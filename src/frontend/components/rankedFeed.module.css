@@ -1,0 +1,70 @@
+
+
+
+
+.feedContainer {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 20px;
+    background-color: #1e1e1e;
+    font-family: 'Inconsolata';
+  }
+  
+  .navBar {
+    display: flex;
+    margin-bottom: 20px;
+    background-color: #A2A2A2;
+    border-radius: 8px;
+  }
+
+  .buttonContainer {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+  }
+
+  .navWords {
+    display: flex;
+    flex-wrap: nowrap;
+    font-size: 20px;
+    font-family: 'Inconsolata';
+    white-space: nowrap;
+    margin-left: 20px;
+    color: black;
+  }
+  
+  .navButton {
+    background-color: #555;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .navButton:hover {
+    background-color: #777;
+  }
+  
+  .projectList {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .projectItem {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+    background-color: #333;
+    border-radius: 8px;
+  }
+
+
+

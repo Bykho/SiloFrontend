@@ -1,0 +1,126 @@
+
+* {
+    font-family: inconsolata; 
+}
+
+.profileImage {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center;
+}
+
+.profileHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 10px;
+    background-color:#D9D9D9;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.profileHeader > div {
+    flex: 1;
+    margin: 0 10px;
+}
+
+.weblink {
+    color: #1e1e1e;
+    text-decoration: none;
+}
+
+.button {
+    font-family: inconsolata;
+    margin-bottom: 10px;
+    margin-right: 140px;
+    padding: 8px 16px;
+    background-color: #b9d9eb;
+    color: #1e1e1e;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    height: 60px;
+    width: 140px;
+    font-size: 15px;
+}
+.bigButton {
+    display: inline-block;
+    font-family: inconsolata;
+    margin-right: 5px; /* Adjust margin to make buttons less wide */
+    margin-bottom: 0px;
+    padding: 8px 16px;
+    background-color: #444444;
+    color: #D9D9D9;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    height: 60px;
+    width: calc(100% / 3 - 30px); /* Adjusted calculation */
+    font-size: 15px;
+    margin-left: 20px; /* Adjust margin to make buttons less wide */
+    transition: background-color 0.3s ease;
+}
+
+
+.bigButton:hover {
+    background-color: #7FAACB;
+    color: white;
+}
+
+.bigButton:focus {
+    outline: none;
+}
+
+.bigButton:active {
+    transform: translateY(2px);
+}
+
+.button:hover {
+    background-color: #7FAACB;
+}
+
+.container {
+    padding: 20px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.profileDetails {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0px 0;
+}
+
+.detailsColumn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 0px;
+    margin-right: 20px;
+    margin-left: 250px;
+    width: 100%;
+}
+
+.detailEntry {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 0 0px;
+    background-color: #B9D9EB;
+    width: 100%;
+}
+
+.imageAndEmail { 
+    display: 'flex';
+    flex-Direction: 'column'; 
+    align-Items: 'center';
+    margin-Bottom: '0px';
+    margin-right: 250px;
+}
+
