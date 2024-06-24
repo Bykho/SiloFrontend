@@ -1,0 +1,60 @@
+/* feed.module.css */
+
+.feedContainer {
+    padding-left: 20px;
+}
+
+.unAuthenticatedText {
+    color: white;
+    font-size: 20px;
+    margin-bottom: 20px;
+    width: 90%;
+    height: 50%;
+    background-color: grey;
+}
+
+.navBar {
+    display: flex;
+    align-items: center;
+    font-size: 25px;
+    color: white;
+    margin-left: 25px; 
+    justify-content: flex-start; /* Changed to flex-start to keep links together */
+    gap: 20px; /* Add some space between the items */
+    position: relative;
+}
+
+.navLinks {
+    display: flex;
+}
+
+.filterIcon {
+    cursor: pointer;
+    color: white; /* Adjust to fit your color scheme */
+    font-size: 30px;
+}
+
+.dropdownMenu {
+    position: absolute;
+    top: 40px; /* Adjust based on your layout */
+    right: 0;
+    background-color: #333; /* Adjust to fit your color scheme */
+    border-radius: 5px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.navLink {
+    padding: 10px 15px; /* Adjusted padding to reduce spacing */
+    cursor: pointer;
+    color: white; /* Ensure the links are also white */
+}
+
+.navLink:hover {
+    background-color: #575757; /* Adjust to fit your color scheme */
+    border-radius: 5px;
+}
+
+.bold {
+    font-weight: bold;
+}

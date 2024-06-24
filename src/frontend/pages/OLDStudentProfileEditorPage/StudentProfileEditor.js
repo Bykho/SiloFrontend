@@ -1,0 +1,104 @@
+
+
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useUser } from '../../contexts/UserContext';
+import styles from './studentProfileEditor.module.css'; // Import the CSS module
+import EditInfoTab from './EditInfoTab';
+import config from '../../config';
+
+function StudentProfileEditor({ initLocalData }) {
+  const navigate = useNavigate(); // Initialize navigate
+  const { updateUser } = useUser();
+  const [localState, setLocalState] = useState(initLocalData);
+
+  const [error, setError] = useState('');
+  const [showFields, setShowFields] = useState({
+    projectName: false,
+    projectDescription: false,
+    githubLink: false,
+    media: false,
+    markdown: false,
+    projectLink: false,
+    tags: false,
+  });
+
+  const handleInputChange = (e, field) => {
+    if (field === 'interests' || field === 'skills') {
+      setLocalState({ ...localState, [field]: e.target.value.split(',').map(item => item.trim()) });
+    } else {
+      setLocalState({ ...localState, [field]: e.target.value });
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem('token');
+    
+    // Calculate the size of localState
+    const localStateSize = new Blob([JSON.stringify(localState)]).size;
+    console.log('This is the local state sent to the backend: ', localState);
+    console.log('Size of localState in bytes: ', localStateSize);
+  
+    // Create a subset of localState with only the necessary keys
+    const subsetKeys = ['username', 'email', 'university', 'interests', 'skills', 'biography', 'profile_photo', 'personal_website'];
+    const localStateSubset = subsetKeys.reduce((obj, key) => {
+      if (localState[key]) {
+        obj[key] = localState[key];
+      }
+      return obj;
+    }, {});
+  
+    try {
+      const response = await fetch(`${config.apiBaseUrl}/studentProfileEditor`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(localStateSubset) // Send only the subset of localState
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        setError(data.message || 'Failed to update profile');
+      } else {
+        setError('Profile updated successfully');
+        updateUser(localStateSubset);
+        if (data.access_token) {
+          localStorage.setItem('token', data.access_token);
+        }
+      }
+    } catch (err) {
+      setError('Failed to connect to the server');
+    }
+  };
+
+  return (
+    <div className={styles.boxContainer}>
+      <div className={styles.profileEditorContainer}>
+        <h1 className={styles.profileEditorTitle}>Student Profile Editor</h1>
+        <EditInfoTab 
+          localState={localState} 
+          handleInputChange={handleInputChange} 
+          handleSubmit={handleSubmit} 
+        />
+      </div>
+      <div className={styles.currentInfo}>
+        <h3>Current Info:</h3>
+        <p>Username: {localState.username || 'N/A'}</p>
+        <p>Email: {localState.email || 'N/A'}</p>
+        <p>University: {localState.university || 'N/A'}</p>
+        <p>Interests: {localState.interests ? localState.interests.join(', ') : 'N/A'}</p>
+        <p>Skills: {localState.skills ? localState.skills.join(', ') : 'N/A'}</p>
+        <p>Biography: {localState.biography || 'N/A'}</p>
+        <p>Profile Photo: {localState.profile_photo || 'N/A'}</p>
+        <p>Personal Website: {localState.personal_website || 'N/A'}</p>
+      </div>
+    </div>
+  );
+}
+
+export default StudentProfileEditor;
+
+
+
