@@ -32,7 +32,7 @@ function Login() {
     <div style={{ position: 'relative', zIndex: 0 }}>
       <GameOfLife />
       <div className={styles.container}>
-        <img src="/silo_logo.png" alt="Silo Logo" className={styles.logo} />
+        <img src='./silo_logo.png' alt="Silo Logo" className={styles.logo} />
         <div className={styles.siloStyle}>S    i    l    o</div>
         {!showLoginForm ? (
           <div className={styles.buttonContainer}>
