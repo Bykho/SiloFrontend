@@ -1,0 +1,56 @@
+
+  .container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .layer {
+    display: flex;
+    flex-direction: row;
+    width: flex;
+  }
+  
+  .column {
+    border: 1px solid black;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+  }
+  
+  .text {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  
+  .image {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .video {
+    width: 100%;
+    height: auto;
+  }
+
+
+  .projectLinkButton {
+    background-color: #eae6e6;
+    color: #70b9e3;
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    font-weight: bold;
+  }
+  
+  .projectLinkButton:hover {
+    background-color: #1e1e1e;
+  }
+  
+  .buttonContainer {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 15px;
+    gap: 10px;
+  }
+  

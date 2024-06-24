@@ -1,0 +1,70 @@
+/* likesFeed.module.css */
+
+.feedContainer {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 20px;
+    background-color: #1e1e1e;
+    font-family: 'Inconsolata';
+}
+
+.navBar {
+    display: flex;
+    margin-bottom: 20px;
+    background-color: #2d2d2d;
+    border-radius: 8px;
+}
+
+.buttonContainer {
+    display: flex;
+    background: #2d2d2d; 
+    padding: 10px; 
+    justify-content: center; /* Center align buttons */
+    gap: 20px; /* Evenly space buttons */
+    flex-direction: row;
+    align-items: center;
+    width: 99%;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+.navWords {
+    display: flex;
+    flex-wrap: nowrap;
+    font-size: 20px;
+    font-family: 'Inconsolata';
+    white-space: nowrap;
+    margin-left: 20px;
+    color: rgb(251, 251, 251);
+}
+
+.navButton {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 20px;
+    margin-right: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.navButton:hover {
+    background-color: #555;
+}
+
+.projectList {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.projectItem {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+    background-color: #333;
+    border-radius: 8px;
+}

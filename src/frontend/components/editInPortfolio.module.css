@@ -1,0 +1,48 @@
+
+
+
+
+.editContainer {
+    display: flex;
+    align-items: center;
+  }
+  
+  .editButton {
+    cursor: pointer;
+    color: #1e1e1e;
+    background-color: #A2A2A2;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+  }
+  
+  .editButton:hover {
+    background-color: #6A6969;
+  }
+  
+  .editInput {
+    width: 100%;
+    padding: 5px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .submitButton {
+    cursor: pointer;
+    color: #ffffff;
+    background-color: #4caf50;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+  }
+  
+  .submitButton:hover {
+    background-color: #45a049;
+  }
+
+  
+
+  
