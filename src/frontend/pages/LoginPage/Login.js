@@ -34,7 +34,7 @@ function Login() {
     <div style={{ position: 'relative', zIndex: 0 }}>
       <GameOfLife />
       <div className={styles.container}>
-        <img src="/static/images/silo_logo.png" alt="Logo" className={styles.logo} />
+        <img src='https://dummyflaska-b17a47997732.herokuapp.com/static/images/silo_logo.png' alt="Logo" className={styles.logo} />
         <div className={styles.siloStyle}>S    i    l    o</div>
         {!showLoginForm ? (
           <div className={styles.buttonContainer}>
