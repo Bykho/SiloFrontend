@@ -4,6 +4,7 @@ import ProfileImage from '../components/ProfileImage';
 import styles from './profileHeader.module.css';
 import { useUser } from '../contexts/UserContext';
 import { FaGithub, FaGlobe, FaLink } from 'react-icons/fa';
+import { IoIosPaper } from 'react-icons/io';
 
 const ProfileHeader = ({ userData, loading, error }) => {
   const { user } = useUser();
@@ -86,6 +87,9 @@ const ProfileHeader = ({ userData, loading, error }) => {
             {userData.personal_website && renderLinkButton(userData.personal_website, <FaGlobe />, 'Website')}
             {userData.links && userData.links.map((link, index) => (
               renderLinkButton(link, <FaLink />, `Link ${index + 1}`)
+            ))}
+            {userData.papers && userData.papers.map((paper, index) => (
+              renderLinkButton(paper, <IoIosPaper />, `paper ${index + 1}`)
             ))}
           </div>
         </div>

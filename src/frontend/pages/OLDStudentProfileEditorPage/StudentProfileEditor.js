@@ -10,6 +10,7 @@ import EditInfoTab from './EditInfoTab';
 import config from '../../config';
 
 function StudentProfileEditor({ initLocalData }) {
+  console.log('init local data for student profile editor: ', initLocalData);
   const navigate = useNavigate(); // Initialize navigate
   const { updateUser } = useUser();
   const [localState, setLocalState] = useState(initLocalData);
@@ -79,11 +80,10 @@ function StudentProfileEditor({ initLocalData }) {
         <p>Interests: {localState.interests ? localState.interests.join(', ') : 'N/A'}</p>
         <p>Skills: {localState.skills ? localState.skills.join(', ') : 'N/A'}</p>
         <p>Biography: {localState.biography || 'N/A'}</p>
-        <p>Profile Photo: {localState.profile_photo || 'N/A'}</p>
         <p>Personal Website: {localState.personal_website || 'N/A'}</p>
         <p>Github Link: {localState.github_link || 'N/A'}</p>
         <p>Papers Link: {localState.papers || 'N/A'}</p>
-        <p>Resume: {localState.resume || 'N/A'}</p>
+        <p>Resume <embed src={localState.resume} type="application/pdf" width="100%" height="500px" /> </p>
         <p>Links: {localState.links || 'N/A'}</p>
       </div>
     </div>
