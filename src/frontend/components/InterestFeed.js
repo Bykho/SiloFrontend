@@ -66,7 +66,7 @@ const Feed = () => {
             type="search"
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
-            placeholder="Search people, tags, or organizations..."
+            placeholder="Search users by interest"
             className={styles.searchInput}
           />
           <button type="submit" className={styles.searchButton}>Search</button>
