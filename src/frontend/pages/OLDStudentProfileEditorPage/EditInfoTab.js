@@ -68,7 +68,7 @@ const EditInfoTab = ({ localState, handleInputChange, handleSubmit }) => {
         </label>
         <label>
           Resume:
-          <input type="text" value={localState.resume || ''} onChange={(e) => handleInputChange(e, 'resume')} className={styles.input} />
+          <input type="file" value={localState.resume || ''} onChange={(e) => handleInputChange(e, 'resume')} className={styles.input} />
         </label>
         <label>
           Links:
