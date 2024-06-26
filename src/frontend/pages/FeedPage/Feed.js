@@ -4,6 +4,7 @@ import Ranked from '../../components/RankedFeed';
 import Tagged from '../../components/TagsFeed';
 import Likes from '../../components/LikesFeed';
 import styles from './feed.module.css';
+import GameOfLife from '../SiloDescriptionPage/GameOfLife';
 
 const Feed = () => {
   const [FeedStyle, setFeedStyle] = useState('showTagged');
@@ -11,15 +12,19 @@ const Feed = () => {
   
   if (!isAuthenticated) {
     return (
-      <div className={styles.feedContainer}>
-        <div className={styles.unAuthenticatedText}>
-          <h2>Currently In Alpha Release</h2>
-          <p>We are currently in our Alpha testing phase. At the moment, we are limiting access to content to ensure we can provide the best possible experience for our users in our next release.</p>
-          <p>As a result, to view the feed and other exclusive features, you will need an access key. This allows us to manage the user experience and gather important feedback from a controlled group of users. If you want one, email me at nico@bykhovsky.com</p>
-          <p>The Beta stage is coming soon and we will open up broader access and introduce more features. We are moving remarkably fast. Stay tuned.</p>
-          <p>We appreciate your interest and support!</p>
-        </div>
+      <div style={{ position: 'relative', zIndex: 0 }}>
+      <GameOfLife />
+      <div className={styles.testTitle}>
+        <h1 className={styles.aboutHeader}>About Silo.</h1>
       </div>
+      <div className={styles.description}>
+        <p>
+        Welcome to Silo, the first networking platform designed exclusively for the STEM community.
+        Connect with students, professors, recruiters, and investors to showcase your projects, collaborate on research, and expand your professional network. 
+        Whether you're looking to gain visibility for your work, find collaborators, or explore top talents, Silo offers a unique, exclusive environment that bridges academia and industry. Join now to innovate, learn, and grow together!
+        </p>
+      </div>
+    </div>
     );
   }
 
