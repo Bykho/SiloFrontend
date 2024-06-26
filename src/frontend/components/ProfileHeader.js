@@ -54,7 +54,7 @@ const ProfileHeader = ({ userData, loading, error }) => {
             <h3 className={styles.userTypeTag}>{userData.user_type}</h3>
           </div>
           <div className={styles.resumeButton}>
-            <h3 className={styles.userTypeTag}>Resume</h3>
+            <h3 className={styles.resumeTag}>Resume</h3>
           </div>
         </div>
         <div className={styles.rightColumn}>
