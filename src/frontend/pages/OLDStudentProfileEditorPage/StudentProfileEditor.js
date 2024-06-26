@@ -1,6 +1,8 @@
 
 
-import React, { useState, useEffect } from 'react';
+
+
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../contexts/UserContext';
 import styles from './studentProfileEditor.module.css'; // Import the CSS module
@@ -11,20 +13,10 @@ function StudentProfileEditor({ initLocalData }) {
   const navigate = useNavigate(); // Initialize navigate
   const { updateUser } = useUser();
   const [localState, setLocalState] = useState(initLocalData);
-
   const [error, setError] = useState('');
-  const [showFields, setShowFields] = useState({
-    projectName: false,
-    projectDescription: false,
-    githubLink: false,
-    media: false,
-    markdown: false,
-    projectLink: false,
-    tags: false,
-  });
 
   const handleInputChange = (e, field) => {
-    if (field === 'interests' || field === 'skills') {
+    if (field === 'interests' || field === 'skills' || field === 'papers' || field === 'links') {
       setLocalState({ ...localState, [field]: e.target.value.split(',').map(item => item.trim()) });
     } else {
       setLocalState({ ...localState, [field]: e.target.value });
@@ -34,21 +26,17 @@ function StudentProfileEditor({ initLocalData }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
-    
-    // Calculate the size of localState
-    const localStateSize = new Blob([JSON.stringify(localState)]).size;
-    console.log('This is the local state sent to the backend: ', localState);
-    console.log('Size of localState in bytes: ', localStateSize);
-  
-    // Create a subset of localState with only the necessary keys
-    const subsetKeys = ['username', 'email', 'university', 'interests', 'skills', 'biography', 'profile_photo', 'personal_website'];
+    const subsetKeys = ['username', 'email', 'university', 'interests', 
+      'skills', 'biography', 'profile_photo', 'personal_website', 'github_link', 
+      'papers', 'resume', 'links'];
     const localStateSubset = subsetKeys.reduce((obj, key) => {
       if (localState[key]) {
         obj[key] = localState[key];
       }
       return obj;
     }, {});
-  
+
+    console.log('localStateSubset: ', localStateSubset)
     try {
       const response = await fetch(`${config.apiBaseUrl}/studentProfileEditor`, {
         method: 'POST',
@@ -93,12 +81,17 @@ function StudentProfileEditor({ initLocalData }) {
         <p>Biography: {localState.biography || 'N/A'}</p>
         <p>Profile Photo: {localState.profile_photo || 'N/A'}</p>
         <p>Personal Website: {localState.personal_website || 'N/A'}</p>
+        <p>Github Link: {localState.github_link || 'N/A'}</p>
+        <p>Papers Link: {localState.papers || 'N/A'}</p>
+        <p>Resume: {localState.resume || 'N/A'}</p>
+        <p>Links: {localState.links || 'N/A'}</p>
       </div>
     </div>
   );
 }
 
 export default StudentProfileEditor;
+
 
 
 

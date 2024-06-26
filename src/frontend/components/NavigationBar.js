@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
+import { IoHomeOutline, IoPersonOutline, IoChatboxEllipsesOutline, IoLogOutOutline, IoLogInOutline } from 'react-icons/io5'; // Import new icons
 import styles from './NavigationBar.module.css';
 
 const NavigationBar = () => {
@@ -38,27 +39,27 @@ const NavigationBar = () => {
               className={`${styles.button} ${activeLink === 'feed' ? styles.clickedButton : ''}`}
               onClick={() => handleLinkClick('feed')}
             >
-              feed
+              <IoHomeOutline className={styles.icon} /> feed
             </a>
             <a
               href="/studentProfile"
               className={`${styles.button} ${(activeLink === 'folio' && currentPath !== '/siloDescription') ? styles.clickedButton : ''}`}
               onClick={() => handleLinkClick('folio')}
             >
-              folio
+              <IoPersonOutline className={styles.icon} /> folio
             </a>
             <a
               href="/GenDirectory"
               className={`${styles.button} ${activeLink === 'find' ? styles.clickedButton : ''}`}
               onClick={() => handleLinkClick('find')}
             >
-              forum
+              <IoChatboxEllipsesOutline className={styles.icon} /> forum
             </a>
             <button
               onClick={handleLogout}
               className={`${styles.button} ${activeLink === 'logout' ? styles.clickedButton : ''}`}
             >
-              logout
+              <IoLogOutOutline className={styles.icon} /> logout
             </button>
           </div>
         </>
@@ -71,14 +72,14 @@ const NavigationBar = () => {
               className={`${styles.button} ${activeLink === 'feed' ? styles.clickedButton : ''}`}
               onClick={() => handleLinkClick('feed')}
             >
-              feed
+              <IoHomeOutline className={styles.icon} /> feed
             </a>
             <a
               href="/login"
               className={`${styles.button} ${activeLink === 'login' ? styles.clickedButton : ''}`}
               onClick={() => handleLinkClick('login')}
             >
-              login
+              <IoLogInOutline className={styles.icon} /> login
             </a>
           </div>
         </>

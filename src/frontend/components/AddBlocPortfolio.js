@@ -139,6 +139,7 @@ const AddBlocPortfolio = () => {
                   <option value="text">Text</option>
                   <option value="image">Image</option>
                   <option value="video">Video</option>
+                  <option value="pdf">pdf</option>
                 </select>
               )}
               {column.type === 'text' && (
@@ -154,6 +155,14 @@ const AddBlocPortfolio = () => {
                   type="file"
                   onChange={(e) => handleFileChange(layerIndex, columnIndex, e.target.files[0])}
                   placeholder="Upload image"
+                  className={styles.fileInput}
+                />
+              )}
+              {column.type === 'pdf' && (
+                <input
+                  type="file"
+                  onChange={(e) => handleFileChange(layerIndex, columnIndex, e.target.files[0])}
+                  placeholder="Upload PDF"
                   className={styles.fileInput}
                 />
               )}

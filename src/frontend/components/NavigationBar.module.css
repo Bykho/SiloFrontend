@@ -18,6 +18,7 @@
 .button {
   color: #f0f0f0;
   padding: 12px 36px;
+  align-items: center;
   border-radius: 12px;
   text-decoration: none;
   font-size: 20px;
@@ -95,4 +96,10 @@
   border-color: #7fc1f4;
 }
 
-
+.icon {
+  margin-right: 3px; /* Add space between the icon and the text */
+  font-size: 1.2em; /* Adjust the size of the icon if needed */
+  vertical-align: middle;
+  margin-left: 0px;
+  margin-bottom: 4px; /* Vertically align the icon with the text */
+}

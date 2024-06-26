@@ -28,19 +28,16 @@ function Login() {
 
   const toggleLoginForm = () => setShowLoginForm(!showLoginForm);
 
-
-
   return (
     <div style={{ position: 'relative', zIndex: 0 }}>
       <GameOfLife />
       <div className={styles.container}>
-        <img src='https://dummyflaska-b17a47997732.herokuapp.com/static/images/silo_logo.png' alt="Logo" className={styles.logo} />
-        <div className={styles.siloStyle}>S    i    l    o</div>
+        <img src='https://dummyflaska-b17a47997732.herokuapp.com/static/images/silo_logo.png' alt="Logo" className={styles.logo} />        <div className={styles.siloStyle}>S    i    l    o</div>
         {!showLoginForm ? (
           <div className={styles.buttonContainer}>
             <button className={`${styles.button} ${styles.loginButton}`} onClick={toggleLoginForm}>Login</button>
-            <a className={`${styles.button} ${styles.createButton}`} href="/SignUp">
-              Create1
+            <a className={`${styles.button} ${styles.createButton}`} href="/GoLive">
+              Create
             </a>
           </div>
         ) : (

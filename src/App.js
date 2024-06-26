@@ -14,6 +14,7 @@ import SiloDescription from './frontend/pages/SiloDescriptionPage/siloDescriptio
 import Feed from './frontend/pages/FeedPage/Feed';
 import ProtectedRoute from './frontend/components/ProtectedRoute';
 import Login from './frontend/pages/LoginPage/Login';
+import GoLive from './frontend/pages/GoLivePage/GoLiveLandingPage'
 
 import AddBlocPortfolio from './frontend/components/AddBlocPortfolio';
 
@@ -36,6 +37,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<Login />} />
             <Route path="/SignUp" element={<SignUp />} />
+            <Route path="/GoLive" element={<GoLive />} />
             <Route path="/studentProfile" element={<ProtectedRoute component={Profile} />} />
             <Route path="/studentProfileEditor" element={<StudentProfileEditor />} />
             <Route path="/addBlockProject" element={<AddBlocPortfolio />} />

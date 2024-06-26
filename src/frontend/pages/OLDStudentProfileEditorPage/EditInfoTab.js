@@ -62,6 +62,22 @@ const EditInfoTab = ({ localState, handleInputChange, handleSubmit }) => {
           Personal Website:
           <input type="text" value={localState.personal_website || ''} onChange={(e) => handleInputChange(e, 'personal_website')} className={styles.input} />
         </label>
+        <label>
+          Github Link:
+          <input type="text" value={localState.github_link || ''} onChange={(e) => handleInputChange(e, 'github_link')} className={styles.input} />
+        </label>
+        <label>
+          Papers Link:
+          <input type="text" value={localState.papers || ''} onChange={(e) => handleInputChange(e, 'papers')} className={styles.input} placeholder="Comma-separated"/>
+        </label>
+        <label>
+          Resume:
+          <input type="text" value={localState.resume || ''} onChange={(e) => handleInputChange(e, 'resume')} className={styles.input} />
+        </label>
+        <label>
+          Links:
+          <input type="text" value={localState.links || ''} onChange={(e) => handleInputChange(e, 'links')} className={styles.input} placeholder="Comma-separated"/>
+        </label>
       </div>
       <button type="submit" className={styles.saveButton}>Save Info</button>
     </form>
@@ -69,6 +85,7 @@ const EditInfoTab = ({ localState, handleInputChange, handleSubmit }) => {
 };
 
 export default EditInfoTab;
+
 
 
 

@@ -2,7 +2,7 @@
 
 
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import PortfolioDisplay from '../../components/PortfolioDisplay';
 import styles from './studentProfile.module.css'; // Import the CSS module
 import { useUser } from '../../contexts/UserContext';
@@ -19,6 +19,7 @@ function StudentProfile() {
   const [showEditor, setShowEditor] = useState(false);
   const { user } = useUser();
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -42,7 +43,12 @@ function StudentProfile() {
       }
     };
     fetchUserData();
-  }, []);
+
+    // Check if the user just signed up
+    if (location.state && location.state.justSignedUp) {
+      setShowEditor(true);
+    }
+  }, [location.state]);
 
   if (!user || !userData) {
     return <p> Loading ... </p>;
@@ -54,7 +60,7 @@ function StudentProfile() {
 
   const handleCloseEditor = () => {
     setShowEditor(false);
-  }
+  };
 
   const handleAddProjectClick = () => {
     setShowModal(true);
@@ -106,6 +112,7 @@ function StudentProfile() {
 }
 
 export default StudentProfile;
+
 
 
 

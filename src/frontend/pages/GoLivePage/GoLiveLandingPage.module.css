@@ -2,101 +2,109 @@ body, html {
   margin: 0;
   padding: 0;
   height: 100%;
-  background-color: rgb(30, 30, 30); /* Matching the container background color */
-  font-family: 'Inconsolata', monospace;
+  background-color: #1E1E1E;
+  font-family: 'Arial', sans-serif;
 }
 
 .centralContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: fit-content;
-  background-color: #2d2d2d;
+  justify-content: center;
+  min-height: 100vh;
   padding: 20px;
+  box-sizing: border-box;
+  backdrop-filter: blur(10px);
+  background-color: rgba(45, 45, 45, 0.3) !important;
+  border-radius: 24px;
+  box-shadow: 0 0 20px rgba(0, 11, 31, 0.4);
+  max-width: 600px;
+  margin: 0 auto; /* Add this line to center the div horizontally */
+}
+
+.title {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  color: #E0E0E0;
+  margin-top: 0px;
 }
 
 .container {
-  margin: 20px;
-  padding: 20px;
+  background-color: #2D2D2D;
+  border-radius: 10px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  width: 100%;
   max-width: 400px;
-  min-width: 400px;
-  background-color: #3c3c3c;
-  border-radius: 12px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.subtitle {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
   color: #E0E0E0;
-}
-
-.buttonContainer {
-  margin-bottom: 20px;
-}
-
-.button, .submitButton, .backButton {
-  background-color: #6A6969;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 8px;
-  text-decoration: none;
-  font-size: 16px;
-  margin-top: 10px;
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.3s;
-}
-
-.button:hover, .submitButton:hover, .backButton:hover {
-  background-color: #A2A2A2;
-  transform: translateY(-2px);
+  margin-top: 0px;
 }
 
 .form {
   display: flex;
   flex-direction: column;
-  align-items: center;
 }
 
 .inputContainer {
-  margin-bottom: 15px;
-  width: 100%;
-  text-align: left;
+  margin-bottom: 1rem;
 }
 
-label {
-  display: block;
-  margin-bottom: 5px;
-  color: #D9D9D9;
-  text-align: center;
-}
-
-input[type="text"], input[type="email"] {
-  background-color: #6A6969;
-  border: none;
-  border-radius: 8px;
-  color: #E0E0E0;
-  padding: 10px;
+.inputText {
   width: 95%;
-  margin-bottom: 10px;
-  text-align: center;
-  transition: background-color 0.3s;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 5px;
+  background-color: #3C3C3C;
+  color: #E0E0E0;
+  font-size: 1rem;
 }
 
-input[type="text"]::placeholder, input[type="email"]::placeholder {
+.inputText::placeholder {
   color: #A2A2A2;
 }
 
-input[type="text"]:focus, input[type="email"]:focus {
-  background-color: #4a4a4a;
-  outline: none;
+.button {
+  background-color: #6da6e7;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 0.75rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.button:hover {
+  background-color: #3A7BCE;
+}
+
+.backButton {
+  background-color: transparent;
+  border: 2px solid #4A90E2;
+  color: #4A90E2;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.backButton:hover {
+  background-color: #4A90E2;
+  color: white;
 }
 
 .errorText {
-  color: red;
+  color: #FF6B6B;
+  margin-top: 0.5rem;
 }
 
 .successText {
-  color: green;
-}
-
-.backButtonContainer {
-  margin-top: 20px;
+  color: #4CAF50;
+  margin-top: 0.5rem;
 }

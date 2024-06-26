@@ -17,6 +17,7 @@ const isStudentProfilePage = window.location.pathname.includes('/studentProfile'
 const ProjectEntry = ({ project, passedUser }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [showDescription, setShowDescription] = useState(false);
   const [localProject, setLocalProject] = useState(project);
   const [localUser, setLocalUser] = useState(passedUser);
   const { user, setUser } = useUser();
@@ -36,6 +37,21 @@ const ProjectEntry = ({ project, passedUser }) => {
     setLocalProject((prevProject) => ({
       ...prevProject,
       [projectField]: newValue,
+    }));
+  };
+
+  const updateLayer = (layerIndex, columnIndex, newValue) => {
+    const updatedLayers = localProject.layers.map((layer, lIndex) => 
+      layer.map((column, cIndex) => {
+        if (layerIndex === lIndex && columnIndex === cIndex) {
+          return { ...column, value: newValue };
+        }
+        return column;
+      })
+    );
+    setLocalProject((prevProject) => ({
+      ...prevProject,
+      layers: updatedLayers,
     }));
   };
 
@@ -93,6 +109,10 @@ const ProjectEntry = ({ project, passedUser }) => {
     setIsExpanded(!isExpanded);
   };
 
+  const toggleDescription = () => {
+    setShowDescription(!showDescription);
+  }
+
   const handleCommentUpvote = (index) => {
     const newComments = [...comments];
     newComments[index].upvotes += 1;
@@ -117,7 +137,6 @@ const ProjectEntry = ({ project, passedUser }) => {
           const updatedComments = data.comments;
           setComments(updatedComments);
           setNewComment('');
-          // Update the comments in localProject
           setLocalProject((prevProject) => ({
             ...prevProject,
             comments: updatedComments,
@@ -184,13 +203,13 @@ const ProjectEntry = ({ project, passedUser }) => {
 
     return (
       <div className={styles.projectDescriptionContainer}>
-        <div className={`${styles.projDescription} ${isLongDescription && !isExpanded ? styles.collapsedDescription : ''}`}>
+        <div className={`${styles.projDescription} ${isLongDescription && !showDescription ? styles.collapsedDescription : ''}`}>
           {description}
           {renderEditableField('projectDescription')}
         </div>
         {isLongDescription && (
-          <button className={styles.seeMoreButton} onClick={toggleExpand}>
-            {isExpanded ? 'Less Description' : 'More Description'}
+          <button className={styles.seeMoreButton} onClick={toggleDescription}>
+            {showDescription ? 'Less Description' : 'More Description'}
           </button>
         )}
         <div className={styles.divider}></div>
@@ -223,12 +242,14 @@ const ProjectEntry = ({ project, passedUser }) => {
       </div>
       {renderProjectDescription()}
       <div className={styles.layerDisplayContainer}>
-        <LayerDisplay layers={localProject.layers} />
+        <LayerDisplay layers={localProject.layers} isEditing={isEditing} updateLayer={updateLayer} />
       </div>
+
       <div className={styles.buttonContainer}>
         {renderProjectLinkButton(localProject.githubLink, 'GitHub')}
         {renderProjectLinkButton(localProject.projectLink, 'ReadMe')}
       </div>
+
       <div className={styles.upvoteSectionBox}>
         {['impactful', 'innovative', 'interesting'].map((field) => {
           const upvoteField = `${field}_upvote`;

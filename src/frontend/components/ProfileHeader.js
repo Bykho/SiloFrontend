@@ -1,16 +1,14 @@
-
-
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProfileImage from '../components/ProfileImage';
-import styles from './profileHeader.module.css'; // Import the CSS module
+import styles from './profileHeader.module.css';
 import { useUser } from '../contexts/UserContext';
+import { FaGithub, FaGlobe, FaLink } from 'react-icons/fa';
 
 const ProfileHeader = ({ userData, loading, error }) => {
   const { user } = useUser();
   const navigate = useNavigate();
-  const [showFullBio, setShowFullBio] = useState(false); // State to control the biography display
+  const [showFullBio, setShowFullBio] = useState(false);
 
   const toggleBio = () => {
     setShowFullBio(!showFullBio);
@@ -23,74 +21,77 @@ const ProfileHeader = ({ userData, loading, error }) => {
     return bio.substring(0, length) + '...';
   };
 
+  const ensureProtocol = (url) => {
+    if (!/^https?:\/\//i.test(url)) {
+      return 'http://' + url;
+    }
+    return url;
+  };
+
+  const renderLinkButton = (link, icon, label) => (
+    <a
+      href={ensureProtocol(link)}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={styles.linkButton}
+    >
+      {icon}
+      <span>{label}</span>
+    </a>
+  );
+
+  if (loading) return <p className={styles.loadingError}>Loading...</p>;
+  if (error) return <p className={styles.loadingError}>Error: {error}</p>;
+  if (!userData) return <p className={styles.loadingError}>No user data available</p>;
+
   return (
     <div className={styles.profileContainer}>
       <div className={styles.profileHeader}>
         <div className={styles.leftColumn}>
-          {loading ? (
-            <p> Loading ... </p>
-          ) : error ? (
-            <p> Error: {error}</p>
-          ) : userData && (
-            <ProfileImage username={userData.username} size={'large'} />
-          )}
+          <ProfileImage username={userData.username} size={'large'} />
           <div className={styles.typeAndName}>
-            <h3 className={styles.userTypeTag}>
-              {userData ? userData.user_type : 'n/a'}
-            </h3>
+            <h3 className={styles.userTypeTag}>{userData.user_type}</h3>
           </div>
         </div>
-        <div className={styles.firstColBox}>
-          <div className={styles.topRowBox}>
-            <div className={styles.nameAndTagsBox}>
-              <h1 className={styles.userName}>
-                {userData ? userData.username : 'Loading...'}
-              </h1>
-              <div className={styles.interestsAndSkillsBox}>
-                <h4 className={styles.labelSkills}>Skills</h4>
-                {userData && userData.skills && userData.skills.length > 0 && (
-                  <div className={styles.skillListBox}>
-                    {userData.skills.map((skill, index) => (
-                      <div key={index} className={styles.skillTagStyle}>
-                        {skill}
-                      </div>
-                    ))}
-                  </div>
-                )}
-                <h4 className={styles.labelInterests}>Interests</h4>
-                {userData && userData.interests && userData.interests.length > 0 && (
-                  <div className={styles.interestListBox}>
-                    {userData.interests.map((interest, index) => (
-                      <div key={index} className={styles.interestsTagStyle}>
-                        {interest}
-                      </div>
-                    ))}
-                  </div>
-                )}
+        <div className={styles.rightColumn}>
+          <div className={styles.nameAndTagsBox}>
+            <h1 className={styles.userName}>{userData.username}</h1>
+            <div className={styles.tagsContainer}>
+              <div className={styles.tagSection}>
+                <h4 className={styles.tagLabel}>Skills</h4>
+                <div className={styles.tagList}>
+                  {userData.skills && userData.skills.map((skill, index) => (
+                    <span key={index} className={styles.skillTag}>{skill}</span>
+                  ))}
+                </div>
+              </div>
+              <div className={styles.tagSection}>
+                <h4 className={styles.tagLabel}>Interests</h4>
+                <div className={styles.tagList}>
+                  {userData.interests && userData.interests.map((interest, index) => (
+                    <span key={index} className={styles.interestTag}>{interest}</span>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
-          <div className={styles.bioAndSkillsBox}>
-            <div className={styles.bioContainer}>
-              <p>{showFullBio ? userData.biography : getTruncatedBio(userData.biography, 300)}</p>
-              <button onClick={toggleBio} className={styles.bioButton}>
-                {showFullBio ? 'Less bio' : 'More bio'}
-              </button>
-            </div>
+          <div className={styles.bioContainer}>
+            <p>{showFullBio ? userData.biography : getTruncatedBio(userData.biography, 300)}</p>
+            <button onClick={toggleBio} className={styles.bioButton}>
+              {showFullBio ? 'Less bio' : 'More bio'}
+            </button>
+          </div>
+          <div className={styles.linksContainer}>
+            {userData.github_link && renderLinkButton(userData.github_link, <FaGithub />, 'GitHub')}
+            {userData.personal_website && renderLinkButton(userData.personal_website, <FaGlobe />, 'Website')}
+            {userData.links && userData.links.map((link, index) => (
+              renderLinkButton(link, <FaLink />, `Link ${index + 1}`)
+            ))}
           </div>
         </div>
       </div>
     </div>
   );
-  
-  
-
 };
 
 export default ProfileHeader;
-
-
-
-
-
-

@@ -1,56 +1,196 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin: 0 auto;
+}
 
+.layer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.column {
+  flex: 1 1 300px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.column:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.text, .editableText {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #333;
+  padding: 1.5rem;
+  white-space: pre-wrap;
+  flex-grow: 1;
+}
+
+.editableText:focus {
+  outline: 2px solid #70b9e3;
+  border-radius: 4px;
+}
+
+.imageContainer {
+  width: 100%;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  box-sizing: border-box;
+  background-color: #f8f8f8;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.image {
+  max-width: calc(100% - 20px);
+  max-height: calc(100% - 20px);
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.imageOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.expandIcon {
+  color: white;
+  font-size: 24px;
+}
+
+.imageContainer:hover .imageOverlay {
+  opacity: 1;
+}
+
+.imageContainer:hover .image {
+  transform: scale(1.05);
+}
+
+.videoContainer, .pdfContainer {
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  position: relative;
+  overflow: hidden;
+}
+
+.video, .pdf {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.editInput {
+  font-size: 16px;
+  line-height: 1.5;
+  padding: 0.75rem;
+  margin: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  width: calc(100% - 1rem);
+  transition: border-color 0.3s ease;
+}
+
+.editInput:focus {
+  outline: none;
+  border-color: #70b9e3;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  position: relative;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 80%;
+  max-height: 80%;
+  overflow: auto;
+}
+
+.modalImage {
+  max-width: 100%;
+  max-height: calc(80vh - 40px);
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}
+
+.closeButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #c4c2c2;
+  border-radius: 5px;
+  border: #333;
+  color: #1f99ef;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px;
+  line-height: 1;
+}
+
+@media (max-width: 768px) {
   .container {
-    display: flex;
+    padding: 1rem;
+  }
+
+  .layer {
     flex-direction: column;
   }
-  
-  .layer {
-    display: flex;
-    flex-direction: row;
-    width: flex;
-  }
-  
+
   .column {
-    border: 1px solid black;
-    padding: 10px;
-    margin: 5px;
-    border-radius: 5px;
-  }
-  
-  .text {
-    font-size: 14px;
-    line-height: 1.5;
-  }
-  
-  .image {
-    max-width: 100%;
-    height: auto;
-  }
-  
-  .video {
-    width: 100%;
-    height: auto;
+    flex-basis: 100%;
   }
 
+  .imageContainer {
+    height: 250px;
+  }
 
-  .projectLinkButton {
-    background-color: #eae6e6;
-    color: #70b9e3;
-    text-decoration: none;
-    padding: 6px 12px;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-    font-weight: bold;
+  .modalContent {
+    max-width: 90%;
+    max-height: 90%;
   }
-  
-  .projectLinkButton:hover {
-    background-color: #1e1e1e;
+
+  .modalImage {
+    max-height: calc(90vh - 40px);
   }
-  
-  .buttonContainer {
-    display: flex;
-    justify-content: flex-start;
-    margin-top: 15px;
-    gap: 10px;
-  }
-  
+}
