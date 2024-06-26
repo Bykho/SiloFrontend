@@ -11,7 +11,6 @@ import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 
 const LayerDisplay = ({ layers }) => {
 
-
     const [currentSlide, setCurrentSlide] = useState(0);
 
     const images = [
