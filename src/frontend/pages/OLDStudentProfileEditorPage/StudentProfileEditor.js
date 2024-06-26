@@ -64,7 +64,7 @@ function StudentProfileEditor({ initLocalData }) {
   return (
     <div className={styles.boxContainer}>
       <div className={styles.profileEditorContainer}>
-        <h3 className={styles.profileEditorTitle}>Student Profile Editor</h3>
+        <h1 className={styles.profileEditorTitle}>Student Profile Editor</h1>
         <EditInfoTab 
           localState={localState} 
           handleInputChange={handleInputChange} 
@@ -72,7 +72,7 @@ function StudentProfileEditor({ initLocalData }) {
         />
       </div>
       <div className={styles.currentInfo}>
-        <h3>Current Info:</h3>
+        <h1>Current Info:</h1>
         <p>Username: {localState.username || 'N/A'}</p>
         <p>Email: {localState.email || 'N/A'}</p>
         <p>University: {localState.university || 'N/A'}</p>
