@@ -55,10 +55,6 @@ const EditInfoTab = ({ localState, handleInputChange, handleSubmit }) => {
           />
         </label>
         <label>
-          Profile Photo URL:
-          <input type="text" value={localState.profile_photo || ''} onChange={(e) => handleInputChange(e, 'profile_photo')} className={styles.input} />
-        </label>
-        <label>
           Personal Website:
           <input type="text" value={localState.personal_website || ''} onChange={(e) => handleInputChange(e, 'personal_website')} className={styles.input} />
         </label>
