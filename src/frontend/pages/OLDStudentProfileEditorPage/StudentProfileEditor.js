@@ -64,7 +64,7 @@ function StudentProfileEditor({ initLocalData }) {
   return (
     <div className={styles.boxContainer}>
       <div className={styles.profileEditorContainer}>
-        <h1 className={styles.profileEditorTitle}>Student Profile Editor</h1>
+        <h3 className={styles.profileEditorTitle}>Student Profile Editor</h3>
         <EditInfoTab 
           localState={localState} 
           handleInputChange={handleInputChange} 
