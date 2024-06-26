@@ -53,6 +53,9 @@ const ProfileHeader = ({ userData, loading, error }) => {
           <div className={styles.typeAndName}>
             <h3 className={styles.userTypeTag}>{userData.user_type}</h3>
           </div>
+          <div className={styles.typeAndName}>
+            <h3 className={styles.userTypeTag}>Resume</h3>
+          </div>
         </div>
         <div className={styles.rightColumn}>
           <div className={styles.nameAndTagsBox}>
@@ -99,3 +102,4 @@ const ProfileHeader = ({ userData, loading, error }) => {
 };
 
 export default ProfileHeader;
+
