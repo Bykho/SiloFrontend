@@ -22,6 +22,19 @@ const EditInfoTab = ({ localState, handleInputChange, handleSubmit }) => {
     }
   };
 
+  const handleFileChange = (e, key) => {
+    const file = e.target.files[0];
+    if (file && file.type === 'application/pdf') {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        handleInputChange({ target: { value: reader.result } }, key);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      alert('Please upload a valid PDF file.');
+    }
+  };
+
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
       <div className={styles.inputGroup}>
@@ -68,7 +81,7 @@ const EditInfoTab = ({ localState, handleInputChange, handleSubmit }) => {
         </label>
         <label>
           Resume:
-          <input type="file" value={localState.resume || ''} onChange={(e) => handleInputChange(e, 'resume')} className={styles.input} />
+          <input type="file" onChange={(e) => handleFileChange(e, 'resume')} className={styles.input} />
         </label>
         <label>
           Links:
@@ -81,6 +94,7 @@ const EditInfoTab = ({ localState, handleInputChange, handleSubmit }) => {
 };
 
 export default EditInfoTab;
+
 
 
 
