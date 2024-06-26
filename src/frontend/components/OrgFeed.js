@@ -52,7 +52,7 @@ const Feed = () => {
 
   return (
     <div className={styles.feedContainer}>
-      <h1 className={styles.title}>User Directory by organizationss</h1>
+      <h1 className={styles.title}>User Directory by organizations</h1>
       <div className={styles.searchSection}>
         <form onSubmit={handleSearch} className={styles.searchBar}>
           <Search className={styles.searchIcon} />
