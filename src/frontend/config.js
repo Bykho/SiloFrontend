@@ -6,7 +6,7 @@
 
 // config.js
 const config = {
-    apiBaseUrl: "https://dummyflaska-b17a47997732.herokuapp.com"
+    apiBaseUrl: "https://dummyflaska-8f14ae7b486f.herokuapp.com"
 };
 
 export default config;
