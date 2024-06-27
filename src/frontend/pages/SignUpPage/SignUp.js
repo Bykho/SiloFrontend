@@ -17,7 +17,7 @@ function SignUp() {
   const [selectedTab, setSelectedTab] = useState('Student');
   const [profile_photo, setProfilePhoto] = useState('');
   const [personal_website, setPersonalWebsite] = useState('');
-  const [resume, setResume] = useState('');
+  const [resume, setResume] = useState(null);
   const [error, setError] = useState('');
 
   const { updateUser } = useUser();
@@ -61,6 +61,7 @@ function SignUp() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(userData),
+        credentials: 'include'
       });
 
       if (response.ok) {
