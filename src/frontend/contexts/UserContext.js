@@ -56,12 +56,14 @@ export const UserProvider = ({ children }) => {
         const profileResponse = await fetch(`${config.apiBaseUrl}/studentProfile`, {
           method: 'POST',
           headers: {
+            'Authorization': `Bearer ${data.access_token}`,
             'Content-Type': 'application/json'
           }
         });
         console.log('got to before profileResponse');
         const profileData = await profileResponse.json();
         console.log('got to after profileResponse');
+        console.log('print profile data, ', profileData);
         if (profileResponse.ok) {
           setUser({
             ...decodedToken,
