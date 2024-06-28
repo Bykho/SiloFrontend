@@ -32,7 +32,7 @@ function Login() {
     <div style={{ position: 'relative', zIndex: 0 }}>
       <GameOfLife />
       <div className={styles.container}>
-        <img src='https://dummyflaska-b17a47997732.herokuapp.com/static/images/silo_logo.png' alt="Logo" className={styles.logo} />        <div className={styles.siloStyle}>S    i   n l    o</div>
+        <img src='https://dummyflaska-90979c29bf50.herokuapp.com/static/images/silo_logo.png' alt="Logo" className={styles.logo} />        <div className={styles.siloStyle}>S    i   n l    o</div>
         {!showLoginForm ? (
           <div className={styles.buttonContainer}>
             <button className={`${styles.button} ${styles.loginButton}`} onClick={toggleLoginForm}>Login</button>
