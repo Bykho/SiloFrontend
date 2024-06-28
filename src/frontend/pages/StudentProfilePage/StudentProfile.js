@@ -28,8 +28,9 @@ function StudentProfile() {
         const response = await fetch(`${config.apiBaseUrl}/studentProfile`, {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${token}`,
-          },
+            'Authorization': `Bearer ${data.access_token}`,
+            'Content-Type': 'application/json'
+          }
         });
         if (!response.ok) {
           throw new Error('Failed to fetch user data');
