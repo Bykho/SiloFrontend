@@ -57,6 +57,7 @@ export const UserProvider = ({ children }) => {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${data.access_token}`
           }
         });
         console.log('got to before profileResponse');
