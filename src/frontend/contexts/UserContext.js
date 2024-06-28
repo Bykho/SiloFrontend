@@ -63,7 +63,6 @@ export const UserProvider = ({ children }) => {
         console.log('got to before profileResponse');
         const profileData = await profileResponse.json();
         console.log('got to after profileResponse');
-        console.log('print profile data, ', JSON.stringify(profileData));
         if (profileResponse.ok) {
           setUser({
             ...decodedToken,
