@@ -49,6 +49,7 @@ export const UserProvider = ({ children }) => {
       console.log('got response')
       if (response.ok) {
         console.log('response was ok');
+        console.log('here is the access token, ', data.access_token);
         localStorage.setItem('token', data.access_token);
         const decodedToken = jwtDecode(data.access_token);
 
@@ -57,7 +58,6 @@ export const UserProvider = ({ children }) => {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${data.access_token}`
           }
         });
         console.log('got to before profileResponse');
