@@ -35,7 +35,7 @@ export const UserProvider = ({ children }) => {
   }, [activeLink]);
 
   const login = async (username, password) => {
-    console.log('made it to login')
+    console.log('made it to login');
     try {
       const response = await fetch(`${config.apiBaseUrl}/login`, {
         method: 'POST',
@@ -44,21 +44,24 @@ export const UserProvider = ({ children }) => {
         },
         body: JSON.stringify({ username, password })
       });
-      console.log('waiting for response')
+      console.log('waiting for response');
       const data = await response.json();
       console.log('got response')
       if (response.ok) {
+        console.log('response was ok');
         localStorage.setItem('token', data.access_token);
         const decodedToken = jwtDecode(data.access_token);
 
-        // Fetch user details from the backend
+        console.log('got to where we call to /studentProfile');
         const profileResponse = await fetch(`${config.apiBaseUrl}/studentProfile`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${data.access_token}`
           }
         });
+        console.log('got to before profileResponse');
         const profileData = await profileResponse.json();
+        console.log('got to after profileResponse');
         if (profileResponse.ok) {
           setUser({
             ...decodedToken,
