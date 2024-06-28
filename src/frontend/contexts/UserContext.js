@@ -54,7 +54,7 @@ export const UserProvider = ({ children }) => {
 
         console.log('got to where we call to /studentProfile');
         const profileResponse = await fetch(`${config.apiBaseUrl}/studentProfile`, {
-          method: 'GET',
+          method: 'POST',
           headers: {
             'Authorization': `Bearer ${data.access_token}`,
             'Content-Type': 'application/json'
