@@ -62,9 +62,10 @@ export const UserProvider = ({ children }) => {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
           }
         });
-
+        
         console.log('got to before profileResponse');
         const profileData = await profileResponse.json();
         console.log('got to after profileResponse');
