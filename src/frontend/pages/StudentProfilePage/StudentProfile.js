@@ -28,8 +28,8 @@ function StudentProfile() {
         const response = await fetch(`${config.apiBaseUrl}/studentProfile`, {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
           }
         });
         if (!response.ok) {
