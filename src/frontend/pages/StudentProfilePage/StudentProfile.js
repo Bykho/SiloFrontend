@@ -26,7 +26,7 @@ function StudentProfile() {
       try {
         const token = localStorage.getItem('token');
         const response = await fetch(`${config.apiBaseUrl}/studentProfile`, {
-          method: 'POST',
+          method: 'GET',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + token
