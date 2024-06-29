@@ -53,6 +53,9 @@ export const UserProvider = ({ children }) => {
         localStorage.setItem('token', data.access_token);
         const decodedToken = jwtDecode(data.access_token);
 
+        const token = localStorage.getItem('token');
+
+        print('here is the token as it is stored in the browser, ', token);
         console.log('got to where we call to /studentProfile');
         const profileResponse = await fetch(`${config.apiBaseUrl}/studentProfile`, {
           method: 'GET',
