@@ -57,17 +57,15 @@ export const UserProvider = ({ children }) => {
 
         console.log('here is the token as it is stored in the browser, ', token);
         console.log('got to where we call to /studentProfile');
-        try {
-          const profileResponse = await fetch(`${config.apiBaseUrl}/studentProfile`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer ' + token
-            }
-          });
-          if (!profileResponse.ok) {
-            throw new Error('Network response was estinky ' + profileResponse.statusText);
+
+        const profileResponse = await fetch(`${config.apiBaseUrl}/studentProfile`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
           }
+        });
+        
         console.log('got to before profileResponse');
         const profileData = await profileResponse.json();
         console.log('got to after profileResponse');
