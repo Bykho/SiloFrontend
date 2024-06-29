@@ -55,17 +55,28 @@ export const UserProvider = ({ children }) => {
 
         const token = localStorage.getItem('token');
 
-        console.log('here is the token as it is stored in the browser, ', token);
-        console.log('got to where we call to /studentProfile');
-        const profileResponse = await fetch(`${config.apiBaseUrl}/studentProfile`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token
+        if (token) {
+          console.log('Got to where we call to /studentProfile');
+        
+          try {
+            const profileResponse = await fetch(`${config.apiBaseUrl}/studentProfile`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+              }
+            });
+        
+            if (!profileResponse.ok) {
+              throw new Error('Network response was not ok ' + profileResponse.statusText);
+            }
+        
+            const profileData = await profileResponse.json();
+            console.log('Profile Data:', profileData);
+          } catch (error) {
+            console.error('There was a problem with the fetch operation:', error);
           }
-        });
-        console.log('got to before profileResponse');
-        const profileData = await profileResponse.json();
+        }
         console.log('got to after profileResponse');
         if (profileResponse.ok) {
           setUser({
