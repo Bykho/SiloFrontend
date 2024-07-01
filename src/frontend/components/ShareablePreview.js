@@ -10,7 +10,6 @@ const ShareablePreview = ({ userData }) => {
   return (
     <div className={styles.previewContainer}>
       <div className={styles.header}>
-        <img src={userData.profile_photo} alt={`${userData.username}'s Profile`} className={styles.profilePhoto} />
         <div>
           <h2>{userData.username}</h2>
           <p>{userData.user_type}</p>
