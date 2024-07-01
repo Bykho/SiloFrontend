@@ -1,5 +1,7 @@
+
+
 import React, { useState, useEffect } from 'react';
-import styles from './orgFeed.module.css';
+import styles from './userSearch.module.css';
 import { useUser } from '../contexts/UserContext';
 import ProfileImage from './ProfileImage';
 import { useNavigate } from 'react-router-dom';
@@ -11,7 +13,7 @@ const Feed = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [org, setOrg] = useState('AI Society');
+  const [value, setValue] = useState('NLP');
   const [searchText, setSearchText] = useState('');
   const { user } = useUser();
 
@@ -21,7 +23,7 @@ const Feed = () => {
       setError('');
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`${config.apiBaseUrl}/genDirectory`, {
+        const response = await fetch(`${config.apiBaseUrl}/userFilteredSearch/${value}`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -39,20 +41,16 @@ const Feed = () => {
       }
     };
     fetchUsers();
-  }, []);
-
-  const filteredUsers = users.filter((specificUser) =>
-    specificUser.orgs && specificUser.orgs.includes(org)
-  );
+  }, [value]);
 
   const handleSearch = (e) => {
     e.preventDefault();
-    setOrg(searchText);
+    setValue(searchText);
   };
 
   return (
     <div className={styles.feedContainer}>
-      <h1 className={styles.title}>User Directory by organizations</h1>
+      <h1 className={styles.title}>User Directory</h1>
       <div className={styles.searchSection}>
         <form onSubmit={handleSearch} className={styles.searchBar}>
           <Search className={styles.searchIcon} />
@@ -60,13 +58,13 @@ const Feed = () => {
             type="search"
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
-            placeholder="Search users by organization"
+            placeholder="Search users"
             className={styles.searchInput}
           />
           <button type="submit" className={styles.searchButton}>Search</button>
         </form>
         <div className={styles.resultsCount}>
-          Results: {filteredUsers.length}
+          Results: {users.length}
         </div>
       </div>
       <div className={styles.userList}>
@@ -75,7 +73,7 @@ const Feed = () => {
         ) : error ? (
           <p className={styles.errorMessage}>{error}</p>
         ) : (
-          filteredUsers.map((specificUser, index) => (
+          users.map((specificUser, index) => (
             <div key={index} className={styles.userCard}>
               <div className={styles.userHeader}>
                 <ProfileImage username={specificUser.username} size='large' />
@@ -113,3 +111,8 @@ const Feed = () => {
 };
 
 export default Feed;
+
+
+
+
+
