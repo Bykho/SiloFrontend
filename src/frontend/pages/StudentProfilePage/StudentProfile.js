@@ -45,7 +45,6 @@ function StudentProfile() {
     };
     fetchUserData();
 
-    // Check if the user just signed up
     if (location.state && location.state.justSignedUp) {
       setShowEditor(true);
     }
