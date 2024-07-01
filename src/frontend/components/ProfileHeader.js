@@ -93,9 +93,12 @@ const ProfileHeader = ({ userData, loading, error }) => {
           <div className={styles.linksContainer}>
             <button onClick={toggleResume} className={styles.linkButton}>View Resume</button>
             {userData.github_link && renderLinkButton(userData.github_link, <FaGithub />, 'GitHub')}
-            {userData.personal_website && renderLinkButton(userData.personal_website, <FaGlobe />, 'Website')}
+            {userData.personal_website && renderLinkButton(userData.personal_website, <FaGlobe />, 'Personal Website')}
             {userData.links && userData.links.map((link, index) => (
               renderLinkButton(link, <FaLink />, `Link ${index + 1}`)
+            ))}
+            {userData.papers && userData.papers.map((paper, index) => (
+              renderLinkButton(paper, <FaLink />, `Paper ${index + 1}`)
             ))}
           </div>
         </div>

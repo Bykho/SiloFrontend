@@ -1,6 +1,7 @@
 
 
 
+
 import React, { useEffect, useRef } from 'react';
 import styles from './studentProfileEditor.module.css';
 
@@ -72,7 +73,7 @@ const EditInfoTab = ({ localState, handleInputChange, handleSubmit }) => {
         </label>
         <label>
           Resume:
-          <input type="text" value={localState.resume || ''} onChange={(e) => handleInputChange(e, 'resume')} className={styles.input} />
+          <input type="file" onChange={(e) => handleInputChange(e, 'resume')} className={styles.input} />
         </label>
         <label>
           Links:
@@ -85,6 +86,7 @@ const EditInfoTab = ({ localState, handleInputChange, handleSubmit }) => {
 };
 
 export default EditInfoTab;
+
 
 
 

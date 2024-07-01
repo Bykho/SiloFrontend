@@ -16,12 +16,22 @@ function StudentProfileEditor({ initLocalData }) {
   const [error, setError] = useState('');
 
   const handleInputChange = (e, field) => {
-    if (field === 'interests' || field === 'skills' || field === 'papers' || field === 'links') {
+    if (field === 'resume') {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setLocalState({ ...localState, resume: reader.result });
+        };
+        reader.readAsDataURL(file);
+      }
+    } else if (field === 'interests' || field === 'skills' || field === 'papers' || field === 'links') {
       setLocalState({ ...localState, [field]: e.target.value.split(',').map(item => item.trim()) });
     } else {
       setLocalState({ ...localState, [field]: e.target.value });
     }
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
