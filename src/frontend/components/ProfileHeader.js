@@ -91,13 +91,13 @@ const ProfileHeader = ({ userData, loading, error }) => {
             </button>
           </div>
           <div className={styles.linksContainer}>
+            <button onClick={toggleResume} className={styles.linkButton}>View Resume</button>
             {userData.github_link && renderLinkButton(userData.github_link, <FaGithub />, 'GitHub')}
             {userData.personal_website && renderLinkButton(userData.personal_website, <FaGlobe />, 'Website')}
             {userData.links && userData.links.map((link, index) => (
               renderLinkButton(link, <FaLink />, `Link ${index + 1}`)
             ))}
           </div>
-          <button onClick={toggleResume} className={styles.resumeButton}>View Resume</button>
         </div>
       </div>
       {showResume && (
@@ -106,8 +106,8 @@ const ProfileHeader = ({ userData, loading, error }) => {
           <embed
             src={userData.resume}
             type="application/pdf"
-            width="100%"
-            height="500px" 
+            width="80%"
+            height="80%" 
           />
         </div>
       )}
