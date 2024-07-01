@@ -1,13 +1,19 @@
-import React, { useState } from 'react';
+
+
+
+import React, { useState, useEffect } from 'react';
+import AddBlocPortfolio from '../AddBlocPortfolio'; // Import the AddBlocPortfolio component
 import styles from './layerDisplay.module.css';
 
-const LayerDisplay = ({ layers, isEditing, updateLayer }) => {
+const LayerDisplay = ({ layers, isEditing, toggleEdit, updateLayer, updateProjectDetails, initialProjectData }) => {
   const [selectedImage, setSelectedImage] = useState(null);
+  const [showEditor, setShowEditor] = useState(false);
 
-  const handleInputChange = (e, layerIndex, columnIndex) => {
-    const { value, innerText } = e.target;
-    updateLayer(layerIndex, columnIndex, value || innerText);
-  };
+  useEffect(() => {
+    if (isEditing) {
+      setShowEditor(true);
+    }
+  }, [isEditing]);
 
   const handleImageClick = (imageSrc) => {
     setSelectedImage(imageSrc);
@@ -17,6 +23,13 @@ const LayerDisplay = ({ layers, isEditing, updateLayer }) => {
     setSelectedImage(null);
   };
 
+  const handleSave = (updatedLayers, updatedProjectDetails) => {
+    setShowEditor(false);
+    toggleEdit();
+    updateLayer(updatedLayers);
+    updateProjectDetails(updatedProjectDetails);
+  };
+
   return (
     <div className={styles.container}>
       {layers.map((layer, layerIndex) => (
@@ -24,82 +37,41 @@ const LayerDisplay = ({ layers, isEditing, updateLayer }) => {
           {layer.map((column, columnIndex) => (
             <div key={columnIndex} className={styles.column}>
               {column.type === 'text' && (
-                isEditing ? (
-                  <div
-                    contentEditable
-                    suppressContentEditableWarning
-                    onBlur={(e) => handleInputChange(e, layerIndex, columnIndex)}
-                    className={styles.editableText}
-                  >
-                    {column.value}
-                  </div>
-                ) : (
-                  <div className={styles.text}>{column.value}</div>
-                )
+                <div className={styles.text}>{column.value}</div>
               )}
               {column.type === 'image' && (
-                isEditing ? (
-                  <input
-                    type="text"
-                    value={column.value}
-                    onChange={(e) => handleInputChange({ target: { value: e.target.value } }, layerIndex, columnIndex)}
-                    className={styles.editInput}
-                    placeholder="Enter image URL"
+                <div 
+                  className={styles.imageContainer} 
+                  onClick={() => handleImageClick(column.value)}
+                >
+                  <img 
+                    src={column.value} 
+                    alt={`Project ${layerIndex}-${columnIndex}`} 
+                    className={styles.image}
                   />
-                ) : (
-                  <div 
-                    className={styles.imageContainer} 
-                    onClick={() => handleImageClick(column.value)}
-                  >
-                    <img 
-                      src={column.value} 
-                      alt={`Project ${layerIndex}-${columnIndex}`} 
-                      className={styles.image}
-                    />
-                    <div className={styles.imageOverlay}>
-                      <span className={styles.expandIcon}>🔍</span>
-                    </div>
+                  <div className={styles.imageOverlay}>
+                    <span className={styles.expandIcon}>🔍</span>
                   </div>
-                )
+                </div>
               )}
               {column.type === 'pdf' && (
-                isEditing ? (
-                  <input
-                    type="text"
-                    value={column.value}
-                    onChange={(e) => handleInputChange({ target: { value: e.target.value } }, layerIndex, columnIndex)}
-                    className={styles.editInput}
-                    placeholder="Enter PDF URL"
+                <div className={styles.pdfContainer}>
+                  <embed
+                    src={column.value}
+                    type="application/pdf"
+                    width="100%"
+                    height="500px"
+                    className={styles.pdf}
                   />
-                ) : (
-                  <div className={styles.pdfContainer}>
-                    <embed
-                      src={column.value}
-                      type="application/pdf"
-                      width="100%"
-                      height="500px"
-                      className={styles.pdf}
-                    />
-                  </div>
-                )
+                </div>
               )}
               {column.type === 'video' && (
-                isEditing ? (
-                  <input
-                    type="text"
-                    value={column.value}
-                    onChange={(e) => handleInputChange({ target: { value: e.target.value } }, layerIndex, columnIndex)}
-                    className={styles.editInput}
-                    placeholder="Enter video URL"
-                  />
-                ) : (
-                  <div className={styles.videoContainer}>
-                    <video controls className={styles.video}>
-                      <source src={column.value} type="video/mp4" />
-                      Your browser does not support the video tag.
-                    </video>
-                  </div>
-                )
+                <div className={styles.videoContainer}>
+                  <video controls className={styles.video}>
+                    <source src={column.value} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
               )}
             </div>
           ))}
@@ -113,8 +85,19 @@ const LayerDisplay = ({ layers, isEditing, updateLayer }) => {
           </div>
         </div>
       )}
+      {showEditor && (
+        <div className={styles.modal} onClick={() => setShowEditor(false)}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <AddBlocPortfolio initialLayers={layers} initialProjectData={initialProjectData} onSave={handleSave} />
+            <button className={styles.closeButton} onClick={() => setShowEditor(false)}>×</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
 export default LayerDisplay;
+
+
+

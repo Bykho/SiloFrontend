@@ -32,7 +32,6 @@ function StudentProfile() {
             'Authorization': 'Bearer ' + token
           }
         });
-        console.log('here is the token, ', token);
         if (!response.ok) {
           throw new Error('Failed to fetch user data');
         }

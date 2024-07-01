@@ -9,7 +9,6 @@ import { useUser } from '../contexts/UserContext';
 import { FaGithub, FaGlobe, FaLink } from 'react-icons/fa';
 
 const ProfileHeader = ({ userData, loading, error }) => {
-  console.log('here is userData in the profile header: ', userData);
   const { user } = useUser();
   const navigate = useNavigate();
   const [showFullBio, setShowFullBio] = useState(false);
