@@ -1,3 +1,6 @@
+
+
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProfileImage from '../components/ProfileImage';
@@ -10,9 +13,14 @@ const ProfileHeader = ({ userData, loading, error }) => {
   const { user } = useUser();
   const navigate = useNavigate();
   const [showFullBio, setShowFullBio] = useState(false);
+  const [showResume, setShowResume] = useState(false);
 
   const toggleBio = () => {
     setShowFullBio(!showFullBio);
+  };
+
+  const toggleResume = () => {
+    setShowResume(!showResume);
   };
 
   const getTruncatedBio = (bio, length) => {
@@ -88,17 +96,27 @@ const ProfileHeader = ({ userData, loading, error }) => {
             {userData.links && userData.links.map((link, index) => (
               renderLinkButton(link, <FaLink />, `Link ${index + 1}`)
             ))}
-            <embed
-              src={userData.resume}
-              type="application/pdf"
-              width="100%"
-              height="500px" 
-            />
           </div>
+          <button onClick={toggleResume} className={styles.resumeButton}>View Resume</button>
         </div>
       </div>
+      {showResume && (
+        <div className={styles.modal}>
+          <button className={styles.closeButton} onClick={toggleResume}>X</button>
+          <embed
+            src={userData.resume}
+            type="application/pdf"
+            width="100%"
+            height="500px" 
+          />
+        </div>
+      )}
     </div>
   );
 };
 
 export default ProfileHeader;
+
+
+
+
