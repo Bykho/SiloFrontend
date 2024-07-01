@@ -88,6 +88,12 @@ const ProfileHeader = ({ userData, loading, error }) => {
             {userData.links && userData.links.map((link, index) => (
               renderLinkButton(link, <FaLink />, `Link ${index + 1}`)
             ))}
+            <embed
+              src={userData.resume}
+              type="application/pdf"
+              width="100%"
+              height="500px" 
+            />
           </div>
         </div>
       </div>
