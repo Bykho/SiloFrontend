@@ -86,6 +86,27 @@ function HomePage() {
     }
   };
 
+  const populateLayers = async () => {
+    try {
+      const response = await fetch(`${config.apiBaseUrl}/populateLayers`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // Add Authorization header if your backend requires it
+        },
+      });
+
+      if (response.ok) {
+        alert('Layers populated successfully!');
+      } else {
+        alert('Failed to populate layers.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error populating layers.');
+    }
+  };
+
 
   return (
     <div style={{ padding: '20px', color: 'white' }}>
@@ -94,6 +115,7 @@ function HomePage() {
         <button onClick={injectData} style={{ marginTop: '20px' }}>Inject Sample Data</button>
         <button onClick={handleKeyGeneration} style={{ marginTop: '20px' }}>Generate Access Key</button>
         <button onClick={migrateProjects} style={{ marginTop: '20px' }}>Migrate Projects</button>
+        <button onClick={populateLayers} style={{ marginTop: '20px' }}>Populate Layers</button>
       </div>
       {loading ? (
         <p>Loading user data...</p>
