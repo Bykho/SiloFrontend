@@ -3,62 +3,57 @@
 
 
 import React, { useState, useEffect } from 'react';
-import styles from './interestFeed.module.css'; // Import the CSS module
+import styles from './userSearch.module.css';
 import { useUser } from '../contexts/UserContext';
 import ProfileImage from './ProfileImage';
 import { useNavigate } from 'react-router-dom';
 import config from '../config';
 import { Search, User, Briefcase, Mail, Tag } from 'lucide-react';
 
-
-
-const Feed = () => {
+const ProjectFeed = () => {
   const navigate = useNavigate();
-  const [users, setUsers] = useState([]);
+  const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [interests, setInterests] = useState('NLP');
+  const [value, setValue] = useState('AI Society');
   const [searchText, setSearchText] = useState('');
   const { user } = useUser();
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchProjects = async () => {
       setLoading(true);
       setError('');
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`${config.apiBaseUrl}/genDirectory`, {
+        const response = await fetch(`${config.apiBaseUrl}/projectFilteredSearch/${value}`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
           },
         });
         if (!response.ok) {
-          throw new Error('Failed to fetch users');
+          throw new Error('Failed to fetch projects');
         }
-        const userData = await response.json();
-        setUsers(userData);
+        console.log('project directory: ', response);
+        const projectData = await response.json();
+        setProjects(projectData);
         setLoading(false);
       } catch (err) {
-        setError('Failed to fetch users');
+        setError('Failed to fetch projects');
         setLoading(false);
       }
     };
-    fetchUsers();
-  }, []);
-
-  const filteredUsers = users.filter((specificUser) =>
-    specificUser.interests && specificUser.interests.includes(interests)
-  );
+    fetchProjects();
+  }, [value]);
 
   const handleSearch = (e) => {
     e.preventDefault();
-    setInterests(searchText);
+    setValue(searchText);
   };
 
   return (
     <div className={styles.feedContainer}>
-      <h1 className={styles.title}>User Directory by interests</h1>
+      <h1 className={styles.title}>Project Directory</h1>
       <div className={styles.searchSection}>
         <form onSubmit={handleSearch} className={styles.searchBar}>
           <Search className={styles.searchIcon} />
@@ -66,13 +61,13 @@ const Feed = () => {
             type="search"
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
-            placeholder="Search users by interest"
+            placeholder="Search projects"
             className={styles.searchInput}
           />
           <button type="submit" className={styles.searchButton}>Search</button>
         </form>
         <div className={styles.resultsCount}>
-          Results: {filteredUsers.length}
+          Results: {projects.length}
         </div>
       </div>
       <div className={styles.userList}>
@@ -81,34 +76,38 @@ const Feed = () => {
         ) : error ? (
           <p className={styles.errorMessage}>{error}</p>
         ) : (
-          filteredUsers.map((specificUser, index) => (
+          projects.map((specificProject, index) => (
             <div key={index} className={styles.userCard}>
               <div className={styles.userHeader}>
-                <ProfileImage username={specificUser.username} size='large' />
+                <ProfileImage username={specificProject.createdBy} size='large' />
                 <div className={styles.userMainInfo}>
-                  <h3 className={styles.username}>{specificUser.username}</h3>
+                  <h3 className={styles.username}>{specificProject.projectName}</h3>
                   <p className={styles.userType}>
                     <User size={16} />
-                    {specificUser.user_type}
+                    Created by: {specificProject.createdBy}
                   </p>
                 </div>
               </div>
               <div className={styles.userDetails}>
                 <p>
-                  <Mail size={16} />
-                  {specificUser.email}
+                  <Briefcase size={16} />
+                  Description: {specificProject.projectDescription}
                 </p>
                 <p>
                   <Tag size={16} />
-                  {specificUser.interests ? specificUser.interests.join(', ') : 'No interests listed'}
+                  Tags: {specificProject.tags ? specificProject.tags.join(', ') : 'No tags listed'}
                 </p>
-                <p>
-                  <Briefcase size={16} />
-                  {specificUser.orgs ? specificUser.orgs.join(', ') : 'No orgs listed'}
-                </p>
+                {specificProject.github_link && (
+                  <p>
+                    <a href={specificProject.github_link} target="_blank" rel="noopener noreferrer">
+                      <Briefcase size={16} />
+                      GitHub Link
+                    </a>
+                  </p>
+                )}
               </div>
-              <button className={styles.viewProfileButton} onClick={() => navigate(`/profile/${specificUser.username}`)}>
-                View Profile
+              <button className={styles.viewProfileButton} onClick={() => navigate(`/project/${specificProject.createdBy}`)}>
+                View Project
               </button>
             </div>
           ))
@@ -118,7 +117,7 @@ const Feed = () => {
   );
 };
 
-export default Feed;
+export default ProjectFeed;
 
 
 

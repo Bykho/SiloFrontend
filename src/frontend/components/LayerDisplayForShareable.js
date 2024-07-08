@@ -1,19 +1,10 @@
 
-
-
 import React, { useState, useEffect } from 'react';
-import AddBlocPortfolio from '../AddBlocPortfolio'; // Import the AddBlocPortfolio component
-import styles from './layerDisplay.module.css';
+import styles from './ProjectEntryPage/layerDisplay.module.css';
 
-const LayerDisplay = ({ layers, isEditing, toggleEdit, updateLayer, updateProjectDetails, initialProjectData }) => {
+const LayerDisplay = ({ layers }) => {
   const [selectedImage, setSelectedImage] = useState(null);
-  const [showEditor, setShowEditor] = useState(false);
 
-  useEffect(() => {
-    if (isEditing) {
-      setShowEditor(true);
-    }
-  }, [isEditing]);
 
   const handleImageClick = (imageSrc) => {
     setSelectedImage(imageSrc);
@@ -21,13 +12,6 @@ const LayerDisplay = ({ layers, isEditing, toggleEdit, updateLayer, updateProjec
 
   const closeModal = () => {
     setSelectedImage(null);
-  };
-
-  const handleSave = (updatedLayers, updatedProjectDetails) => {
-    setShowEditor(false);
-    toggleEdit();
-    updateLayer(updatedLayers);
-    updateProjectDetails(updatedProjectDetails);
   };
 
   return (
@@ -85,19 +69,8 @@ const LayerDisplay = ({ layers, isEditing, toggleEdit, updateLayer, updateProjec
           </div>
         </div>
       )}
-      {showEditor && (
-        <div className={styles.modal} onClick={() => setShowEditor(false)}>
-          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-            <AddBlocPortfolio initialLayers={layers} initialProjectData={initialProjectData} onSave={handleSave} />
-            <button className={styles.closeButton} onClick={() => setShowEditor(false)}>×</button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
 
 export default LayerDisplay;
-
-
-

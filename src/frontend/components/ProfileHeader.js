@@ -7,18 +7,19 @@ import ProfileImage from '../components/ProfileImage';
 import styles from './profileHeader.module.css';
 import { useUser } from '../contexts/UserContext';
 import { FaGithub, FaGlobe, FaLink } from 'react-icons/fa';
-import { IoIosPaper } from 'react-icons/io';
-import { CiViewList } from "react-icons/ci";
 
 const ProfileHeader = ({ userData, loading, error }) => {
   const { user } = useUser();
   const navigate = useNavigate();
   const [showFullBio, setShowFullBio] = useState(false);
-  const [showPDF, setShowPDF] = useState(false);
-  const [pdfLink, setPdfLink] = useState('');
+  const [showResume, setShowResume] = useState(false);
 
   const toggleBio = () => {
     setShowFullBio(!showFullBio);
+  };
+
+  const toggleResume = () => {
+    setShowResume(!showResume);
   };
 
   const getTruncatedBio = (bio, length) => {
@@ -35,29 +36,17 @@ const ProfileHeader = ({ userData, loading, error }) => {
     return url;
   };
 
-  const renderLinkButton = (link, icon, label) => {
-    const handleClick = (e) => {
-      if (label === 'Resume') {
-        console.log('here is the link in render link button, ', link);
-        e.preventDefault();
-        setPdfLink(link);
-        setShowPDF(true);
-      }
-    };
-
-    return (
-      <a
-        href={ensureProtocol(link)}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={styles.linkButton}
-        onClick={handleClick}
-      >
-        {icon}
-        <span>{label}</span>
-      </a>
-    );
-  };
+  const renderLinkButton = (link, icon, label) => (
+    <a
+      href={ensureProtocol(link)}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={styles.linkButton}
+    >
+      {icon}
+      <span>{label}</span>
+    </a>
+  );
 
   if (loading) return <p className={styles.loadingError}>Loading...</p>;
   if (error) return <p className={styles.loadingError}>Error: {error}</p>;
@@ -65,12 +54,6 @@ const ProfileHeader = ({ userData, loading, error }) => {
 
   return (
     <div className={styles.profileContainer}>
-      {showPDF && (
-        <div className={styles.pdfViewer}>
-          <button onClick={() => setShowPDF(false)} className={styles.closeButton}>Close</button>
-          <embed src={pdfLink} type="application/pdf" width="100%" height="500px" className={styles.pdfEmbed} />
-        </div>
-      )}
       <div className={styles.profileHeader}>
         <div className={styles.leftColumn}>
           <ProfileImage username={userData.username} size={'large'} />
@@ -107,21 +90,35 @@ const ProfileHeader = ({ userData, loading, error }) => {
             </button>
           </div>
           <div className={styles.linksContainer}>
-            {userData.resume && renderLinkButton(userData.resume, <CiViewList />, 'Resume')}
+            <button onClick={toggleResume} className={styles.linkButton}>View Resume</button>
             {userData.github_link && renderLinkButton(userData.github_link, <FaGithub />, 'GitHub')}
-            {userData.personal_website && renderLinkButton(userData.personal_website, <FaGlobe />, 'Website')}
+            {userData.personal_website && renderLinkButton(userData.personal_website, <FaGlobe />, 'Personal Website')}
             {userData.links && userData.links.map((link, index) => (
               renderLinkButton(link, <FaLink />, `Link ${index + 1}`)
             ))}
             {userData.papers && userData.papers.map((paper, index) => (
-              renderLinkButton(paper, <IoIosPaper />, `paper ${index + 1}`)
+              renderLinkButton(paper, <FaLink />, `Paper ${index + 1}`)
             ))}
           </div>
         </div>
       </div>
+      {showResume && (
+        <div className={styles.modal}>
+          <button className={styles.closeButton} onClick={toggleResume}>X</button>
+          <embed
+            src={userData.resume}
+            type="application/pdf"
+            width="80%"
+            height="80%" 
+          />
+        </div>
+      )}
     </div>
   );
 };
 
 export default ProfileHeader;
+
+
+
 

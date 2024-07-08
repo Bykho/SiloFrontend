@@ -1,6 +1,7 @@
 
 
 
+
 import React, { useEffect, useRef } from 'react';
 import styles from './studentProfileEditor.module.css';
 
@@ -19,19 +20,6 @@ const EditInfoTab = ({ localState, handleInputChange, handleSubmit }) => {
     if (bioRef.current) {
       bioRef.current.style.height = 'auto';
       bioRef.current.style.height = bioRef.current.scrollHeight + 'px';
-    }
-  };
-
-  const handleFileChange = (e, key) => {
-    const file = e.target.files[0];
-    if (file && file.type === 'application/pdf') {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        handleInputChange({ target: { value: reader.result } }, key);
-      };
-      reader.readAsDataURL(file);
-    } else {
-      alert('Please upload a valid PDF file.');
     }
   };
 
@@ -68,6 +56,10 @@ const EditInfoTab = ({ localState, handleInputChange, handleSubmit }) => {
           />
         </label>
         <label>
+          Profile Photo URL:
+          <input type="text" value={localState.profile_photo || ''} onChange={(e) => handleInputChange(e, 'profile_photo')} className={styles.input} />
+        </label>
+        <label>
           Personal Website:
           <input type="text" value={localState.personal_website || ''} onChange={(e) => handleInputChange(e, 'personal_website')} className={styles.input} />
         </label>
@@ -81,7 +73,7 @@ const EditInfoTab = ({ localState, handleInputChange, handleSubmit }) => {
         </label>
         <label>
           Resume:
-          <input type="file" onChange={(e) => handleFileChange(e, 'resume')} className={styles.input} />
+          <input type="file" onChange={(e) => handleInputChange(e, 'resume')} className={styles.input} />
         </label>
         <label>
           Links:

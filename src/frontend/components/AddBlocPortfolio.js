@@ -2,16 +2,22 @@
 
 
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useUser } from '../contexts/UserContext';
 import styles from './AddBlocPortfolio.module.css';
 import config from '../config';
 
-const AddBlocPortfolio = () => {
-  const [layers, setLayers] = useState([]);
-  const [projectName, setProjectName] = useState('');
-  const [projectDescription, setProjectDescription] = useState('');
+const AddBlocPortfolio = ({ initialLayers, initialProjectData, onSave }) => {
+  const [layers, setLayers] = useState(initialLayers || []);
+  const [projectName, setProjectName] = useState(initialProjectData?.projectName || '');
+  const [projectDescription, setProjectDescription] = useState(initialProjectData?.projectDescription || '');
   const { user } = useUser();
+
+  useEffect(() => {
+    setLayers(initialLayers || []);
+    setProjectName(initialProjectData?.projectName || '');
+    setProjectDescription(initialProjectData?.projectDescription || '');
+  }, [initialLayers, initialProjectData]);
 
   const handleAddLayer = () => {
     const newLayer = [{ type: '', value: '' }, { type: '', value: '' }, { type: '', value: '' }];
@@ -85,6 +91,11 @@ const AddBlocPortfolio = () => {
       username: user.username
     };
 
+    // Add project_id if it exists
+    if (initialProjectData?.project_id) {
+      projectData.project_id = initialProjectData.project_id;
+    }
+
     const token = localStorage.getItem('token');
     try {
       const response = await fetch(`${config.apiBaseUrl}/addBlocProject`, {
@@ -97,6 +108,7 @@ const AddBlocPortfolio = () => {
       });
       if (response.ok) {
         alert('Project saved successfully');
+        onSave(layers, { projectName, projectDescription }); // Pass the updated layers and project details back to the parent component
       } else {
         console.error('Error saving project:', response.statusText);
       }
@@ -185,6 +197,7 @@ const AddBlocPortfolio = () => {
 };
 
 export default AddBlocPortfolio;
+
 
 
 

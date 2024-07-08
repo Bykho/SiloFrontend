@@ -1,6 +1,8 @@
 
 
 
+
+
 import React, { useState } from 'react';
 import EditInPortfolio from '../EditInPortfolio';
 import styles from './projectEntry.module.css';
@@ -40,18 +42,17 @@ const ProjectEntry = ({ project, passedUser }) => {
     }));
   };
 
-  const updateLayer = (layerIndex, columnIndex, newValue) => {
-    const updatedLayers = localProject.layers.map((layer, lIndex) => 
-      layer.map((column, cIndex) => {
-        if (layerIndex === lIndex && columnIndex === cIndex) {
-          return { ...column, value: newValue };
-        }
-        return column;
-      })
-    );
+  const updateLayer = (updatedLayers) => {
     setLocalProject((prevProject) => ({
       ...prevProject,
       layers: updatedLayers,
+    }));
+  };
+
+  const updateProjectDetails = (details) => {
+    setLocalProject((prevProject) => ({
+      ...prevProject,
+      ...details,
     }));
   };
 
@@ -242,7 +243,7 @@ const ProjectEntry = ({ project, passedUser }) => {
       </div>
       {renderProjectDescription()}
       <div className={styles.layerDisplayContainer}>
-        <LayerDisplay layers={localProject.layers} isEditing={isEditing} updateLayer={updateLayer} />
+        <LayerDisplay layers={localProject.layers} isEditing={isEditing} toggleEdit={toggleEdit} updateLayer={updateLayer} updateProjectDetails={updateProjectDetails} initialProjectData={localProject} />
       </div>
 
       <div className={styles.buttonContainer}>
@@ -282,6 +283,9 @@ const ProjectEntry = ({ project, passedUser }) => {
 };
 
 export default ProjectEntry;
+
+
+
 
 
 

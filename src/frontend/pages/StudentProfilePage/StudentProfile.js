@@ -9,6 +9,7 @@ import { useUser } from '../../contexts/UserContext';
 import ProfileHeader from '../../components/ProfileHeader';
 import AddBlocPortfolio from '../../components/AddBlocPortfolio';
 import InfoEditor from '../OLDStudentProfileEditorPage/StudentProfileEditor';
+import ShareablePreview from '../../components/ShareablePreview'; // Import ShareablePreview component
 import config from '../../config';
 
 function StudentProfile() {
@@ -17,6 +18,7 @@ function StudentProfile() {
   const [error, setError] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [showEditor, setShowEditor] = useState(false);
+  const [showSharePreview, setShowSharePreview] = useState(false); // State for ShareablePreview modal
   const { user } = useUser();
   const navigate = useNavigate();
   const location = useLocation();
@@ -28,8 +30,9 @@ function StudentProfile() {
         const response = await fetch(`${config.apiBaseUrl}/studentProfile`, {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${token}`,
-          },
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          }
         });
         if (!response.ok) {
           throw new Error('Failed to fetch user data');
@@ -44,7 +47,6 @@ function StudentProfile() {
     };
     fetchUserData();
 
-    // Check if the user just signed up
     if (location.state && location.state.justSignedUp) {
       setShowEditor(true);
     }
@@ -70,6 +72,14 @@ function StudentProfile() {
     setShowModal(false);
   };
 
+  const handleShareProfileClick = () => {
+    setShowSharePreview(true);
+  };
+
+  const handleCloseSharePreview = () => {
+    setShowSharePreview(false);
+  };
+
   return (
     <div>
       <ProfileHeader
@@ -79,7 +89,7 @@ function StudentProfile() {
       />
       <div className={styles.buttonContainer}>
         <button className={styles.bigButton} onClick={handleEditProfileClick}>Edit My Profile</button>
-        <button className={styles.bigButton}>Share My Profile</button>
+        <button className={styles.bigButton} onClick={handleShareProfileClick}>Share My Profile</button>
         <button className={styles.bigButton} onClick={handleAddProjectClick}>Add New Project</button>
       </div>
       <div className={styles.contentContainer}>
@@ -107,12 +117,19 @@ function StudentProfile() {
           </div>
         </div>
       )}
+      {showSharePreview && (
+        <div className={styles.modal}>
+          <div className={styles.modalContent}>
+            <button className={styles.closeButton} onClick={handleCloseSharePreview}>X</button>
+            <ShareablePreview userData={userData} /> {/* Pass user data to ShareablePreview */}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
 export default StudentProfile;
-
 
 
 
