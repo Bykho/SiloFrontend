@@ -17,13 +17,15 @@ import config from '../../config';
 const isStudentProfilePage = window.location.pathname.includes('/studentProfile'); // Adjust this condition based on your routing
 
 const ProjectEntry = ({ project, passedUser }) => {
+  console.log('here is the passed user: ', passedUser)
+  console.log('here is the project, ', project)
   const [isEditing, setIsEditing] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [showDescription, setShowDescription] = useState(false);
   const [localProject, setLocalProject] = useState(project);
   const [localUser, setLocalUser] = useState(passedUser);
   const { user, setUser } = useUser();
-
+  console.log('here is the user: ', user)
   const [comments, setComments] = useState(() => {
     try {
       return JSON.parse(JSON.stringify(project.comments));
@@ -235,7 +237,7 @@ const ProjectEntry = ({ project, passedUser }) => {
             ))}
           </div>
         )}
-        {passedUser.username === localProject.createdBy && (
+        {user.username === localProject.createdBy && (
           <button className={styles.editButton} onClick={toggleEdit}>
             <FaEdit />
           </button>
