@@ -33,31 +33,21 @@ export const UserProvider = ({ children }) => {
   useEffect(() => {
     localStorage.setItem('activeLink', activeLink);
   }, [activeLink]);
-
-  const login = async (username, password) => {
-    console.log('made it to login');
+  const login = async (email, password) => {
     try {
       const response = await fetch(`${config.apiBaseUrl}/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ username, password })
+        body: JSON.stringify({ email, password })
       });
-      console.log('waiting for response');
       const data = await response.json();
-      console.log('got response')
       if (response.ok) {
-        console.log('response was ok');
-        console.log('here is the access token, ', data.access_token);
         localStorage.setItem('token', data.access_token);
         const decodedToken = jwtDecode(data.access_token);
-
         const token = localStorage.getItem('token');
-
-        console.log('here is the token as it is stored in the browser, ', token);
-        console.log('got to where we call to /studentProfile');
-
+  
         const profileResponse = await fetch(`${config.apiBaseUrl}/studentProfile`, {
           method: 'GET',
           headers: {
@@ -65,18 +55,10 @@ export const UserProvider = ({ children }) => {
             'Authorization': 'Bearer ' + token
           }
         });
-        
-        console.log('got to before profileResponse');
+  
         const profileData = await profileResponse.json();
-        console.log('got to after profileResponse');
         if (profileResponse.ok) {
           setUser({
-            ...decodedToken,
-            impactful_upvote: profileData.impactful_upvote || [],
-            innovative_upvote: profileData.innovative_upvote || [],
-            interesting_upvote: profileData.interesting_upvote || []
-          });
-          console.log("Here is what is stored in the user context: ", {
             ...decodedToken,
             impactful_upvote: profileData.impactful_upvote || [],
             innovative_upvote: profileData.innovative_upvote || [],
@@ -85,7 +67,7 @@ export const UserProvider = ({ children }) => {
         } else {
           console.error('Failed to load user details:', profileData.message);
         }
-
+  
         setActiveLink('folio');
       } else {
         throw new Error(data.message || 'Unable to login');
@@ -95,6 +77,7 @@ export const UserProvider = ({ children }) => {
       throw error;
     }
   };
+  
 
   const logout = () => {
     setUser(null);
