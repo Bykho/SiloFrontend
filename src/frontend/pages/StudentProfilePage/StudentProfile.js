@@ -11,6 +11,8 @@ import AddBlocPortfolio from '../../components/AddBlocPortfolio';
 import InfoEditor from '../OLDStudentProfileEditorPage/StudentProfileEditor';
 import ShareablePreview from '../../components/ShareablePreview'; // Import ShareablePreview component
 import config from '../../config';
+import {FaWindowClose} from 'react-icons/fa';
+
 
 function StudentProfile() {
   const [userData, setUserData] = useState(null);
@@ -104,7 +106,7 @@ function StudentProfile() {
       {showEditor && (
         <div className={styles.modal}>
           <div className={styles.modalContent}>
-            <button className={styles.closeButton} onClick={handleCloseEditor}>X</button>
+            <button className={styles.closeButton} onClick={handleCloseEditor}><FaWindowClose/></button>
             <InfoEditor initLocalData={userData} />
           </div>
         </div>
@@ -112,7 +114,7 @@ function StudentProfile() {
       {showModal && (
         <div className={styles.modal}>
           <div className={styles.modalContent}>
-            <button className={styles.closeButton} onClick={handleCloseModal}>X</button>
+            <button className={styles.closeButton} onClick={handleCloseModal}><FaWindowClose/></button>
             <AddBlocPortfolio />
           </div>
         </div>
@@ -120,7 +122,7 @@ function StudentProfile() {
       {showSharePreview && (
         <div className={styles.modal}>
           <div className={styles.modalContent}>
-            <button className={styles.closeButton} onClick={handleCloseSharePreview}>X</button>
+            <button className={styles.closeButton} onClick={handleCloseSharePreview}><FaWindowClose/></button>
             <ShareablePreview userData={userData} /> {/* Pass user data to ShareablePreview */}
           </div>
         </div>

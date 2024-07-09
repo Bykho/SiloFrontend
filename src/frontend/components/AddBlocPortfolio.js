@@ -6,7 +6,7 @@ import React, { useState, useEffect } from 'react';
 import { useUser } from '../contexts/UserContext';
 import styles from './AddBlocPortfolio.module.css';
 import config from '../config';
-import { FaPlus, FaSave, FaTrash, FaArrowRight } from 'react-icons/fa';
+import { FaPlus, FaSave, FaTrash, FaArrowRight, FaArrowCircleRight, FaArrowCircleDown, FaGripLines} from 'react-icons/fa';
 
 const AddBlocPortfolio = ({ initialRows, initialProjectData, onSave }) => {
   const [rows, setRows] = useState(initialRows || []);
@@ -196,15 +196,15 @@ const AddBlocPortfolio = ({ initialRows, initialProjectData, onSave }) => {
               ))}
               {row.length < 3 && (
                 <button className={styles.addContentRightButton} onClick={() => handleAddCell(rowIndex)}>
-                  <FaPlus /> <FaArrowRight/>
+                  <FaPlus/>
                 </button>
               )}
             </div>
           ))}
         </div>
+        <button className={styles.addContentBelowButton} onClick={handleAddRow}> <FaPlus className={styles.iconSpacing}/> Add Content Row </button>
         <div className={styles.actionButtons}>
-          <button className={styles.addContentBelowButton} onClick={handleAddRow}> <FaPlus className={styles.iconSpacing}/>  Add Content Row </button>
-          <button className={styles.saveButton} onClick={handleSave}>Save Project</button>
+          <button className={styles.saveButton} onClick={handleSave}><FaSave className={styles.iconSpacing}/> Save Project</button>
         </div>
       </div>
     </div>

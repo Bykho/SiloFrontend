@@ -208,7 +208,6 @@
   border-top: 1px solid var(--border-color);
 }
 
-.addContentBelowButton,
 .saveButton {
   padding: 0.5rem 1rem;
   border: none;
@@ -222,14 +221,31 @@
   justify-content: center;
 }
 
+.addContentBelowButton {
+  background-color: #2d2d2d;
+  border: 1px dashed #6a6969; 
+  height: 50px; 
+  width: 100%; 
+  display: flex; 
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #a2a2a2; 
+  border-radius: 5px;
+  margin-bottom: 15px;
+  position: relative; 
+  font-size: 1rem;
+}
+
 .iconSpacing { 
   margin-right: 0.5rem;
+  margin-left: 0.5rem; 
 }
 
 .addContentRightButton{
   padding: 0.5rem 1rem;
   max-width: 80px;
-  border: none;
+  border: 1px dashed #6a6969;
   border-radius: 4px;
   cursor: pointer;
   font-size: 0.9rem;
@@ -241,17 +257,14 @@
   align-self: center;
   margin-left: 0.5rem;
   height: 80px;
-}
-
-.addContentRightButton,
-.addContentBelowButton {
-  background-color: var(--highlight-bg);
-  color: var(--primary-bg);
+  background-color: #2d2d2d;
+  color: #a2a2a2;
+  flex-direction: column; 
 }
 
 .addContentRightButton:hover,
 .addContentBelowButton:hover {
-  background-color: var(--highlight-bg-hover);
+  background-color: #262626;
   transform: translateY(-2px);
 }
 
@@ -315,7 +328,6 @@
     gap: 1rem;
   }
   
-  .addContentBelowButton,
   .saveButton {
     width: 100%;
   }
