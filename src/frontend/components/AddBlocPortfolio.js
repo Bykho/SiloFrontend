@@ -1,9 +1,12 @@
+
+
+
+
 import React, { useState, useEffect } from 'react';
 import { useUser } from '../contexts/UserContext';
 import styles from './AddBlocPortfolio.module.css';
 import config from '../config';
 import { FaPlus, FaSave, FaTrash, FaArrowRight } from 'react-icons/fa';
-
 
 const AddBlocPortfolio = ({ initialRows, initialProjectData, onSave }) => {
   const [rows, setRows] = useState(initialRows || []);
@@ -12,6 +15,7 @@ const AddBlocPortfolio = ({ initialRows, initialProjectData, onSave }) => {
   const { user } = useUser();
 
   useEffect(() => {
+    console.log('Initial Rows: ', initialRows);
     setRows(initialRows || []);
     setProjectName(initialProjectData?.projectName || '');
     setProjectDescription(initialProjectData?.projectDescription || '');
@@ -31,7 +35,7 @@ const AddBlocPortfolio = ({ initialRows, initialProjectData, onSave }) => {
 
   const handleCellTypeChange = (rowIndex, cellIndex, type) => {
     const newRows = [...rows];
-    newRows[rowIndex][cellIndex] = { ...newRows[rowIndex][cellIndex], type, content: '' };
+    newRows[rowIndex][cellIndex] = { ...newRows[rowIndex][cellIndex], type, content: newRows[rowIndex][cellIndex].content || '' };
     setRows(newRows);
   };
 
@@ -137,25 +141,53 @@ const AddBlocPortfolio = ({ initialRows, initialProjectData, onSave }) => {
                   </div>
                   {cell.type === 'text' && (
                     <textarea
-                      value={cell.content}
+                      value={cell.value || ''}
                       onChange={(e) => handleCellContentChange(rowIndex, cellIndex, e.target.value)}
                       placeholder="Enter text"
                       className={styles.cellTextArea}
                     />
                   )}
-                  {(cell.type === 'image' || cell.type === 'video' || cell.type === 'pdf') && (
+                  {cell.type === 'image' && (
                     <div className={styles.fileUploadContainer}>
                       <input
                         type="file"
                         onChange={(e) => handleFileChange(rowIndex, cellIndex, e.target.files[0])}
-                        accept={cell.type === 'image' ? "image/*" : cell.type === 'video' ? "video/*" : ".pdf"}
+                        accept="image/*"
                         className={styles.fileInput}
                       />
-                      {cell.content && (
+                      {cell.value && (
                         <div className={styles.previewContainer}>
-                          {cell.type === 'image' && <img src={cell.content} alt="Preview" className={styles.preview} />}
-                          {cell.type === 'video' && <video src={cell.content} controls className={styles.preview} />}
-                          {cell.type === 'pdf' && <embed src={cell.content} type="application/pdf" className={styles.preview} />}
+                          <img src={cell.value} alt="Preview" className={styles.preview} />
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  {cell.type === 'video' && (
+                    <div className={styles.fileUploadContainer}>
+                      <input
+                        type="file"
+                        onChange={(e) => handleFileChange(rowIndex, cellIndex, e.target.files[0])}
+                        accept="video/*"
+                        className={styles.fileInput}
+                      />
+                      {cell.value && (
+                        <div className={styles.previewContainer}>
+                          <video src={cell.content} controls className={styles.preview} />
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  {cell.type === 'pdf' && (
+                    <div className={styles.fileUploadContainer}>
+                      <input
+                        type="file"
+                        onChange={(e) => handleFileChange(rowIndex, cellIndex, e.target.files[0])}
+                        accept=".pdf"
+                        className={styles.fileInput}
+                      />
+                      {cell.value && (
+                        <div className={styles.previewContainer}>
+                          <embed src={cell.content} type="application/pdf" className={styles.preview} />
                         </div>
                       )}
                     </div>
@@ -180,3 +212,7 @@ const AddBlocPortfolio = ({ initialRows, initialProjectData, onSave }) => {
 };
 
 export default AddBlocPortfolio;
+
+
+
+
