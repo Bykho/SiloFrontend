@@ -249,7 +249,7 @@ Should be taking from userContext rather than passedUser unless we changge the p
   };
 
 
-  console.log('here are localProject.layers in projectEntry: ', localProject.layers);
+  //console.log('here are localProject.layers in projectEntry: ', localProject.layers);
   return (
     <div className={styles.projectContainer}>
       {localProject.createdBy && !isStudentProfilePage && (

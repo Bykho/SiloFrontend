@@ -6,49 +6,51 @@ import React, { useState, useEffect } from 'react';
 import { useUser } from '../contexts/UserContext';
 import styles from './AddBlocPortfolio.module.css';
 import config from '../config';
-import { FaPlus, FaSave, FaTrash, FaArrowRight, FaArrowCircleRight, FaArrowCircleDown, FaGripLines} from 'react-icons/fa';
+import { FaPlus, FaSave, FaTrash } from 'react-icons/fa';
 
-const AddBlocPortfolio = ({ initialRows, initialProjectData, onSave }) => {
-  const [rows, setRows] = useState(initialRows || []);
+const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = null }) => {
+  console.log('this is what the initialProjectData holds: ', initialProjectData);
+  console.log('this is what the initialRows holds: ', initialRows);
+
+  const [rows, setRows] = useState(initialRows.length ? initialRows : [[{ type: '', value: '' }]]);
   const [projectName, setProjectName] = useState(initialProjectData?.projectName || '');
   const [projectDescription, setProjectDescription] = useState(initialProjectData?.projectDescription || '');
   const { user } = useUser();
 
-  useEffect(() => {
-    console.log('Initial Rows: ', initialRows);
-    setRows(initialRows || []);
-    setProjectName(initialProjectData?.projectName || '');
-    setProjectDescription(initialProjectData?.projectDescription || '');
-  }, [initialRows, initialProjectData]);
+  // useEffect(() => {
+  //   setRows(initialRows);
+  //   setProjectName(initialProjectData?.projectName || '');
+  //   setProjectDescription(initialProjectData?.projectDescription || '');
+  // }, [initialRows, initialProjectData]);
 
   const handleAddRow = () => {
-    setRows([...rows, [{ type: '', content: '' }]]);
+    setRows([...rows, [{ type: '', value: '' }]]);
   };
 
   const handleAddCell = (rowIndex) => {
     if (rows[rowIndex].length < 3) {
       const newRows = [...rows];
-      newRows[rowIndex] = [...newRows[rowIndex], { type: '', content: '' }];
+      newRows[rowIndex] = [...newRows[rowIndex], { type: '', value: '' }];
       setRows(newRows);
     }
   };
 
   const handleCellTypeChange = (rowIndex, cellIndex, type) => {
     const newRows = [...rows];
-    newRows[rowIndex][cellIndex] = { ...newRows[rowIndex][cellIndex], type, content: newRows[rowIndex][cellIndex].content || '' };
+    newRows[rowIndex][cellIndex] = { ...newRows[rowIndex][cellIndex], type, value: newRows[rowIndex][cellIndex].value || '' };
     setRows(newRows);
   };
 
-  const handleCellContentChange = (rowIndex, cellIndex, content) => {
+  const handleCellValueChange = (rowIndex, cellIndex, value) => {
     const newRows = [...rows];
-    newRows[rowIndex][cellIndex].content = content;
+    newRows[rowIndex][cellIndex].value = value;
     setRows(newRows);
   };
 
   const handleFileChange = (rowIndex, cellIndex, file) => {
     const reader = new FileReader();
     reader.onloadend = () => {
-      handleCellContentChange(rowIndex, cellIndex, reader.result);
+      handleCellValueChange(rowIndex, cellIndex, reader.result);
     };
     reader.readAsDataURL(file);
   };
@@ -66,14 +68,14 @@ const AddBlocPortfolio = ({ initialRows, initialProjectData, onSave }) => {
     const projectData = {
       projectName,
       projectDescription,
-      rows,
+      layers: rows,
       username: user.username
     };
 
     if (initialProjectData?.project_id) {
       projectData.project_id = initialProjectData.project_id;
     }
-
+    console.log('here is project data, ', projectData)
     const token = localStorage.getItem('token');
     try {
       const response = await fetch(`${config.apiBaseUrl}/addBlocProject`, {
@@ -86,7 +88,9 @@ const AddBlocPortfolio = ({ initialRows, initialProjectData, onSave }) => {
       });
       if (response.ok) {
         alert('Project saved successfully');
-        onSave(rows, { projectName, projectDescription });
+        if (onSave) {
+          onSave(rows, { projectName, projectDescription });
+        }
       } else {
         console.error('Error saving project:', response.statusText);
       }
@@ -142,7 +146,7 @@ const AddBlocPortfolio = ({ initialRows, initialProjectData, onSave }) => {
                   {cell.type === 'text' && (
                     <textarea
                       value={cell.value || ''}
-                      onChange={(e) => handleCellContentChange(rowIndex, cellIndex, e.target.value)}
+                      onChange={(e) => handleCellValueChange(rowIndex, cellIndex, e.target.value)}
                       placeholder="Enter text"
                       className={styles.cellTextArea}
                     />
@@ -172,7 +176,7 @@ const AddBlocPortfolio = ({ initialRows, initialProjectData, onSave }) => {
                       />
                       {cell.value && (
                         <div className={styles.previewContainer}>
-                          <video src={cell.content} controls className={styles.preview} />
+                          <video src={cell.value} controls className={styles.preview} />
                         </div>
                       )}
                     </div>
@@ -187,7 +191,7 @@ const AddBlocPortfolio = ({ initialRows, initialProjectData, onSave }) => {
                       />
                       {cell.value && (
                         <div className={styles.previewContainer}>
-                          <embed src={cell.content} type="application/pdf" className={styles.preview} />
+                          <embed src={cell.value} type="application/pdf" className={styles.preview} />
                         </div>
                       )}
                     </div>
@@ -196,7 +200,7 @@ const AddBlocPortfolio = ({ initialRows, initialProjectData, onSave }) => {
               ))}
               {row.length < 3 && (
                 <button className={styles.addContentRightButton} onClick={() => handleAddCell(rowIndex)}>
-                  <FaPlus/>
+                  <FaPlus />
                 </button>
               )}
             </div>
@@ -212,6 +216,8 @@ const AddBlocPortfolio = ({ initialRows, initialProjectData, onSave }) => {
 };
 
 export default AddBlocPortfolio;
+
+
 
 
 

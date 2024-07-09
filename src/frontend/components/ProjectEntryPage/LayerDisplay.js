@@ -6,7 +6,7 @@ import AddBlocPortfolio from '../AddBlocPortfolio'; // Import the AddBlocPortfol
 import styles from './layerDisplay.module.css';
 
 const LayerDisplay = ({ layers, isEditing, toggleEdit, updateLayer, updateProjectDetails, initialProjectData }) => {
-  console.log('here are layers as given to the LayerDisplay: ', layers);
+  //console.log('here are layers as given to the LayerDisplay: ', layers);
   const [selectedImage, setSelectedImage] = useState(null);
   const [showEditor, setShowEditor] = useState(false);
 
