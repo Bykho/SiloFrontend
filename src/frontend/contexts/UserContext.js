@@ -33,50 +33,55 @@ export const UserProvider = ({ children }) => {
   useEffect(() => {
     localStorage.setItem('activeLink', activeLink);
   }, [activeLink]);
-  const login = async (email, password) => {
-    try {
-      const response = await fetch(`${config.apiBaseUrl}/login`, {
-        method: 'POST',
+
+
+const login = async (email, password) => {
+  try {
+    const response = await fetch(`${config.apiBaseUrl}/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email, password })
+    });
+    const data = await response.json();
+    if (response.ok) {
+      localStorage.setItem('token', data.access_token);
+      const decodedToken = jwtDecode(data.access_token);
+      const token = localStorage.getItem('token');
+      console.log('here is the token as stored in local: ', token);
+
+      const profileResponse = await fetch(`${config.apiBaseUrl}/studentProfile`, {
+        method: 'GET',
         headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email, password })
-      });
-      const data = await response.json();
-      if (response.ok) {
-        localStorage.setItem('token', data.access_token);
-        const decodedToken = jwtDecode(data.access_token);
-        const token = localStorage.getItem('token');
-  
-        const profileResponse = await fetch(`${config.apiBaseUrl}/studentProfile`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token
-          }
-        });
-  
-        const profileData = await profileResponse.json();
-        if (profileResponse.ok) {
-          setUser({
-            ...decodedToken,
-            impactful_upvote: profileData.impactful_upvote || [],
-            innovative_upvote: profileData.innovative_upvote || [],
-            interesting_upvote: profileData.interesting_upvote || []
-          });
-        } else {
-          console.error('Failed to load user details:', profileData.message);
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
         }
-  
-        setActiveLink('folio');
+      });
+
+      const profileData = await profileResponse.json();
+      console.log('here is the profileData, ', profileData);
+      if (profileResponse.ok) {
+        setUser({
+          ...decodedToken,
+          impactful_upvote: profileData.impactful_upvote || [],
+          innovative_upvote: profileData.innovative_upvote || [],
+          interesting_upvote: profileData.interesting_upvote || []
+        });
       } else {
-        throw new Error(data.message || 'Unable to login');
+        console.error('Failed to load user details:', profileData.message);
       }
-    } catch (error) {
-      console.error('Login failed:', error);
-      throw error;
+
+      setActiveLink('folio');
+    } else {
+      throw new Error(data.message || 'Unable to login');
     }
-  };
+  } catch (error) {
+    console.error('Login failed:', error);
+    throw error;
+  }
+};
+
   
 
   const logout = () => {
