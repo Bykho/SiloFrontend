@@ -1,90 +1,84 @@
-/* Dark Mode Colors */
-.primary-bg {
-  background-color: #1e1e1e;
+:root {
+  --primary-bg: #1e1e1e;
+  --secondary-bg: #2d2d2d;
+  --primary-text: #D9D9D9;
+  --secondary-text: #A2A2A2;
+  --border-color: #6A6969;
+  --highlight-bg: #85bcdb;
+  --danger-bg: #ff4c4c;
+  --input-bg: #3a3a3a;
 }
 
-.secondary-bg {
-  background-color: #2d2d2d;
+.containerWrapper {
+  width: 100%;
+  height: 100%;
+  background-color: var(--primary-bg);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow-y: auto;
 }
 
-.primary-text {
-  color: #D9D9D9;
-}
-
-.secondary-text {
-  color: #A2A2A2;
-}
-
-.border-color {
-  border-color: #6A6969;
-}
-
-.highlight-bg {
-  background-color: #B9D9EB; /* Green for save button */
-}
-
-.highlight-text {
-  color: white;
-}
-
-.danger-bg {
-  background-color: #ff4c4c;
-}
-
-/* Container */
 .container {
-  padding: 20px;
-  background-color: #1e1e1e;  /* Ensure this line is set to the desired background color */
-  color: #D9D9D9;
-  width: 100%;
-  max-width: 1200px;  /* Adjust this value as needed to make the container bigger */
-  margin: 0 auto;  /* Center the container horizontally */
-  box-sizing: border-box;  /* Include padding and border in the element's total width and height */
+  width: 90%;
+  max-width: 1000px;
+  padding: 2rem 3rem;
+  color: var(--primary-text);
+  font-family: Arial, sans-serif;
+  box-sizing: border-box;
 }
 
-/* Input Fields */
+.title {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: var(--highlight-bg);
+}
+
 .projectNameInput,
-.infoInput,
-.textArea, 
-.fileInput {
+.projectDescriptionInput,
+.textArea,
+.fileInput,
+.customSelect {
   width: 100%;
-  padding: 12px;
-  margin-bottom: 15px;
-  background-color: #2d2d2d;
-  color: #D9D9D9;
-  border: 1px solid #6A6969;
-  border-radius: 5px;
-  box-sizing: border-box;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  background-color: var(--input-bg);
+  color: var(--primary-text);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
 }
 
-/* Project Description Input */
+.projectNameInput:focus,
+.projectDescriptionInput:focus,
+.textArea:focus,
+.fileInput:focus,
+.customSelect:focus {
+  outline: none;
+  border-color: var(--highlight-bg);
+}
+
 .projectDescriptionInput {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 15px;
-  background-color: #2d2d2d;
-  color: #D9D9D9;
-  border: 1px solid #6A6969;
-  border-radius: 5px;
-  box-sizing: border-box;
+  min-height: 100px;
+  resize: vertical;
 }
 
-/* Layer */
 .layer {
-  border-top: 1px solid #6A6969;
-  margin-bottom: 15px;
-  padding: 15px;
-  position: relative;
-  background-color: #2d2d2d;
-  border-radius: 5px;
+  border: 1px solid var(--border-color);
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: var(--secondary-bg);
+  border-radius: 4px;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 
-/* Columns */
 .column {
-  display: inline-block;
-  vertical-align: top;
   width: 32%;
-  margin-right: 1%;
+  margin-bottom: 1rem;
   position: relative;
   box-sizing: border-box;
 }
@@ -97,50 +91,52 @@
   width: 49%;
 }
 
-/* Add Column Button */
 .addColumn {
-  background-color: #2d2d2d;
-  border: 1px dashed #6A6969;
+  background-color: var(--input-bg);
+  border: 2px dashed var(--border-color);
   height: 120px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: #A2A2A2;
-  border-radius: 5px;
-  margin-bottom: 15px;
-  position: relative;
+  color: var(--secondary-text);
+  border-radius: 4px;
+  transition: all 0.3s ease;
 }
 
-.addColumnButton {
-  background: none;
-  border: none;
-  color: #A2A2A2;
-  font-size: 24px;
-  cursor: pointer;
+.addColumn:hover {
+  background-color: var(--secondary-bg);
+  border-color: var(--highlight-bg);
 }
 
-/* Add Column Back Button */
-.addColumnBack {
-  background-color: #2d2d2d;
-  border: 1px dashed #6A6969;
-  padding: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: #A2A2A2;
-  border-radius: 5px;
-  margin-top: 10px;
-  margin-bottom: 15px;
+.addColumn span {
+  font-size: 2rem;
 }
 
-/* Remove Buttons */
+.customSelect,
+.textArea,
+.fileInput {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: var(--input-bg);
+  color: var(--primary-text);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+  margin-bottom: 0.5rem;
+}
+
+.textArea {
+  min-height: 100px;
+  resize: vertical;
+}
+
 .removeColumnButton {
   position: absolute;
-  bottom: 10px;
-  right: 10px;
-  background-color: #ff4c4c;
+  top: -0.5rem;
+  right: -0.5rem;
+  background-color: var(--danger-bg);
   color: white;
   border: none;
   border-radius: 50%;
@@ -150,90 +146,102 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+  z-index: 10;
 }
 
-.removeExternalLinkButton {
-  background-color: #ff4c4c;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  width: 24px;
-  height: 24px;
+.removeColumnButton:hover {
+  background-color: #ff6b6b;
+}
+
+.addColumnBack {
+  width: 100%;
+  background-color: var(--input-bg);
+  border: 2px dashed var(--border-color);
+  padding: 0.75rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: 10px;
+  cursor: pointer;
+  color: var(--secondary-text);
+  border-radius: 4px;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
 }
 
-/* Action Buttons */
+.addColumnBack:hover {
+  background-color: var(--secondary-bg);
+  border-color: var(--highlight-bg);
+}
+
 .actionButtons {
   display: flex;
   justify-content: space-between;
-  margin-top: 20px;
+  margin-top: 2rem;
 }
 
 .addLayerButton,
-.addInfoButton {
-  width: 180px;
-  padding: 12px;
-  background-color: #6A6969;
-  color: white;
+.saveButton {
+  padding: 0.75rem 1.5rem;
   border: none;
-  border-radius: 5px;
+  border-radius: 4px;
   cursor: pointer;
-  text-align: center;
-  font-size: 16px;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.addLayerButton {
+  background-color: var(--secondary-bg);
+  color: var(--primary-text);
+}
+
+.addLayerButton:hover {
+  background-color: var(--input-bg);
 }
 
 .saveButton {
-  width: 180px;
-  padding: 12px;
-  background-color: #85bcdb; /* Green for save button */
+  background-color: var(--highlight-bg);
   color: white;
-  border: none;
-  border-radius: 5px;
+}
+
+.saveButton:hover {
+  background-color: #6ca3c0;
+}
+
+.fileInput {
   cursor: pointer;
-  text-align: center;
-  font-size: 16px;
 }
 
-/* Custom Select Button */
-.customSelect {
-  border: 1px solid #6A6969;
-  border-radius: 5px;
-  padding: 12px;
-  background-color: #2d2d2d;
-  font-size: 16px;
-  color: #D9D9D9;
-  box-sizing: border-box;
+.fileInput::file-selector-button {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  background-color: var(--secondary-bg);
+  color: var(--primary-text);
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.fileInput::file-selector-button:hover {
+  background-color: var(--input-bg);
+}
+
+.imageUploadContainer {
   width: 100%;
-  margin-bottom: 15px;
 }
 
-.customSelect:hover,
-.customSelect:focus {
-  border-color: #007bff;
-  outline: none;
-  background-color: #3a3a3a;
+.imagePreviewContainer {
+  margin-top: 0.5rem;
+  width: 100%;
+  height: 150px;
+  overflow: hidden;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
 }
 
-/* External Links */
-.externalLinks {
-  border: 1px solid #6A6969;
-  padding: 15px;
-  margin-top: 15px;
-  background-color: #2d2d2d;
-  border-radius: 5px;
-}
-
-.externalLink {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-/* Utility Classes */
-.hidden {
-  display: none;
+.imagePreview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }

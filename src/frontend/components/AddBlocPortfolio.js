@@ -1,7 +1,3 @@
-
-
-
-
 import React, { useState, useEffect } from 'react';
 import { useUser } from '../contexts/UserContext';
 import styles from './AddBlocPortfolio.module.css';
@@ -91,7 +87,6 @@ const AddBlocPortfolio = ({ initialLayers, initialProjectData, onSave }) => {
       username: user.username
     };
 
-    // Add project_id if it exists
     if (initialProjectData?.project_id) {
       projectData.project_id = initialProjectData.project_id;
     }
@@ -108,7 +103,7 @@ const AddBlocPortfolio = ({ initialLayers, initialProjectData, onSave }) => {
       });
       if (response.ok) {
         alert('Project saved successfully');
-        onSave(layers, { projectName, projectDescription }); // Pass the updated layers and project details back to the parent component
+        onSave(layers, { projectName, projectDescription });
       } else {
         console.error('Error saving project:', response.statusText);
       }
@@ -118,87 +113,92 @@ const AddBlocPortfolio = ({ initialLayers, initialProjectData, onSave }) => {
   };
 
   return (
-    <div className={styles.container}>
-      <input
-        type="text"
-        value={projectName}
-        onChange={(e) => setProjectName(e.target.value)}
-        placeholder="Project Name"
-        className={styles.projectNameInput}
-      />
-      <textarea
-        value={projectDescription}
-        onChange={(e) => setProjectDescription(e.target.value)}
-        placeholder="Project Description"
-        className={styles.projectDescriptionInput}
-      />
-      {layers.map((layer, layerIndex) => (
-        <div key={layerIndex} className={styles.layer}>
-          {layer.map((column, columnIndex) => (
-            <div key={columnIndex} className={`${styles.column} ${layer.length === 1 ? styles.fullWidth : layer.length === 2 ? styles.halfWidth : ''}`}>
-              {column.type === '' && (
-                <div className={styles.addColumn} onClick={() => handleColumnTypeChange(layerIndex, columnIndex, 'select')}>
-                  +
-                </div>
-              )}
-              {column.type === 'select' && (
-                <select
-                  value={column.type}
-                  onChange={(e) => handleColumnTypeChange(layerIndex, columnIndex, e.target.value)}
-                  className={styles.customSelect}
-                >
-                  <option value="">Select Type</option>
-                  <option value="text">Text</option>
-                  <option value="image">Image</option>
-                  <option value="video">Video</option>
-                  <option value="pdf">pdf</option>
-                </select>
-              )}
-              {column.type === 'text' && (
-                <textarea
-                  value={column.value}
-                  onChange={(e) => handleColumnChange(layerIndex, columnIndex, e.target.value)}
-                  placeholder="Enter text"
-                  className={styles.textArea}
-                />
-              )}
-              {column.type === 'image' && (
-                <input
-                  type="file"
-                  onChange={(e) => handleFileChange(layerIndex, columnIndex, e.target.files[0])}
-                  placeholder="Upload image"
-                  className={styles.fileInput}
-                />
-              )}
-              {column.type === 'pdf' && (
-                <input
-                  type="file"
-                  onChange={(e) => handleFileChange(layerIndex, columnIndex, e.target.files[0])}
-                  placeholder="Upload PDF"
-                  className={styles.fileInput}
-                />
-              )}
-              <button className={styles.removeColumnButton} onClick={() => handleRemoveColumn(layerIndex, columnIndex)}>-</button>
-            </div>
-          ))}
-          {layer.length < 3 && (
-            <div className={styles.addColumnBack} onClick={() => handleAddColumn(layerIndex)}>
-              + Add Column
-            </div>
-          )}
+    <div className={styles.containerWrapper}>
+      <div className={styles.container}>
+        <h2 className={styles.title}>Project Builder</h2>
+        <input
+          type="text"
+          value={projectName}
+          onChange={(e) => setProjectName(e.target.value)}
+          placeholder="Project Name"
+          className={styles.projectNameInput}
+        />
+        <textarea
+          value={projectDescription}
+          onChange={(e) => setProjectDescription(e.target.value)}
+          placeholder="Project Description"
+          className={styles.projectDescriptionInput}
+        />
+        {layers.map((layer, layerIndex) => (
+          <div key={layerIndex} className={styles.layer}>
+            {layer.map((column, columnIndex) => (
+              <div key={columnIndex} className={`${styles.column} ${layer.length === 1 ? styles.fullWidth : layer.length === 2 ? styles.halfWidth : ''}`}>
+                {column.type === '' && (
+                  <div className={styles.addColumn} onClick={() => handleColumnTypeChange(layerIndex, columnIndex, 'select')}>
+                    <span>+</span>
+                  </div>
+                )}
+                {column.type === 'select' && (
+                  <select
+                    value={column.type}
+                    onChange={(e) => handleColumnTypeChange(layerIndex, columnIndex, e.target.value)}
+                    className={styles.customSelect}
+                  >
+                    <option value="">Select Type</option>
+                    <option value="text">Text</option>
+                    <option value="image">Image</option>
+                    <option value="video">Video</option>
+                    <option value="pdf">PDF</option>
+                  </select>
+                )}
+                {column.type === 'text' && (
+                  <textarea
+                    value={column.value}
+                    onChange={(e) => handleColumnChange(layerIndex, columnIndex, e.target.value)}
+                    placeholder="Enter text"
+                    className={styles.textArea}
+                  />
+                )}
+                {column.type === 'image' && (
+                  <div className={styles.imageUploadContainer}>
+                    <input
+                      type="file"
+                      onChange={(e) => handleFileChange(layerIndex, columnIndex, e.target.files[0])}
+                      accept="image/*"
+                      className={styles.fileInput}
+                    />
+                    {column.value && (
+                      <div className={styles.imagePreviewContainer}>
+                        <img src={column.value} alt="Preview" className={styles.imagePreview} />
+                      </div>
+                    )}
+                  </div>
+                )}
+                {column.type === 'pdf' && (
+                  <input
+                    type="file"
+                    onChange={(e) => handleFileChange(layerIndex, columnIndex, e.target.files[0])}
+                    accept=".pdf"
+                    className={styles.fileInput}
+                  />
+                )}
+                <button className={styles.removeColumnButton} onClick={() => handleRemoveColumn(layerIndex, columnIndex)}>×</button>
+              </div>
+            ))}
+            {layer.length < 3 && (
+              <div className={styles.addColumnBack} onClick={() => handleAddColumn(layerIndex)}>
+                + Add Column
+              </div>
+            )}
+          </div>
+        ))}
+        <div className={styles.actionButtons}>
+          <button className={styles.addLayerButton} onClick={handleAddLayer}>Add Content Row</button>
+          <button className={styles.saveButton} onClick={handleSave}>Save</button>
         </div>
-      ))}
-      <div className={styles.actionButtons}>
-        <button className={styles.addLayerButton} onClick={handleAddLayer}>Add Content Row</button>
-        <button className={styles.saveButton} onClick={handleSave}>Save</button>
       </div>
     </div>
   );
 };
 
 export default AddBlocPortfolio;
-
-
-
-
-
