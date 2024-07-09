@@ -138,12 +138,12 @@
 
 .modalContent {
   position: relative;
-  background-color: white;
+  background-color: #2e2e2e;
   padding: 20px;
   border-radius: 8px;
-  max-width: 80%;
   max-height: 80%;
   overflow: auto;
+  width: 85%; 
 }
 
 .modalImage {
