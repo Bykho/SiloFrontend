@@ -207,6 +207,10 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
           ))}
         </div>
         <button className={styles.addContentBelowButton} onClick={handleAddRow}> <FaPlus className={styles.iconSpacing}/> Add Content Row </button>
+        <div className={styles.addTagsAndLinks}>
+          <input type="text" placeholder="Add tags" className={styles.tagInput} />
+          <input type="text" placeholder="Add links" className={styles.linkInput} />
+        </div>
         <div className={styles.actionButtons}>
           <button className={styles.saveButton} onClick={handleSave}><FaSave className={styles.iconSpacing}/> Save Project</button>
         </div>
