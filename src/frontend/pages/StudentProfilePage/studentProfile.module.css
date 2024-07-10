@@ -141,7 +141,7 @@
   }
   
   .modalContent {
-    background-color: white;
+    background-color: #1e1e1e;
     padding: 20px;
     border-radius: 8px;
     position: relative;
@@ -159,13 +159,13 @@
   
   @media (min-width: 1024px) {
     .modalContent {
-      width: 70%; /* Adjust width for even larger screens */
+      width: 80%; /* Adjust width for even larger screens */
     }
   }
   
   @media (min-width: 1280px) {
     .modalContent {
-      width: 60%; /* Adjust width for even larger screens */
+      width: 80%; /* Adjust width for even larger screens */
     }
   }
   

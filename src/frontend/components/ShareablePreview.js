@@ -74,9 +74,6 @@ const ShareablePreview = ({ userData }) => {
           ))}
         </ul>
       </div>
-      <div className={styles.section}>
-        <h3>Checking out portfolio</h3>
-      </div>
 
       <div className={styles.section}>
         <h3>Links</h3>

@@ -1,17 +1,13 @@
-
-
-
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../contexts/UserContext';
-import styles from './studentProfileEditor.module.css'; // Import the CSS module
+import styles from './studentProfileEditor.module.css';
 import EditInfoTab from './EditInfoTab';
 import config from '../../config';
 
-function StudentProfileEditor({ initLocalData }) {
+function StudentProfileEditor({ initLocalData, setUserData, onSave }) {
   console.log('init local data for student profile editor: ', initLocalData);
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate();
   const { updateUser } = useUser();
   const [localState, setLocalState] = useState(initLocalData);
   const [error, setError] = useState('');
@@ -32,7 +28,6 @@ function StudentProfileEditor({ initLocalData }) {
       setLocalState({ ...localState, [field]: e.target.value });
     }
   };
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -55,7 +50,7 @@ function StudentProfileEditor({ initLocalData }) {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(localStateSubset) // Send only the subset of localState
+        body: JSON.stringify(localStateSubset)
       });
       const data = await response.json();
       if (!response.ok) {
@@ -63,9 +58,12 @@ function StudentProfileEditor({ initLocalData }) {
       } else {
         setError('Profile updated successfully');
         updateUser(localStateSubset);
+        setUserData(prevState => ({ ...prevState, ...localStateSubset }));
         if (data.access_token) {
           localStorage.setItem('token', data.access_token);
         }
+        // Call onSave to close the modal
+        onSave();
       }
     } catch (err) {
       setError('Failed to connect to the server');
@@ -81,27 +79,62 @@ function StudentProfileEditor({ initLocalData }) {
           handleInputChange={handleInputChange} 
           handleSubmit={handleSubmit} 
         />
+        {error && <p className={styles.errorMessage}>{error}</p>}
       </div>
       <div className={styles.currentInfo}>
-        <h1>Current Info:</h1>
-        <p>Username: {localState.username || 'N/A'}</p>
-        <p>Email: {localState.email || 'N/A'}</p>
-        <p>University: {localState.university || 'N/A'}</p>
-        <p>Interests: {localState.interests ? localState.interests.join(', ') : 'N/A'}</p>
-        <p>Skills: {localState.skills ? localState.skills.join(', ') : 'N/A'}</p>
-        <p>Biography: {localState.biography || 'N/A'}</p>
-        <p>Personal Website: {localState.personal_website || 'N/A'}</p>
-        <p>Github Link: {localState.github_link || 'N/A'}</p>
-        <p>Papers Link: {localState.papers || 'N/A'}</p>
-        <p>Resume <embed src={localState.resume} type="application/pdf" width="100%" height="500px" /> </p>
-        <p>Links: {localState.links || 'N/A'}</p>
+        <h2 className={styles.currentInfoTitle}>Current Info</h2>
+        <div className={styles.infoGrid}>
+          <div className={styles.infoItem}>
+            <span className={styles.infoLabel}>Username:</span>
+            <span className={styles.infoValue}>{localState.username || 'N/A'}</span>
+          </div>
+          <div className={styles.infoItem}>
+            <span className={styles.infoLabel}>Email:</span>
+            <span className={styles.infoValue}>{localState.email || 'N/A'}</span>
+          </div>
+          <div className={styles.infoItem}>
+            <span className={styles.infoLabel}>University:</span>
+            <span className={styles.infoValue}>{localState.university || 'N/A'}</span>
+          </div>
+          <div className={styles.infoItem}>
+            <span className={styles.infoLabel}>Interests:</span>
+            <span className={styles.infoValue}>{localState.interests ? localState.interests.join(', ') : 'N/A'}</span>
+          </div>
+          <div className={styles.infoItem}>
+            <span className={styles.infoLabel}>Skills:</span>
+            <span className={styles.infoValue}>{localState.skills ? localState.skills.join(', ') : 'N/A'}</span>
+          </div>
+          <div className={`${styles.infoItem} ${styles.fullWidth}`}>
+            <span className={styles.infoLabel}>Biography:</span>
+            <span className={styles.infoValue}>{localState.biography || 'N/A'}</span>
+          </div>
+          <div className={styles.infoItem}>
+            <span className={styles.infoLabel}>Personal Website:</span>
+            <span className={styles.infoValue}>{localState.personal_website || 'N/A'}</span>
+          </div>
+          <div className={styles.infoItem}>
+            <span className={styles.infoLabel}>Github Link:</span>
+            <span className={styles.infoValue}>{localState.github_link || 'N/A'}</span>
+          </div>
+          <div className={styles.infoItem}>
+            <span className={styles.infoLabel}>Papers Link:</span>
+            <span className={styles.infoValue}>{localState.papers || 'N/A'}</span>
+          </div>
+          <div className={styles.infoItem}>
+            <span className={styles.infoLabel}>Links:</span>
+            <span className={styles.infoValue}>{localState.links || 'N/A'}</span>
+          </div>
+        </div>
+        {localState.resume && (
+          <div className={`${styles.infoItem} ${styles.fullWidth}`}>
+            <span className={styles.infoLabel}>Resume:</span>
+            <embed src={localState.resume} type="application/pdf" width="100%" height="300px" />
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
 export default StudentProfileEditor;
-
-
-
 

@@ -6,6 +6,7 @@ import AddBlocPortfolio from '../AddBlocPortfolio'; // Import the AddBlocPortfol
 import styles from './layerDisplay.module.css';
 
 const LayerDisplay = ({ layers, isEditing, toggleEdit, updateLayer, updateProjectDetails, initialProjectData }) => {
+  //console.log('here are layers as given to the LayerDisplay: ', layers);
   const [selectedImage, setSelectedImage] = useState(null);
   const [showEditor, setShowEditor] = useState(false);
 
@@ -88,7 +89,7 @@ const LayerDisplay = ({ layers, isEditing, toggleEdit, updateLayer, updateProjec
       {showEditor && (
         <div className={styles.modal} onClick={() => setShowEditor(false)}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-            <AddBlocPortfolio initialLayers={layers} initialProjectData={initialProjectData} onSave={handleSave} />
+            <AddBlocPortfolio initialRows={layers} initialProjectData={initialProjectData} onSave={handleSave} />
             <button className={styles.closeButton} onClick={() => setShowEditor(false)}>×</button>
           </div>
         </div>

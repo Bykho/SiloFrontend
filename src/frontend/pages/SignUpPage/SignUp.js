@@ -1,58 +1,94 @@
-
-
-
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../contexts/UserContext';
+import GameOfLife from '../GoLivePage/GameOfLife';
 import styles from './SignUp.module.css';
 import config from '../../config';
-import GameOfLife from '../GoLivePage/GameOfLife';
 
 function SignUp() {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [university, setUniversity] = useState('');
-  const [selectedTab, setSelectedTab] = useState('Student');
-  const [profile_photo, setProfilePhoto] = useState('');
-  const [personal_website, setPersonalWebsite] = useState('');
-  const [resume, setResume] = useState(null);
+  const [page, setPage] = useState(1);
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    university: '',
+    grad: '',
+    major: '',
+    userType: 'Student',
+    personalWebsite: '',
+    resume: null,
+    interests: [],
+    skills: [],
+    biography: ''
+  });
   const [error, setError] = useState('');
+  const [isNextDisabled, setIsNextDisabled] = useState(true);
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
 
   const { updateUser } = useUser();
-  const { login } = useUser();
   const navigate = useNavigate();
 
-  const handleUsernameChange = (e) => setUsername(e.target.value);
-  const handleEmailChange = (e) => setEmail(e.target.value);
-  const handlePasswordChange = (e) => setPassword(e.target.value);
-  const handleUniversityChange = (e) => setUniversity(e.target.value);
-  const handleProfilePhotoChange = (e) => setProfilePhoto(e.target.value);
-  const handlePersonalWebsiteChange = (e) => setPersonalWebsite(e.target.value);
-  const handleBackButtonClick = () => navigate('/login');
-  const handleTabChange = (tab) => setSelectedTab(tab);
-
-  const handleFileChange = (file) => {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setResume(reader.result);
-    };
-    reader.readAsDataURL(file);
+  const handleChange = (e) => {
+    const { name, value, type, files } = e.target;
+    setFormData(prevState => ({
+      ...prevState,
+      [name]: type === 'file' ? files[0] : value
+    }));
   };
+
+  const handleArrayChange = (e, field) => {
+    const { value } = e.target;
+    setFormData(prevState => ({
+      ...prevState,
+      [field]: value.split(',').map(item => item.trim())
+    }));
+  };
+
+  const handleNext = () => {
+    setPage(prevPage => prevPage + 1);
+  };
+
+  const handleBack = () => {
+    setPage(prevPage => prevPage - 1);
+  };
+
+  const validatePage = (pageNumber) => {
+    switch(pageNumber) {
+      case 1:
+        return formData.firstName && formData.lastName && formData.email && formData.password;
+      case 2:
+        return formData.university && formData.grad && formData.major;
+      case 3:
+        return formData.interests.length && formData.skills.length && formData.biography;
+      default:
+        return false;
+    }
+  };
+
+  useEffect(() => {
+    setIsNextDisabled(!validatePage(page));
+    setIsSubmitDisabled(!validatePage(3));
+  }, [formData, page]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmitDisabled) return;
+
     const userData = {
-      username,
-      password,
-      email,
-      university,
-      user_type: selectedTab,
-      profile_photo,
-      personal_website,
-      resume,
+      username: `${formData.firstName} ${formData.lastName}`,
+      email: formData.email,
+      password: formData.password,
+      university: formData.university,
+      user_type: formData.userType,
+      personal_website: formData.personalWebsite,
+      resume: formData.resume,
+      interests: formData.interests,
+      skills: formData.skills,
+      biography: formData.biography
     };
+
+    console.log("Here is userData: ", userData);
 
     try {
       const response = await fetch(`${config.apiBaseUrl}/SignUp`, {
@@ -65,62 +101,235 @@ function SignUp() {
 
       if (response.ok) {
         const data = await response.json();
-        try {
-          localStorage.setItem('token', data.access_token);
-          updateUser(data.new_user);
-          navigate('/studentProfile', { state: { justSignedUp: true } }); // Pass state indicating just signed up
-        } catch (error) {
-          setError(error.message || 'login failed');
-        }
+        localStorage.setItem('token', data.access_token);
+        updateUser(data.new_user);
+        navigate('/siloDescription');
       } else {
         const errorData = await response.json();
-        console.error('Registration failed:', errorData.message);
+        setError(errorData.message || 'Registration failed');
       }
     } catch (error) {
       console.error('Error during registration:', error);
+      setError('An unexpected error occurred. Please try again.');
+    }
+  };
+
+  const renderPage = () => {
+    switch(page) {
+      case 1:
+        return (
+          <>
+            <div className={styles.formGroup}>
+              <label htmlFor="firstName">First name *</label>
+              <input
+                type="text"
+                id="firstName"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                placeholder="John"
+                required
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="lastName">Last name *</label>
+              <input
+                type="text"
+                id="lastName"
+                name="lastName"
+                value={formData.lastName}
+                placeholder="Smith"
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="email">Email *</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="example@email.com"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="password">Password *</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder='At least 8 characters long'
+                required
+              />
+            </div>
+            <button 
+              type="button" 
+              onClick={handleNext} 
+              className={styles.btnNext}
+              disabled={isNextDisabled}
+            >
+              Next
+            </button>
+          </>
+        );
+      case 2:
+        return (
+          <>
+            <div className={styles.formGroup}>
+              <label htmlFor="university">University *</label>
+              <input
+                type="text"
+                id="university"
+                name="university"
+                placeholder="Columbia University"
+                value={formData.university}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="grad">Graduation Year *</label>
+              <input
+                type="text"
+                id="grad"
+                name="grad"
+                value={formData.grad}
+                onChange={handleChange}
+                placeholder='2025'
+                required
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="major">Major *</label>
+              <input
+                type="text"
+                id="major"
+                name="major"
+                value={formData.major}
+                onChange={handleChange}
+                placeholder='Computer Science'
+                required
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="userType">User Type</label>
+              <select
+                id="userType"
+                name="userType"
+                value={formData.userType}
+                onChange={handleChange}
+              >
+                <option value="Student">Student</option>
+                <option value="Faculty">Faculty</option>
+              </select>
+            </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="personalWebsite">Personal Website</label>
+              <input
+                type="url"
+                id="personalWebsite"
+                name="personalWebsite"
+                value={formData.personalWebsite}
+                onChange={handleChange}
+                placeholder='www.example.com'
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="resume">Resume</label>
+              <input
+                type="file"
+                id="resume"
+                name="resume"
+                onChange={handleChange}
+                accept=".pdf,.doc,.docx"
+              />
+            </div>
+            <div className={styles.buttonGroup}>
+              <button type="button" onClick={handleBack} className={styles.btnBack}>Back</button>
+              <button 
+                type="button" 
+                onClick={handleNext} 
+                className={styles.btnNext}
+                disabled={isNextDisabled}
+              >
+                Next
+              </button>
+            </div>
+          </>
+        );
+      case 3:
+        return (
+          <>
+            <div className={styles.formGroup}>
+              <label htmlFor="interests">Interests *</label>
+              <input
+                type="text"
+                id="interests"
+                name="interests"
+                value={formData.interests.join(', ')}
+                onChange={(e) => handleArrayChange(e, 'interests')}
+                placeholder="e.g., Machine Learning, Web Development"
+                required
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="skills">Skills *</label>
+              <input
+                type="text"
+                id="skills"
+                name="skills"
+                value={formData.skills.join(', ')}
+                onChange={(e) => handleArrayChange(e, 'skills')}
+                placeholder="e.g., Python, JavaScript, React"
+                required
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="bio">Bio *</label>
+              <textarea
+                id="biography"
+                name="biography"
+                value={formData.biography}
+                onChange={handleChange}
+                placeholder="Tell us about yourself..."
+                rows="4"
+                required
+              />
+            </div>
+            <div className={styles.buttonGroup}>
+              <button type="button" onClick={handleBack} className={styles.btnBack}>Back</button>
+              <button 
+                type="submit" 
+                className={styles.btnSubmit}
+                disabled={isSubmitDisabled}
+              >
+                Sign Up
+              </button>
+            </div>
+          </>
+        );
+      default:
+        return null;
     }
   };
 
   return (
-    <div style={{ position: 'relative', zIndex: 0 }}>
-      <GameOfLife />
-      <div className={styles.container}>
-        <div className={styles.tabContainer}>
-          <button onClick={() => handleTabChange('Student')} className={`${styles.button} ${selectedTab === 'Student' ? styles.activeTab : ''}`}>Student</button>
-          <button onClick={() => handleTabChange('Faculty')} className={`${styles.button} ${selectedTab === 'Faculty' ? styles.activeTab : ''}`}>Faculty</button>
-        </div>
-
-        <div className={styles.formInfoContainer}>
-          <div className={styles.signInForm}>
-            <form onSubmit={handleSubmit}>
-              <div className={styles.inputContainer}>
-                <label>Full Name:</label>
-                <input type="text" value={username} onChange={handleUsernameChange} placeholder="Enter your full name" className={styles.inputSignUp} />
-              </div>
-              <div className={styles.inputContainer}>
-                <label>Email:</label>
-                <input type="text" value={email} onChange={handleEmailChange} placeholder="Enter your email" className={styles.inputSignUp} />
-              </div>
-              <div className={styles.inputContainer}>
-                <label>Password:</label>
-                <input type="password" value={password} onChange={handlePasswordChange} placeholder="Enter your password" className={styles.inputSignUp} />
-              </div>
-              <div className={styles.inputContainer}>
-                <label>University:</label>
-                <input type="text" value={university} onChange={handleUniversityChange} placeholder="Enter your university" className={styles.inputSignUp} />
-              </div>
-              <div className={styles.inputContainer}>
-                <label>Personal Website:</label>
-                <input type="text" value={personal_website} onChange={handlePersonalWebsiteChange} placeholder="Enter personal website" className={styles.inputSignUp} />
-              </div>
-              <div className={styles.inputContainer}>
-                <label>Resume</label>
-                <input type="file" onChange={(e) => handleFileChange(e.target.files[0])} placeholder="Upload resume pdf" className={styles.inputSignUp} />
-              </div>
-              <button className={styles.bottomButton} type="submit">Sign Up</button>
-              <button className={styles.bottomButton} onClick={handleBackButtonClick}>Back</button>
-            </form>
-          </div>
+    <div className={styles.signupContainer}>
+      <div className={styles.gameOfLifeWrapper}>
+        <GameOfLife />
+      </div>
+      <div className={styles.signupFormWrapper}>
+        <div className={styles.signupForm}>
+          <h1>{page === 1 ? 'Create your account' : page === 2 ? 'Additional Information' : 'About You'}</h1>
+          {error && <p className={styles.error}>{error}</p>}
+          <form onSubmit={handleSubmit}>
+            {renderPage()}
+          </form>
         </div>
       </div>
     </div>
@@ -128,8 +337,5 @@ function SignUp() {
 }
 
 export default SignUp;
-
-
-
 
 

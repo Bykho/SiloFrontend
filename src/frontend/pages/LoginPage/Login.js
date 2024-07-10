@@ -1,25 +1,29 @@
+
+
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../contexts/UserContext';
 import styles from './login.module.css';
 import GameOfLife from './GameOfLife';
 import { Mail, Lock, User } from 'lucide-react';
+import config from '../../config';
 
 function Login() {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [showLoginForm, setShowLoginForm] = useState(false);
   const navigate = useNavigate();
   const { login } = useUser();
 
-  const handleUsernameChange = (e) => setUsername(e.target.value);
+  const handleEmailChange = (e) => setEmail(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await login(username, password);
+      await login(email, password);
       navigate('/siloDescription');
     } catch (error) {
       setError(error.message || 'Login failed');
@@ -32,26 +36,25 @@ function Login() {
     <div style={{ position: 'relative', zIndex: 0 }}>
       <GameOfLife />
       <div className={styles.container}>
-        <img src='https://dummyflaska-90979c29bf50.herokuapp.com/static/images/silo_logo.png' alt="Logo" className={styles.logo} />        <div className={styles.siloStyle}>S    i   l    o</div>
+        <img src={`${config.apiBaseUrl}/static/images/silo_logo.png`} alt="Logo" className={styles.logo} />
+        <div className={styles.siloStyle}>S    i   l    o</div>
         {!showLoginForm ? (
           <div className={styles.buttonContainer}>
             <button className={`${styles.button} ${styles.loginButton}`} onClick={toggleLoginForm}>Login</button>
-            <a className={`${styles.button} ${styles.createButton}`} href="/GoLive">
-              Create
-            </a>
+            <a className={`${styles.button} ${styles.createButton}`} href="/GoLive">Create</a>
           </div>
         ) : (
           <>
             {error && <p className={styles.error}>{error}</p>}
             <form onSubmit={handleSubmit} className={styles.formInfoContainer}>
               <div className={styles.inputContainer}>
-                <User className={styles.inputIcon} size={20} />
+                <Mail className={styles.inputIcon} size={20} />
                 <input 
-                  type="text" 
-                  className={styles.usernameInput}
-                  value={username} 
-                  onChange={handleUsernameChange} 
-                  placeholder="Enter your username" 
+                  type="email" 
+                  className={styles.emailInput}
+                  value={email} 
+                  onChange={handleEmailChange} 
+                  placeholder="Enter your email" 
                 />
               </div>
               <div className={styles.inputContainer}>
@@ -74,3 +77,7 @@ function Login() {
 }
 
 export default Login;
+
+
+
+

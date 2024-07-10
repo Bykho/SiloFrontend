@@ -3,7 +3,7 @@
 
 
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import EditInPortfolio from '../EditInPortfolio';
 import styles from './projectEntry.module.css';
 import ProfileImage from '../ProfileImage';
@@ -17,12 +17,16 @@ import config from '../../config';
 const isStudentProfilePage = window.location.pathname.includes('/studentProfile'); // Adjust this condition based on your routing
 
 const ProjectEntry = ({ project, passedUser }) => {
+  /*console.log('here is the passed user: ', passedUser)
+  console.log('here is the project, ', project)*/
   const [isEditing, setIsEditing] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [showDescription, setShowDescription] = useState(false);
   const [localProject, setLocalProject] = useState(project);
   const [localUser, setLocalUser] = useState(passedUser);
   const { user, setUser } = useUser();
+  const modalRef = useRef(null);
+  /*console.log('here is the user: ', user)*/
 
   const [comments, setComments] = useState(() => {
     try {
@@ -34,6 +38,26 @@ const ProjectEntry = ({ project, passedUser }) => {
   });
 
   const [newComment, setNewComment] = useState('');
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        if (isEditing) {
+          toggleEdit();
+        }
+      }
+    };
+
+    if (isEditing) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isEditing]);
 
   const updateLocalProject = (projectField, newValue) => {
     setLocalProject((prevProject) => ({
@@ -120,6 +144,11 @@ const ProjectEntry = ({ project, passedUser }) => {
     setComments(newComments);
   };
 
+
+/*
+It seems like the handle comment function is using the wrong approach to determining author.
+Should be taking from userContext rather than passedUser unless we changge the passed user to be taken from the context, pulled from the backend, and then delivered to projectEntry.
+*/
   const handleAddComment = async (commentText) => {
     if (commentText.trim() !== '') {
       const token = localStorage.getItem('token');
@@ -151,6 +180,8 @@ const ProjectEntry = ({ project, passedUser }) => {
     }
   };
 
+
+  /*this function seems to be obselete*/
   const renderEditableField = (projectField) => {
     return isEditing && (
       <EditInPortfolio
@@ -206,7 +237,6 @@ const ProjectEntry = ({ project, passedUser }) => {
       <div className={styles.projectDescriptionContainer}>
         <div className={`${styles.projDescription} ${isLongDescription && !showDescription ? styles.collapsedDescription : ''}`}>
           {description}
-          {renderEditableField('projectDescription')}
         </div>
         {isLongDescription && (
           <button className={styles.seeMoreButton} onClick={toggleDescription}>
@@ -218,6 +248,8 @@ const ProjectEntry = ({ project, passedUser }) => {
     );
   };
 
+
+  //console.log('here are localProject.layers in projectEntry: ', localProject.layers);
   return (
     <div className={styles.projectContainer}>
       {localProject.createdBy && !isStudentProfilePage && (
@@ -235,7 +267,7 @@ const ProjectEntry = ({ project, passedUser }) => {
             ))}
           </div>
         )}
-        {passedUser.username === localProject.createdBy && (
+        {user.username === localProject.createdBy && (
           <button className={styles.editButton} onClick={toggleEdit}>
             <FaEdit />
           </button>
@@ -283,8 +315,6 @@ const ProjectEntry = ({ project, passedUser }) => {
 };
 
 export default ProjectEntry;
-
-
 
 
 

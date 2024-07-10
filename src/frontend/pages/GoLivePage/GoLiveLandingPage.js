@@ -72,7 +72,6 @@ function GoLiveLanding() {
     <div style={{ position: 'relative', zIndex: 0 }}>
       <GameOfLife />
       <div className={styles.centralContainer}>
-        <h1 className={styles.title}>Create an Account</h1>
         <div className={styles.container}>
           <h2 className={styles.subtitle}>Have an Access Key?</h2>
           {error && <p className={styles.errorText}>{error}</p>}
