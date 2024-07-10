@@ -1,8 +1,3 @@
-
-
-
-
-
 import React, { useState, useEffect, useRef } from 'react';
 import EditInPortfolio from '../EditInPortfolio';
 import styles from './projectEntry.module.css';

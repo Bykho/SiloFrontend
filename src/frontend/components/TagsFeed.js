@@ -6,7 +6,7 @@ import React, { useState, useEffect } from 'react';
 import styles from './tagsFeed.module.css'; // Import the CSS module
 import ProjectEntry from './ProjectEntryPage/ProjectEntry';
 import { useUser } from '../contexts/UserContext';
-
+import SmallProjectEntry from './ProjectEntryPage/SmallProjectEntry';
 import config from '../config';
 
 
@@ -78,7 +78,7 @@ const Feed = () => {
         ) : (
           filteredProjects.map((project, index) => (
             <div key={index} className={styles.projectItem}>
-              <ProjectEntry project={project} passedUser={user} />
+              <SmallProjectEntry project={project}/>
             </div>
           ))
         )}
