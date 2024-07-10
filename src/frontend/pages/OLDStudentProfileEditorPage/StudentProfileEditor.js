@@ -1,3 +1,6 @@
+
+
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../contexts/UserContext';
@@ -42,7 +45,6 @@ function StudentProfileEditor({ initLocalData, setUserData, onSave }) {
       return obj;
     }, {});
 
-    console.log('localStateSubset: ', localStateSubset)
     try {
       const response = await fetch(`${config.apiBaseUrl}/studentProfileEditor`, {
         method: 'POST',
@@ -63,9 +65,10 @@ function StudentProfileEditor({ initLocalData, setUserData, onSave }) {
           localStorage.setItem('token', data.access_token);
         }
         // Call onSave to close the modal
-        onSave();
+        onSave(data.access_token);
       }
     } catch (err) {
+      console.error('Failed to connect to the server:', err);
       setError('Failed to connect to the server');
     }
   };
@@ -137,4 +140,6 @@ function StudentProfileEditor({ initLocalData, setUserData, onSave }) {
 }
 
 export default StudentProfileEditor;
+
+
 
