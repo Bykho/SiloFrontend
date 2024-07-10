@@ -1,57 +1,53 @@
-
-
-
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../contexts/UserContext';
+import GameOfLife from '../GoLivePage/GameOfLife';
 import styles from './SignUp.module.css';
 import config from '../../config';
-import GameOfLife from '../GoLivePage/GameOfLife';
 
 function SignUp() {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [university, setUniversity] = useState('');
-  const [selectedTab, setSelectedTab] = useState('Student');
-  const [profile_photo, setProfilePhoto] = useState('');
-  const [personal_website, setPersonalWebsite] = useState('');
-  const [resume, setResume] = useState(null);
+  const [page, setPage] = useState(1);
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    university: '',
+    password: '',
+    userType: 'Student',
+    personalWebsite: '',
+    resume: null
+  });
   const [error, setError] = useState('');
 
   const { updateUser } = useUser();
-  const { login } = useUser();
   const navigate = useNavigate();
 
-  const handleUsernameChange = (e) => setUsername(e.target.value);
-  const handleEmailChange = (e) => setEmail(e.target.value);
-  const handlePasswordChange = (e) => setPassword(e.target.value);
-  const handleUniversityChange = (e) => setUniversity(e.target.value);
-  const handleProfilePhotoChange = (e) => setProfilePhoto(e.target.value);
-  const handlePersonalWebsiteChange = (e) => setPersonalWebsite(e.target.value);
-  const handleBackButtonClick = () => navigate('/login');
-  const handleTabChange = (tab) => setSelectedTab(tab);
+  const handleChange = (e) => {
+    const { name, value, type, files } = e.target;
+    setFormData(prevState => ({
+      ...prevState,
+      [name]: type === 'file' ? files[0] : value
+    }));
+  };
 
-  const handleFileChange = (file) => {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setResume(reader.result);
-    };
-    reader.readAsDataURL(file);
+  const handleNext = () => {
+    setPage(2);
+  };
+
+  const handleBack = () => {
+    setPage(1);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const userData = {
-      username,
-      password,
-      email,
-      university,
-      user_type: selectedTab,
-      profile_photo,
-      personal_website,
-      resume,
+      username: `${formData.firstName} ${formData.lastName}`,
+      email: formData.email,
+      password: formData.password,
+      university: formData.university,
+      user_type: formData.userType,
+      personal_website: formData.personalWebsite,
+      resume: formData.resume
     };
 
     try {
@@ -65,62 +61,128 @@ function SignUp() {
 
       if (response.ok) {
         const data = await response.json();
-        try {
-          localStorage.setItem('token', data.access_token);
-          updateUser(data.new_user);
-          navigate('/studentProfile', { state: { justSignedUp: true } }); // Pass state indicating just signed up
-        } catch (error) {
-          setError(error.message || 'login failed');
-        }
+        localStorage.setItem('token', data.access_token);
+        updateUser(data.new_user);
+        navigate('/studentProfile', { state: { justSignedUp: true } });
       } else {
         const errorData = await response.json();
-        console.error('Registration failed:', errorData.message);
+        setError(errorData.message || 'Registration failed');
       }
     } catch (error) {
       console.error('Error during registration:', error);
+      setError('An unexpected error occurred. Please try again.');
     }
   };
 
   return (
-    <div style={{ position: 'relative', zIndex: 0 }}>
-      <GameOfLife />
-      <div className={styles.container}>
-        <div className={styles.tabContainer}>
-          <button onClick={() => handleTabChange('Student')} className={`${styles.button} ${selectedTab === 'Student' ? styles.activeTab : ''}`}>Student</button>
-          <button onClick={() => handleTabChange('Faculty')} className={`${styles.button} ${selectedTab === 'Faculty' ? styles.activeTab : ''}`}>Faculty</button>
-        </div>
-
-        <div className={styles.formInfoContainer}>
-          <div className={styles.signInForm}>
-            <form onSubmit={handleSubmit}>
-              <div className={styles.inputContainer}>
-                <label>Full Name:</label>
-                <input type="text" value={username} onChange={handleUsernameChange} placeholder="Enter your full name" className={styles.inputSignUp} />
-              </div>
-              <div className={styles.inputContainer}>
-                <label>Email:</label>
-                <input type="text" value={email} onChange={handleEmailChange} placeholder="Enter your email" className={styles.inputSignUp} />
-              </div>
-              <div className={styles.inputContainer}>
-                <label>Password:</label>
-                <input type="password" value={password} onChange={handlePasswordChange} placeholder="Enter your password" className={styles.inputSignUp} />
-              </div>
-              <div className={styles.inputContainer}>
-                <label>University:</label>
-                <input type="text" value={university} onChange={handleUniversityChange} placeholder="Enter your university" className={styles.inputSignUp} />
-              </div>
-              <div className={styles.inputContainer}>
-                <label>Personal Website:</label>
-                <input type="text" value={personal_website} onChange={handlePersonalWebsiteChange} placeholder="Enter personal website" className={styles.inputSignUp} />
-              </div>
-              <div className={styles.inputContainer}>
-                <label>Resume</label>
-                <input type="file" onChange={(e) => handleFileChange(e.target.files[0])} placeholder="Upload resume pdf" className={styles.inputSignUp} />
-              </div>
-              <button className={styles.bottomButton} type="submit">Sign Up</button>
-              <button className={styles.bottomButton} onClick={handleBackButtonClick}>Back</button>
-            </form>
-          </div>
+    <div className={styles.signupContainer}>
+      <div className={styles.gameOfLifeWrapper}>
+        <GameOfLife />
+      </div>
+      <div className={styles.signupFormWrapper}>
+        <div className={styles.signupForm}>
+          <h1>{page === 1 ? 'Create your account' : 'Additional Information'}</h1>
+          {error && <p className={styles.error}>{error}</p>}
+          <form onSubmit={handleSubmit}>
+            {page === 1 ? (
+              <>
+                <div className={styles.formGroup}>
+                  <label htmlFor="firstName">First name *</label>
+                  <input
+                    type="text"
+                    id="firstName"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <label htmlFor="lastName">Last name</label>
+                  <input
+                    type="text"
+                    id="lastName"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <label htmlFor="email">Email *</label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <label htmlFor="university">University *</label>
+                  <input
+                    type="text"
+                    id="university"
+                    name="university"
+                    value={formData.university}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+                <button type="button" onClick={handleNext} className={styles.btnNext}>Next</button>
+              </>
+            ) : (
+              <>
+                <div className={styles.formGroup}>
+                  <label htmlFor="password">Password *</label>
+                  <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <label htmlFor="userType">User Type</label>
+                  <select
+                    id="userType"
+                    name="userType"
+                    value={formData.userType}
+                    onChange={handleChange}
+                  >
+                    <option value="Student">Student</option>
+                    <option value="Faculty">Faculty</option>
+                  </select>
+                </div>
+                <div className={styles.formGroup}>
+                  <label htmlFor="personalWebsite">Personal Website</label>
+                  <input
+                    type="url"
+                    id="personalWebsite"
+                    name="personalWebsite"
+                    value={formData.personalWebsite}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className={styles.formGroup}>
+                  <label htmlFor="resume">Resume</label>
+                  <input
+                    type="file"
+                    id="resume"
+                    name="resume"
+                    onChange={handleChange}
+                    accept=".pdf,.doc,.docx"
+                  />
+                </div>
+                <div className={styles.buttonGroup}>
+                  <button type="button" onClick={handleBack} className={styles.btnBack}>Back</button>
+                  <button type="submit" className={styles.btnSubmit}>Sign Up</button>
+                </div>
+              </>
+            )}
+          </form>
         </div>
       </div>
     </div>
@@ -128,8 +190,3 @@ function SignUp() {
 }
 
 export default SignUp;
-
-
-
-
-
