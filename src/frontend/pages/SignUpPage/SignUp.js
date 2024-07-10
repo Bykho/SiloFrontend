@@ -103,7 +103,7 @@ function SignUp() {
         const data = await response.json();
         localStorage.setItem('token', data.access_token);
         updateUser(data.new_user);
-        navigate('/studentProfile', { state: { justSignedUp: true } });
+        navigate('/siloDescription');
       } else {
         const errorData = await response.json();
         setError(errorData.message || 'Registration failed');
