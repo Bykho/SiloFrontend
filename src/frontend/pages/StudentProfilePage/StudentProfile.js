@@ -49,8 +49,8 @@ function StudentProfile() {
     };
     fetchUserData();
 
-    if (location.state && location.state.justSignedUp) {
-      setShowEditor(true);
+    if (location.state && location.state.buildPortfolio) {
+      setShowModal(true);
     }
   }, [location.state]);
 
