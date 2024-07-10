@@ -1,17 +1,18 @@
 /* siloDescription.module.css */
 .description {
     padding: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
     margin-top: 0px;
     border-radius: 10px;
-    font-size: 20px; /* Increase the font size */
+    font-size: 25px; /* Increase the font size */
     margin-left: 40px;
     margin-right: 40px;
-    background: linear-gradient(45deg, #73beff, #f2f2f2);
-    backdrop-filter: blur(10px);
+    background: linear-gradient(45deg, #73beff, #f2f2f2, .3);
     text-align: left; /* Left justify the text */
     position: relative;
     z-index: 1; /* Ensure this is above the canvas */
+    backdrop-filter: blur(5px);
+    color: #d1d1d1
 }
   
 .testTitle {

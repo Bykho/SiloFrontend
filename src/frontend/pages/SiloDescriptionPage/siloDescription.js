@@ -7,7 +7,7 @@ function SiloDescription() {
     <div style={{ position: 'relative', zIndex: 0 }}>
       <GameOfLife />
       <div className={styles.testTitle}>
-        <h1 className={styles.aboutHeader}>About Silo.</h1>
+        <h1 className={styles.aboutHeader}>Hello World</h1>
       </div>
       <div className={styles.description}>
         <p>
