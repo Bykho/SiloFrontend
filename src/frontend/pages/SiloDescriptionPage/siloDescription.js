@@ -1,20 +1,39 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './siloDescription.module.css';
 import GameOfLife from './GameOfLife';
 
 function SiloDescription() {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    setIsLoaded(true);
+  }, []);
+
   return (
-    <div style={{ position: 'relative', zIndex: 0 }}>
-      <GameOfLife />
-      <div className={styles.testTitle}>
-        <h1 className={styles.aboutHeader}>Hello World</h1>
+    <div className={styles.container}>
+      <div className={styles.backgroundAnimation}>
+        <GameOfLife />
       </div>
-      <div className={styles.description}>
-        <p>
-        Welcome to Silo, the first networking platform designed exclusively for the STEM community.
-        Connect with students, professors, recruiters, and investors to showcase your projects, collaborate on research, and expand your professional network. 
-        Whether you're looking to gain visibility for your work, find collaborators, or explore top talents, Silo offers a unique, exclusive environment that bridges academia and industry. Join now to innovate, learn, and grow together!
-        </p>
+      <div className={styles.leftContent}>
+        <div className={styles.testTitle}>
+          <h1 className={`${styles.aboutHeader} ${isLoaded ? styles.headerLoaded : ''}`}>
+            <div className={styles.helloLine}>
+              <span>H</span><span>e</span><span>l</span><span>l</span><span>o</span>
+            </div>
+            <div className={styles.worldLine}>
+              <span>W</span><span>o</span><span>r</span><span>l</span><span>d</span>
+            </div>
+          </h1>
+        </div>
+      </div>
+      <div className={styles.rightContent}>
+        <div className={`${styles.ctaContainer} ${isLoaded ? styles.ctaLoaded : ''}`}>
+          <p className={styles.cta}>LinkedIn wasn't built for engineers.</p>
+          <p className={styles.cta}>Silo is.</p>
+        </div>
+        <button className={`${styles.createButton} ${isLoaded ? styles.buttonLoaded : ''}`}>
+          Create Your First Project
+        </button>
       </div>
     </div>
   );
