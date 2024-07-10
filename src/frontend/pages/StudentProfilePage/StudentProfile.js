@@ -11,8 +11,7 @@ import AddBlocPortfolio from '../../components/AddBlocPortfolio';
 import InfoEditor from '../OLDStudentProfileEditorPage/StudentProfileEditor';
 import ShareablePreview from '../../components/ShareablePreview'; // Import ShareablePreview component
 import config from '../../config';
-import {FaWindowClose} from 'react-icons/fa';
-
+import { FaWindowClose } from 'react-icons/fa';
 
 function StudentProfile() {
   const [userData, setUserData] = useState(null);
@@ -51,8 +50,10 @@ function StudentProfile() {
 
     if (location.state && location.state.buildPortfolio) {
       setShowModal(true);
+      // Clear the location state after setting the modal to show
+      navigate(location.pathname, { replace: true, state: {} });
     }
-  }, [location.state]);
+  }, [location.state, navigate]);
 
   if (!user || !userData) {
     return <p> Loading ... </p>;
@@ -82,6 +83,14 @@ function StudentProfile() {
     setShowSharePreview(false);
   };
 
+  const handleSaveProject = () => {
+    setShowModal(false);
+  };
+
+  const handleSaveProfile = () => {
+    setShowEditor(false);
+  };
+
   return (
     <div>
       <ProfileHeader
@@ -100,29 +109,29 @@ function StudentProfile() {
         ) : error ? (
           <p> Error: {error}</p>
         ) : userData && (
-          <PortfolioDisplay user={userData}/>
+          <PortfolioDisplay user={userData} />
         )}
       </div>
       {showEditor && (
         <div className={styles.modal}>
           <div className={styles.modalContent}>
-            <button className={styles.closeButton} onClick={handleCloseEditor}><FaWindowClose/></button>
-            <InfoEditor initLocalData={userData} />
+            <button className={styles.closeButton} onClick={handleCloseEditor}><FaWindowClose /></button>
+            <InfoEditor initLocalData={userData} setUserData={setUserData} onSave={handleSaveProfile} />
           </div>
         </div>
       )}
       {showModal && (
         <div className={styles.modal}>
           <div className={styles.modalContent}>
-            <button className={styles.closeButton} onClick={handleCloseModal}><FaWindowClose/></button>
-            <AddBlocPortfolio />
+            <button className={styles.closeButton} onClick={handleCloseModal}><FaWindowClose /></button>
+            <AddBlocPortfolio onSave={handleSaveProject} />
           </div>
         </div>
       )}
       {showSharePreview && (
         <div className={styles.modal}>
           <div className={styles.modalContent}>
-            <button className={styles.closeButton} onClick={handleCloseSharePreview}><FaWindowClose/></button>
+            <button className={styles.closeButton} onClick={handleCloseSharePreview}><FaWindowClose /></button>
             <ShareablePreview userData={userData} /> {/* Pass user data to ShareablePreview */}
           </div>
         </div>
@@ -132,6 +141,9 @@ function StudentProfile() {
 }
 
 export default StudentProfile;
+
+
+
 
 
 

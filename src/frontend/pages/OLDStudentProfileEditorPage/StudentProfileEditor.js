@@ -5,7 +5,7 @@ import styles from './studentProfileEditor.module.css';
 import EditInfoTab from './EditInfoTab';
 import config from '../../config';
 
-function StudentProfileEditor({ initLocalData }) {
+function StudentProfileEditor({ initLocalData, setUserData, onSave }) {
   console.log('init local data for student profile editor: ', initLocalData);
   const navigate = useNavigate();
   const { updateUser } = useUser();
@@ -58,9 +58,12 @@ function StudentProfileEditor({ initLocalData }) {
       } else {
         setError('Profile updated successfully');
         updateUser(localStateSubset);
+        setUserData(prevState => ({ ...prevState, ...localStateSubset }));
         if (data.access_token) {
           localStorage.setItem('token', data.access_token);
         }
+        // Call onSave to close the modal
+        onSave();
       }
     } catch (err) {
       setError('Failed to connect to the server');
@@ -134,3 +137,4 @@ function StudentProfileEditor({ initLocalData }) {
 }
 
 export default StudentProfileEditor;
+
