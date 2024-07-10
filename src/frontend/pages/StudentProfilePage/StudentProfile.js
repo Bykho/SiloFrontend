@@ -87,6 +87,10 @@ function StudentProfile() {
     setShowModal(false);
   };
 
+  const handleSaveProfile = () => {
+    setShowEditor(false);
+  };
+
   return (
     <div>
       <ProfileHeader
@@ -112,7 +116,7 @@ function StudentProfile() {
         <div className={styles.modal}>
           <div className={styles.modalContent}>
             <button className={styles.closeButton} onClick={handleCloseEditor}><FaWindowClose /></button>
-            <InfoEditor initLocalData={userData} />
+            <InfoEditor initLocalData={userData} setUserData={setUserData} onSave={handleSaveProfile} />
           </div>
         </div>
       )}
@@ -137,6 +141,8 @@ function StudentProfile() {
 }
 
 export default StudentProfile;
+
+
 
 
 
