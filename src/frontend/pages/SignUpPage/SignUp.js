@@ -18,9 +18,9 @@ function SignUp() {
     userType: 'Student',
     personalWebsite: '',
     resume: null,
-    interests: '',
-    skills: '',
-    bio: ''
+    interests: [],
+    skills: [],
+    biography: ''
   });
   const [error, setError] = useState('');
   const [isNextDisabled, setIsNextDisabled] = useState(true);
@@ -34,6 +34,14 @@ function SignUp() {
     setFormData(prevState => ({
       ...prevState,
       [name]: type === 'file' ? files[0] : value
+    }));
+  };
+
+  const handleArrayChange = (e, field) => {
+    const { value } = e.target;
+    setFormData(prevState => ({
+      ...prevState,
+      [field]: value.split(',').map(item => item.trim())
     }));
   };
 
@@ -52,7 +60,7 @@ function SignUp() {
       case 2:
         return formData.university && formData.grad && formData.major;
       case 3:
-        return formData.interests && formData.skills && formData.bio;
+        return formData.interests.length && formData.skills.length && formData.biography;
       default:
         return false;
     }
@@ -77,8 +85,10 @@ function SignUp() {
       resume: formData.resume,
       interests: formData.interests,
       skills: formData.skills,
-      bio: formData.bio
+      biography: formData.biography
     };
+
+    console.log("Here is userData: ", userData);
 
     try {
       const response = await fetch(`${config.apiBaseUrl}/SignUp`, {
@@ -261,8 +271,8 @@ function SignUp() {
                 type="text"
                 id="interests"
                 name="interests"
-                value={formData.interests}
-                onChange={handleChange}
+                value={formData.interests.join(', ')}
+                onChange={(e) => handleArrayChange(e, 'interests')}
                 placeholder="e.g., Machine Learning, Web Development"
                 required
               />
@@ -273,8 +283,8 @@ function SignUp() {
                 type="text"
                 id="skills"
                 name="skills"
-                value={formData.skills}
-                onChange={handleChange}
+                value={formData.skills.join(', ')}
+                onChange={(e) => handleArrayChange(e, 'skills')}
                 placeholder="e.g., Python, JavaScript, React"
                 required
               />
@@ -282,9 +292,9 @@ function SignUp() {
             <div className={styles.formGroup}>
               <label htmlFor="bio">Bio *</label>
               <textarea
-                id="bio"
-                name="bio"
-                value={formData.bio}
+                id="biography"
+                name="biography"
+                value={formData.biography}
                 onChange={handleChange}
                 placeholder="Tell us about yourself..."
                 rows="4"
@@ -327,3 +337,5 @@ function SignUp() {
 }
 
 export default SignUp;
+
+
