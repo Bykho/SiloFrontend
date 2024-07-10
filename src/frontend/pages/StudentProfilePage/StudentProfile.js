@@ -24,28 +24,30 @@ function StudentProfile() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const response = await fetch(`${config.apiBaseUrl}/studentProfile`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token
-          }
-        });
-        if (!response.ok) {
-          throw new Error('Failed to fetch user data');
+  const fetchUserData = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${config.apiBaseUrl}/studentProfile`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
         }
-        const data = await response.json();
-        setUserData(data);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-        setLoading(false);
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch user data');
       }
-    };
+      const data = await response.json();
+      setUserData(data);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      setError('Failed to fetch user data');
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchUserData();
 
     if (location.state && location.state.buildPortfolio) {
@@ -87,8 +89,12 @@ function StudentProfile() {
     setShowModal(false);
   };
 
-  const handleSaveProfile = () => {
+  const handleSaveProfile = (newToken = null) => {
     setShowEditor(false);
+    if (newToken) {
+      localStorage.setItem('token', newToken);
+      fetchUserData(); // Re-fetch user data with the new token
+    }
   };
 
   return (
@@ -141,8 +147,6 @@ function StudentProfile() {
 }
 
 export default StudentProfile;
-
-
 
 
 
