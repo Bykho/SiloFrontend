@@ -8,7 +8,8 @@
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Inconsolata', sans-serif;
+  font-weight: bold;
 }
 
 .gameOfLifeWrapper {
@@ -28,23 +29,26 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 51, 0.5);
+  background-color: rgba(0, 56, 85, 0.5);
 }
 
 .signupForm {
   width: 400px;
   padding: 2rem;
-  background-color: rgba(0, 0, 51, 0.8);
+  background-color: rgba(32, 63, 78, 0.8);
   border-radius: 10px;
   box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
   color: white;
+  font-weight: bold;
 }
 
 .signupForm h1 {
   font-size: 1.5rem;
   margin-bottom: 1.5rem;
-  text-align: center;
-  font-weight: 300;
+  text-align: left; 
+  font-weight: bold;
+  margin-top: 20px;
+  margin-bottom: 40px;
 }
 
 .formGroup {
@@ -59,8 +63,9 @@
 }
 
 .formGroup input,
-.formGroup select {
-  width: 100%;
+.formGroup select,
+.formGroup textarea {
+  width: 95%;
   padding: 0.5rem;
   background-color: transparent;
   border: none;
@@ -69,8 +74,14 @@
   font-size: 1rem;
 }
 
+.formGroup textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
 .formGroup input:focus,
-.formGroup select:focus {
+.formGroup select:focus,
+.formGroup textarea:focus {
   outline: none;
   border-bottom-color: white;
 }
@@ -78,38 +89,141 @@
 .btnNext,
 .btnBack,
 .btnSubmit {
-  padding: 0.5rem 1rem;
-  background-color: white;
-  color: #000033;
-  border: none;
-  border-radius: 5px;
+  padding: 0.75rem 1.5rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s ease;
+  font-size: 0.9rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(5px);
 }
 
 .btnNext:hover,
 .btnBack:hover,
 .btnSubmit:hover {
-  background-color: #e6e6e6;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.btnNext:focus,
+.btnBack:focus,
+.btnSubmit:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+}
+
+.btnNext:active,
+.btnBack:active,
+.btnSubmit:active {
+  background-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(1px);
 }
 
 .btnNext,
 .btnSubmit {
   float: right;
+  background-color: rgba(185, 217, 235, 0.2);
+}
+
+.btnNext:hover,
+.btnSubmit:hover {
+  background-color: rgba(185, 217, 235, 0.3);
 }
 
 .btnBack {
   float: left;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.btnBack:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .buttonGroup {
   display: flex;
   justify-content: space-between;
+  margin-top: 1.5rem;
 }
 
 .error {
   color: #ff6b6b;
   margin-bottom: 1rem;
   text-align: center;
+}
+
+.fileInput {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.fileInputLabel {
+  padding: 0.75rem 1.5rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(5px);
+  display: inline-block;
+  margin-top: 0.5rem;
+}
+
+.fileInputLabel:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.fileInputLabel:focus-within {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+}
+
+.fileName {
+  margin-left: 1rem;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+
+.btnNext:hover:not(:disabled),
+.btnBack:hover:not(:disabled),
+.btnSubmit:hover:not(:disabled) {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.btnNext:focus:not(:disabled),
+.btnBack:focus:not(:disabled),
+.btnSubmit:focus:not(:disabled) {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+}
+
+.btnNext:active:not(:disabled),
+.btnBack:active:not(:disabled),
+.btnSubmit:active:not(:disabled) {
+  background-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(1px);
+}
+
+.btnNext:disabled,
+.btnSubmit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
