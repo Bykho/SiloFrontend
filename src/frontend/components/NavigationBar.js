@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
-import { IoHomeOutline, IoPersonOutline, IoChatboxEllipsesOutline, IoLogOutOutline, IoLogInOutline } from 'react-icons/io5'; // Import new icons
+import { IoHomeOutline, IoPersonOutline, IoChatboxEllipsesOutline, IoLogOutOutline, IoLogInOutline, IoNewspaperOutline } from 'react-icons/io5'; // Import new icons
+import {PiAddressBookLight, PiAddressBook} from 'react-icons/pi'; // Import new icons
+import { LuUserSquare2 } from 'react-icons/lu';
 import styles from './NavigationBar.module.css';
 
 const NavigationBar = () => {
@@ -39,21 +41,21 @@ const NavigationBar = () => {
               className={`${styles.button} ${activeLink === 'feed' ? styles.clickedButton : ''}`}
               onClick={() => handleLinkClick('feed')}
             >
-              <IoHomeOutline className={styles.icon} /> feed
+              <IoNewspaperOutline className={styles.icon} /> feed
             </a>
             <a
               href="/studentProfile"
               className={`${styles.button} ${(activeLink === 'folio' && currentPath !== '/siloDescription') ? styles.clickedButton : ''}`}
               onClick={() => handleLinkClick('folio')}
             >
-              <IoPersonOutline className={styles.icon} /> folio
+              <LuUserSquare2 className={styles.icon} /> profile
             </a>
             <a
               href="/GenDirectory"
               className={`${styles.button} ${activeLink === 'find' ? styles.clickedButton : ''}`}
               onClick={() => handleLinkClick('find')}
             >
-              <IoChatboxEllipsesOutline className={styles.icon} /> forum
+              <PiAddressBook className={styles.icon} /> network
             </a>
             <button
               onClick={handleLogout}
