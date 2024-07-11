@@ -4,16 +4,19 @@ import styles from './smallProjectEntry.module.css';
 import { useUser } from '../../contexts/UserContext';
 import CommentSection from './CommentSection';
 import config from '../../config';
+import ProjectEntry from './ProjectEntry';
 
 const SmallProjectEntry = ({ project }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [showFullDescription, setShowFullDescription] = useState(false);
   const [showFullContent, setShowFullContent] = useState(false);
   const [localProject, setLocalProject] = useState(project);
   const { user, setUser } = useUser();
   const [localUser, setLocalUser] = useState(user);
   const modalRef = useRef(null);
+  const descriptionRef = useRef(null);
+  const imageRef = useRef(null);
+  const [showPopup, setShowPopup] = useState(false);
 
   const [comments, setComments] = useState(() => {
     try {
@@ -48,8 +51,8 @@ const SmallProjectEntry = ({ project }) => {
 
   const toggleEdit = () => setIsEditing(!isEditing);
   const toggleExpand = () => setIsExpanded(!isExpanded);
-  const toggleDescription = () => setShowFullDescription(!showFullDescription);
   const toggleContent = () => setShowFullContent(!showFullContent);
+  const togglePopup = () => setShowPopup(!showPopup);
 
   const handleUpvote = async (upvoteType) => {
     const token = localStorage.getItem('token');
@@ -148,32 +151,50 @@ const SmallProjectEntry = ({ project }) => {
   };
 
   const renderDescription = () => (
-    <div className={styles.descriptionContainer}>
-      <p className={showFullDescription ? styles.fullDescription : styles.truncatedDescription}>
+    <div className={styles.descContainer}>
+      <div 
+        ref={descriptionRef}
+        className={styles.description}
+      >
         {localProject.projectDescription}
-      </p>
-      {localProject.projectDescription.length > 100 && (
-        <button className={styles.expandButton} onClick={toggleDescription}>
-          {showFullDescription ? <FaChevronUp /> : <FaChevronDown />}
-        </button>
-      )}
+      </div>
     </div>
   );
 
-  //!! This function is not implemented yet
-  //TO DO: Implement rendering of project content preview!
-  const renderContentPreview = () => (
-    <div className={styles.contentPreviewContainer}>
-      <h4>Content Preview</h4>
-      <div className={showFullContent ? styles.fullContent : styles.truncatedContent}>
-        {/* Replace this with actual content from your project */}
-        <p>This is a preview of the project content. It could be a summary of key features, a snippet of code, or any other relevant information.</p>
+  const renderContentPreview = () => {
+    let imgSrc = null;
+    let textContent = null;
+
+    for (let layer of localProject.layers) {
+      for (let cell of layer) {
+        if (cell.type === 'image' && !imgSrc) {
+          imgSrc = cell.value;
+          break;
+        } 
+      }
+      if (imgSrc) break;
+    }
+    
+    if (!imgSrc) {
+      for (let layer of localProject.layers) {
+        for (let cell of layer) {
+          if (cell.type === 'text' && !textContent) {
+            textContent = cell.value;
+            break;
+          } 
+        }
+        if (textContent) break;
+      }
+    }
+
+    return (
+      <div className={styles.preview}>
+        {imgSrc && <img ref={imageRef} src={imgSrc} alt="Project Preview" className={styles.previewImage} />}
+        {!imgSrc && textContent && <p className={styles.previewText}>{textContent}</p>}
+        {!imgSrc && !textContent && <p>No preview available</p>}
       </div>
-      <button className={styles.expandButton} onClick={toggleContent}>
-        {showFullContent ? <FaChevronUp /> : <FaChevronDown />}
-      </button>
-    </div>
-  );
+    );
+  };
 
   const renderComments = () => {
     if (!isExpanded) return null;
@@ -211,7 +232,25 @@ const SmallProjectEntry = ({ project }) => {
         </div>
       </div>
       <div className={styles.divider} />
-      {renderDescription()}
+      <div className={styles.descAndPreviewContainer}>
+        {renderDescription()}
+        <div className={styles.previewContainer}>
+          {renderContentPreview()}
+        </div>
+      </div>
+      <button className={styles.seeMoreButton} onClick={togglePopup}>
+        See Full Project
+      </button>
+      {showPopup && (
+        <div className={styles.popupOverlay}>
+          <div className={styles.popupContent}>
+            <button className={styles.closeButton} onClick={togglePopup}>
+              &times;
+            </button>
+            <ProjectEntry project={project} passedUser={user} />
+          </div>
+        </div>
+      )}
       <div className={styles.commentBox}>
         <div className={styles.commentIconContainer}>
           <FaComment className={styles.commentIcon} />

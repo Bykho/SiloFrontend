@@ -1,14 +1,53 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useUser } from '../../contexts/UserContext';
-import Ranked from '../../components/RankedFeed';
 import Tagged from '../../components/TagsFeed';
-import Likes from '../../components/LikesFeed';
+import FeedSidebar from '../../components/FeedSidebar';
 import styles from './feed.module.css';
 import GameOfLife from '../SiloDescriptionPage/GameOfLife';
+import config from '../../config';
+import {FaSearch} from 'react-icons/fa';
+
 
 const Feed = () => {
   const [FeedStyle, setFeedStyle] = useState('showTagged');
   const { isAuthenticated } = useUser();
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [filter, setFilter] = useState('impactful');
+  const [tag, setTag] = useState('machine learning');
+  const [searchText, setSearchText] = useState('');
+  const { user } = useUser();
+
+  useEffect(() => {
+    const fetchProjects = async (feedType) => {
+      setLoading(true);
+      setError('');
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${config.apiBaseUrl}/returnFeed/${feedType}`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+        if (!response.ok) {
+          throw new Error('Failed to fetch projects');
+        }
+        const projects = await response.json();
+        setProjects(projects);
+        setLoading(false);
+      } catch (err) {
+        setError('Failed to fetch projects');
+        setLoading(false);
+      }
+    };
+    fetchProjects(filter);
+  }, [filter]);
+
+  const filteredProjects = projects.filter((project) =>
+    project.tags && project.tags.some((projectTag) => projectTag.toLowerCase().includes(tag.toLowerCase()))
+  );
   
   if (!isAuthenticated) {
     return (
@@ -30,30 +69,43 @@ const Feed = () => {
 
   return (
     <div className={styles.feedContainer}>
-      <div className={styles.navBar}>
-        <p>Filter by: </p>
-        <p
-          className={`${styles.navLink} ${FeedStyle === 'showTagged' ? styles.bold : ''}`}
-          onClick={() => setFeedStyle('showTagged')}
-        >
-          Tags
-        </p>
-        <p
-          className={`${styles.navLink} ${FeedStyle === 'showRanked' ? styles.bold : ''}`}
-          onClick={() => setFeedStyle('showRanked')}
-        >
-          Top
-        </p>
-        <p
-          className={`${styles.navLink} ${FeedStyle === 'showLikes' ? styles.bold : ''}`}
-          onClick={() => setFeedStyle('showLikes')}
-        >
-          My Likes
-        </p>
+      <div className={styles.searchBar}>
+        <div className={styles.searchWords}>
+          <p style={{ textAlign: 'left' }}><FaSearch /></p>
+        </div>
+        <div className={styles.buttonContainer}>
+          <input
+            type="search"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            placeholder="Machine Learning"
+            className={styles.searchInput}
+          />
+          <button className={styles.navButton} onClick={() => setTag(searchText)}>Search</button>
+        </div>
+        <div className={styles.sortDropdown}>
+          <select
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+            className={styles.sortSelect}
+          >
+            <option value="top">Top</option>
+            <option value="newest">Newest</option>
+          </select>
+        </div>
+        <div className={styles.resultsCount}>
+          Results: {filteredProjects.length}
+        </div>
       </div>
-      {FeedStyle === 'showRanked' && <Ranked />}
-      {FeedStyle === 'showTagged' && <Tagged />}
-      {FeedStyle === 'showLikes' && <Likes />}
+
+      <div className={styles.feedBottomContainer}>
+        <div className={styles.feedSidebar}>
+          <FeedSidebar />
+        </div>
+        <div className={styles.feedContent}>
+          <Tagged />
+        </div>
+      </div>
     </div>
   );
 };

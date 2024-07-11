@@ -52,24 +52,6 @@ const Feed = () => {
   
   return (
     <div className={styles.feedContainer}>
-      <div className={styles.searchBar}>
-        <div className={styles.searchWords}>
-          <p style={{ textAlign: 'left' }}>Search by tags:</p>
-        </div>
-        <div className={styles.buttonContainer}>
-          <input
-            type="search"
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-            placeholder="Machine Learning"
-            className={styles.searchInput}
-          />
-          <button className={styles.navButton} onClick={() => setTag(searchText)}>Search</button>
-        </div>
-        <div className={styles.resultsCount}>
-          Results: {filteredProjects.length}
-        </div>
-      </div>
       <div className={styles.projectList}>
         {loading ? (
           <p>Loading...</p>
