@@ -8,6 +8,7 @@ import ProjectEntry from './ProjectEntryPage/ProjectEntry';
 import { useUser } from '../contexts/UserContext';
 import SmallProjectEntry from './ProjectEntryPage/SmallProjectEntry';
 import config from '../config';
+import LoadingIndicator from './LoadingIndicator';
 
 
 const Feed = () => {
@@ -54,7 +55,9 @@ const Feed = () => {
     <div className={styles.feedContainer}>
       <div className={styles.projectList}>
         {loading ? (
-          <p>Loading...</p>
+          <div style={{ minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <LoadingIndicator />
+          </div>
         ) : error ? (
           <p>{error}</p>
         ) : (
