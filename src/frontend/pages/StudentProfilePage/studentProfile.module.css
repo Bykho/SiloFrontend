@@ -62,7 +62,7 @@
     border-radius: 4px;
     cursor: pointer;
     height: 60px;
-    width: calc(100% / 3 - 30px); /* Adjusted calculation */
+    width: calc(100% / 2 - 30px); /* Adjusted calculation */
     font-size: 15px;
     margin-left: 20px; /* Adjust margin to make buttons less wide */
     transition: background-color 0.3s ease;

@@ -112,7 +112,6 @@ function StudentProfile() {
       />
       <div className={styles.buttonContainer}>
         <button className={styles.bigButton} onClick={handleEditProfileClick}>Edit My Profile</button>
-        <button className={styles.bigButton} onClick={handleShareProfileClick}>Share My Profile</button>
         <button className={styles.bigButton} onClick={handleAddProjectClick}>Add New Project</button>
       </div>
       <div className={styles.contentContainer}>
