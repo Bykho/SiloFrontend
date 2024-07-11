@@ -9,10 +9,10 @@ import config from '../config';
 import { FaPlus, FaSave, FaTrash } from 'react-icons/fa';
 
 const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = null }) => {
-  console.log('this is what the initialProjectData holds: ', initialProjectData);
-  console.log('here is initialProjectData.project_id: ', initialProjectData.project_id)
+  //console.log('this is what the initialProjectData holds: ', initialProjectData);
+  //console.log('here is initialProjectData.project_id: ', initialProjectData.project_id)
   console.log('this is initialProjectData._id: ', initialProjectData._id)
-  console.log('this is what the initialRows holds: ', initialRows);
+  //console.log('this is what the initialRows holds: ', initialRows);
 
   const [rows, setRows] = useState(initialRows.length ? initialRows : [[{ type: '', value: '' }]]);
   const [projectName, setProjectName] = useState(initialProjectData?.projectName || '');
@@ -66,7 +66,7 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
     const projectData = {
       projectName,
       projectDescription,
-      layers: rows,
+      layers: rows ? rows : [[]],
       tags,
       links,
       username: user.username
@@ -75,7 +75,6 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
     if (initialProjectData._id) {
       projectData._id = initialProjectData._id;
     }
-    console.log('here is project data, ', projectData)
     const token = localStorage.getItem('token');
     try {
       const response = await fetch(`${config.apiBaseUrl}/addBlocProject`, {
@@ -87,9 +86,15 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
         body: JSON.stringify({ data: projectData }),
       });
       if (response.ok) {
+        const savedProject = await response.json(); // Assuming your API returns the saved project
         alert('Project saved successfully');
+        console.log('here is the savedProject ahead of the onSave call', savedProject)
         if (onSave) {
-          onSave(rows, { projectName, projectDescription });
+          if (initialProjectData._id) {
+            onSave(savedProject.layers, savedProject);
+          } else {
+            onSave(savedProject);
+          }
         }
       } else {
         console.error('Error saving project:', response.statusText);
@@ -249,8 +254,5 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
 };
 
 export default AddBlocPortfolio;
-
-
-
 
 

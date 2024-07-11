@@ -25,6 +25,8 @@ const LayerDisplay = ({ layers, isEditing, toggleEdit, updateLayer, updateProjec
   };
 
   const handleSave = (updatedLayers, updatedProjectDetails) => {
+    console.log('Here is the updatedLayers in handleSave, ', updatedLayers);
+    console.log('Here is the updatedProejctDetails in handleSave, ', updatedProjectDetails);
     setShowEditor(false);
     toggleEdit();
     updateLayer(updatedLayers);

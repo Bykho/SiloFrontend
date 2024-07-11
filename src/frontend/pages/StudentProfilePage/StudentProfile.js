@@ -85,8 +85,14 @@ function StudentProfile() {
     setShowSharePreview(false);
   };
 
-  const handleSaveProject = () => {
+  const handleSaveProject = (newProject) => {
     setShowModal(false);
+    if (newProject) {
+      setUserData((prevState) => ({
+        ...prevState,
+        portfolio: [...prevState.portfolio, newProject],
+      }));
+    }
   };
 
   const handleSaveProfile = (newToken = null) => {

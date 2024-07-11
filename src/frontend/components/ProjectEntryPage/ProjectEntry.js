@@ -1,3 +1,7 @@
+
+
+
+
 import React, { useState, useEffect, useRef } from 'react';
 import EditInPortfolio from '../EditInPortfolio';
 import styles from './projectEntry.module.css';
@@ -12,6 +16,7 @@ import config from '../../config';
 const isStudentProfilePage = window.location.pathname.includes('/studentProfile'); // Adjust this condition based on your routing
 
 const ProjectEntry = ({ project, passedUser }) => {
+  //console.log('here is the project: ', project)
   /*console.log('here is the passed user: ', passedUser)
   console.log('here is the project, ', project)*/
   const [isEditing, setIsEditing] = useState(false);
