@@ -1,7 +1,6 @@
 
 
 
-
 import React, { useState, useEffect, useRef } from 'react';
 import EditInPortfolio from '../EditInPortfolio';
 import styles from './projectEntry.module.css';
@@ -16,9 +15,6 @@ import config from '../../config';
 const isStudentProfilePage = window.location.pathname.includes('/studentProfile'); // Adjust this condition based on your routing
 
 const ProjectEntry = ({ project, passedUser }) => {
-  //console.log('here is the project: ', project)
-  /*console.log('here is the passed user: ', passedUser)
-  console.log('here is the project, ', project)*/
   const [isEditing, setIsEditing] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [showDescription, setShowDescription] = useState(false);
@@ -26,7 +22,6 @@ const ProjectEntry = ({ project, passedUser }) => {
   const [localUser, setLocalUser] = useState(passedUser);
   const { user, setUser } = useUser();
   const modalRef = useRef(null);
-  /*console.log('here is the user: ', user)*/
 
   const [comments, setComments] = useState(() => {
     try {
@@ -80,15 +75,30 @@ const ProjectEntry = ({ project, passedUser }) => {
     }));
   };
 
-  const handleUpvote = async (upvoteType) => {
+  const handleUpvote = async () => {
     const token = localStorage.getItem('token');
     if (!token) {
       console.error('No token found in local storage');
       return;
     }
-    const payload = { username: passedUser.username, upvoteType };
+    const payload = { username: passedUser.username };
+
+    const newUpvoteId = Math.random().toString(36).substring(2, 15); // Generate a temporary ID
+    setLocalProject((prevProject) => ({
+      ...prevProject,
+      upvotes: [...(prevProject.upvotes || []), newUpvoteId],
+    }));
+    setLocalUser((prevUser) => ({
+      ...prevUser,
+      upvotes: [...(prevUser.upvotes || []), newUpvoteId],
+    }));
+    setUser((prevUser) => ({
+      ...prevUser,
+      upvotes: [...(prevUser.upvotes || []), newUpvoteId],
+    }));
+
     try {
-      const response = await fetch(`${config.apiBaseUrl}/upvoteProject/${project._id}`, {
+      const response = await fetch(`${config.apiBaseUrl}/upvoteProject/${localProject._id}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -99,30 +109,37 @@ const ProjectEntry = ({ project, passedUser }) => {
       const data = await response.json();
       console.log('Response Data:', data);
       if (response.ok) {
-        const newUpvoteId = data._id;
-
-        // Update the local project state
+        // Replace the temporary ID with the actual one from the server
         setLocalProject((prevProject) => ({
           ...prevProject,
-          [upvoteType]: [...(prevProject[upvoteType] || []), newUpvoteId],
+          upvotes: prevProject.upvotes.map(id => id === newUpvoteId ? data._id : id),
         }));
-
-        // Update the local user state
         setLocalUser((prevUser) => ({
           ...prevUser,
-          [upvoteType]: [...(prevUser[upvoteType] || []), newUpvoteId],
+          upvotes: prevUser.upvotes.map(id => id === newUpvoteId ? data._id : id),
         }));
-
-        // Update the user context state
         setUser((prevUser) => ({
           ...prevUser,
-          [upvoteType]: [...(prevUser[upvoteType] || []), newUpvoteId],
+          upvotes: prevUser.upvotes.map(id => id === newUpvoteId ? data._id : id),
         }));
       } else {
         console.error('Upvote failed:', data.message);
       }
     } catch (error) {
       console.error('Error during upvote:', error);
+      // Rollback optimistic update on failure
+      setLocalProject((prevProject) => ({
+        ...prevProject,
+        upvotes: prevProject.upvotes.filter(id => id !== newUpvoteId),
+      }));
+      setLocalUser((prevUser) => ({
+        ...prevUser,
+        upvotes: prevUser.upvotes.filter(id => id !== newUpvoteId),
+      }));
+      setUser((prevUser) => ({
+        ...prevUser,
+        upvotes: prevUser.upvotes.filter(id => id !== newUpvoteId),
+      }));
     }
   };
 
@@ -144,11 +161,6 @@ const ProjectEntry = ({ project, passedUser }) => {
     setComments(newComments);
   };
 
-
-/*
-It seems like the handle comment function is using the wrong approach to determining author.
-Should be taking from userContext rather than passedUser unless we changge the passed user to be taken from the context, pulled from the backend, and then delivered to projectEntry.
-*/
   const handleAddComment = async (commentText) => {
     if (commentText.trim() !== '') {
       const token = localStorage.getItem('token');
@@ -180,8 +192,6 @@ Should be taking from userContext rather than passedUser unless we changge the p
     }
   };
 
-
-  /*this function seems to be obselete*/
   const renderEditableField = (projectField) => {
     return isEditing && (
       <EditInPortfolio
@@ -203,18 +213,11 @@ Should be taking from userContext rather than passedUser unless we changge the p
     );
   };
 
-  const findUpvoteOverlap = (upvote_field, user, localProject) => {
-    if (!Array.isArray(user[upvote_field]) || !Array.isArray(localProject[upvote_field])) {
+  const findUpvoteOverlap = (user, localProject) => {
+    if (!Array.isArray(user.upvotes) || !Array.isArray(localProject.upvotes)) {
       return false;
     }
-    for (let userUpvote of user[upvote_field]) {
-      for (let projectUpvote of localProject[upvote_field]) {
-        if (userUpvote === projectUpvote) {
-          return true;
-        }
-      }
-    }
-    return false;
+    return user.upvotes.some(userUpvote => localProject.upvotes.includes(userUpvote));
   };
 
   const renderComments = () => {
@@ -248,8 +251,6 @@ Should be taking from userContext rather than passedUser unless we changge the p
     );
   };
 
-
-  //console.log('here are localProject.layers in projectEntry: ', localProject.layers);
   return (
     <div className={styles.projectContainer}>
       {localProject.createdBy && !isStudentProfilePage && (
@@ -284,22 +285,16 @@ Should be taking from userContext rather than passedUser unless we changge the p
       </div>
 
       <div className={styles.upvoteSectionBox}>
-        {['impactful', 'innovative', 'interesting'].map((field) => {
-          const upvoteField = `${field}_upvote`;
-          const hasOverlap = findUpvoteOverlap(upvoteField, localUser, localProject);
-          return (
-            <div className={styles.upvoteButtonBox} key={field}>
-              <p>{field}: {localProject[upvoteField] ? localProject[upvoteField].length : 0}</p>
-              <button
-                className={hasOverlap ? styles.clickedUpvoteButton : styles.upvoteButton}
-                onClick={() => handleUpvote(upvoteField)}
-                disabled={hasOverlap}
-              >
-                &#x2B06;
-              </button>
-            </div>
-          );
-        })}
+        <div className={styles.upvoteButtonBox}>
+          <p>Upvotes: {localProject.upvotes ? localProject.upvotes.length : 0}</p>
+          <button
+            className={findUpvoteOverlap(localUser, localProject) ? styles.clickedUpvoteButton : styles.upvoteButton}
+            onClick={handleUpvote}
+            disabled={findUpvoteOverlap(localUser, localProject)}
+          >
+            &#x2B06;
+          </button>
+        </div>
         <div className={styles.commentBox}>
           <ProfileImage username={passedUser.username} size="small" />
           <FaComment className={styles.commentIcon} />
@@ -309,14 +304,12 @@ Should be taking from userContext rather than passedUser unless we changge the p
           </button>
         </div>
       </div>
+
       {renderComments()}
     </div>
   );
 };
 
 export default ProjectEntry;
-
-
-
 
 
