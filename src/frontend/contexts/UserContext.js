@@ -64,9 +64,7 @@ const login = async (email, password) => {
       if (profileResponse.ok) {
         setUser({
           ...decodedToken,
-          impactful_upvote: profileData.impactful_upvote || [],
-          innovative_upvote: profileData.innovative_upvote || [],
-          interesting_upvote: profileData.interesting_upvote || []
+          upvotes: profileData.upvotes || [],
         });
       } else {
         console.error('Failed to load user details:', profileData.message);

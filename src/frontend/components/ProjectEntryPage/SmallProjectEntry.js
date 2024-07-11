@@ -1,3 +1,5 @@
+
+
 import React, { useState, useEffect, useRef } from 'react';
 import { FaComment, FaChevronDown, FaChevronUp, FaArrowUp } from 'react-icons/fa';
 import styles from './smallProjectEntry.module.css';
@@ -54,15 +56,31 @@ const SmallProjectEntry = ({ project }) => {
   const toggleContent = () => setShowFullContent(!showFullContent);
   const togglePopup = () => setShowPopup(!showPopup);
 
-  const handleUpvote = async (upvoteType) => {
+  const handleUpvote = async () => {
     const token = localStorage.getItem('token');
     if (!token) {
       console.error('No token found in local storage');
       return;
     }
-    const payload = { username: user.username, upvoteType };
+    const payload = { username: user.username };
+
+    // Optimistically update the state
+    const newUpvoteId = Math.random().toString(36).substring(2, 15); // Generate a temporary ID
+    setLocalProject((prevProject) => ({
+      ...prevProject,
+      upvotes: [...(prevProject.upvotes || []), newUpvoteId],
+    }));
+    setLocalUser((prevUser) => ({
+      ...prevUser,
+      upvotes: [...(prevUser.upvotes || []), newUpvoteId],
+    }));
+    setUser((prevUser) => ({
+      ...prevUser,
+      upvotes: [...(prevUser.upvotes || []), newUpvoteId],
+    }));
+
     try {
-      const response = await fetch(`${config.apiBaseUrl}/upvoteProject/${project._id}`, {
+      const response = await fetch(`${config.apiBaseUrl}/upvoteProject/${localProject._id}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -72,24 +90,37 @@ const SmallProjectEntry = ({ project }) => {
       });
       const data = await response.json();
       if (response.ok) {
-        const newUpvoteId = data._id;
+        // Replace the temporary ID with the actual one from the server
         setLocalProject((prevProject) => ({
           ...prevProject,
-          [upvoteType]: [...(prevProject[upvoteType] || []), newUpvoteId],
+          upvotes: prevProject.upvotes.map(id => id === newUpvoteId ? data._id : id),
         }));
         setLocalUser((prevUser) => ({
           ...prevUser,
-          [upvoteType]: [...(prevUser[upvoteType] || []), newUpvoteId],
+          upvotes: prevUser.upvotes.map(id => id === newUpvoteId ? data._id : id),
         }));
         setUser((prevUser) => ({
           ...prevUser,
-          [upvoteType]: [...(prevUser[upvoteType] || []), newUpvoteId],
+          upvotes: prevUser.upvotes.map(id => id === newUpvoteId ? data._id : id),
         }));
       } else {
         console.error('Upvote failed:', data.message);
       }
     } catch (error) {
       console.error('Error during upvote:', error);
+      // Rollback optimistic update on failure
+      setLocalProject((prevProject) => ({
+        ...prevProject,
+        upvotes: prevProject.upvotes.filter(id => id !== newUpvoteId),
+      }));
+      setLocalUser((prevUser) => ({
+        ...prevUser,
+        upvotes: prevUser.upvotes.filter(id => id !== newUpvoteId),
+      }));
+      setUser((prevUser) => ({
+        ...prevUser,
+        upvotes: prevUser.upvotes.filter(id => id !== newUpvoteId),
+      }));
     }
   };
 
@@ -131,16 +162,15 @@ const SmallProjectEntry = ({ project }) => {
   };
 
   const renderUpvotes = () => {
-    const upvoteField = 'impactful_upvote';
-    const hasOverlap = findUpvoteOverlap(upvoteField, localUser, localProject);
+    const hasOverlap = findUpvoteOverlap(localUser, localProject);
     
     return (
       <div className={styles.upvotesContainer}>
         <div className={styles.upvoteItem}>
-          <span>{localProject[upvoteField]?.length || 0}</span>
+          <span>{localProject.upvotes?.length || 0}</span>
           <button
             className={hasOverlap ? styles.clickedUpvoteButton : styles.upvoteButton}
-            onClick={() => handleUpvote(upvoteField)}
+            onClick={handleUpvote}
             disabled={hasOverlap}
           >
             <FaArrowUp/>
@@ -208,13 +238,11 @@ const SmallProjectEntry = ({ project }) => {
     );
   };
 
-  const findUpvoteOverlap = (upvote_field, user, localProject) => {
-    if (!Array.isArray(user[upvote_field]) || !Array.isArray(localProject[upvote_field])) {
+  const findUpvoteOverlap = (user, localProject) => {
+    if (!Array.isArray(user.upvotes) || !Array.isArray(localProject.upvotes)) {
       return false;
     }
-    return user[upvote_field].some(userUpvote => 
-      localProject[upvote_field].includes(userUpvote)
-    );
+    return user.upvotes.some(userUpvote => localProject.upvotes.includes(userUpvote));
   };
 
   return (
@@ -266,3 +294,5 @@ const SmallProjectEntry = ({ project }) => {
 };
 
 export default SmallProjectEntry;
+
+
