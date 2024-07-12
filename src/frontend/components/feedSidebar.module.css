@@ -16,9 +16,9 @@
   font-weight: bold;
   margin-bottom: 30px;
   padding-left: 10px;
-  color: #4a90e2 !important;
-  text-shadow: 0 0 10px rgba(74, 144, 226, 0.5);
-  letter-spacing: 1px;
+  color: #ffffff!important;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+  letter-spacing: 20px;
 }
 
 .sidebarMenu {

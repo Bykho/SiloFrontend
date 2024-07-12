@@ -13,7 +13,7 @@ const SidebarItem = ({ icon, text }) => (
 const Sidebar = () => {
   return (
     <div className={styles.sidebar}>
-      <h2 className={styles.sidebarTitle}>Navigate</h2>
+      <h2 className={styles.sidebarTitle}>MY FEED</h2>
       <ul className={styles.sidebarMenu}>
         <SidebarItem icon="🏠" text="For You" />
         <SidebarItem icon="🚀" text="Most Upvoted" />
