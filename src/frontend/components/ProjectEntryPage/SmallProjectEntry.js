@@ -300,3 +300,4 @@ const SmallProjectEntry = ({ project }) => {
 export default SmallProjectEntry;
 
 
+

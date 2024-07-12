@@ -1,6 +1,6 @@
 .sidebar {
   width: 250px;
-  height:91vh;
+  height: 91vh;
   background-color: #333 !important;
   color: #ffffff !important;
   padding: 20px;
@@ -16,7 +16,7 @@
   font-weight: bold;
   margin-bottom: 30px;
   padding-left: 10px;
-  color: #ffffff!important;
+  color: #ffffff !important;
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
   letter-spacing: 20px;
 }
@@ -60,4 +60,9 @@
 
 .sidebarLink:hover .sidebarText {
   color: #4a90e2 !important;
+}
+
+.sidebarItem.active .sidebarLink {
+  background-color: rgba(74, 144, 226, 0.2) !important;
+  transform: translateX(5px);
 }

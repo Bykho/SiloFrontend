@@ -1,7 +1,6 @@
 
 
-
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useUser } from '../../contexts/UserContext';
 import Tagged from '../../components/TagsFeed';
 import FeedSidebar from '../../components/FeedSidebar';
@@ -35,8 +34,8 @@ const Feed = () => {
         if (!response.ok) {
           throw new Error('Failed to fetch projects');
         }
-        const projects = await response.json();
-        setProjects(projects);
+        const returnedProjects = await response.json();
+        setProjects(returnedProjects);
         setLoading(false);
       } catch (err) {
         setError('Failed to fetch projects');
@@ -47,6 +46,7 @@ const Feed = () => {
   }, []);
 
   useEffect(() => {
+    console.log('here is the feedStyle: ', feedStyle)
     console.log('here is search text: ', searchText);
     let filtered = projects;
   
@@ -76,46 +76,48 @@ const Feed = () => {
         const score = (project.upvotes ? project.upvotes.length : 0) / hoursElapsed;
         return { ...project, score };
       }).sort((a, b) => b.score - a.score);
-    } else if (feedStyle === 'most upvoted') {
-      filtered = [...projects].sort((a, b) => (b.upvotes ? b.upvotes.length : 0) - (a.upvotes ? a.upvotes.length : 0));
+    } else if (feedStyle === 'mostUpvoted') {
+      filtered = projects.map(project => {
+        const score = (project.upvotes ? project.upvotes.length : 0)
+        return { ...project, score };
+      }).sort((a, b) => b.score - a.score);
+
     }
     
     setFilteredProjects(filtered);
   }, [projects, searchText, feedStyle]);
 
-
   return (
     <div className={styles.feedContainer}>
-      {feedStyle === 'explore' && (
-        <div className={styles.searchBar}>
-          <div className={styles.searchWords}>
-            <p style={{ textAlign: 'left' }}><FaSearch /></p>
-          </div>
-          <div className={styles.buttonContainer}>
-            <input
-              type="search"
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-              placeholder="Machine Learning"
-              className={styles.searchInput}
-            />
-            <button className={styles.navButton} onClick={() => setSearchText(inputText)}>Search</button>
-          </div>
-          <div className={styles.sortDropdown}>
-            <select className={styles.sortSelect}>
-              <option value="top">Top</option>
-              <option value="newest">Newest</option>
-            </select>
-          </div>
-          <div className={styles.resultsCount}>
-            Results: {filteredProjects.length}
-          </div>
+      <div className={styles.searchBar}>
+        <div className={styles.searchWords}>
+          <p style={{ textAlign: 'left' }}><FaSearch /></p>
         </div>
-      )}
+        <div className={styles.buttonContainer}>
+          <input
+            type="search"
+            value={inputText}
+            onClick={() => setFeedStyle('explore')} // Change feedStyle to 'explore' on click
+            onChange={(e) => setInputText(e.target.value)}
+            placeholder="Machine Learning"
+            className={styles.searchInput}
+          />
+          <button className={styles.navButton} onClick={() => setSearchText(inputText)}>Search</button>
+        </div>
+        <div className={styles.sortDropdown}>
+          <select className={styles.sortSelect}>
+            <option value="top">Top</option>
+            <option value="newest">Newest</option>
+          </select>
+        </div>
+        <div className={styles.resultsCount}>
+          Results: {filteredProjects.length}
+        </div>
+      </div>
 
       <div className={styles.feedBottomContainer}>
         <div className={styles.feedSidebar}>
-          <FeedSidebar setFeedStyle={setFeedStyle} />
+          <FeedSidebar feedStyle={feedStyle} setFeedStyle={setFeedStyle} />
         </div>
         <div className={styles.feedContent}>
           <Tagged filteredProjects={filteredProjects} loading={loading} error={error} />
