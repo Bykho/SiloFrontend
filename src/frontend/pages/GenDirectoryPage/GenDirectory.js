@@ -15,25 +15,9 @@ function Directory() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.navBar}>
-        <p>Filter by: </p>
-        <p
-          className={`${styles.navLink} ${feedStyle === 'showUserSearch' ? styles.bold : ''}`}
-          onClick={() => setFeedStyle('showUserSearch')}
-        >
-          Profiles
-        </p>
-        <p
-          className={`${styles.navLink} ${feedStyle === 'showProjectSearch' ? styles.bold : ''}`}
-          onClick={() => setFeedStyle('showProjectSearch')}
-        >
-          Projects
-        </p>
-      </div>
       <div className={styles.feedContainer}>
-        {feedStyle === 'showUserSearch' && <UserSearch />}
-        {feedStyle === 'showProjectSearch' && <ProjectSearch />}
-      </div>
+        <UserSearch />
+=      </div>
     </div>
   );  
 }

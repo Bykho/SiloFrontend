@@ -30,7 +30,6 @@ function App() {
     <Router>
       <UserProvider>
         <div style={appStyle}>
-          <GameofLife />
           <NavigationWithConditionalRender />
           <Routes>
             <Route path="/homePage" element={<HomePage />} />

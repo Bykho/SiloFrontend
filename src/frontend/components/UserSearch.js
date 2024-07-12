@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from 'react';
 import styles from './userSearch.module.css';
 import { useUser } from '../contexts/UserContext';
@@ -13,7 +11,7 @@ const Feed = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [value, setValue] = useState('NLP');
+  const [value, setValue] = useState('student'); // Default value to fetch student users
   const [searchText, setSearchText] = useState('');
   const { user } = useUser();
 
@@ -45,7 +43,7 @@ const Feed = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    setValue(searchText);
+    setValue(searchText || 'student'); // Use 'student' if searchText is empty
   };
 
   return (
@@ -111,8 +109,3 @@ const Feed = () => {
 };
 
 export default Feed;
-
-
-
-
-
