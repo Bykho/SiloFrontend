@@ -15,6 +15,7 @@ import Feed from './frontend/pages/FeedPage/Feed';
 import ProtectedRoute from './frontend/components/ProtectedRoute';
 import Login from './frontend/pages/LoginPage/Login';
 import GoLive from './frontend/pages/GoLivePage/GoLiveLandingPage'
+import GameofLife from './frontend/components/GameOfLife';
 
 import AddBlocPortfolio from './frontend/components/AddBlocPortfolio';
 
@@ -22,7 +23,7 @@ function App() {
   const appStyle = {
     backgroundColor: '#1e1e1e',
     minHeight: '100vh', // Minimum height to 100% of the viewport height
-    minWidth: '100vw',
+    minWidth: '100%',
   };
 
   return (

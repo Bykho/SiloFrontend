@@ -36,6 +36,7 @@ export const UserProvider = ({ children }) => {
 
 
 const login = async (email, password) => {
+  console.log('loggin in')
   try {
     const response = await fetch(`${config.apiBaseUrl}/login`, {
       method: 'POST',
@@ -64,9 +65,7 @@ const login = async (email, password) => {
       if (profileResponse.ok) {
         setUser({
           ...decodedToken,
-          impactful_upvote: profileData.impactful_upvote || [],
-          innovative_upvote: profileData.innovative_upvote || [],
-          interesting_upvote: profileData.interesting_upvote || []
+          upvotes: profileData.upvotes || [],
         });
       } else {
         console.error('Failed to load user details:', profileData.message);

@@ -11,7 +11,7 @@ import AddBlocPortfolio from '../../components/AddBlocPortfolio';
 import InfoEditor from '../OLDStudentProfileEditorPage/StudentProfileEditor';
 import ShareablePreview from '../../components/ShareablePreview'; // Import ShareablePreview component
 import config from '../../config';
-import { FaWindowClose } from 'react-icons/fa';
+import { FaWindowClose, FaPlusSquare, FaRegEdit } from 'react-icons/fa';
 
 function StudentProfile() {
   const [userData, setUserData] = useState(null);
@@ -24,28 +24,30 @@ function StudentProfile() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const response = await fetch(`${config.apiBaseUrl}/studentProfile`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token
-          }
-        });
-        if (!response.ok) {
-          throw new Error('Failed to fetch user data');
+  const fetchUserData = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${config.apiBaseUrl}/studentProfile`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
         }
-        const data = await response.json();
-        setUserData(data);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-        setLoading(false);
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch user data');
       }
-    };
+      const data = await response.json();
+      setUserData(data);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      setError('Failed to fetch user data');
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchUserData();
 
     if (location.state && location.state.buildPortfolio) {
@@ -83,12 +85,22 @@ function StudentProfile() {
     setShowSharePreview(false);
   };
 
-  const handleSaveProject = () => {
+  const handleSaveProject = (newProject) => {
     setShowModal(false);
+    if (newProject) {
+      setUserData((prevState) => ({
+        ...prevState,
+        portfolio: [...prevState.portfolio, newProject],
+      }));
+    }
   };
 
-  const handleSaveProfile = () => {
+  const handleSaveProfile = (newToken = null) => {
     setShowEditor(false);
+    if (newToken) {
+      localStorage.setItem('token', newToken);
+      fetchUserData(); // Re-fetch user data with the new token
+    }
   };
 
   return (
@@ -99,9 +111,8 @@ function StudentProfile() {
         error={error}
       />
       <div className={styles.buttonContainer}>
-        <button className={styles.bigButton} onClick={handleEditProfileClick}>Edit My Profile</button>
-        <button className={styles.bigButton} onClick={handleShareProfileClick}>Share My Profile</button>
-        <button className={styles.bigButton} onClick={handleAddProjectClick}>Add New Project</button>
+        <button className={styles.bigButton} onClick={handleAddProjectClick}> <FaPlusSquare /> Add New Project</button>
+        <button className={styles.bigButton} onClick={handleEditProfileClick}> <FaRegEdit /> Edit My Profile</button>
       </div>
       <div className={styles.contentContainer}>
         {loading ? (
@@ -141,8 +152,6 @@ function StudentProfile() {
 }
 
 export default StudentProfile;
-
-
 
 
 

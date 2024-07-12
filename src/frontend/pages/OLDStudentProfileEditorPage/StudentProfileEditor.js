@@ -1,3 +1,6 @@
+
+
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../contexts/UserContext';
@@ -34,7 +37,7 @@ function StudentProfileEditor({ initLocalData, setUserData, onSave }) {
     const token = localStorage.getItem('token');
     const subsetKeys = ['username', 'email', 'university', 'interests', 
       'skills', 'biography', 'profile_photo', 'personal_website', 'github_link', 
-      'papers', 'resume', 'links'];
+      'papers', 'resume', 'links', 'major', 'grad'];
     const localStateSubset = subsetKeys.reduce((obj, key) => {
       if (localState[key]) {
         obj[key] = localState[key];
@@ -42,7 +45,6 @@ function StudentProfileEditor({ initLocalData, setUserData, onSave }) {
       return obj;
     }, {});
 
-    console.log('localStateSubset: ', localStateSubset)
     try {
       const response = await fetch(`${config.apiBaseUrl}/studentProfileEditor`, {
         method: 'POST',
@@ -62,10 +64,10 @@ function StudentProfileEditor({ initLocalData, setUserData, onSave }) {
         if (data.access_token) {
           localStorage.setItem('token', data.access_token);
         }
-        // Call onSave to close the modal
-        onSave();
+        onSave(data.access_token);
       }
     } catch (err) {
+      console.error('Failed to connect to the server:', err);
       setError('Failed to connect to the server');
     }
   };
@@ -97,6 +99,14 @@ function StudentProfileEditor({ initLocalData, setUserData, onSave }) {
             <span className={styles.infoValue}>{localState.university || 'N/A'}</span>
           </div>
           <div className={styles.infoItem}>
+            <span className={styles.infoLabel}>Grad Year:</span>
+            <span className={styles.infoValue}>{localState.grad || 'N/A'}</span>
+          </div>
+          <div className={styles.infoItem}>
+            <span className={styles.infoLabel}>Major:</span>
+            <span className={styles.infoValue}>{localState.major || 'N/A'}</span>
+          </div>
+          <div className={styles.infoItem}>
             <span className={styles.infoLabel}>Interests:</span>
             <span className={styles.infoValue}>{localState.interests ? localState.interests.join(', ') : 'N/A'}</span>
           </div>
@@ -117,13 +127,10 @@ function StudentProfileEditor({ initLocalData, setUserData, onSave }) {
             <span className={styles.infoValue}>{localState.github_link || 'N/A'}</span>
           </div>
           <div className={styles.infoItem}>
-            <span className={styles.infoLabel}>Papers Link:</span>
-            <span className={styles.infoValue}>{localState.papers || 'N/A'}</span>
-          </div>
-          <div className={styles.infoItem}>
-            <span className={styles.infoLabel}>Links:</span>
+            <span className={styles.infoLabel}>Other Links:</span>
             <span className={styles.infoValue}>{localState.links || 'N/A'}</span>
           </div>
+
         </div>
         {localState.resume && (
           <div className={`${styles.infoItem} ${styles.fullWidth}`}>
@@ -137,4 +144,6 @@ function StudentProfileEditor({ initLocalData, setUserData, onSave }) {
 }
 
 export default StudentProfileEditor;
+
+
 

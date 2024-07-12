@@ -39,6 +39,14 @@ const EditInfoTab = ({ localState, handleInputChange, handleSubmit }) => {
           <input type="text" value={localState.university || ''} onChange={(e) => handleInputChange(e, 'university')} className={styles.input} />
         </label>
         <label>
+          Grad Year:
+          <input type="text" value={localState.grad || ''} onChange={(e) => handleInputChange(e, 'grad')} className={styles.input} placeholder="2026" />
+        </label>
+        <label>
+          Major:
+          <input type="text" value={localState.major || ''} onChange={(e) => handleInputChange(e, 'major')} className={styles.input} placeholder="Computer Science" />
+        </label>
+        <label>
           Interests:
           <input type="text" value={localState.interests || ''} onChange={(e) => handleInputChange(e, 'interests')} className={styles.input} placeholder="Comma-separated" />
         </label>
@@ -56,10 +64,6 @@ const EditInfoTab = ({ localState, handleInputChange, handleSubmit }) => {
           />
         </label>
         <label>
-          Profile Photo URL:
-          <input type="text" value={localState.profile_photo || ''} onChange={(e) => handleInputChange(e, 'profile_photo')} className={styles.input} />
-        </label>
-        <label>
           Personal Website:
           <input type="text" value={localState.personal_website || ''} onChange={(e) => handleInputChange(e, 'personal_website')} className={styles.input} />
         </label>
@@ -68,17 +72,14 @@ const EditInfoTab = ({ localState, handleInputChange, handleSubmit }) => {
           <input type="text" value={localState.github_link || ''} onChange={(e) => handleInputChange(e, 'github_link')} className={styles.input} />
         </label>
         <label>
-          Papers Link:
-          <input type="text" value={localState.papers || ''} onChange={(e) => handleInputChange(e, 'papers')} className={styles.input} placeholder="Comma-separated"/>
+          Other Links:
+          <input type="text" value={localState.links || ''} onChange={(e) => handleInputChange(e, 'links')} className={styles.input} placeholder="Comma-separated"/>
         </label>
         <label>
           Resume:
           <input type="file" onChange={(e) => handleInputChange(e, 'resume')} className={styles.input} />
         </label>
-        <label>
-          Links:
-          <input type="text" value={localState.links || ''} onChange={(e) => handleInputChange(e, 'links')} className={styles.input} placeholder="Comma-separated"/>
-        </label>
+
       </div>
       <button type="submit" className={styles.saveButton}>Save Info</button>
     </form>

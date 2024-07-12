@@ -22,6 +22,17 @@ const ProfileHeader = ({ userData, loading, error }) => {
     setShowResume(!showResume);
   };
 
+  const getLinkLabel = (url) => {
+    try {
+      const cleanUrl = url.replace(/^(https?:\/\/)?(www\.)?/, '');
+      const parts = cleanUrl.split('.');
+      return parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
+    } catch (error) {
+      console.error('Error parsing URL:', error);
+      return 'Link';
+    }
+  };
+
   const getTruncatedBio = (bio, length) => {
     if (bio.length <= length) {
       return bio;
@@ -36,17 +47,24 @@ const ProfileHeader = ({ userData, loading, error }) => {
     return url;
   };
 
-  const renderLinkButton = (link, icon, label) => (
-    <a
-      href={ensureProtocol(link)}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={styles.linkButton}
-    >
-      {icon}
-      <span>{label}</span>
-    </a>
-  );
+  const renderLinkButton = (link, icon) => {
+    const label = getLinkLabel(link);
+    return (
+      <a
+        href={ensureProtocol(link)}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={styles.linkButton}
+      >
+        {icon}
+        <span>{label}</span>
+      </a>
+    );
+  };
+
+  const handleSkillClick = (skill) => {
+    navigate('/GenDirectory', { state: { skill } });
+  };
 
   if (loading) return <p className={styles.loadingError}>Loading...</p>;
   if (error) return <p className={styles.loadingError}>Error: {error}</p>;
@@ -69,7 +87,13 @@ const ProfileHeader = ({ userData, loading, error }) => {
                 <h4 className={styles.tagLabel}>Skills</h4>
                 <div className={styles.tagList}>
                   {userData.skills && userData.skills.map((skill, index) => (
-                    <span key={index} className={styles.skillTag}>{skill}</span>
+                    <span
+                      key={index}
+                      className={styles.skillTag}
+                      onClick={() => handleSkillClick(skill)}
+                    >
+                      {skill}
+                    </span>
                   ))}
                 </div>
               </div>
@@ -94,10 +118,7 @@ const ProfileHeader = ({ userData, loading, error }) => {
             {userData.github_link && renderLinkButton(userData.github_link, <FaGithub />, 'GitHub')}
             {userData.personal_website && renderLinkButton(userData.personal_website, <FaGlobe />, 'Personal Website')}
             {userData.links && userData.links.map((link, index) => (
-              renderLinkButton(link, <FaLink />, `Link ${index + 1}`)
-            ))}
-            {userData.papers && userData.papers.map((paper, index) => (
-              renderLinkButton(paper, <FaLink />, `Paper ${index + 1}`)
+              renderLinkButton(link, <FaLink key={index} />)
             ))}
           </div>
         </div>

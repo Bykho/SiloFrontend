@@ -56,20 +56,25 @@
     margin-right: 5px; /* Adjust margin to make buttons less wide */
     margin-bottom: 0px;
     padding: 8px 16px;
-    background-color: #444444;
+    background-color: #262d35;
     color: #D9D9D9;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
     height: 60px;
-    width: calc(100% / 3 - 30px); /* Adjusted calculation */
-    font-size: 15px;
+    width: calc(100% / 2 - 30px); /* Adjusted calculation */
+    font-size: 20px;
     margin-left: 20px; /* Adjust margin to make buttons less wide */
     transition: background-color 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid #c3c3c3;
+    justify-content: center;
+    gap: 10px; 
   }
   
   .bigButton:hover {
-    background-color: #7FAACB;
+    background-color: #537c9b;
     color: white;
   }
   

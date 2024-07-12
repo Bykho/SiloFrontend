@@ -71,16 +71,16 @@
   .projectList {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 0px;
   }
   
   .projectItem {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    padding: 20px;
+    gap: 0px;
+    padding: 0px 30px 0px 20px;
     background-color: #333;
-    border-radius: 8px;
+    border-radius: 3px;
   }
 
 .resultsCount {

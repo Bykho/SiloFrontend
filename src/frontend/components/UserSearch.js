@@ -1,21 +1,34 @@
 
 
-import React, { useState, useEffect } from 'react';
+
+import React, { useState, useEffect, useRef } from 'react';
 import styles from './userSearch.module.css';
 import { useUser } from '../contexts/UserContext';
 import ProfileImage from './ProfileImage';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import config from '../config';
 import { Search, User, Briefcase, Mail, Tag } from 'lucide-react';
 
-const Feed = () => {
+const UserSearch = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const searchInputRef = useRef(null);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [value, setValue] = useState('NLP');
+  const [value, setValue] = useState('student');
   const [searchText, setSearchText] = useState('');
   const { user } = useUser();
+
+  useEffect(() => {
+    if (location.state && location.state.skill) {
+      setSearchText(location.state.skill);
+      setValue(location.state.skill);
+      searchInputRef.current.focus();
+      handleSearch({ preventDefault: () => {} });
+      navigate('/GenDirectory', { replace: true }); // Remove the state from the URL
+    }
+  }, [location.state, navigate]);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -45,7 +58,7 @@ const Feed = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    setValue(searchText);
+    setValue(searchText || 'student'); // Use 'student' if searchText is empty
   };
 
   return (
@@ -55,6 +68,7 @@ const Feed = () => {
         <form onSubmit={handleSearch} className={styles.searchBar}>
           <Search className={styles.searchIcon} />
           <input
+            ref={searchInputRef} // Attach the ref to the search input
             type="search"
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
@@ -110,9 +124,7 @@ const Feed = () => {
   );
 };
 
-export default Feed;
-
-
+export default UserSearch;
 
 
 

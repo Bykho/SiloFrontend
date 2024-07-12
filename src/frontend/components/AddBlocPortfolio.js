@@ -1,27 +1,22 @@
 
 
 
-
 import React, { useState, useEffect } from 'react';
 import { useUser } from '../contexts/UserContext';
 import styles from './AddBlocPortfolio.module.css';
 import config from '../config';
 import { FaPlus, FaSave, FaTrash } from 'react-icons/fa';
 
-const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = null }) => {
-  console.log('this is what the initialProjectData holds: ', initialProjectData);
-  console.log('this is what the initialRows holds: ', initialRows);
+const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = null, onClose = null }) => {
+  console.log('this is initialProjectData._id: ', initialProjectData._id);
 
   const [rows, setRows] = useState(initialRows.length ? initialRows : [[{ type: '', value: '' }]]);
   const [projectName, setProjectName] = useState(initialProjectData?.projectName || '');
   const [projectDescription, setProjectDescription] = useState(initialProjectData?.projectDescription || '');
+  const [tags, setTags] = useState(initialProjectData?.tags || []);
+  const [links, setLinks] = useState(initialProjectData?.links || []);
   const { user } = useUser();
-
-  // useEffect(() => {
-  //   setRows(initialRows);
-  //   setProjectName(initialProjectData?.projectName || '');
-  //   setProjectDescription(initialProjectData?.projectDescription || '');
-  // }, [initialRows, initialProjectData]);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const handleAddRow = () => {
     setRows([...rows, [{ type: '', value: '' }]]);
@@ -37,7 +32,7 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
 
   const handleCellTypeChange = (rowIndex, cellIndex, type) => {
     const newRows = [...rows];
-    newRows[rowIndex][cellIndex] = { ...newRows[rowIndex][cellIndex], type, value: newRows[rowIndex][cellIndex].value || '' };
+    newRows[rowIndex][cellIndex] = { ...newRows[rowIndex][cellIndex], type, value: '' }; // Reset value on type change
     setRows(newRows);
   };
 
@@ -68,14 +63,15 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
     const projectData = {
       projectName,
       projectDescription,
-      layers: rows,
+      layers: rows ? rows : [[]],
+      tags,
+      links,
       username: user.username
     };
-
-    if (initialProjectData?.project_id) {
-      projectData.project_id = initialProjectData.project_id;
+    console.log('were trying to saave');
+    if (initialProjectData._id) {
+      projectData._id = initialProjectData._id;
     }
-    console.log('here is project data, ', projectData)
     const token = localStorage.getItem('token');
     try {
       const response = await fetch(`${config.apiBaseUrl}/addBlocProject`, {
@@ -87,15 +83,71 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
         body: JSON.stringify({ data: projectData }),
       });
       if (response.ok) {
+        const savedProject = await response.json(); // Assuming your API returns the saved project
         alert('Project saved successfully');
+        console.log('here is the savedProject ahead of the onSave call', savedProject)
         if (onSave) {
-          onSave(rows, { projectName, projectDescription });
+          if (initialProjectData._id) {
+            onSave(savedProject.layers, savedProject);
+          } else {
+            onSave(savedProject);
+          }
         }
       } else {
         console.error('Error saving project:', response.statusText);
       }
     } catch (error) {
       console.error('Error saving project:', error);
+    }
+  };
+
+  const handleTagsChange = (e) => {
+    setTags(e.target.value.split(',').map(tag => tag.trim()));
+  };
+
+  const handleLinksChange = (e) => {
+    setLinks(e.target.value.split(',').map(link => link.trim()));
+  };
+
+  const isValidURL = (url) => {
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  const handleDeleteClick = () => {
+    setShowDeleteModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowDeleteModal(false);
+  };
+
+  const handleDelete = async () => {
+    const token = localStorage.getItem('token');
+    try {
+      const response = await fetch(`${config.apiBaseUrl}/deleteProject`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ projectId: initialProjectData._id, userId: user._id }),
+      });
+      if (response.ok) {
+        console.log('modal delete project button was clicked.');
+        setShowDeleteModal(false);
+        if (onClose) {
+          onClose(); // Close the AddBlocPortfolio modal
+        }
+      } else {
+        console.error('Error deleting project:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error deleting project:', error);
     }
   };
 
@@ -159,7 +211,7 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
                         accept="image/*"
                         className={styles.fileInput}
                       />
-                      {cell.value && (
+                      {isValidURL(cell.value) && (
                         <div className={styles.previewContainer}>
                           <img src={cell.value} alt="Preview" className={styles.preview} />
                         </div>
@@ -174,7 +226,7 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
                         accept="video/*"
                         className={styles.fileInput}
                       />
-                      {cell.value && (
+                      {isValidURL(cell.value) && (
                         <div className={styles.previewContainer}>
                           <video src={cell.value} controls className={styles.preview} />
                         </div>
@@ -189,7 +241,7 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
                         accept=".pdf"
                         className={styles.fileInput}
                       />
-                      {cell.value && (
+                      {isValidURL(cell.value) && (
                         <div className={styles.previewContainer}>
                           <embed src={cell.value} type="application/pdf" className={styles.preview} />
                         </div>
@@ -207,16 +259,45 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
           ))}
         </div>
         <button className={styles.addContentBelowButton} onClick={handleAddRow}> <FaPlus className={styles.iconSpacing}/> Add Content Row </button>
+        <div className={styles.addTagsAndLinks}>
+          <input
+            type="text"
+            value={tags.join(', ')}
+            onChange={handleTagsChange}
+            placeholder="Add tags (comma separated)"
+            className={styles.tagInput}
+          />
+          <input
+            type="text"
+            value={links.join(', ')}
+            onChange={handleLinksChange}
+            placeholder="Add links (comma separated)"
+            className={styles.linkInput}
+          />
+        </div>
         <div className={styles.actionButtons}>
           <button className={styles.saveButton} onClick={handleSave}><FaSave className={styles.iconSpacing}/> Save Project</button>
+          {initialProjectData._id && (
+            <button className={styles.deleteButton} onClick={handleDeleteClick}><FaTrash className={styles.iconSpacing}/> Delete Project</button>
+          )}
         </div>
       </div>
+      {showDeleteModal && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modal}>
+            <h2>All deletions are permanent. Are you sure you want to delete?</h2>
+            <div className={styles.modalActions}>
+              <button className={styles.modalDeleteButton} onClick={handleDelete}>Delete Project</button>
+              <button className={styles.modalKeepButton} onClick={handleCloseModal}>Keep Project</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
 export default AddBlocPortfolio;
-
 
 
 

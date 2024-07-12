@@ -1,3 +1,7 @@
+
+
+
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../contexts/UserContext';
@@ -31,10 +35,22 @@ function SignUp() {
 
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
-    setFormData(prevState => ({
-      ...prevState,
-      [name]: type === 'file' ? files[0] : value
-    }));
+    if (type === 'file') {
+      const file = files[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData(prevState => ({
+          ...prevState,
+          resume: reader.result
+        }));
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setFormData(prevState => ({
+        ...prevState,
+        [name]: value
+      }));
+    }
   };
 
   const handleArrayChange = (e, field) => {
@@ -80,6 +96,8 @@ function SignUp() {
       email: formData.email,
       password: formData.password,
       university: formData.university,
+      grad: formData.grad,
+      major: formData.major,
       user_type: formData.userType,
       personal_website: formData.personalWebsite,
       resume: formData.resume,
@@ -337,5 +355,6 @@ function SignUp() {
 }
 
 export default SignUp;
+
 
 
