@@ -96,6 +96,8 @@ function SignUp() {
       email: formData.email,
       password: formData.password,
       university: formData.university,
+      grad: formData.grad,
+      major: formData.major,
       user_type: formData.userType,
       personal_website: formData.personalWebsite,
       resume: formData.resume,

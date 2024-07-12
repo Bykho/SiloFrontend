@@ -37,7 +37,7 @@ function StudentProfileEditor({ initLocalData, setUserData, onSave }) {
     const token = localStorage.getItem('token');
     const subsetKeys = ['username', 'email', 'university', 'interests', 
       'skills', 'biography', 'profile_photo', 'personal_website', 'github_link', 
-      'papers', 'resume', 'links'];
+      'papers', 'resume', 'links', 'major', 'grad'];
     const localStateSubset = subsetKeys.reduce((obj, key) => {
       if (localState[key]) {
         obj[key] = localState[key];
@@ -64,7 +64,6 @@ function StudentProfileEditor({ initLocalData, setUserData, onSave }) {
         if (data.access_token) {
           localStorage.setItem('token', data.access_token);
         }
-        // Call onSave to close the modal
         onSave(data.access_token);
       }
     } catch (err) {

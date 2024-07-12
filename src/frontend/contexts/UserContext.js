@@ -36,6 +36,7 @@ export const UserProvider = ({ children }) => {
 
 
 const login = async (email, password) => {
+  console.log('loggin in')
   try {
     const response = await fetch(`${config.apiBaseUrl}/login`, {
       method: 'POST',
