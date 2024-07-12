@@ -24,13 +24,8 @@ const ProfileHeader = ({ userData, loading, error }) => {
 
   const getLinkLabel = (url) => {
     try {
-      // Remove protocol if present
       const cleanUrl = url.replace(/^(https?:\/\/)?(www\.)?/, '');
-      
-      // Split the remaining string by dots
       const parts = cleanUrl.split('.');
-      
-      // Return the first part (main domain name) with the first letter capitalized
       return parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
     } catch (error) {
       console.error('Error parsing URL:', error);
@@ -67,6 +62,10 @@ const ProfileHeader = ({ userData, loading, error }) => {
     );
   };
 
+  const handleSkillClick = (skill) => {
+    navigate('/GenDirectory', { state: { skill } });
+  };
+
   if (loading) return <p className={styles.loadingError}>Loading...</p>;
   if (error) return <p className={styles.loadingError}>Error: {error}</p>;
   if (!userData) return <p className={styles.loadingError}>No user data available</p>;
@@ -88,7 +87,13 @@ const ProfileHeader = ({ userData, loading, error }) => {
                 <h4 className={styles.tagLabel}>Skills</h4>
                 <div className={styles.tagList}>
                   {userData.skills && userData.skills.map((skill, index) => (
-                    <span key={index} className={styles.skillTag}>{skill}</span>
+                    <span
+                      key={index}
+                      className={styles.skillTag}
+                      onClick={() => handleSkillClick(skill)}
+                    >
+                      {skill}
+                    </span>
                   ))}
                 </div>
               </div>
