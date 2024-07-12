@@ -2,6 +2,7 @@
 
 
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import EditInPortfolio from '../EditInPortfolio';
 import styles from './projectEntry.module.css';
 import ProfileImage from '../ProfileImage';
@@ -23,6 +24,7 @@ const ProjectEntry = ({ project, passedUser }) => {
   const [localUser, setLocalUser] = useState(passedUser);
   const { user, setUser } = useUser();
   const modalRef = useRef(null);
+  const navigate = useNavigate();
 
   const [comments, setComments] = useState(() => {
     try {
@@ -157,6 +159,10 @@ const ProjectEntry = ({ project, passedUser }) => {
 
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
+  };
+
+  const handleTagClick = (tag) => {
+    navigate('/feed', { state: { tag } });
   };
 
   const toggleDescription = () => {
@@ -307,7 +313,9 @@ const ProjectEntry = ({ project, passedUser }) => {
         {localProject.tags && (
           <div className={styles.tagsDisplay}>
             {localProject.tags.map((tag, index) => (
-              <span key={index} className={styles.tagStyle}>{tag}</span>
+              <span key={index} className={styles.tagStyle} onClick={() => handleTagClick(tag)}>
+                {tag}
+              </span>
             ))}
           </div>
         )}

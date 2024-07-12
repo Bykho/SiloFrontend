@@ -1,7 +1,8 @@
 
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useUser } from '../../contexts/UserContext';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Tagged from '../../components/TagsFeed';
 import FeedSidebar from '../../components/FeedSidebar';
 import styles from './feed.module.css';
@@ -18,6 +19,10 @@ const Feed = () => {
   const [searchText, setSearchText] = useState('');
   const [inputText, setInputText] = useState('');
   const { user } = useUser();
+  const location = useLocation();
+  const searchInputRef = useRef(null);
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -46,10 +51,24 @@ const Feed = () => {
   }, []);
 
   useEffect(() => {
-    console.log('here is the feedStyle: ', feedStyle)
+    if (location.state && location.state.tag) {
+      const tag = location.state.tag;
+      setSearchText(tag);
+      setInputText(tag);
+      setFeedStyle('explore');
+      searchInputRef.current.focus();
+      setTimeout(() => {
+        handleSearch({ preventDefault: () => {} });
+        navigate('/feed', { replace: true });
+      }, 0); // Adding a timeout to ensure the focus and search trigger properly
+    }
+  }, [location.state]);
+
+  useEffect(() => {
+    console.log('here is the feedStyle: ', feedStyle);
     console.log('here is search text: ', searchText);
     let filtered = projects;
-  
+
     if (feedStyle === 'explore') {
       filtered = projects.filter(project => {
         const searchTextLower = searchText.toLowerCase();
@@ -64,6 +83,9 @@ const Feed = () => {
           }
         }
         if (project.projectName.toLowerCase().includes(searchTextLower)) {
+          return true;
+        }
+        if (project.tags && project.tags.some(tag => tag.toLowerCase().includes(searchTextLower))) {
           return true;
         }
         return false;
@@ -81,11 +103,15 @@ const Feed = () => {
         const score = (project.upvotes ? project.upvotes.length : 0)
         return { ...project, score };
       }).sort((a, b) => b.score - a.score);
-
     }
-    
+
     setFilteredProjects(filtered);
   }, [projects, searchText, feedStyle]);
+
+  const handleSearch = (e) => {
+    if (e) e.preventDefault();
+    setSearchText(inputText);
+  };
 
   return (
     <div className={styles.feedContainer}>
@@ -95,6 +121,7 @@ const Feed = () => {
         </div>
         <div className={styles.buttonContainer}>
           <input
+            ref={searchInputRef} // Attach the ref to the search input
             type="search"
             value={inputText}
             onClick={() => setFeedStyle('explore')} // Change feedStyle to 'explore' on click
@@ -102,7 +129,7 @@ const Feed = () => {
             placeholder="Machine Learning"
             className={styles.searchInput}
           />
-          <button className={styles.navButton} onClick={() => setSearchText(inputText)}>Search</button>
+          <button className={styles.navButton} onClick={handleSearch}>Search</button>
         </div>
         <div className={styles.sortDropdown}>
           <select className={styles.sortSelect}>
@@ -128,6 +155,5 @@ const Feed = () => {
 };
 
 export default Feed;
-
 
 
