@@ -100,6 +100,14 @@ function StudentProfileEditor({ initLocalData, setUserData, onSave }) {
             <span className={styles.infoValue}>{localState.university || 'N/A'}</span>
           </div>
           <div className={styles.infoItem}>
+            <span className={styles.infoLabel}>Grad Year:</span>
+            <span className={styles.infoValue}>{localState.grad || 'N/A'}</span>
+          </div>
+          <div className={styles.infoItem}>
+            <span className={styles.infoLabel}>Major:</span>
+            <span className={styles.infoValue}>{localState.major || 'N/A'}</span>
+          </div>
+          <div className={styles.infoItem}>
             <span className={styles.infoLabel}>Interests:</span>
             <span className={styles.infoValue}>{localState.interests ? localState.interests.join(', ') : 'N/A'}</span>
           </div>
@@ -119,14 +127,7 @@ function StudentProfileEditor({ initLocalData, setUserData, onSave }) {
             <span className={styles.infoLabel}>Github Link:</span>
             <span className={styles.infoValue}>{localState.github_link || 'N/A'}</span>
           </div>
-          <div className={styles.infoItem}>
-            <span className={styles.infoLabel}>Papers Link:</span>
-            <span className={styles.infoValue}>{localState.papers || 'N/A'}</span>
-          </div>
-          <div className={styles.infoItem}>
-            <span className={styles.infoLabel}>Links:</span>
-            <span className={styles.infoValue}>{localState.links || 'N/A'}</span>
-          </div>
+
         </div>
         {localState.resume && (
           <div className={`${styles.infoItem} ${styles.fullWidth}`}>
