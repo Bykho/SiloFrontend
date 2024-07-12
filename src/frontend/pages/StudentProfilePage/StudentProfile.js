@@ -11,7 +11,7 @@ import AddBlocPortfolio from '../../components/AddBlocPortfolio';
 import InfoEditor from '../OLDStudentProfileEditorPage/StudentProfileEditor';
 import ShareablePreview from '../../components/ShareablePreview'; // Import ShareablePreview component
 import config from '../../config';
-import { FaWindowClose } from 'react-icons/fa';
+import { FaWindowClose, FaPlusSquare, FaRegEdit } from 'react-icons/fa';
 
 function StudentProfile() {
   const [userData, setUserData] = useState(null);
@@ -111,8 +111,8 @@ function StudentProfile() {
         error={error}
       />
       <div className={styles.buttonContainer}>
-        <button className={styles.bigButton} onClick={handleEditProfileClick}>Edit My Profile</button>
-        <button className={styles.bigButton} onClick={handleAddProjectClick}>Add New Project</button>
+        <button className={styles.bigButton} onClick={handleAddProjectClick}> <FaPlusSquare /> Add New Project</button>
+        <button className={styles.bigButton} onClick={handleEditProfileClick}> <FaRegEdit /> Edit My Profile</button>
       </div>
       <div className={styles.contentContainer}>
         {loading ? (
