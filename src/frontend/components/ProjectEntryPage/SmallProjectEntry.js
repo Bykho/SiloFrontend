@@ -32,6 +32,10 @@ const SmallProjectEntry = ({ project }) => {
   const [newComment, setNewComment] = useState('');
 
   useEffect(() => {
+    setLocalProject(project);
+  }, [project]);
+
+  useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
         if (isEditing) {
