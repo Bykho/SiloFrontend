@@ -229,8 +229,18 @@ const ProjectEntry = ({ project, passedUser }) => {
     }
   };
 
-  const renderLinkButton = (link, icon) => {
+  const renderLinkButton = (link) => {
     const label = getLinkLabel(link);
+    let icon;
+
+    if (link.includes('github.com')) {
+      icon = <FaGithub />;
+    } else if (link.includes('linkedin.com')) {
+      icon = <FaGlobe />;
+    } else {
+      icon = <FaLink />;
+    }
+
     return (
       <a
         href={ensureProtocol(link)}
@@ -244,17 +254,7 @@ const ProjectEntry = ({ project, passedUser }) => {
     );
   };
 
-  const renderProjectLinkButton = (link) => {
-    const label = getLinkLabel(link);
-    
-    return (
-      link && (
-        <a href={link} target="_blank" rel="noopener noreferrer" className={styles.projectLinkButton}>
-          {label}
-        </a>
-      )
-    );
-  };
+
 
   const findUpvoteOverlap = (user, localProject) => {
     if (!Array.isArray(user.upvotes) || !Array.isArray(localProject.upvotes)) {
@@ -323,7 +323,7 @@ const ProjectEntry = ({ project, passedUser }) => {
       </div>
 
       <div className={styles.buttonContainer}>
-        {localProject.links && localProject.links.map((link, index) => (renderLinkButton(link, <FaLink key={index} />)))}
+        {localProject.links && localProject.links.map((link, index) => (renderLinkButton(link)))}
       </div>
 
       <div className={styles.upvoteSectionBox}>
