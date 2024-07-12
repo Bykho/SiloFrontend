@@ -7,6 +7,7 @@ import styles from './projectEntry.module.css';
 import ProfileImage from '../ProfileImage';
 import LayerDisplay from './LayerDisplay';
 import { FaEdit, FaComment, FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { FaGithub, FaGlobe, FaLink } from 'react-icons/fa';
 import { useUser } from '../../contexts/UserContext';
 import CommentSection from './CommentSection';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
@@ -73,6 +74,13 @@ const ProjectEntry = ({ project, passedUser }) => {
       ...prevProject,
       ...details,
     }));
+  };
+
+  const ensureProtocol = (url) => {
+    if (!/^https?:\/\//i.test(url)) {
+      return 'http://' + url;
+    }
+    return url;
   };
 
   const handleUpvote = async () => {
@@ -203,7 +211,42 @@ const ProjectEntry = ({ project, passedUser }) => {
     );
   };
 
-  const renderProjectLinkButton = (link, label) => {
+  const getLinkLabel = (url) => {
+    try {
+      // Remove protocol if present
+      const cleanUrl = url.replace(/^(https?:\/\/)?(www\.)?/, '');
+      
+      // Split the remaining string by dots
+      const parts = cleanUrl.split('.');
+      
+      // Capitalize the first letter of the first part (main domain name)
+      const capitalized = parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
+      
+      return capitalized;
+    } catch (error) {
+      console.error('Error parsing URL:', error);
+      return 'Link';
+    }
+  };
+
+  const renderLinkButton = (link, icon) => {
+    const label = getLinkLabel(link);
+    return (
+      <a
+        href={ensureProtocol(link)}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={styles.linkButton}
+      >
+        {icon}
+        <span>{label}</span>
+      </a>
+    );
+  };
+
+  const renderProjectLinkButton = (link) => {
+    const label = getLinkLabel(link);
+    
     return (
       link && (
         <a href={link} target="_blank" rel="noopener noreferrer" className={styles.projectLinkButton}>
@@ -235,7 +278,7 @@ const ProjectEntry = ({ project, passedUser }) => {
   const renderProjectDescription = () => {
     const description = localProject.projectDescription;
     const isLongDescription = description.length > 200;
-
+    console.log(localProject); 
     return (
       <div className={styles.projectDescriptionContainer}>
         <div className={`${styles.projDescription} ${isLongDescription && !showDescription ? styles.collapsedDescription : ''}`}>
@@ -280,8 +323,7 @@ const ProjectEntry = ({ project, passedUser }) => {
       </div>
 
       <div className={styles.buttonContainer}>
-        {renderProjectLinkButton(localProject.githubLink, 'GitHub')}
-        {renderProjectLinkButton(localProject.projectLink, 'ReadMe')}
+        {localProject.links && localProject.links.map((link, index) => (renderLinkButton(link, <FaLink key={index} />)))}
       </div>
 
       <div className={styles.upvoteSectionBox}>

@@ -30,14 +30,14 @@ const ProfileHeader = ({ userData, loading, error }) => {
       // Split the remaining string by dots
       const parts = cleanUrl.split('.');
       
-      // Return the first part (main domain name)
-      return parts[0];
+      // Return the first part (main domain name) with the first letter capitalized
+      return parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
     } catch (error) {
       console.error('Error parsing URL:', error);
       return 'Link';
     }
   };
-  
+
   const getTruncatedBio = (bio, length) => {
     if (bio.length <= length) {
       return bio;
