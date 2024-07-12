@@ -72,6 +72,10 @@ const EditInfoTab = ({ localState, handleInputChange, handleSubmit }) => {
           <input type="text" value={localState.github_link || ''} onChange={(e) => handleInputChange(e, 'github_link')} className={styles.input} />
         </label>
         <label>
+          Other Links:
+          <input type="text" value={localState.links || ''} onChange={(e) => handleInputChange(e, 'links')} className={styles.input} placeholder="Comma-separated"/>
+        </label>
+        <label>
           Resume:
           <input type="file" onChange={(e) => handleInputChange(e, 'resume')} className={styles.input} />
         </label>

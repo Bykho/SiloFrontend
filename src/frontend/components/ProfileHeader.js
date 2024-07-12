@@ -22,6 +22,22 @@ const ProfileHeader = ({ userData, loading, error }) => {
     setShowResume(!showResume);
   };
 
+  const getLinkLabel = (url) => {
+    try {
+      // Remove protocol if present
+      const cleanUrl = url.replace(/^(https?:\/\/)?(www\.)?/, '');
+      
+      // Split the remaining string by dots
+      const parts = cleanUrl.split('.');
+      
+      // Return the first part (main domain name)
+      return parts[0];
+    } catch (error) {
+      console.error('Error parsing URL:', error);
+      return 'Link';
+    }
+  };
+  
   const getTruncatedBio = (bio, length) => {
     if (bio.length <= length) {
       return bio;
@@ -36,17 +52,20 @@ const ProfileHeader = ({ userData, loading, error }) => {
     return url;
   };
 
-  const renderLinkButton = (link, icon, label) => (
-    <a
-      href={ensureProtocol(link)}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={styles.linkButton}
-    >
-      {icon}
-      <span>{label}</span>
-    </a>
-  );
+  const renderLinkButton = (link, icon) => {
+    const label = getLinkLabel(link);
+    return (
+      <a
+        href={ensureProtocol(link)}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={styles.linkButton}
+      >
+        {icon}
+        <span>{label}</span>
+      </a>
+    );
+  };
 
   if (loading) return <p className={styles.loadingError}>Loading...</p>;
   if (error) return <p className={styles.loadingError}>Error: {error}</p>;
@@ -94,10 +113,7 @@ const ProfileHeader = ({ userData, loading, error }) => {
             {userData.github_link && renderLinkButton(userData.github_link, <FaGithub />, 'GitHub')}
             {userData.personal_website && renderLinkButton(userData.personal_website, <FaGlobe />, 'Personal Website')}
             {userData.links && userData.links.map((link, index) => (
-              renderLinkButton(link, <FaLink />, `Link ${index + 1}`)
-            ))}
-            {userData.papers && userData.papers.map((paper, index) => (
-              renderLinkButton(paper, <FaLink />, `Paper ${index + 1}`)
+              renderLinkButton(link, <FaLink key={index} />)
             ))}
           </div>
         </div>

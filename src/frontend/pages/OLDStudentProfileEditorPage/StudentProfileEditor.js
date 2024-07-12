@@ -127,6 +127,10 @@ function StudentProfileEditor({ initLocalData, setUserData, onSave }) {
             <span className={styles.infoLabel}>Github Link:</span>
             <span className={styles.infoValue}>{localState.github_link || 'N/A'}</span>
           </div>
+          <div className={styles.infoItem}>
+            <span className={styles.infoLabel}>Other Links:</span>
+            <span className={styles.infoValue}>{localState.links || 'N/A'}</span>
+          </div>
 
         </div>
         {localState.resume && (
