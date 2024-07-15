@@ -1,38 +1,64 @@
-
 .suggestedContainer {
-    display: flex;
+    display: flex; 
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 20px;
     margin-top: 20px;
+    margin-bottom: 20px;
+
+    /* Webkit browsers (Chrome, Safari, Brave, newer versions of Edge) */
+    &::-webkit-scrollbar {
+        width: 12px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.2); /* Lighter track color for contrast */
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: rgba(255, 255, 255, 0.6); /* Lighter thumb color for contrast */
+        border-radius: 6px;
+        border: 3px solid rgba(255, 255, 255, 0.2); /* Border color matching the track */
+    }
+
+    /* Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.6) rgba(255, 255, 255, 0.2);
+
+    /* IE and Edge */
+    -ms-overflow-style: none;
+
+    /* Standard property for future compatibility */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.6) rgba(255, 255, 255, 0.2);
 }
 
+/* For IE and Edge */
+.suggestedContainer::-ms-scrollbar {
+    width: 12px;
+}
+
+.suggestedContainer::-ms-scrollbar-track {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.suggestedContainer::-ms-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.6);
+    border-radius: 6px;
+    border: 3px solid rgba(255, 255, 255, 0.2);
+}
 .suggestedProjects {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    margin: 10px;
+    margin: 10px 0;
     padding: 10px;
     border: 1px solid #e0e0e0;
     border-radius: 5px;
-    width: 300px;
-    height: 300px;
-    gap: 300px; /* Add space between elements */
-    overflow: auto; /* Make it scrollable if content overflows */
-}
-
-.suggestion{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin: 10px;
-    padding: 10px;
-    border: 1px solid #e0e0e0;
-    border-radius: 5px;
-    width: 300px;
-    height: 300px;
+    width: 100%;
+    max-width: 600px; /* Limit maximum width */
 }
 
 .buttons {

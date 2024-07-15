@@ -1,6 +1,6 @@
 .projectContainer {
   margin: 20px 0;
-  padding: 20px;
+  padding: 20px 35px 20px 35px;
   border: 1px solid #6A6969;
   border-radius: 8px;
   background-color: #f7f7f7;
@@ -18,7 +18,7 @@
 .createdByContainer a {
   margin-left: 20px;
   color: #1e1e1e;
-  font-size: 30px;
+  font-size: 25px;
   text-decoration: none;
   font-weight: bolder;
 }
@@ -30,14 +30,61 @@
   margin-bottom: 15px;
 }
 
+.headerContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  margin-top: 15px
+}
+
+.byUsername {
+  font-size: 1rem;
+  color: #666;
+  white-space: nowrap;
+}
+
+.username {
+  font-weight: 600;
+  color: #4a90e2;
+}
+
+.tagsContainer {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  min-width: 120px;
+}
+
+.tag {
+  background-color: #e8f0fe;
+  color: #4a90e2;
+  padding: 4px 10px;
+  border-radius: 15px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.tag:hover {
+  background-color: #d0e0fc;
+}
+
+.divider {
+  height: 1px;
+  background-color: #e0e0e0;
+  margin: 15px 0;
+}
+
 .projectTitle {
+  font-size: 1.4rem;
+  font-weight: 600;
   margin: 0;
-  font-size: 1.5rem;
-  background-color: #f6f6f6;
-  color: #1e1e1e;
-  padding: 10px 20px 10px 5px;
-  border-radius: 8px;
-  flex: 1; /* Ensure the title takes up available space */
+  margin-right: 25px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .tagsDisplay {
@@ -85,6 +132,15 @@
 .comments {
   margin-bottom: 15px;
 }
+
+.titleAndUsernameContainer {
+  display: flex;
+  align-items: baseline;
+  flex-grow: 1;
+  margin: 0px 0px;
+  overflow: hidden;
+}
+
 
 .mediaImage {
   max-width: 100%;

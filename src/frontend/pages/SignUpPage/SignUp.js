@@ -412,7 +412,16 @@ function SignUp() {
         );
       case 4:
         return (
+          <div>
           <SuggestedPortfolio portfolioSuggestions={suggestedProjects} />
+          <button type="button" onClick={handleBack} className={styles.btnBack}>Back</button>
+          <button 
+            type="submit" 
+            onClick={handleSubmit}
+            className={styles.btnSubmit}
+            disabled={isSubmitDisabled}
+          > Finish </button>
+          </div>
         );
       default:
         return null;

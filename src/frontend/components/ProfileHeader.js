@@ -85,24 +85,28 @@ const ProfileHeader = ({ userData, loading, error }) => {
             <div className={styles.tagsContainer}>
               <div className={styles.tagSection}>
                 <h4 className={styles.tagLabel}>Skills</h4>
-                <div className={styles.tagList}>
-                  {userData.skills && userData.skills.map((skill, index) => (
-                    <span
-                      key={index}
-                      className={styles.skillTag}
-                      onClick={() => handleSkillClick(skill)}
-                    >
-                      {skill}
-                    </span>
-                  ))}
+                  <div className={styles.tagListWrapper}>
+                    <div className={styles.tagList}>
+                      {userData.skills && userData.skills.map((skill, index) => (
+                        <span
+                          key={index}
+                          className={styles.skillTag}
+                          onClick={() => handleSkillClick(skill)}
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
                 </div>
               </div>
               <div className={styles.tagSection}>
                 <h4 className={styles.tagLabel}>Interests</h4>
-                <div className={styles.tagList}>
-                  {userData.interests && userData.interests.map((interest, index) => (
-                    <span key={index} className={styles.interestTag}>{interest}</span>
-                  ))}
+                <div className={styles.tagListWrapper}>
+                  <div className={styles.tagList}>
+                    {userData.interests && userData.interests.map((interest, index) => (
+                      <span key={index} className={styles.interestTag}>{interest}</span>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>

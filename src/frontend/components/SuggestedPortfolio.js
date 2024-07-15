@@ -5,8 +5,9 @@
 import React from 'react';
 import { useUser } from '../contexts/UserContext';
 import styles from './suggestPortfolio.module.css';
-import SmallProjectEntry from './ProjectEntryPage/SmallProjectEntry';
+import SmallestProjectEntry from './ProjectEntryPage/SmallestProjectEntry';
 import config from '../config'; // Assuming config contains your API base URL
+import { FaChevronUp } from 'react-icons/fa';
 
 function SuggestedPortfolio({ portfolioSuggestions }) {
     const { user } = useUser();
@@ -46,26 +47,22 @@ function SuggestedPortfolio({ portfolioSuggestions }) {
 
     return (
         <div className={styles.suggestedContainer}>
-            <h1>Suggested Portfolio</h1>
-            <div className={styles.suggestedProjects}>
                 {Array.isArray(portfolioSuggestions) && portfolioSuggestions.map((project, index) => {
                     const preparedProject = prepareProject(project);
                     return (
-                        <div key={index} className={styles.suggestion}>
-                            <SmallProjectEntry project={preparedProject} />
+                        <div key={index}>
+                            <SmallestProjectEntry project={preparedProject} />
                             <div className={styles.buttons}>
-                                <button className={styles.deleteButton}>Delete this project?</button>
                                 <button
                                     className={styles.saveButton}
                                     onClick={() => handleSaveProject(preparedProject)}
                                 >
-                                    Save Portfolio
+                                    <FaChevronUp /> Save this Project to Portfolio
                                 </button>
                             </div>
                         </div>
                     );
                 })}
-            </div>
         </div>
     );
 }
