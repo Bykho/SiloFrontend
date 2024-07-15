@@ -26,6 +26,14 @@ function SignUp() {
     biography: ''
   });
   const [extractedText, setExtractedText] = useState('');
+  const [suggestedSummary, setSuggestedSummary] = useState({});
+  const [suggestedBio, setSuggestedBio] = useState('');
+  const [suggestedInterests, setSuggestedInterests] = useState([]);
+  const [suggestedSkills, setSuggestedSkills] = useState([]);
+  const [suggestedProjects, setSuggestedProjects] = useState([]);
+  const [suggestedUniversity, setSuggestedUniversity] = useState('');
+  const [suggestedMajor, setSuggestedMajor] = useState('');
+  const [suggestedGradYr, setSuggestedGradYr] = useState('');
   const [error, setError] = useState('');
   const [isNextDisabled, setIsNextDisabled] = useState(true);
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
@@ -37,11 +45,11 @@ function SignUp() {
     const { name, value, type, files } = e.target;
     if (type === 'file') {
       const file = files[0];
-      handleResumeUpload(file);
       setFormData(prevState => ({
         ...prevState,
         resume: file
       }));
+      handleResumeUpload(file);
     } else {
       setFormData(prevState => ({
         ...prevState,
@@ -55,8 +63,18 @@ function SignUp() {
     console.log('File size:', file.size, 'bytes');
   
     try {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result;
+        setFormData(prevState => ({
+          ...prevState,
+          resume: base64String
+        }));
+      };
+      reader.readAsDataURL(file);
+
+
       const text = await pdfToText(file);
-      console.log("Extracted text from resume: ", text);
       setExtractedText(text);
 
       const response = await fetch(`${config.apiBaseUrl}/resumeParser`, {
@@ -69,7 +87,10 @@ function SignUp() {
   
       if (response.ok) {
         const data = await response.json();
-        console.log("Backend response: ", data);
+        console.log('Received summary:', data.summary);
+        const parsedSummary = JSON.parse(data.summary);
+        console.log('Parsed summary:', parsedSummary);
+        setSuggestedSummary(parsedSummary);
       } else {
         console.error('Failed to send extracted text to backend');
       }
@@ -111,6 +132,33 @@ function SignUp() {
     setIsNextDisabled(!validatePage(page));
     setIsSubmitDisabled(!validatePage(3));
   }, [formData, page]);
+
+
+  useEffect(() => {
+    if (Object.keys(suggestedSummary).length > 0) {
+      setSuggestedBio(suggestedSummary.bio || '');
+      setSuggestedInterests(suggestedSummary.interests || []);
+      setSuggestedSkills(suggestedSummary.skills || []);
+      setSuggestedProjects(suggestedSummary.projects ? suggestedSummary.projects.map(project => ({
+        title: project.title,
+        desc: project.desc
+      })) : []);
+      setSuggestedUniversity(suggestedSummary.latestUniversity || '');
+      setSuggestedMajor(suggestedSummary.major || '');
+      setSuggestedGradYr(suggestedSummary.grad_yr || '');
+      
+      setFormData(prevState => ({
+        ...prevState,
+        biography: suggestedSummary.bio || '',
+        interests: suggestedSummary.interests || [],
+        skills: suggestedSummary.skills || [],
+        university: suggestedSummary.latestUniversity || '',
+        major: suggestedSummary.major || '',
+        grad: suggestedSummary.grad_yr || ''
+      }));
+    }
+  }, [suggestedSummary]);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -380,6 +428,7 @@ function SignUp() {
 }
 
 export default SignUp;
+
 
 
 
