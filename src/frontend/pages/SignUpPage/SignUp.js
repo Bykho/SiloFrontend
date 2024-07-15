@@ -1,13 +1,12 @@
 
 
-
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../contexts/UserContext';
 import GameOfLife from '../GoLivePage/GameOfLife';
 import styles from './SignUp.module.css';
 import config from '../../config';
+import pdfToText from 'react-pdftotext';
 
 function SignUp() {
   const [page, setPage] = useState(1);
@@ -21,11 +20,12 @@ function SignUp() {
     major: '',
     userType: 'Student',
     personalWebsite: '',
-    resume: null,
+    resume: '',
     interests: [],
     skills: [],
     biography: ''
   });
+  const [extractedText, setExtractedText] = useState('');
   const [error, setError] = useState('');
   const [isNextDisabled, setIsNextDisabled] = useState(true);
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
@@ -37,19 +37,44 @@ function SignUp() {
     const { name, value, type, files } = e.target;
     if (type === 'file') {
       const file = files[0];
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData(prevState => ({
-          ...prevState,
-          resume: reader.result
-        }));
-      };
-      reader.readAsDataURL(file);
+      handleResumeUpload(file);
+      setFormData(prevState => ({
+        ...prevState,
+        resume: file
+      }));
     } else {
       setFormData(prevState => ({
         ...prevState,
         [name]: value
       }));
+    }
+  };
+
+  const handleResumeUpload = async (file) => {
+    console.log('Submitted a file:', file);
+    console.log('File size:', file.size, 'bytes');
+  
+    try {
+      const text = await pdfToText(file);
+      console.log("Extracted text from resume: ", text);
+      setExtractedText(text);
+
+      const response = await fetch(`${config.apiBaseUrl}/resumeParser`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ resumeText: text }),
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Backend response: ", data);
+      } else {
+        console.error('Failed to send extracted text to backend');
+      }
+    } catch (error) {
+      console.error('Failed to extract text from pdf', error);
     }
   };
 
@@ -185,6 +210,16 @@ function SignUp() {
                 required
               />
             </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="resume">Resume</label>
+              <input
+                type="file"
+                id="resume"
+                name="resume"
+                onChange={handleChange}
+                accept=".pdf,.doc,.docx"
+              />
+            </div>
             <button 
               type="button" 
               onClick={handleNext} 
@@ -255,16 +290,6 @@ function SignUp() {
                 value={formData.personalWebsite}
                 onChange={handleChange}
                 placeholder='www.example.com'
-              />
-            </div>
-            <div className={styles.formGroup}>
-              <label htmlFor="resume">Resume</label>
-              <input
-                type="file"
-                id="resume"
-                name="resume"
-                onChange={handleChange}
-                accept=".pdf,.doc,.docx"
               />
             </div>
             <div className={styles.buttonGroup}>
