@@ -1,11 +1,13 @@
 
 
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../contexts/UserContext';
 import GameOfLife from '../GoLivePage/GameOfLife';
 import styles from './SignUp.module.css';
 import config from '../../config';
+import SuggestedPortfolio from '../../components/SuggestedPortfolio';
 import pdfToText from 'react-pdftotext';
 
 function SignUp() {
@@ -73,7 +75,6 @@ function SignUp() {
       };
       reader.readAsDataURL(file);
 
-
       const text = await pdfToText(file);
       setExtractedText(text);
 
@@ -123,6 +124,8 @@ function SignUp() {
         return formData.university && formData.grad && formData.major;
       case 3:
         return formData.interests.length && formData.skills.length && formData.biography;
+      case 4:
+        return true;
       default:
         return false;
     }
@@ -132,7 +135,6 @@ function SignUp() {
     setIsNextDisabled(!validatePage(page));
     setIsSubmitDisabled(!validatePage(3));
   }, [formData, page]);
-
 
   useEffect(() => {
     if (Object.keys(suggestedSummary).length > 0) {
@@ -158,7 +160,6 @@ function SignUp() {
       }));
     }
   }, [suggestedSummary]);
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -194,7 +195,12 @@ function SignUp() {
         const data = await response.json();
         localStorage.setItem('token', data.access_token);
         updateUser(data.new_user);
-        navigate('/siloDescription');
+        
+        if (suggestedSummary.projects && suggestedSummary.projects.length > 0) {
+          setPage(4);  // Navigate to the fourth page if there are suggested projects
+        } else {
+          navigate('/siloDescription');  // Otherwise navigate to the description page
+        }
       } else {
         const errorData = await response.json();
         setError(errorData.message || 'Registration failed');
@@ -404,6 +410,10 @@ function SignUp() {
             </div>
           </>
         );
+      case 4:
+        return (
+          <SuggestedPortfolio portfolioSuggestions={suggestedProjects} />
+        );
       default:
         return null;
     }
@@ -416,7 +426,7 @@ function SignUp() {
       </div>
       <div className={styles.signupFormWrapper}>
         <div className={styles.signupForm}>
-          <h1>{page === 1 ? 'Create your account' : page === 2 ? 'Additional Information' : 'About You'}</h1>
+          <h1>{page === 1 ? 'Create your account' : page === 2 ? 'Additional Information' : page === 3 ? 'About You' : 'Review Suggested Projects'}</h1>
           {error && <p className={styles.error}>{error}</p>}
           <form onSubmit={handleSubmit}>
             {renderPage()}
@@ -428,6 +438,7 @@ function SignUp() {
 }
 
 export default SignUp;
+
 
 
 
