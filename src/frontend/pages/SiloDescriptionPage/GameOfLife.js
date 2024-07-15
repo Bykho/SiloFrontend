@@ -80,7 +80,7 @@ const GameOfLife = () => {
     }
 
     render(grid);
-    const intervalId = setInterval(update, 100);
+    const intervalId = setInterval(update, 110);
 
     return () => clearInterval(intervalId);
   }, []);
