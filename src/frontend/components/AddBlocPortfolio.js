@@ -122,6 +122,12 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
     setShowDeleteModal(true);
   };
 
+  const handleLanguageChange = (rowIndex, cellIndex, language) => {
+    const newRows = [...rows];
+    newRows[rowIndex][cellIndex] = { ...newRows[rowIndex][cellIndex], language };
+    setRows(newRows);
+  };
+
   const handleCloseModal = () => {
     setShowDeleteModal(false);
   };
@@ -189,6 +195,7 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
                       <option value="image">Image</option>
                       <option value="video">Video</option>
                       <option value="pdf">PDF</option>
+                      <option value="code">Code</option>
                     </select>
                     <button 
                       className={styles.removeCellButton} 
@@ -249,6 +256,34 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
                         </div>
                       )}
                     </div>
+                  )}
+                  {cell.type === 'code' && (
+                    <>
+                      <select
+                        value={cell.language}
+                        onChange={(e) => handleLanguageChange(rowIndex, cellIndex, e.target.value)}
+                        className={styles.languageSelect}
+                      >
+                        <option value="">Select Language</option>
+                        <option value="javascript">JavaScript</option>
+                        <option value="python">Python</option>
+                        <option value="java">Java</option>
+                        <option value="css">CSS</option>
+                        <option value="html">HTML</option>
+                        <option value="c">C</option>
+                        <option value="c++">C++</option>
+                        <option value="ruby">Ruby</option>
+                        <option value="php">PHP</option>
+                        <option value="rust">Rust</option>
+                        {/* Add more language options as needed */}
+                      </select>
+                      <textarea
+                        value={cell.value || ''}
+                        onChange={(e) => handleCellValueChange(rowIndex, cellIndex, e.target.value)}
+                        placeholder="Enter code"
+                        className={styles.cellTextArea}
+                      />
+                    </>
                   )}
                 </div>
               ))}
