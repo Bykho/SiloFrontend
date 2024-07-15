@@ -345,7 +345,7 @@ const ProjectEntry = ({ project, passedUser }) => {
             &#x2B06;
           </button>
         </div>
-        <div className={styles.commentBox}>
+        <div className={styles.commentBox} onClick={toggleExpand}>
           <ProfileImage username={passedUser.username} size="small" />
           <FaComment className={styles.commentIcon} />
           <span className={styles.commentText}>Comments...</span>

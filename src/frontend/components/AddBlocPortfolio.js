@@ -155,6 +155,7 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
     <div className={styles.containerWrapper}>
       <div className={styles.container}>
         <h1 className={styles.title}>Project Builder</h1>
+        <p className={styles.subtitle}>Create a new project for your portfolio or edit an existing one</p>
         <div className={styles.projectInfo}>
           <input
             type="text"
@@ -171,6 +172,7 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
           />
         </div>
         <h1 className={styles.subTitle}> Project Content: </h1>
+        <p className={styles.subtitle}> Add up to 3 content blocks per row... </p>
         <div className={styles.rowsContainer}>
           {rows.map((row, rowIndex) => (
             <div key={rowIndex} className={styles.row}>
