@@ -4,6 +4,9 @@
 import React, { useState, useEffect } from 'react';
 import AddBlocPortfolio from '../AddBlocPortfolio'; // Import the AddBlocPortfolio component
 import styles from './layerDisplay.module.css';
+import hljs from 'highlight.js';
+import 'highlight.js/styles/vs.css';
+
 
 const LayerDisplay = ({ layers, isEditing, toggleEdit, updateLayer, updateProjectDetails, initialProjectData }) => {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -13,7 +16,11 @@ const LayerDisplay = ({ layers, isEditing, toggleEdit, updateLayer, updateProjec
     if (isEditing) {
       setShowEditor(true);
     }
-  }, [isEditing]);
+    // Apply syntax highlighting to all code blocks
+    document.querySelectorAll('pre code').forEach((block) => {
+      hljs.highlightBlock(block);
+    });
+  }, [isEditing, layers]);
 
   const handleImageClick = (imageSrc) => {
     setSelectedImage(imageSrc);
@@ -78,6 +85,15 @@ const LayerDisplay = ({ layers, isEditing, toggleEdit, updateLayer, updateProjec
                     <source src={column.value} type="video/mp4" />
                     Your browser does not support the video tag.
                   </video>
+                </div>
+              )}
+              {column.type === 'code' && (
+                <div className={styles.codeContainer}>
+                  <pre>
+                    <code className={`hljs ${column.language || ''}`}>
+                      {column.value}
+                    </code>
+                  </pre>
                 </div>
               )}
             </div>

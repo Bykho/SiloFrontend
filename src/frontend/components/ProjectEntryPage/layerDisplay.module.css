@@ -192,4 +192,46 @@
   .modalImage {
     max-height: calc(90vh - 40px);
   }
+
+/* Existing styles... */
+
+.codeContainer {
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 0.5rem;
+  overflow-x: auto;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.code {
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 14px !important; /* Force consistent font size */
+  line-height: 1.5;
+  color: #d4d4d4;
+  white-space: pre-wrap;
+  word-break: break-all;
+  word-wrap: break-word;
+  tab-size: 4;
+}
+
+.code * {
+  font-size: inherit !important; /* Ensure all nested elements inherit the font size */
+}
+
+/* Custom scrollbar styles for webkit browsers */
+.codeContainer::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.codeContainer::-webkit-scrollbar-thumb {
+  background-color: #4a4a4a;
+  border-radius: 4px;
+}
+
+.codeContainer::-webkit-scrollbar-track {
+  background-color: #2a2a2a;
+}
+
 }
