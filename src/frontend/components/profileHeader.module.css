@@ -15,6 +15,7 @@
   border-radius: 8px;
   margin-bottom: 20px;
   position: relative;
+  overflow: hidden; /* Prevent overflow from child elements */
 }
 
 .leftColumn {
@@ -22,6 +23,7 @@
   flex-direction: column;
   align-items: center;
   margin-right: 20px;
+  flex-shrink: 0; /* Prevent shrinking */
 }
 
 .typeAndName {
@@ -46,6 +48,7 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
+  min-width: 0; /* Allow shrinking */
 }
 
 .nameAndTagsBox {
@@ -60,6 +63,9 @@
   margin: 0;
   color: #f0f0f0;
   flex-grow: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .tagsContainer {
@@ -68,6 +74,7 @@
   justify-content: flex-end;
   flex-wrap: wrap;
   max-width: 70%;
+  min-width: 0; /* Allow shrinking */
 }
 
 .tagSection {
@@ -75,7 +82,7 @@
   align-items: center;
   gap: 10px;
   flex: 1;
-  min-width: 200px;
+  min-width: 0; /* Allow shrinking */
   max-width: 100%;
 }
 
@@ -91,7 +98,7 @@
 }
 
 .tagListWrapper {
-  max-width: calc(100% - 80px);
+  max-width: calc(100% - 90px); /* Adjust based on your tagLabel width */
   overflow-x: auto;
   overflow-y: hidden;
   scrollbar-width: thin;
@@ -250,11 +257,10 @@
 
   .tagSection {
     width: 100%;
-    min-width: 0;
   }
 
   .tagListWrapper {
-    max-width: calc(100% - 80px);
+    max-width: calc(100% - 90px);
   }
 
   .linksContainer {
