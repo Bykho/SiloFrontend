@@ -187,6 +187,16 @@
   margin-bottom: 1rem;
 }
 
+.header{
+  margin-bottom: 1.2rem;
+  margin-top: 1rem; 
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  border-bottom: 1px solid var(--border-color); 
+  padding-bottom: 1.2rem; /* Add padding to create space between border and content */
+}
+
 .cellTypeSelect {
   flex-grow: 1;
   margin-right: 0.5rem;
@@ -463,7 +473,18 @@
 .autofillLabel {
   background-color: #3498db;
   color: white;
-  padding: 10px 20px;
+  padding: 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  white-space: nowrap;
+  max-height: 20px;
+}
+
+.autofillLabel:hover {
+  background-color: #236895;
+  color: white;
+  padding: 20px;
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;

@@ -226,7 +226,7 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
             accept=".pdf"
           />
         </div>
-        <p className={styles.subtitle}>Create a new project for your portfolio or edit an existing one</p>
+        <p className={styles.subtitle}>Create a new project for your portfolio, edit an existing one or upload PDF to autofill text content</p>
         <div className={styles.projectInfo}>
           <input
             type="text"
