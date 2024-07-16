@@ -275,7 +275,7 @@ function SignUp() {
                 style={{display: 'none'}}
               />
               <label htmlFor="resume" className={styles.fileInputLabel}>
-                Choose File
+                Upload Resume
               </label>
               {formData.resume && (
                 <span className={styles.fileUploadIndicator}>Uploaded</span>
