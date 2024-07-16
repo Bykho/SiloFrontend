@@ -2,17 +2,17 @@
 
 
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useUser } from '../contexts/UserContext';
 import styles from './suggestPortfolio.module.css';
 import SmallestProjectEntry from './ProjectEntryPage/SmallestProjectEntry';
 import config from '../config'; // Assuming config contains your API base URL
 import { FaChevronUp } from 'react-icons/fa';
 
-function SuggestedPortfolio({ portfolioSuggestions }) {
+function SuggestedPortfolio({ portfolioSuggestions, selectedPortfolio, setSelectedPortfolio }) {
     const { user } = useUser();
+    const [selectedKeys, setSelectedKeys] = useState([]);
 
-    // Method to prepare each project
     const prepareProject = (project) => {
         return {
             ...project,
@@ -23,51 +23,68 @@ function SuggestedPortfolio({ portfolioSuggestions }) {
         };
     };
 
-    // Handler to save a project
-    const handleSaveProject = async (project) => {
-        const token = localStorage.getItem('token');
-        try {
-            const response = await fetch(`${config.apiBaseUrl}/addBlocProject`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ data: project }),
-            });
-            if (response.ok) {
-                alert('Project saved successfully');
-            } else {
-                console.error('Error saving project:', response.statusText);
+    const handleIncludeProject = (index) => {
+        setSelectedKeys(prevState => {
+            if (!prevState.includes(index)) {
+                return [...prevState, index];
             }
-        } catch (error) {
-            console.error('Error saving project:', error);
-        }
+            return prevState;
+        });
     };
+
+    const handleExcludeProject = (index) => {
+        setSelectedKeys(prevState => prevState.filter(i => i !== index));
+    };
+
+    // Update selectedPortfolio whenever selectedKeys changes
+    useEffect(() => {
+        if (Array.isArray(portfolioSuggestions)) {
+            const newSelectedPortfolio = selectedKeys.map(index => prepareProject(portfolioSuggestions[index]));
+            setSelectedPortfolio(newSelectedPortfolio);
+        }
+    }, [selectedKeys, portfolioSuggestions]);
+
+    useEffect(() => {
+        console.log('Selected Portfolio:', selectedPortfolio);
+        console.log('Selected Keys:', selectedKeys);
+    }, [selectedKeys]);
 
     return (
         <div className={styles.suggestedContainer}>
-                {Array.isArray(portfolioSuggestions) && portfolioSuggestions.map((project, index) => {
-                    const preparedProject = prepareProject(project);
-                    return (
-                        <div key={index}>
-                            <SmallestProjectEntry project={preparedProject} />
-                            <div className={styles.buttons}>
-                                <button
-                                    className={styles.saveButton}
-                                    onClick={() => handleSaveProject(preparedProject)}
-                                >
-                                    <FaChevronUp /> Save this Project to Portfolio
-                                </button>
-                            </div>
+            {Array.isArray(portfolioSuggestions) && portfolioSuggestions.map((project, index) => {
+                const preparedProject = prepareProject(project);
+                const isIncluded = selectedKeys.includes(index);
+
+                return (
+                    <div key={index}>
+                        <SmallestProjectEntry project={preparedProject} />
+                        <div className={styles.buttons}>
+                            <button
+                                className={`${styles.includeButton} ${isIncluded ? styles.disabledButton : ''}`}
+                                onClick={() => handleIncludeProject(index)}
+                                disabled={isIncluded}
+                            >
+                                <FaChevronUp /> Include
+                            </button>
+                            <button
+                                className={`${styles.excludeButton} ${!isIncluded ? styles.disabledButton : ''}`}
+                                onClick={() => handleExcludeProject(index)}
+                                disabled={!isIncluded}
+                            >
+                                <FaChevronUp /> Exclude
+                            </button>
                         </div>
-                    );
-                })}
+                    </div>
+                );
+            })}
         </div>
     );
 }
 
 export default SuggestedPortfolio;
+
+
+
 
 
 

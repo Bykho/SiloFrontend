@@ -1,3 +1,4 @@
+
 .suggestedContainer {
     display: flex; 
     flex-direction: column;
@@ -88,3 +89,29 @@
     margin: 5px;
     cursor: pointer;
 }
+
+.includeButton {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.excludeButton {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.disabledButton {
+    background-color: grey;
+    cursor: not-allowed;
+}
+

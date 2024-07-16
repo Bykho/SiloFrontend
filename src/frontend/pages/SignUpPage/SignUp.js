@@ -1,6 +1,5 @@
 
 
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../contexts/UserContext';
@@ -39,8 +38,11 @@ function SignUp() {
   const [error, setError] = useState('');
   const [isNextDisabled, setIsNextDisabled] = useState(true);
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+  const [selectedPortfolio, setSelectedPortfolio] = useState([]);
+  const [savedUsersId, setSavedUsersId] = useState('');
+  const [isLoading, setIsLoading] = useState(false); // Add loading state
 
-  const { updateUser } = useUser();
+  const { user, updateUser } = useUser();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -63,7 +65,9 @@ function SignUp() {
   const handleResumeUpload = async (file) => {
     console.log('Submitted a file:', file);
     console.log('File size:', file.size, 'bytes');
-  
+
+    setIsLoading(true); // Set loading state to true
+
     try {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -85,7 +89,7 @@ function SignUp() {
         },
         body: JSON.stringify({ resumeText: text }),
       });
-  
+
       if (response.ok) {
         const data = await response.json();
         console.log('Received summary:', data.summary);
@@ -97,6 +101,8 @@ function SignUp() {
       }
     } catch (error) {
       console.error('Failed to extract text from pdf', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -210,6 +216,50 @@ function SignUp() {
       setError('An unexpected error occurred. Please try again.');
     }
   };
+
+
+  const handleSuggestedPortfolioSubmit = async (e) => {
+    e.preventDefault();
+
+    if (selectedPortfolio.length === 0) return;
+    const token = localStorage.getItem('token');
+
+    const userData = {
+      user_id: user._id,
+      selectedPortfolio: selectedPortfolio
+    };
+
+    console.log("Here is userData: ", userData);
+
+    try {
+      const response = await fetch(`${config.apiBaseUrl}/massProjectPublish`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        navigate('/siloDescription');  // Otherwise navigate to the description page
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || 'Publishing Failed');
+      }
+    } catch (error) {
+      console.error('Error during publishing:', error);
+      setError('An unexpected error occurred. Please try again.');
+    }
+  };
+
+  const renderLoadingIndicator = () => (
+    <div className={styles.loadingIndicator}>
+      Autofilling from resume...
+    </div>
+  );
+
 
   const renderPage = () => {
     switch(page) {
@@ -421,14 +471,18 @@ function SignUp() {
       case 4:
         return (
           <div>
-          <SuggestedPortfolio portfolioSuggestions={suggestedProjects} />
-          <button type="button" onClick={handleBack} className={styles.btnBack}>Back</button>
-          <button 
-            type="submit" 
-            onClick={handleSubmit}
-            className={styles.btnSubmit}
-            disabled={isSubmitDisabled}
-          > Finish </button>
+            <SuggestedPortfolio
+              portfolioSuggestions={suggestedProjects}
+              selectedPortfolio={selectedPortfolio}
+              setSelectedPortfolio={setSelectedPortfolio}
+            />
+            <button type="button" onClick={handleBack} className={styles.btnBack}>Back</button>
+            <button 
+              type="submit" 
+              onClick={handleSuggestedPortfolioSubmit}
+              className={styles.btnSubmit}
+              disabled={isSubmitDisabled}
+            > Finish </button>
           </div>
         );
       default:
@@ -442,6 +496,7 @@ function SignUp() {
         <GameOfLife />
       </div>
       <div className={styles.signupFormWrapper}>
+        {isLoading && renderLoadingIndicator()}
         <div className={styles.signupForm}>
           <h1>{page === 1 ? 'Create your account' : page === 2 ? 'Additional Information' : page === 3 ? 'About You' : 'Review Suggested Projects'}</h1>
           {error && <p className={styles.error}>{error}</p>}
@@ -455,6 +510,7 @@ function SignUp() {
 }
 
 export default SignUp;
+
 
 
 
