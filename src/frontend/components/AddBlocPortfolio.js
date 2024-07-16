@@ -1,11 +1,10 @@
-
-
-
 import React, { useState, useEffect } from 'react';
 import { useUser } from '../contexts/UserContext';
 import styles from './AddBlocPortfolio.module.css';
 import config from '../config';
 import { FaPlus, FaSave, FaTrash } from 'react-icons/fa';
+import pdfToText from 'react-pdftotext';
+
 
 const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = null, onClose = null }) => {
   console.log('this is initialProjectData._id: ', initialProjectData._id);
@@ -17,6 +16,9 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
   const [links, setLinks] = useState(initialProjectData?.links || []);
   const { user } = useUser();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isLoading, setIsLoading ] = useState(false);
+  const [extractedText, setExtractedText] = useState('');
+  const [suggestedSummary, setSuggestedSummary] = useState('');
 
   const handleAddRow = () => {
     setRows([...rows, [{ type: '', value: '' }]]);
@@ -157,10 +159,67 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
     }
   };
 
+
+  const handleFileSugUpload = async (text) => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(`${config.apiBaseUrl}/projectFileParser`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ fileText: text }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Received summary:', data.summary);
+        const parsedSummary = JSON.parse(data.summary);
+        console.log('Parsed summary:', parsedSummary);
+        setSuggestedSummary(parsedSummary);
+        return parsedSummary;
+      } else {
+        console.error('Failed to send extracted text to backend');
+      }
+    } catch (error) {
+      console.error('Failed to extract text from pdf', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleAutofillFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        const result = reader.result;
+        const parsedData = await handleFileSugUpload(result);
+
+        if (parsedData) {
+          setProjectName(parsedData.projectName);
+          setProjectDescription(parsedData.projectDescription);
+          setTags(parsedData.tags || []);
+          setLinks(parsedData.links || []);
+          setRows(parsedData.layers || [[{ type: '', value: '' }]]);
+        }
+      };
+      reader.readAsText(file);
+    }
+  };
+
   return (
     <div className={styles.containerWrapper}>
       <div className={styles.container}>
-        <h1 className={styles.title}>Project Builder</h1>
+        <div className={styles.header}>
+          <h1 className={styles.title}>Project Builder</h1>
+          <input 
+            type="file" 
+            className={styles.autofillInput} 
+            onChange={handleAutofillFileChange} 
+            accept=".json"
+          />
+        </div>
         <p className={styles.subtitle}>Create a new project for your portfolio or edit an existing one</p>
         <div className={styles.projectInfo}>
           <input
@@ -335,6 +394,7 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
 };
 
 export default AddBlocPortfolio;
+
 
 
 
