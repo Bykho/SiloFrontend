@@ -203,7 +203,8 @@
 
 .seeMoreButton {
   width: 100%;
-  background-color: #f5f5f5;
+  display: inline-flex;
+  background-color: #e8f0fe;
   border: 1px solid #e0e0e0;
   border-radius: 4px;
   color: #4a90e2;
@@ -213,11 +214,14 @@
   transition: all 0.2s ease;
   text-align: center;
   margin-top: 10px;
+  align-items: center;
+  justify-content: center; /* Added this line */
+  gap: 10px;
 }
 
 .seeMoreButton:hover {
-  background-color: #e8f0fe;
-  color: #2a6cb0;
+  background-color: #73a0ee;
+  color: #ffffff;
 }
 
 .commentBox {

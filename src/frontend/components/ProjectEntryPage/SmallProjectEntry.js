@@ -7,6 +7,7 @@ import { useUser } from '../../contexts/UserContext';
 import CommentSection from './CommentSection';
 import config from '../../config';
 import ProjectEntry from './ProjectEntry';
+import { IoIosExpand } from 'react-icons/io';
 
 const SmallProjectEntry = ({ project }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -271,7 +272,7 @@ const SmallProjectEntry = ({ project }) => {
         </div>
       </div>
       <button className={styles.seeMoreButton} onClick={togglePopup}>
-        See Full Project
+        <IoIosExpand /> See Full Project
       </button>
       {showPopup && (
         <div className={styles.popupOverlay}>
