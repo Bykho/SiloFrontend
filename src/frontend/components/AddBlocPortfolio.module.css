@@ -120,6 +120,21 @@
   max-width: 100%;
 }
 
+.languageSelect{
+  cursor: pointer;
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  background-color: var(--input-bg);
+  color: var(--primary-text);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  max-width: 100%;
+
+}
+
 .projectNameInput:focus,
 .projectDescriptionInput:focus,
 .fileInput:focus,
