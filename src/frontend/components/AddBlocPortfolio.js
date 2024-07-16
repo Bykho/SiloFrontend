@@ -194,11 +194,12 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
       const reader = new FileReader();
       reader.onloadend = async () => {
         const result = reader.result;
-        const parsedData = await handleFileSugUpload(result);
+        const text = await pdfToText(file);
+        const parsedData = await handleFileSugUpload(text);
 
         if (parsedData) {
-          setProjectName(parsedData.projectName);
-          setProjectDescription(parsedData.projectDescription);
+          setProjectName(parsedData.name);
+          setProjectDescription(parsedData.description);
           setTags(parsedData.tags || []);
           setLinks(parsedData.links || []);
           setRows(parsedData.layers || [[{ type: '', value: '' }]]);
@@ -210,14 +211,19 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
 
   return (
     <div className={styles.containerWrapper}>
+      {isLoading && <div className={styles.spinner}></div>}
       <div className={styles.container}>
         <div className={styles.header}>
           <h1 className={styles.title}>Project Builder</h1>
+          <label htmlFor="autofillInput" className={styles.autofillLabel}>
+            Autofill Project from PDF
+          </label>
           <input 
             type="file" 
+            id="autofillInput"
             className={styles.autofillInput} 
             onChange={handleAutofillFileChange} 
-            accept=".json"
+            accept=".pdf"
           />
         </div>
         <p className={styles.subtitle}>Create a new project for your portfolio or edit an existing one</p>
