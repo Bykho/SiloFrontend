@@ -272,8 +272,16 @@ function SignUp() {
                 name="resume"
                 onChange={handleChange}
                 accept=".pdf,.doc,.docx"
+                style={{display: 'none'}}
               />
+              <label htmlFor="resume" className={styles.fileInputLabel}>
+                Choose File
+              </label>
+              {formData.resume && (
+                <span className={styles.fileUploadIndicator}>Uploaded</span>
+              )}
             </div>
+
             <button 
               type="button" 
               onClick={handleNext} 

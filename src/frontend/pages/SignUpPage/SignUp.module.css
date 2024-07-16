@@ -62,7 +62,48 @@
   font-size: 0.9rem;
   opacity: 0.8;
 }
+.formGroup input[type="file"] {
+  display: none;
+}
 
+.formGroup .fileInputLabel {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(5px);
+  margin-top: 0.5rem;
+}
+
+.formGroup .fileInputLabel:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.formGroup .fileInputLabel:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+}
+
+.formGroup .fileInputLabel:active {
+  background-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(1px);
+}
+
+.fileUploadIndicator {
+  display: inline-block;
+  margin-left: 1rem;
+  font-size: 0.9rem;
+  color: #4CAF50;
+}
 .formGroup input,
 .formGroup select,
 .formGroup textarea {
