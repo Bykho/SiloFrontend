@@ -59,7 +59,7 @@ const HandleUpvote = (WrappedComponent) => {
 
     const UpvoteButton = ({ project, setProject, passedUser, setPassedUser }) => (
       <div className={styles.upvoteButtonBox}>
-        <p>Upvotes: {project.upvotes ? project.upvotes.length : 0}</p>
+        <p className={styles.upvoteNumber}> {project.upvotes ? project.upvotes.length : 0}</p>
         <button
           className={findUpvoteOverlap(project) ? styles.clickedUpvoteButton : styles.upvoteButton}
           onClick={() => handleUpvote(project, setProject, passedUser, setPassedUser)}

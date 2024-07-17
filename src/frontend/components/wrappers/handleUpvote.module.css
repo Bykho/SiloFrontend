@@ -1,7 +1,7 @@
 .upvoteButtonBox {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 10px;
   }
   
   .upvoteButton {
@@ -29,3 +29,7 @@
     margin-right: 20px;
   }
   
+  .upvoteNumber {
+    font-size: larger;
+    font-weight: bolder;
+  }
