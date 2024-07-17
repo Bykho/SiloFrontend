@@ -1,13 +1,13 @@
 
 
-
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../contexts/UserContext';
 import GameOfLife from '../GoLivePage/GameOfLife';
 import styles from './SignUp.module.css';
 import config from '../../config';
+import SuggestedPortfolio from '../../components/SuggestedPortfolio';
+import pdfToText from 'react-pdftotext';
 
 function SignUp() {
   const [page, setPage] = useState(1);
@@ -21,35 +21,88 @@ function SignUp() {
     major: '',
     userType: 'Student',
     personalWebsite: '',
-    resume: null,
+    resume: '',
     interests: [],
     skills: [],
     biography: ''
   });
+  const [extractedText, setExtractedText] = useState('');
+  const [suggestedSummary, setSuggestedSummary] = useState({});
+  const [suggestedBio, setSuggestedBio] = useState('');
+  const [suggestedInterests, setSuggestedInterests] = useState([]);
+  const [suggestedSkills, setSuggestedSkills] = useState([]);
+  const [suggestedProjects, setSuggestedProjects] = useState([]);
+  const [suggestedUniversity, setSuggestedUniversity] = useState('');
+  const [suggestedMajor, setSuggestedMajor] = useState('');
+  const [suggestedGradYr, setSuggestedGradYr] = useState('');
   const [error, setError] = useState('');
   const [isNextDisabled, setIsNextDisabled] = useState(true);
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+  const [selectedPortfolio, setSelectedPortfolio] = useState([]);
+  const [savedUsersId, setSavedUsersId] = useState('');
+  const [isLoading, setIsLoading] = useState(false); // Add loading state
 
-  const { updateUser } = useUser();
+  const { user, updateUser } = useUser();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
     if (type === 'file') {
       const file = files[0];
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData(prevState => ({
-          ...prevState,
-          resume: reader.result
-        }));
-      };
-      reader.readAsDataURL(file);
+      setFormData(prevState => ({
+        ...prevState,
+        resume: file
+      }));
+      handleResumeUpload(file);
     } else {
       setFormData(prevState => ({
         ...prevState,
         [name]: value
       }));
+    }
+  };
+
+  const handleResumeUpload = async (file) => {
+    console.log('Submitted a file:', file);
+    console.log('File size:', file.size, 'bytes');
+
+    setIsLoading(true); // Set loading state to true
+
+    try {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result;
+        setFormData(prevState => ({
+          ...prevState,
+          resume: base64String
+        }));
+      };
+      reader.readAsDataURL(file);
+
+      const text = await pdfToText(file);
+      setExtractedText(text);
+
+      const response = await fetch(`${config.apiBaseUrl}/resumeParser`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ resumeText: text }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Received summary:', data.summary);
+        const parsedSummary = JSON.parse(data.summary);
+        console.log('Parsed summary:', parsedSummary);
+        setSuggestedSummary(parsedSummary);
+      } else {
+        console.error('Failed to send extracted text to backend');
+      }
+    } catch (error) {
+      console.error('Failed to extract text from pdf', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -77,6 +130,8 @@ function SignUp() {
         return formData.university && formData.grad && formData.major;
       case 3:
         return formData.interests.length && formData.skills.length && formData.biography;
+      case 4:
+        return true;
       default:
         return false;
     }
@@ -86,6 +141,31 @@ function SignUp() {
     setIsNextDisabled(!validatePage(page));
     setIsSubmitDisabled(!validatePage(3));
   }, [formData, page]);
+
+  useEffect(() => {
+    if (Object.keys(suggestedSummary).length > 0) {
+      setSuggestedBio(suggestedSummary.bio || '');
+      setSuggestedInterests(suggestedSummary.interests || []);
+      setSuggestedSkills(suggestedSummary.skills || []);
+      setSuggestedProjects(suggestedSummary.projects ? suggestedSummary.projects.map(project => ({
+        title: project.title,
+        desc: project.desc
+      })) : []);
+      setSuggestedUniversity(suggestedSummary.latestUniversity || '');
+      setSuggestedMajor(suggestedSummary.major || '');
+      setSuggestedGradYr(suggestedSummary.grad_yr || '');
+      
+      setFormData(prevState => ({
+        ...prevState,
+        biography: suggestedSummary.bio || '',
+        interests: suggestedSummary.interests || [],
+        skills: suggestedSummary.skills || [],
+        university: suggestedSummary.latestUniversity || '',
+        major: suggestedSummary.major || '',
+        grad: suggestedSummary.grad_yr || ''
+      }));
+    }
+  }, [suggestedSummary]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -121,7 +201,12 @@ function SignUp() {
         const data = await response.json();
         localStorage.setItem('token', data.access_token);
         updateUser(data.new_user);
-        navigate('/siloDescription');
+        
+        if (suggestedSummary.projects && suggestedSummary.projects.length > 0) {
+          setPage(4);  // Navigate to the fourth page if there are suggested projects
+        } else {
+          navigate('/siloDescription');  // Otherwise navigate to the description page
+        }
       } else {
         const errorData = await response.json();
         setError(errorData.message || 'Registration failed');
@@ -131,6 +216,50 @@ function SignUp() {
       setError('An unexpected error occurred. Please try again.');
     }
   };
+
+
+  const handleSuggestedPortfolioSubmit = async (e) => {
+    e.preventDefault();
+
+    if (selectedPortfolio.length === 0) return;
+    const token = localStorage.getItem('token');
+
+    const userData = {
+      user_id: user._id,
+      selectedPortfolio: selectedPortfolio
+    };
+
+    console.log("Here is userData: ", userData);
+
+    try {
+      const response = await fetch(`${config.apiBaseUrl}/massProjectPublish`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        navigate('/siloDescription');  // Otherwise navigate to the description page
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || 'Publishing Failed');
+      }
+    } catch (error) {
+      console.error('Error during publishing:', error);
+      setError('An unexpected error occurred. Please try again.');
+    }
+  };
+
+  const renderLoadingIndicator = () => (
+    <div className={styles.loadingIndicator}>
+      Autofilling from resume...
+    </div>
+  );
+
 
   const renderPage = () => {
     switch(page) {
@@ -185,6 +314,24 @@ function SignUp() {
                 required
               />
             </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="resume">Resume</label>
+              <input
+                type="file"
+                id="resume"
+                name="resume"
+                onChange={handleChange}
+                accept=".pdf,.doc,.docx"
+                style={{display: 'none'}}
+              />
+              <label htmlFor="resume" className={styles.fileInputLabel}>
+                Upload Resume
+              </label>
+              {formData.resume && (
+                <span className={styles.fileUploadIndicator}>Uploaded</span>
+              )}
+            </div>
+
             <button 
               type="button" 
               onClick={handleNext} 
@@ -257,16 +404,6 @@ function SignUp() {
                 placeholder='www.example.com'
               />
             </div>
-            <div className={styles.formGroup}>
-              <label htmlFor="resume">Resume</label>
-              <input
-                type="file"
-                id="resume"
-                name="resume"
-                onChange={handleChange}
-                accept=".pdf,.doc,.docx"
-              />
-            </div>
             <div className={styles.buttonGroup}>
               <button type="button" onClick={handleBack} className={styles.btnBack}>Back</button>
               <button 
@@ -331,6 +468,23 @@ function SignUp() {
             </div>
           </>
         );
+      case 4:
+        return (
+          <div>
+            <SuggestedPortfolio
+              portfolioSuggestions={suggestedProjects}
+              selectedPortfolio={selectedPortfolio}
+              setSelectedPortfolio={setSelectedPortfolio}
+            />
+            <button type="button" onClick={handleBack} className={styles.btnBack}>Back</button>
+            <button 
+              type="submit" 
+              onClick={handleSuggestedPortfolioSubmit}
+              className={styles.btnSubmit}
+              disabled={isSubmitDisabled}
+            > Finish </button>
+          </div>
+        );
       default:
         return null;
     }
@@ -342,8 +496,9 @@ function SignUp() {
         <GameOfLife />
       </div>
       <div className={styles.signupFormWrapper}>
+        {isLoading && renderLoadingIndicator()}
         <div className={styles.signupForm}>
-          <h1>{page === 1 ? 'Create your account' : page === 2 ? 'Additional Information' : 'About You'}</h1>
+          <h1>{page === 1 ? 'Create your account' : page === 2 ? 'Additional Information' : page === 3 ? 'About You' : 'Review Suggested Projects'}</h1>
           {error && <p className={styles.error}>{error}</p>}
           <form onSubmit={handleSubmit}>
             {renderPage()}
@@ -355,6 +510,9 @@ function SignUp() {
 }
 
 export default SignUp;
+
+
+
 
 
 

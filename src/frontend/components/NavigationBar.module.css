@@ -7,6 +7,7 @@
   border: 1px solid #1a1a1a;
   padding: 20px 10px 20px 10px;
   display: flex;
+  width: 100%;
   justify-content: space-between;
   align-items: center;
   font-weight: bolder;
@@ -102,4 +103,31 @@
   vertical-align: middle;
   margin-left: 0px;
   margin-bottom: 4px; /* Vertically align the icon with the text */
+}
+
+.logoutButton {
+  color: #f0f0f0;
+  border-radius: 12px;
+  padding: 12px 4px 12px 10px;
+  text-decoration: none;
+  font-size: 20px;
+  font-weight: light;
+  font-family: 'Inconsolata', monospace;
+  margin-left: 10px;
+  justify-content: center;
+  margin-right: 30px;
+  height: 50px;
+  max-width: auto;
+  cursor: pointer;
+  background: linear-gradient(145deg, #3a3a3a, #2e2e2e);
+  border: 1px solid #4f4f4f;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3), 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.logoutButton:hover{
+  background: linear-gradient(145deg, #575757, #494949);
+  color: #dedede;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3), 0 10px 25px rgba(0, 0, 0, 0.3);
+  border-color: #d0d0d0;
 }

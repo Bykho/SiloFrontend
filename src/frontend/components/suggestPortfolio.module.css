@@ -1,0 +1,204 @@
+.suggestedContainer {
+    display: flex; 
+    flex-direction: column;
+    align-items: center;
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+    /* Webkit browsers (Chrome, Safari, Brave, newer versions of Edge) */
+    &::-webkit-scrollbar {
+        width: 12px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: rgba(255, 255, 255, 0.6);
+        border-radius: 6px;
+        border: 3px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.6) rgba(255, 255, 255, 0.2);
+
+    /* IE and Edge */
+    -ms-overflow-style: none;
+
+    /* Standard property for future compatibility */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.6) rgba(255, 255, 255, 0.2);
+}
+
+/* For IE and Edge */
+.suggestedContainer::-ms-scrollbar {
+    width: 12px;
+}
+
+.suggestedContainer::-ms-scrollbar-track {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.suggestedContainer::-ms-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.6);
+    border-radius: 6px;
+    border: 3px solid rgba(255, 255, 255, 0.2);
+}
+
+.suggestedProjects {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 600px;
+}
+
+.projectItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px;
+    width: 100%;
+}
+
+.toggleButton {
+    position: relative;
+    display: inline-block;
+    width: 160px;
+    height: 40px;
+    margin-top: 15px;
+}
+
+.toggleCheckbox {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggleSlider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #f44336;
+    transition: .4s;
+    border-radius: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15px;
+}
+
+.toggleSlider:before {
+    position: absolute;
+    content: "";
+    height: 32px;
+    width: 32px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+.toggleCheckbox:checked + .toggleSlider {
+    background-color: #4CAF50;
+}
+
+.toggleCheckbox:checked + .toggleSlider:before {
+    transform: translateX(120px);
+}
+
+.checkIcon, .timesIcon {
+    color: white;
+    transition: .4s;
+    font-size: 18px;
+}
+
+.checkIcon {
+    opacity: 0;
+}
+
+.toggleCheckbox:checked + .toggleSlider .checkIcon {
+    opacity: 1;
+}
+
+.toggleCheckbox:checked + .toggleSlider .timesIcon {
+    opacity: 0;
+}
+
+.toggleLabel {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: bold;
+    transition: .4s;
+    font-size: 14px;
+}
+
+/* The following styles are no longer used but kept for reference */
+.buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}   
+
+.deleteButton {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.saveButton {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.includeButton {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.excludeButton {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.disabledButton {
+    background-color: grey;
+    cursor: not-allowed;
+}

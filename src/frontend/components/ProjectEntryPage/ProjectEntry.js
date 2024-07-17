@@ -302,29 +302,26 @@ const ProjectEntry = ({ project, passedUser }) => {
 
   return (
     <div className={styles.projectContainer}>
-      {localProject.createdBy && !isStudentProfilePage && (
-        <div className={styles.createdByContainer}>
-          <ProfileImage username={localProject.createdBy} size="medium" />
-          <a href={`/profile/${localProject.createdBy}`}>{localProject.createdBy}</a>
+      <div className={styles.headerContainer}>
+        <div className={styles.titleAndUsernameContainer}>
+          <h3 className={styles.projectTitle}>{localProject.projectName}</h3>
+          <span className={styles.byUsername}>by <span className={styles.username}>{localProject.createdBy}</span></span>
         </div>
-      )}
-      <div className={styles.projectHeader}>
-        <h3 className={styles.projectTitle}>{localProject.projectName}</h3>
-        {localProject.tags && (
-          <div className={styles.tagsDisplay}>
-            {localProject.tags.map((tag, index) => (
-              <span key={index} className={styles.tagStyle} onClick={() => handleTagClick(tag)}>
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
+        <div className={styles.tagsContainer}>
+          {localProject.tags?.map((tag, index) => (
+            <span key={index} className={styles.tag}>{tag}</span>
+          ))}
+        </div>
         {user.username === localProject.createdBy && (
           <button className={styles.editButton} onClick={toggleEdit}>
             <FaEdit />
           </button>
         )}
       </div>
+
+
+
+
       {renderProjectDescription()}
       <div className={styles.layerDisplayContainer}>
         <LayerDisplay layers={localProject.layers} isEditing={isEditing} toggleEdit={toggleEdit} updateLayer={updateLayer} updateProjectDetails={updateProjectDetails} initialProjectData={localProject} />
@@ -345,8 +342,7 @@ const ProjectEntry = ({ project, passedUser }) => {
             &#x2B06;
           </button>
         </div>
-        <div className={styles.commentBox}>
-          <ProfileImage username={passedUser.username} size="small" />
+        <div className={styles.commentBox} onClick={toggleExpand}>
           <FaComment className={styles.commentIcon} />
           <span className={styles.commentText}>Comments...</span>
           <button className={styles.expandButton} onClick={toggleExpand}>

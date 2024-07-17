@@ -1,11 +1,11 @@
-
-
-
 import React, { useState, useEffect } from 'react';
 import { useUser } from '../contexts/UserContext';
 import styles from './AddBlocPortfolio.module.css';
 import config from '../config';
 import { FaPlus, FaSave, FaTrash } from 'react-icons/fa';
+import pdfToText from 'react-pdftotext';
+import { IoSparkles } from "react-icons/io5";
+
 
 const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = null, onClose = null }) => {
   console.log('this is initialProjectData._id: ', initialProjectData._id);
@@ -17,6 +17,9 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
   const [links, setLinks] = useState(initialProjectData?.links || []);
   const { user } = useUser();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isLoading, setIsLoading ] = useState(false);
+  const [extractedText, setExtractedText] = useState('');
+  const [suggestedSummary, setSuggestedSummary] = useState('');
 
   const handleAddRow = () => {
     setRows([...rows, [{ type: '', value: '' }]]);
@@ -122,6 +125,12 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
     setShowDeleteModal(true);
   };
 
+  const handleLanguageChange = (rowIndex, cellIndex, language) => {
+    const newRows = [...rows];
+    newRows[rowIndex][cellIndex] = { ...newRows[rowIndex][cellIndex], language };
+    setRows(newRows);
+  };
+
   const handleCloseModal = () => {
     setShowDeleteModal(false);
   };
@@ -151,10 +160,74 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
     }
   };
 
+
+  const handleFileSugUpload = async (text) => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(`${config.apiBaseUrl}/projectFileParser`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ fileText: text }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Received summary:', data.summary);
+        const parsedSummary = JSON.parse(data.summary);
+        console.log('Parsed summary:', parsedSummary);
+        setSuggestedSummary(parsedSummary);
+        return parsedSummary;
+      } else {
+        console.error('Failed to send extracted text to backend');
+      }
+    } catch (error) {
+      console.error('Failed to extract text from pdf', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleAutofillFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        const result = reader.result;
+        const text = await pdfToText(file);
+        const parsedData = await handleFileSugUpload(text);
+
+        if (parsedData) {
+          setProjectName(parsedData.name);
+          setProjectDescription(parsedData.description);
+          setTags(parsedData.tags || []);
+          setLinks(parsedData.links || []);
+          setRows(parsedData.layers || [[{ type: '', value: '' }]]);
+        }
+      };
+      reader.readAsText(file);
+    }
+  };
+
   return (
     <div className={styles.containerWrapper}>
+      {isLoading && <div className={styles.spinner}></div>}
       <div className={styles.container}>
-        <h1 className={styles.title}>Project Builder</h1>
+        <div className={styles.header}>
+          <h1 className={styles.title}>Project Builder</h1>
+          <label htmlFor="autofillInput" className={styles.autofillLabel}>
+            <IoSparkles /> Autofill Project from PDF
+          </label>
+          <input 
+            type="file" 
+            id="autofillInput"
+            className={styles.autofillInput} 
+            onChange={handleAutofillFileChange} 
+            accept=".pdf"
+          />
+        </div>
+        <p className={styles.subtitle}>Create a new project for your portfolio, edit an existing one or upload PDF to autofill text content</p>
         <div className={styles.projectInfo}>
           <input
             type="text"
@@ -171,6 +244,7 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
           />
         </div>
         <h1 className={styles.subTitle}> Project Content: </h1>
+        <p className={styles.subtitle}> Add up to 3 content blocks per row... </p>
         <div className={styles.rowsContainer}>
           {rows.map((row, rowIndex) => (
             <div key={rowIndex} className={styles.row}>
@@ -187,6 +261,7 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
                       <option value="image">Image</option>
                       <option value="video">Video</option>
                       <option value="pdf">PDF</option>
+                      <option value="code">Code</option>
                     </select>
                     <button 
                       className={styles.removeCellButton} 
@@ -248,6 +323,34 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
                       )}
                     </div>
                   )}
+                  {cell.type === 'code' && (
+                    <>
+                      <select
+                        value={cell.language}
+                        onChange={(e) => handleLanguageChange(rowIndex, cellIndex, e.target.value)}
+                        className={styles.languageSelect}
+                      >
+                        <option value="">Select Language</option>
+                        <option value="javascript">JavaScript</option>
+                        <option value="python">Python</option>
+                        <option value="java">Java</option>
+                        <option value="css">CSS</option>
+                        <option value="html">HTML</option>
+                        <option value="c">C</option>
+                        <option value="c++">C++</option>
+                        <option value="ruby">Ruby</option>
+                        <option value="php">PHP</option>
+                        <option value="rust">Rust</option>
+                        {/* Add more language options as needed */}
+                      </select>
+                      <textarea
+                        value={cell.value || ''}
+                        onChange={(e) => handleCellValueChange(rowIndex, cellIndex, e.target.value)}
+                        placeholder="Enter code"
+                        className={styles.cellTextArea}
+                      />
+                    </>
+                  )}
                 </div>
               ))}
               {row.length < 3 && (
@@ -298,6 +401,7 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
 };
 
 export default AddBlocPortfolio;
+
 
 
 

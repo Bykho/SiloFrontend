@@ -16,6 +16,7 @@ import ProtectedRoute from './frontend/components/ProtectedRoute';
 import Login from './frontend/pages/LoginPage/Login';
 import GoLive from './frontend/pages/GoLivePage/GoLiveLandingPage'
 import GameofLife from './frontend/components/GameOfLife';
+import './App.css'; 
 
 import AddBlocPortfolio from './frontend/components/AddBlocPortfolio';
 

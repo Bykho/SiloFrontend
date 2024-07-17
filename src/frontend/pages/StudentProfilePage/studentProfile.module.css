@@ -197,5 +197,16 @@
     box-sizing: border-box;
   }
   
+  .modalContent::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+  }
   
-
+  .modalContent::-webkit-scrollbar-track {
+    background: #2d2d2d;
+  }
+  
+  .modalContent::-webkit-scrollbar-thumb {
+    background-color: #8fb8d9;
+    border-radius: 3px;
+  }

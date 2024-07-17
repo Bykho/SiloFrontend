@@ -7,6 +7,7 @@ import { useUser } from '../../contexts/UserContext';
 import CommentSection from './CommentSection';
 import config from '../../config';
 import ProjectEntry from './ProjectEntry';
+import { IoIosExpand } from 'react-icons/io';
 
 const SmallProjectEntry = ({ project }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -251,7 +252,7 @@ const SmallProjectEntry = ({ project }) => {
 
   return (
     <div className={styles.projectContainer}>
-      <div className={styles.headerContainer}>
+      <div className={styles.headerContainer} onClick={togglePopup}>
         {renderUpvotes()}
         <div className={styles.titleAndUsernameContainer}>
           <h3 className={styles.projectTitle}>{localProject.projectName}</h3>
@@ -271,7 +272,7 @@ const SmallProjectEntry = ({ project }) => {
         </div>
       </div>
       <button className={styles.seeMoreButton} onClick={togglePopup}>
-        See Full Project
+        <IoIosExpand /> See Full Project
       </button>
       {showPopup && (
         <div className={styles.popupOverlay}>
@@ -283,7 +284,7 @@ const SmallProjectEntry = ({ project }) => {
           </div>
         </div>
       )}
-      <div className={styles.commentBox}>
+      <div className={styles.commentBox} onClick={toggleExpand}>
         <div className={styles.commentIconContainer}>
           <FaComment className={styles.commentIcon} />
           <span className={styles.commentText}>Comments...</span>

@@ -146,7 +146,8 @@ body, html {
 }
 
 .createButton:hover {
-    background-color: #0d3d65;
+    background-color: #062b49;
+    border: 2px solid rgba(115, 190, 255, 0.3); 
 }
 
 /* Background animation */

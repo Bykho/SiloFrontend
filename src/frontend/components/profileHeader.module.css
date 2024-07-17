@@ -15,6 +15,7 @@
   border-radius: 8px;
   margin-bottom: 20px;
   position: relative;
+  overflow: hidden; /* Prevent overflow from child elements */
 }
 
 .leftColumn {
@@ -22,6 +23,7 @@
   flex-direction: column;
   align-items: center;
   margin-right: 20px;
+  flex-shrink: 0; /* Prevent shrinking */
 }
 
 .typeAndName {
@@ -46,6 +48,7 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
+  min-width: 0; /* Allow shrinking */
 }
 
 .nameAndTagsBox {
@@ -60,6 +63,9 @@
   margin: 0;
   color: #f0f0f0;
   flex-grow: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .tagsContainer {
@@ -67,12 +73,17 @@
   gap: 15px;
   justify-content: flex-end;
   flex-wrap: wrap;
+  max-width: 70%;
+  min-width: 0; /* Allow shrinking */
 }
 
 .tagSection {
   display: flex;
   align-items: center;
   gap: 10px;
+  flex: 1;
+  min-width: 0; /* Allow shrinking */
+  max-width: 100%;
 }
 
 .tagLabel {
@@ -83,11 +94,35 @@
   font-size: 16px;
   color: #1a1a1a;
   white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.tagListWrapper {
+  max-width: calc(100% - 90px); /* Adjust based on your tagLabel width */
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: #8fb8d9 #2d2d2d;
+  padding-bottom: 5px;
+}
+
+.tagListWrapper::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+
+.tagListWrapper::-webkit-scrollbar-track {
+  background: #2d2d2d;
+}
+
+.tagListWrapper::-webkit-scrollbar-thumb {
+  background-color: #8fb8d9;
+  border-radius: 3px;
 }
 
 .tagList {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 5px;
 }
 
@@ -98,6 +133,7 @@
   font-size: 14px;
   white-space: nowrap;
   color: #f0f0f0;
+  flex-shrink: 0;
 }
 
 .skillTag:hover, .interestTag:hover {
@@ -170,28 +206,6 @@
   padding: 10px;
 }
 
-@media (max-width: 768px) {
-  .nameAndTagsBox {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .tagsContainer {
-    justify-content: flex-start;
-    margin-top: 10px;
-  }
-
-  .tagSection {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .linksContainer {
-    justify-content: flex-start;
-  }
-}
-
-
 .resumeButton {
   display: inline-flex;
   align-items: center;
@@ -205,7 +219,6 @@
   font-weight: 600;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
-
 
 .modal {
   position: fixed;
@@ -230,3 +243,27 @@
   cursor: pointer;
 }
 
+@media (max-width: 768px) {
+  .nameAndTagsBox {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .tagsContainer {
+    justify-content: flex-start;
+    margin-top: 10px;
+    max-width: 100%;
+  }
+
+  .tagSection {
+    width: 100%;
+  }
+
+  .tagListWrapper {
+    max-width: calc(100% - 90px);
+  }
+
+  .linksContainer {
+    justify-content: flex-start;
+  }
+}
