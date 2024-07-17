@@ -7,14 +7,16 @@ import { useUser } from '../../contexts/UserContext';
 import CommentSection from './CommentSection';
 import config from '../../config';
 import ProjectEntry from './ProjectEntry';
+import HandleUpvote from '../wrappers/HandleUpvote';
 import { IoIosExpand } from 'react-icons/io';
 
-const SmallProjectEntry = ({ project }) => {
+
+const SmallProjectEntry = ({ project, UpvoteButton }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [showFullContent, setShowFullContent] = useState(false);
   const [localProject, setLocalProject] = useState(project);
-  const { user, setUser } = useUser();
+  const { user } = useUser();
   const [localUser, setLocalUser] = useState(user);
   const modalRef = useRef(null);
   const descriptionRef = useRef(null);
@@ -61,74 +63,6 @@ const SmallProjectEntry = ({ project }) => {
   const toggleContent = () => setShowFullContent(!showFullContent);
   const togglePopup = () => setShowPopup(!showPopup);
 
-  const handleUpvote = async () => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      console.error('No token found in local storage');
-      return;
-    }
-    const payload = { username: user.username };
-
-    // Optimistically update the state
-    const newUpvoteId = Math.random().toString(36).substring(2, 15); // Generate a temporary ID
-    setLocalProject((prevProject) => ({
-      ...prevProject,
-      upvotes: [...(prevProject.upvotes || []), newUpvoteId],
-    }));
-    setLocalUser((prevUser) => ({
-      ...prevUser,
-      upvotes: [...(prevUser.upvotes || []), newUpvoteId],
-    }));
-    setUser((prevUser) => ({
-      ...prevUser,
-      upvotes: [...(prevUser.upvotes || []), newUpvoteId],
-    }));
-
-    try {
-      const response = await fetch(`${config.apiBaseUrl}/upvoteProject/${localProject._id}`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-      const data = await response.json();
-      if (response.ok) {
-        // Replace the temporary ID with the actual one from the server
-        setLocalProject((prevProject) => ({
-          ...prevProject,
-          upvotes: prevProject.upvotes.map(id => id === newUpvoteId ? data._id : id),
-        }));
-        setLocalUser((prevUser) => ({
-          ...prevUser,
-          upvotes: prevUser.upvotes.map(id => id === newUpvoteId ? data._id : id),
-        }));
-        setUser((prevUser) => ({
-          ...prevUser,
-          upvotes: prevUser.upvotes.map(id => id === newUpvoteId ? data._id : id),
-        }));
-      } else {
-        console.error('Upvote failed:', data.message);
-      }
-    } catch (error) {
-      console.error('Error during upvote:', error);
-      // Rollback optimistic update on failure
-      setLocalProject((prevProject) => ({
-        ...prevProject,
-        upvotes: prevProject.upvotes.filter(id => id !== newUpvoteId),
-      }));
-      setLocalUser((prevUser) => ({
-        ...prevUser,
-        upvotes: prevUser.upvotes.filter(id => id !== newUpvoteId),
-      }));
-      setUser((prevUser) => ({
-        ...prevUser,
-        upvotes: prevUser.upvotes.filter(id => id !== newUpvoteId),
-      }));
-    }
-  };
-
   const handleCommentUpvote = (index) => {
     const newComments = [...comments];
     newComments[index].upvotes += 1;
@@ -166,31 +100,9 @@ const SmallProjectEntry = ({ project }) => {
     }
   };
 
-  const renderUpvotes = () => {
-    const hasOverlap = findUpvoteOverlap(localUser, localProject);
-    
-    return (
-      <div className={styles.upvotesContainer}>
-        <div className={styles.upvoteItem}>
-          <span>{localProject.upvotes?.length || 0}</span>
-          <button
-            className={hasOverlap ? styles.clickedUpvoteButton : styles.upvoteButton}
-            onClick={handleUpvote}
-            disabled={hasOverlap}
-          >
-            <FaArrowUp/>
-          </button>
-        </div>
-      </div>
-    );
-  };
-
   const renderDescription = () => (
     <div className={styles.descContainer}>
-      <div 
-        ref={descriptionRef}
-        className={styles.description}
-      >
+      <div ref={descriptionRef} className={styles.description}>
         {localProject.projectDescription}
       </div>
     </div>
@@ -205,18 +117,18 @@ const SmallProjectEntry = ({ project }) => {
         if (cell.type === 'image' && !imgSrc) {
           imgSrc = cell.value;
           break;
-        } 
+        }
       }
       if (imgSrc) break;
     }
-    
+
     if (!imgSrc) {
       for (let layer of localProject.layers) {
         for (let cell of layer) {
           if (cell.type === 'text' && !textContent) {
             textContent = cell.value;
             break;
-          } 
+          }
         }
         if (textContent) break;
       }
@@ -247,13 +159,18 @@ const SmallProjectEntry = ({ project }) => {
     if (!Array.isArray(user.upvotes) || !Array.isArray(localProject.upvotes)) {
       return false;
     }
-    return user.upvotes.some(userUpvote => localProject.upvotes.includes(userUpvote));
+    return user.upvotes.some((userUpvote) => localProject.upvotes.includes(userUpvote));
   };
 
   return (
     <div className={styles.projectContainer}>
       <div className={styles.headerContainer} onClick={togglePopup}>
-        {renderUpvotes()}
+        <UpvoteButton
+          project={localProject}
+          setProject={setLocalProject}
+          passedUser={localUser}
+          setPassedUser={setLocalUser}
+        />
         <div className={styles.titleAndUsernameContainer}>
           <h3 className={styles.projectTitle}>{localProject.projectName}</h3>
           <span className={styles.byUsername}>by <span className={styles.username}>{localProject.createdBy}</span></span>
@@ -298,7 +215,6 @@ const SmallProjectEntry = ({ project }) => {
   );
 };
 
-export default SmallProjectEntry;
-
+export default HandleUpvote(SmallProjectEntry);
 
 

@@ -13,10 +13,11 @@ import { useUser } from '../../contexts/UserContext';
 import CommentSection from './CommentSection';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import config from '../../config';
+import HandleUpvote from '../wrappers/HandleUpvote';
 
 const isStudentProfilePage = window.location.pathname.includes('/studentProfile'); // Adjust this condition based on your routing
 
-const ProjectEntry = ({ project, passedUser }) => {
+const ProjectEntry = ({ project, passedUser, UpvoteButton }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [showDescription, setShowDescription] = useState(false);
@@ -25,6 +26,7 @@ const ProjectEntry = ({ project, passedUser }) => {
   const { user, setUser } = useUser();
   const modalRef = useRef(null);
   const navigate = useNavigate();
+  const [newComment, setNewComment] = useState('');
 
   const [comments, setComments] = useState(() => {
     try {
@@ -35,8 +37,6 @@ const ProjectEntry = ({ project, passedUser }) => {
     }
   });
 
-  const [newComment, setNewComment] = useState('');
-
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -45,7 +45,6 @@ const ProjectEntry = ({ project, passedUser }) => {
         }
       }
     };
-
     if (isEditing) {
       document.addEventListener('mousedown', handleClickOutside);
     } else {
@@ -83,74 +82,6 @@ const ProjectEntry = ({ project, passedUser }) => {
       return 'http://' + url;
     }
     return url;
-  };
-
-  const handleUpvote = async () => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      console.error('No token found in local storage');
-      return;
-    }
-    const payload = { username: passedUser.username };
-
-    const newUpvoteId = Math.random().toString(36).substring(2, 15); // Generate a temporary ID
-    setLocalProject((prevProject) => ({
-      ...prevProject,
-      upvotes: [...(prevProject.upvotes || []), newUpvoteId],
-    }));
-    setLocalUser((prevUser) => ({
-      ...prevUser,
-      upvotes: [...(prevUser.upvotes || []), newUpvoteId],
-    }));
-    setUser((prevUser) => ({
-      ...prevUser,
-      upvotes: [...(prevUser.upvotes || []), newUpvoteId],
-    }));
-
-    try {
-      const response = await fetch(`${config.apiBaseUrl}/upvoteProject/${localProject._id}`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-      const data = await response.json();
-      console.log('Response Data:', data);
-      if (response.ok) {
-        // Replace the temporary ID with the actual one from the server
-        setLocalProject((prevProject) => ({
-          ...prevProject,
-          upvotes: prevProject.upvotes.map(id => id === newUpvoteId ? data._id : id),
-        }));
-        setLocalUser((prevUser) => ({
-          ...prevUser,
-          upvotes: prevUser.upvotes.map(id => id === newUpvoteId ? data._id : id),
-        }));
-        setUser((prevUser) => ({
-          ...prevUser,
-          upvotes: prevUser.upvotes.map(id => id === newUpvoteId ? data._id : id),
-        }));
-      } else {
-        console.error('Upvote failed:', data.message);
-      }
-    } catch (error) {
-      console.error('Error during upvote:', error);
-      // Rollback optimistic update on failure
-      setLocalProject((prevProject) => ({
-        ...prevProject,
-        upvotes: prevProject.upvotes.filter(id => id !== newUpvoteId),
-      }));
-      setLocalUser((prevUser) => ({
-        ...prevUser,
-        upvotes: prevUser.upvotes.filter(id => id !== newUpvoteId),
-      }));
-      setUser((prevUser) => ({
-        ...prevUser,
-        upvotes: prevUser.upvotes.filter(id => id !== newUpvoteId),
-      }));
-    }
   };
 
   const toggleEdit = () => {
@@ -219,15 +150,9 @@ const ProjectEntry = ({ project, passedUser }) => {
 
   const getLinkLabel = (url) => {
     try {
-      // Remove protocol if present
       const cleanUrl = url.replace(/^(https?:\/\/)?(www\.)?/, '');
-      
-      // Split the remaining string by dots
       const parts = cleanUrl.split('.');
-      
-      // Capitalize the first letter of the first part (main domain name)
       const capitalized = parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
-      
       return capitalized;
     } catch (error) {
       console.error('Error parsing URL:', error);
@@ -246,7 +171,6 @@ const ProjectEntry = ({ project, passedUser }) => {
     } else {
       icon = <FaLink />;
     }
-
     return (
       <a
         href={ensureProtocol(link)}
@@ -258,15 +182,6 @@ const ProjectEntry = ({ project, passedUser }) => {
         <span>{label}</span>
       </a>
     );
-  };
-
-
-
-  const findUpvoteOverlap = (user, localProject) => {
-    if (!Array.isArray(user.upvotes) || !Array.isArray(localProject.upvotes)) {
-      return false;
-    }
-    return user.upvotes.some(userUpvote => localProject.upvotes.includes(userUpvote));
   };
 
   const renderComments = () => {
@@ -284,7 +199,6 @@ const ProjectEntry = ({ project, passedUser }) => {
   const renderProjectDescription = () => {
     const description = localProject.projectDescription;
     const isLongDescription = description.length > 200;
-    console.log(localProject); 
     return (
       <div className={styles.projectDescriptionContainer}>
         <div className={`${styles.projDescription} ${isLongDescription && !showDescription ? styles.collapsedDescription : ''}`}>
@@ -318,10 +232,6 @@ const ProjectEntry = ({ project, passedUser }) => {
           </button>
         )}
       </div>
-
-
-
-
       {renderProjectDescription()}
       <div className={styles.layerDisplayContainer}>
         <LayerDisplay layers={localProject.layers} isEditing={isEditing} toggleEdit={toggleEdit} updateLayer={updateLayer} updateProjectDetails={updateProjectDetails} initialProjectData={localProject} />
@@ -331,24 +241,19 @@ const ProjectEntry = ({ project, passedUser }) => {
         {localProject.links && localProject.links.map((link, index) => (renderLinkButton(link)))}
       </div>
 
-      <div className={styles.upvoteSectionBox}>
-        <div className={styles.upvoteButtonBox}>
-          <p>Upvotes: {localProject.upvotes ? localProject.upvotes.length : 0}</p>
-          <button
-            className={findUpvoteOverlap(localUser, localProject) ? styles.clickedUpvoteButton : styles.upvoteButton}
-            onClick={handleUpvote}
-            disabled={findUpvoteOverlap(localUser, localProject)}
-          >
-            &#x2B06;
-          </button>
-        </div>
-        <div className={styles.commentBox} onClick={toggleExpand}>
-          <FaComment className={styles.commentIcon} />
-          <span className={styles.commentText}>Comments...</span>
-          <button className={styles.expandButton} onClick={toggleExpand}>
-            {isExpanded ? <FaChevronUp /> : <FaChevronDown />}
-          </button>
-        </div>
+      <UpvoteButton
+        project={localProject}
+        setProject={setLocalProject}
+        passedUser={localUser}
+        setPassedUser={setLocalUser}
+      />
+
+      <div className={styles.commentBox} onClick={toggleExpand}>
+        <FaComment className={styles.commentIcon} />
+        <span className={styles.commentText}>Comments...</span>
+        <button className={styles.expandButton} onClick={toggleExpand}>
+          {isExpanded ? <FaChevronUp /> : <FaChevronDown />}
+        </button>
       </div>
 
       {renderComments()}
@@ -356,6 +261,7 @@ const ProjectEntry = ({ project, passedUser }) => {
   );
 };
 
-export default ProjectEntry;
+export default HandleUpvote(ProjectEntry);
+
 
 

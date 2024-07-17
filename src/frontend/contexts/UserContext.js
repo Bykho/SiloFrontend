@@ -1,12 +1,9 @@
 
 
 
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { jwtDecode } from 'jwt-decode';
-
+import { jwtDecode } from 'jwt-decode'; // Fix import
 import config from '../config';
-
 
 const UserContext = createContext();
 
@@ -22,7 +19,29 @@ export const UserProvider = ({ children }) => {
       const token = localStorage.getItem('token');
       if (token) {
         const decodedToken = jwtDecode(token);
-        setUser(decodedToken);
+
+        try {
+          const profileResponse = await fetch(`${config.apiBaseUrl}/studentProfile`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + token
+            }
+          });
+
+          const profileData = await profileResponse.json();
+          if (profileResponse.ok) {
+            setUser({
+              ...decodedToken,
+              upvotes: profileData.upvotes || [],
+              // Add any other fields you expect in the user profile
+            });
+          } else {
+            console.error('Failed to load user details:', profileData.message);
+          }
+        } catch (error) {
+          console.error('Error loading user profile:', error);
+        }
       }
       setLoading(false);
     };
@@ -34,54 +53,52 @@ export const UserProvider = ({ children }) => {
     localStorage.setItem('activeLink', activeLink);
   }, [activeLink]);
 
-
-const login = async (email, password) => {
-  console.log('loggin in')
-  try {
-    const response = await fetch(`${config.apiBaseUrl}/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ email, password })
-    });
-    const data = await response.json();
-    if (response.ok) {
-      localStorage.setItem('token', data.access_token);
-      const decodedToken = jwtDecode(data.access_token);
-      const token = localStorage.getItem('token');
-      console.log('here is the token as stored in local: ', token);
-
-      const profileResponse = await fetch(`${config.apiBaseUrl}/studentProfile`, {
-        method: 'GET',
+  const login = async (email, password) => {
+    console.log('loggin in')
+    try {
+      const response = await fetch(`${config.apiBaseUrl}/login`, {
+        method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + token
-        }
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
       });
+      const data = await response.json();
+      if (response.ok) {
+        localStorage.setItem('token', data.access_token);
+        const decodedToken = jwtDecode(data.access_token);
+        const token = localStorage.getItem('token');
+        console.log('here is the token as stored in local: ', token);
 
-      const profileData = await profileResponse.json();
-      console.log('here is the profileData, ', profileData);
-      if (profileResponse.ok) {
-        setUser({
-          ...decodedToken,
-          upvotes: profileData.upvotes || [],
+        const profileResponse = await fetch(`${config.apiBaseUrl}/studentProfile`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          }
         });
+
+        const profileData = await profileResponse.json();
+        console.log('here is the profileData, ', profileData);
+        if (profileResponse.ok) {
+          setUser({
+            ...decodedToken,
+            upvotes: profileData.upvotes || [],
+            // Add any other fields you expect in the user profile
+          });
+        } else {
+          console.error('Failed to load user details:', profileData.message);
+        }
+
+        setActiveLink('folio');
       } else {
-        console.error('Failed to load user details:', profileData.message);
+        throw new Error(data.message || 'Unable to login');
       }
-
-      setActiveLink('folio');
-    } else {
-      throw new Error(data.message || 'Unable to login');
+    } catch (error) {
+      console.error('Login failed:', error);
+      throw error;
     }
-  } catch (error) {
-    console.error('Login failed:', error);
-    throw error;
-  }
-};
-
-  
+  };
 
   const logout = () => {
     setUser(null);
@@ -91,8 +108,25 @@ const login = async (email, password) => {
   };
 
   const updateUser = (updates) => {
+    console.log('updated user getting called')
     const updatedUser = { ...user, ...updates };
+    console.log('here is updatedUser: ', updatedUser)
     setUser(updatedUser);
+  };
+
+  useEffect(() => {
+    console.log('User state after update:', user);
+  }, [user]);
+  
+  const addUpvoteToUser = (upvoteId) => {
+    console.log('here is the upvoteID in addUpvotetoUser: ', upvoteId)
+    if (user) {
+      console.log('Initial user state:', user);
+      const updatedUpvotes = [...(user.upvotes || []), upvoteId];
+      console.log('here is updatedUpvotes in addUpvoteUser check: ', updatedUpvotes)
+      updateUser({ upvotes: updatedUpvotes });
+    }
+    console.log('here is user in addUpvoteToUser: ', user)
   };
 
   const addProjectToPortfolio = (project) => {
@@ -111,7 +145,7 @@ const login = async (email, password) => {
     updatedPortfolio.splice(index, 1);
     updateUser({ portfolio: updatedPortfolio });
   };
-  
+
   const isAuthenticated = !!user;
 
   return (
@@ -122,6 +156,7 @@ const login = async (email, password) => {
       login, 
       logout, 
       updateUser, 
+      addUpvoteToUser,
       addProjectToPortfolio, 
       updateProjectInPortfolio, 
       removeProjectFromPortfolio, 
@@ -133,8 +168,5 @@ const login = async (email, password) => {
     </UserContext.Provider>
   );
 };
-
-
-
 
 

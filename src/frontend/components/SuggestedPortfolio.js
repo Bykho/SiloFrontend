@@ -49,6 +49,14 @@ function SuggestedPortfolio({ portfolioSuggestions, selectedPortfolio, setSelect
         console.log('Selected Keys:', selectedKeys);
     }, [selectedKeys, selectedPortfolio]);
 
+    // Populate selectedKeys with all indices on mount
+    useEffect(() => {
+        if (Array.isArray(portfolioSuggestions)) {
+            const initialSelectedKeys = portfolioSuggestions.map((_, index) => index);
+            setSelectedKeys(initialSelectedKeys);
+        }
+    }, [portfolioSuggestions]);
+
     return (
         <div className={styles.suggestedContainer}>
             {Array.isArray(portfolioSuggestions) && portfolioSuggestions.map((project, index) => {
