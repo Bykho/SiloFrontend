@@ -6,6 +6,7 @@ import GroupsSidebar from '../../components/GroupsSidebar';
 import styles from './groups.module.css';
 import config from '../../config';
 import { FaSearch } from 'react-icons/fa';
+import { FaPlus, FaUserGroup } from 'react-icons/fa6';
 
 const Groups = () => {
   const [feedStyle, setFeedStyle] = useState('explore');
@@ -128,14 +129,9 @@ const Groups = () => {
           />
           <button className={styles.navButton} onClick={handleSearch}>Search</button>
         </div>
-        <div className={styles.sortDropdown}>
-          <select className={styles.sortSelect}>
-            <option value="top">Top</option>
-            <option value="newest">Newest</option>
-          </select>
-        </div>
-        <div className={styles.resultsCount}>
-          Results: {filteredProjects.length}
+        <div className={styles.groupsButtons}>   
+            <button className={styles.groupButton} > <FaPlus /> Create Group </button>
+            <button className={styles.groupButton} > <FaUserGroup /> View Members</button>
         </div>
       </div>
 

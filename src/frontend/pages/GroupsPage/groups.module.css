@@ -17,6 +17,40 @@
     background-color: grey;
 }
 
+.groupsButtons{
+    display: inline-flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    gap: 10px; 
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.groupButton{
+    display: inline-flex;
+    background-color: #555;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 15px;
+    align-items: center;
+}
+
+.groupButton:hover{
+    display: inline-flex;
+    background-color: #2a2a2a;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 15px;
+    align-items: center;
+}
+
 .navBar {
     display: flex;
     align-items: center;
