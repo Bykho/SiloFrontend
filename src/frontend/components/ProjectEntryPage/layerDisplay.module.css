@@ -167,6 +167,157 @@
   line-height: 1;
 }
 
+/* Updated styles for code display */
+.codeContainer {
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  margin: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  max-height: 400px; /* Set max height */
+}
+
+.codeContent {
+  display: flex;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  overflow: auto;
+  max-height: 100%; /* Allow content to scroll within container */
+}
+
+.lineNumbers {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 1.4rem 10px 0.5rem 0;
+  border-right: 1px solid #ddd;
+  color: #999;
+  user-select: none;
+  text-align: right;
+  min-width: 25px; /* Ensure enough space for line numbers */
+  background-color: #f5f5f5;
+  gap: 1.16px; 
+}
+
+.lineNumbers span {
+  height: 20px;
+  line-height: 20px;
+}
+
+.code {
+  flex: 1;
+  padding: 0.5rem 0 0.5rem 10px;
+  margin: 0;
+  overflow: visible; /* Allow horizontal scrolling */
+  background-color: transparent;
+}
+
+.code code {
+  display: block;
+  min-width: 100%;
+  padding: 0;
+  margin: 0;
+  background-color: transparent !important;
+  white-space: pre;
+}
+
+/* Override highlight.js styles */
+.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0;
+  background-color: transparent !important;
+  color: #333;
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: #998;
+  font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-subst {
+  color: #333;
+  font-weight: bold;
+}
+
+.hljs-number,
+.hljs-literal,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag .hljs-attr {
+  color: #008080;
+}
+
+.hljs-string,
+.hljs-doctag {
+  color: #d14;
+}
+
+.hljs-title,
+.hljs-section,
+.hljs-selector-id {
+  color: #900;
+  font-weight: bold;
+}
+
+.hljs-subst {
+  font-weight: normal;
+}
+
+.hljs-type,
+.hljs-class .hljs-title {
+  color: #458;
+  font-weight: bold;
+}
+
+.hljs-tag,
+.hljs-name,
+.hljs-attribute {
+  color: #000080;
+  font-weight: normal;
+}
+
+.hljs-regexp,
+.hljs-link {
+  color: #009926;
+}
+
+.hljs-symbol,
+.hljs-bullet {
+  color: #990073;
+}
+
+.hljs-built_in,
+.hljs-builtin-name {
+  color: #0086b3;
+}
+
+.hljs-meta {
+  color: #999;
+  font-weight: bold;
+}
+
+.hljs-deletion {
+  background: #fdd;
+}
+
+.hljs-addition {
+  background: #dfd;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+
 @media (max-width: 768px) {
   .container {
     padding: 1rem;
@@ -192,46 +343,7 @@
   .modalImage {
     max-height: calc(90vh - 40px);
   }
-
-/* Existing styles... */
-
-.codeContainer {
-  background-color: #1e1e1e;
-  border-radius: 8px;
-  padding: 1rem;
-  margin: 0.5rem;
-  overflow-x: auto;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-
-.code {
-  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-  font-size: 14px !important; /* Force consistent font size */
-  line-height: 1.5;
-  color: #d4d4d4;
-  white-space: pre-wrap;
-  word-break: break-all;
-  word-wrap: break-word;
-  tab-size: 4;
-}
-
-.code * {
-  font-size: inherit !important; /* Ensure all nested elements inherit the font size */
-}
-
-/* Custom scrollbar styles for webkit browsers */
-.codeContainer::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-.codeContainer::-webkit-scrollbar-thumb {
-  background-color: #4a4a4a;
-  border-radius: 4px;
-}
-
-.codeContainer::-webkit-scrollbar-track {
-  background-color: #2a2a2a;
-}
-
+::-webkit-scrollbar-track {
+  background: #dbdbdb;
 }
