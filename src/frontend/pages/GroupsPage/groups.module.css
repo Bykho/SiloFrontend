@@ -247,4 +247,9 @@
   .individualItem {
     margin-bottom: 10px; /* Space between items */
   }
-  
+
+  .comingSoon{
+    color: white; 
+    justify-content: center;
+    margin: 50px; 
+  }

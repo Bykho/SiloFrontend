@@ -150,11 +150,13 @@ const Groups = () => {
           <GroupsSidebar feedStyle={feedStyle} groups={majorList} setFeedStyle={setFeedStyle} setMajor={setMajor} myGroups={myGroupsList} /> {/* Updated this line */}
         </div>
         <div className={styles.feedContent}>
-          <div className={styles.filteredProjectsContainer}>
+          {/*<div className={styles.filteredProjectsContainer}>
             {filteredProjects.map((individual, index) => (
               <div key={index} className={styles.individualItem}>User: {individual.username} ---- major: {individual.major}</div>
             ))}
           </div>
+          */}
+        <h1 className={styles.comingSoon}>Coming soon...</h1>
         </div>
       </div>
     </div>
