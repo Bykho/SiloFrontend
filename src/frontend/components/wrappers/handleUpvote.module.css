@@ -1,0 +1,31 @@
+.upvoteButtonBox {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .upvoteButton {
+    background-color: #eae6e6;
+    color: #70b9e3;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    margin-right: 20px;
+  }
+  
+  .upvoteButton:hover {
+    background-color: #1e1e1e;
+  }
+  
+  .clickedUpvoteButton {
+    background-color: #4a90e2;
+    color: white;
+    border-radius: 5px;
+    border-color: #3a7abd;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transform: translateY(1px);
+    margin-right: 20px;
+  }
+  

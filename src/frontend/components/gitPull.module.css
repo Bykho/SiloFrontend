@@ -1,54 +1,81 @@
 .gitPullContainer {
-    background-color: white;
     padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
+  }
+  
+  .heading {
+    color: white;
   }
   
   .input {
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 5px;
-    border: 1px solid #ccc;
     width: 100%;
-    max-width: 300px;
+    padding: 10px;
+    margin-bottom: 10px;
   }
   
   .fetchButton {
-    padding: 10px 20px;
-    background-color: #007bff;
+    padding: 10px;
+    background-color: #4CAF50;
     color: white;
     border: none;
-    border-radius: 5px;
     cursor: pointer;
-    margin-bottom: 20px;
+    width: 100%;
   }
   
   .fetchButton:hover {
-    background-color: #0056b3;
+    background-color: #45a049;
   }
   
   .repoList {
-    list-style: none;
+    list-style-type: none;
     padding: 0;
   }
   
   .repoItem {
-    margin: 10px 0;
+    margin-bottom: 10px;
   }
   
-  .repoItem a {
+  .repoButton {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    width: 100%;
+  }
+  
+  .repoButton:hover {
+    background-color: #0056b3;
+  }
+  
+  .repoButton.pressed {
+    background-color: #003d80;
+  }
+  
+  .fileTree {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px;
+    border: 1px solid #ddd;
+    background-color: white;
+    width: 100%;
+  }
+  
+  .fileItem {
+    margin: 5px;
+    white-space: nowrap;
+  }
+  
+  .fileItem a {
     text-decoration: none;
     color: #007bff;
   }
   
-  .repoItem a:hover {
+  .fileItem a:hover {
     text-decoration: underline;
   }
   
   .error {
     color: red;
-    margin-top: 10px;
   }
+  
   

@@ -1,16 +1,23 @@
 
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styles from './gitPull.module.css';
 
 const GitPull = ({ userData }) => {
   const [githubUsernameOrUrl, setGithubUsernameOrUrl] = useState('');
   const [repos, setRepos] = useState([]);
-  const [files, setFiles] = useState([]);
+  const [fileTree, setFileTree] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [selectedRepo, setSelectedRepo] = useState(null);
+  const [pressedRepos, setPressedRepos] = useState({});
+
+  useEffect(() => {
+    if (userData.github_link) {
+      setGithubUsernameOrUrl(userData.github_link);
+    }
+  }, [userData.github_link]);
 
   const handleInputChange = (e) => {
     setGithubUsernameOrUrl(e.target.value);
@@ -28,7 +35,8 @@ const GitPull = ({ userData }) => {
     setLoading(true);
     setError('');
     setSelectedRepo(null);
-    setFiles([]);
+    setFileTree({});
+    setPressedRepos({});
 
     try {
       const response = await fetch(`https://api.github.com/users/${username}/repos`);
@@ -44,19 +52,22 @@ const GitPull = ({ userData }) => {
     }
   };
 
-  const fetchRepoContents = async (repoName) => {
+  const fetchRepoContents = async (repoName, path = '') => {
     const username = extractUsername(githubUsernameOrUrl);
     if (!username || !repoName) return;
     setLoading(true);
     setError('');
 
     try {
-      const response = await fetch(`https://api.github.com/repos/${username}/${repoName}/contents`);
+      const response = await fetch(`https://api.github.com/repos/${username}/${repoName}/contents/${path}`);
       if (!response.ok) {
         throw new Error('Failed to fetch repository contents');
       }
       const data = await response.json();
-      setFiles(data);
+      setFileTree((prevFileTree) => ({
+        ...prevFileTree,
+        [`${repoName}/${path}`]: data
+      }));
       setSelectedRepo(repoName);
     } catch (err) {
       setError('Failed to fetch repository contents. Please try again.');
@@ -86,9 +97,41 @@ const GitPull = ({ userData }) => {
     }
   };
 
+  const isUserFile = (fileName) => {
+    const userFileExtensions = ['.js', '.py', '.html'];
+    return userFileExtensions.some((ext) => fileName.endsWith(ext));
+  };
+
+  const renderFileTree = (repoName, path = '') => {
+    const key = `${repoName}/${path}`;
+    const files = fileTree[key];
+    if (!files) return null;
+
+    return (
+      <div className={styles.fileTree}>
+        {files
+          .filter((file) => file.type === 'file' && (file.name.toLowerCase() === 'readme.md' || isUserFile(file.name)))
+          .map((file) => (
+            <div key={file.sha} className={styles.fileItem}>
+              <a href={file.html_url} target="_blank" rel="noopener noreferrer">
+                {file.name}
+              </a>
+            </div>
+          ))}
+      </div>
+    );
+  };
+
+  const toggleRepoPressed = (repoName) => {
+    setPressedRepos((prevPressedRepos) => ({
+      ...prevPressedRepos,
+      [repoName]: !prevPressedRepos[repoName]
+    }));
+  };
+
   return (
     <div className={styles.gitPullContainer}>
-      <p>{userData.github_link}</p>
+      <h2 className={styles.heading}>Autofill Portfolio from GitHub</h2>
       <input
         type="text"
         value={githubUsernameOrUrl}
@@ -104,29 +147,20 @@ const GitPull = ({ userData }) => {
       <ul className={styles.repoList}>
         {repos.map((repo) => (
           <li key={repo.id} className={styles.repoItem}>
-            <a href={repo.html_url} target="_blank" rel="noopener noreferrer">
+            <button
+              className={`${styles.repoButton} ${pressedRepos[repo.name] ? styles.pressed : ''}`}
+              onClick={() => {
+                toggleRepoPressed(repo.name);
+                fetchRepoContents(repo.name);
+              }}
+              style={{ width: '100%' }}
+            >
               {repo.name}
-            </a>
-            <button onClick={() => fetchRepoContents(repo.name)}>View Files</button>
+            </button>
+            {pressedRepos[repo.name] && renderFileTree(repo.name)}
           </li>
         ))}
       </ul>
-      {selectedRepo && (
-        <div className={styles.repoContents}>
-          <h3>Contents of {selectedRepo}</h3>
-          <ul className={styles.fileList}>
-            {files.map((file) => (
-              <li key={file.sha} className={styles.fileItem}>
-                {file.type === 'file' ? (
-                  <button onClick={() => fetchFileContent(file.path)}>{file.name}</button>
-                ) : (
-                  <span>{file.name} (directory)</span>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
     </div>
   );
 };
@@ -136,3 +170,7 @@ GitPull.propTypes = {
 };
 
 export default GitPull;
+
+
+
+
