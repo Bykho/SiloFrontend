@@ -164,14 +164,14 @@ const SmallProjectEntry = ({ project, UpvoteButton }) => {
 
   return (
     <div className={styles.projectContainer}>
-      <div className={styles.headerContainer} onClick={togglePopup}>
+      <div className={styles.headerContainer}>
         <UpvoteButton
           project={localProject}
           setProject={setLocalProject}
           passedUser={localUser}
           setPassedUser={setLocalUser}
         />
-        <div className={styles.titleAndUsernameContainer}>
+        <div className={styles.titleAndUsernameContainer} onClick={togglePopup}>
           <h3 className={styles.projectTitle}>{localProject.projectName}</h3>
           <span className={styles.byUsername}>by <span className={styles.username}>{localProject.createdBy}</span></span>
         </div>
