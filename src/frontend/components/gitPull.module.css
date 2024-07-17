@@ -1,162 +1,154 @@
-
-
-
 .gitPullContainer {
-    padding: 20px;
-    background-color: #f5f5f5; /* Light background color for better contrast */
-    border-radius: 10px; /* Rounded corners for a softer look */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-  }
-  
-  .heading {
-    color: black;
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  .inputContainer {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px; /* Add margin for better spacing */
-  }
-  
-  .input {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #ccc; /* Add border for input field */
-    border-radius: 5px; /* Rounded corners */
-  }
-  
-  .fetchButton {
-    padding: 10px 20px; /* Increase padding for a larger button */
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px; /* Rounded corners */
-    transition: background-color 0.3s ease; /* Smooth transition */
-  }
-  
-  .fetchButton:hover {
-    background-color: #0056b3; /* Darker blue on hover */
-  }
-  
-  .repoList {
-    list-style-type: none;
-    padding: 0;
-    margin-bottom: 20px; /* Add margin for better spacing */
-  }
-  
-  .repoItem {
-    margin-bottom: 10px;
-  }
-  
-  .repoButton {
-    background-color: rgba(0, 123, 255, 0.2);
-    color: #007bff;
-    border: 2px solid #007bff;
-    padding: 10px;
-    cursor: pointer;
-    width: 100%;
-    max-width: 300px;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-    border-radius: 5px; /* Rounded corners */
-    display: block; /* Make the button a block element */
-  }
-  
-  .repoButton:hover {
-    background-color: rgba(0, 123, 255, 0.4);
-  }
-  
-  .repoButton.pressed {
-    background-color: #0056b3;
-    color: white;
-    border-color: #0056b3;
-  }
-  
-  .fileTree {
-    display: flex;
-    flex-wrap: wrap;
-    padding: 10px;
-    border: 1px solid #ddd;
-    background-color: white;
-    width: 100%;
-    border-radius: 5px; /* Rounded corners */
-    margin-top: 10px; /* Add margin for spacing */
-  }
-  
-  .fileItem {
-    margin: 5px;
-    white-space: nowrap;
-  }
-  
-  .fileItem a {
-    text-decoration: none;
-    color: #007bff;
-  }
-  
-  .fileItem a:hover {
-    text-decoration: underline;
-  }
-  
-  .error {
-    color: red;
-    margin-top: 10px; /* Add margin for spacing */
-  }
-  
-  .submitButton {
-    padding: 10px 20px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px; /* Rounded corners */
-    transition: background-color 0.3s ease;
-    display: block; /* Make the button a block element */
-    width: 100%; /* Full width */
-    max-width: 300px; /* Maximum width */
-    margin: 0 auto; /* Center align */
-  }
-  
-  .submitButton:hover {
-    background-color: #218838;
-  }
-  
-  .spinnerOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999; /* Ensure it appears above other elements */
-  }
-  
-  .spinner {
-    border: 8px solid #f3f3f3; /* Light grey */
-    border-top: 8px solid #007bff; /* Blue */
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    animation: spin 2s linear infinite;
-  }
-  
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-  
-  .spinnerOverlay p {
-    margin-top: 20px;
-    color: white;
-    font-size: 1.2rem;
-    text-align: center;
-  }
-  
-  
-  
+  padding: 24px;
+  background-color: #1e1e1e;
+  color: #e0e0e0;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.heading {
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.headingIcon {
+  margin-right: 12px;
+}
+
+.inputContainer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.input {
+  flex: 1;
+  padding: 12px;
+  background-color: #333333;
+  color: #ffffff;
+  border: 1px solid #4a4a4a;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.input::placeholder {
+  color: #888888;
+}
+
+.fetchButton, .submitButton {
+  padding: 12px 20px;
+  background-color: #4a4aff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.fetchButton:hover, .submitButton:hover {
+  background-color: #3a3aff;
+}
+
+.repoList {
+  list-style-type: none;
+  padding: 0;
+  margin-bottom: 24px;
+}
+
+.repoItem {
+  margin-bottom: 12px;
+}
+
+.repoButton {
+  background-color: #2a2a2a;
+  color: #ffffff;
+  border: none;
+  padding: 12px;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: background-color 0.3s ease;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+}
+
+.repoButton:hover {
+  background-color: #3a3a3a;
+}
+
+.fileTree {
+  list-style-type: none;
+  padding-left: 20px;
+  margin-top: 8px;
+}
+
+.fileItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.fileToggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-right: 8px;
+  color: #8099ff;
+}
+
+.subtitle {
+  display: flex; 
+  justify-content: center;
+}
+
+.icon {
+  margin-right: 8px;
+  color: #888888;
+}
+
+.error {
+  color: #ff4a4a;
+  margin-top: 12px;
+}
+
+.loading {
+  color: #4a4aff;
+  margin-top: 12px;
+}
+
+.submitButton {
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  margin: 24px auto 0;
+}
+
+.noRepos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #2a2a2a;
+  border-radius: 6px;
+  padding: 16px;
+  margin-top: 16px;
+}
+
+.noRepos p {
+  margin: 0;
+  margin-left: 12px;
+  color: #e0e0e0;
+}
+
+.alertIcon {
+  color: #ff4a4a;
+}
