@@ -1,0 +1,204 @@
+/* feed.module.css */
+
+.feedContainer {
+    padding-left: 20px;
+}
+
+.feedBottomContainer {
+    display: flex; 
+}
+
+.unAuthenticatedText {
+    color: white;
+    font-size: 20px;
+    margin-bottom: 20px;
+    width: 90%;
+    height: 50%;
+    background-color: grey;
+}
+
+.navBar {
+    display: flex;
+    align-items: center;
+    font-size: 25px;
+    color: white;
+    margin-left: 25px; 
+    justify-content: flex-start; /* Changed to flex-start to keep links together */
+    gap: 20px; /* Add some space between the items */
+    position: relative;
+}
+
+.navLinks {
+    display: flex;
+}
+
+.filterIcon {
+    cursor: pointer;
+    color: white; /* Adjust to fit your color scheme */
+    font-size: 30px;
+}
+
+.dropdownMenu {
+    position: absolute;
+    top: 40px; /* Adjust based on your layout */
+    right: 0;
+    background-color: #333; /* Adjust to fit your color scheme */
+    border-radius: 5px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.navLink {
+    padding: 10px 15px; /* Adjusted padding to reduce spacing */
+    cursor: pointer;
+    color: white; /* Ensure the links are also white */
+}
+
+.navLink:hover {
+    background-color: #575757; /* Adjust to fit your color scheme */
+    border-radius: 5px;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+
+
+/* siloDescription.module.css */
+.description {
+    padding: 20px;
+    margin-bottom: 20px;
+    margin-top: 0px;
+    border-radius: 10px;
+    font-size: 20px; /* Increase the font size */
+    margin-left: 40px;
+    margin-right: 40px;
+    background: linear-gradient(45deg, #73beff, #f2f2f2);
+    backdrop-filter: blur(10px);
+    text-align: left; /* Left justify the text */
+    position: relative;
+    z-index: 1; /* Ensure this is above the canvas */
+}
+  
+.testTitle {
+    display: flex;
+    justify-content: flex-start; /* Left justify the header */
+    align-items: center;
+    background-color: None;
+    width: 90%;
+    color: #ffffffff; 
+    margin-left: auto;
+    margin-right: auto;
+    padding: 10px;
+    margin-bottom: 10px;
+    margin-top: 20px;
+    position: relative;
+    z-index: 1; /* Ensure this is above the canvas */
+}
+  
+.aboutHeader {
+    font-size: 100px; /* Huge font size for the header */
+    margin-left: 10px; /* Align with description margin */
+    letter-spacing: 75px;
+    position: relative;
+    z-index: 1; /* Ensure this is above the canvas */
+}
+
+.searchBar {
+    display: flex;
+    margin-bottom: 20px;
+    background-color: #2d2d2d;
+    border-radius: 8px;
+    width: 98.5%;
+    margin-top: 20px;
+  }
+
+  .buttonContainer {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+    align-items: center;
+    width: 75%;
+  }
+
+  .searchInput {
+    width: 20px;
+    padding: 8px;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-top: 20px;
+    background-color: #6A6969;
+    border: none;
+    color: #E0E0E0;
+    padding: 10px;
+    width: 95%;
+    margin-bottom: 20px;
+    text-align: center;
+    transition: background-color 0.3s;
+  }
+
+  .searchInput::placeholder {
+    color: #a5a5a5; /* Change this to your desired color */
+  }
+
+  .searchWords {
+    display: flex;
+    flex-wrap: nowrap;
+    font-size: 20px;
+    font-family: 'Inconsolata';
+    white-space: nowrap;
+    margin-left: 20px;
+    margin-top: 5px; 
+    margin-right: 20px;
+    color: rgb(251, 251, 251);
+  }
+
+  .resultsCount {
+    font-size: auto;
+    font-family: 'Inconsolata';
+    color: rgb(167, 167, 167);
+    background-color: #484545;
+    margin-top: 25px;
+    margin-bottom: 30px;
+    margin-left: 20px;
+    margin-right: 20px;
+    max-width: fit-content;
+    padding: 3px 10px;
+    border-radius: 8px;
+}
+
+.navButton {
+    background-color: #555;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+}
+
+.sortSelect {
+    background-color: #555;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 20px;
+    margin-top: 11px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    max-width: 90px;
+    max-height: 38px;
+}
+
+.sortDropdown {
+    border-radius: 5px;
+    z-index: 1;
+    color: white; 
+    margin-top: 9px;
+}
