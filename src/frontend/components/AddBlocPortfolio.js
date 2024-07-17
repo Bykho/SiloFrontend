@@ -4,6 +4,7 @@ import styles from './AddBlocPortfolio.module.css';
 import config from '../config';
 import { FaPlus, FaSave, FaTrash } from 'react-icons/fa';
 import pdfToText from 'react-pdftotext';
+import { IoSparkles } from "react-icons/io5";
 
 
 const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = null, onClose = null }) => {
@@ -216,7 +217,7 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
         <div className={styles.header}>
           <h1 className={styles.title}>Project Builder</h1>
           <label htmlFor="autofillInput" className={styles.autofillLabel}>
-            Autofill Project from PDF
+            <IoSparkles /> Autofill Project from PDF
           </label>
           <input 
             type="file" 
@@ -226,7 +227,7 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
             accept=".pdf"
           />
         </div>
-        <p className={styles.subtitle}>Create a new project for your portfolio or edit an existing one</p>
+        <p className={styles.subtitle}>Create a new project for your portfolio, edit an existing one or upload PDF to autofill text content</p>
         <div className={styles.projectInfo}>
           <input
             type="text"

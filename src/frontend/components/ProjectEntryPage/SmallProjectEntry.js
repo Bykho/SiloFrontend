@@ -8,6 +8,8 @@ import CommentSection from './CommentSection';
 import config from '../../config';
 import ProjectEntry from './ProjectEntry';
 import HandleUpvote from '../wrappers/HandleUpvote';
+import { IoIosExpand } from 'react-icons/io';
+
 
 const SmallProjectEntry = ({ project, UpvoteButton }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -187,7 +189,7 @@ const SmallProjectEntry = ({ project, UpvoteButton }) => {
         </div>
       </div>
       <button className={styles.seeMoreButton} onClick={togglePopup}>
-        See Full Project
+        <IoIosExpand /> See Full Project
       </button>
       {showPopup && (
         <div className={styles.popupOverlay}>

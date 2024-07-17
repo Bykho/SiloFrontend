@@ -1,13 +1,9 @@
-
-
-
-
 import React, { useState, useEffect } from 'react';
 import { useUser } from '../contexts/UserContext';
 import styles from './suggestPortfolio.module.css';
 import SmallestProjectEntry from './ProjectEntryPage/SmallestProjectEntry';
 import config from '../config'; // Assuming config contains your API base URL
-import { FaChevronUp } from 'react-icons/fa';
+import { FaCheck, FaTimes } from 'react-icons/fa';
 
 function SuggestedPortfolio({ portfolioSuggestions, selectedPortfolio, setSelectedPortfolio }) {
     const { user } = useUser();
@@ -23,17 +19,21 @@ function SuggestedPortfolio({ portfolioSuggestions, selectedPortfolio, setSelect
         };
     };
 
-    const handleIncludeProject = (index) => {
+    useEffect(() => {
+        // Initialize all projects as included
+        if (Array.isArray(portfolioSuggestions)) {
+            setSelectedKeys(portfolioSuggestions.map((_, index) => index));
+        }
+    }, [portfolioSuggestions]);
+
+    const handleToggleProject = (index) => {
         setSelectedKeys(prevState => {
-            if (!prevState.includes(index)) {
+            if (prevState.includes(index)) {
+                return prevState.filter(i => i !== index);
+            } else {
                 return [...prevState, index];
             }
-            return prevState;
         });
-    };
-
-    const handleExcludeProject = (index) => {
-        setSelectedKeys(prevState => prevState.filter(i => i !== index));
     };
 
     // Update selectedPortfolio whenever selectedKeys changes
@@ -42,12 +42,12 @@ function SuggestedPortfolio({ portfolioSuggestions, selectedPortfolio, setSelect
             const newSelectedPortfolio = selectedKeys.map(index => prepareProject(portfolioSuggestions[index]));
             setSelectedPortfolio(newSelectedPortfolio);
         }
-    }, [selectedKeys, portfolioSuggestions]);
+    }, [selectedKeys, portfolioSuggestions, setSelectedPortfolio]);
 
     useEffect(() => {
         console.log('Selected Portfolio:', selectedPortfolio);
         console.log('Selected Keys:', selectedKeys);
-    }, [selectedKeys]);
+    }, [selectedKeys, selectedPortfolio]);
 
     // Populate selectedKeys with all indices on mount
     useEffect(() => {
@@ -64,24 +64,23 @@ function SuggestedPortfolio({ portfolioSuggestions, selectedPortfolio, setSelect
                 const isIncluded = selectedKeys.includes(index);
 
                 return (
-                    <div key={index}>
+                    <div key={index} className={styles.projectItem}>
                         <SmallestProjectEntry project={preparedProject} />
-                        <div className={styles.buttons}>
-                            <button
-                                className={`${styles.includeButton} ${isIncluded ? styles.disabledButton : ''}`}
-                                onClick={() => handleIncludeProject(index)}
-                                disabled={isIncluded}
-                            >
-                                <FaChevronUp /> Include
-                            </button>
-                            <button
-                                className={`${styles.excludeButton} ${!isIncluded ? styles.disabledButton : ''}`}
-                                onClick={() => handleExcludeProject(index)}
-                                disabled={!isIncluded}
-                            >
-                                <FaChevronUp /> Exclude
-                            </button>
-                        </div>
+                        <label className={styles.toggleButton}>
+                            <input
+                                type="checkbox"
+                                checked={isIncluded}
+                                onChange={() => handleToggleProject(index)}
+                                className={styles.toggleCheckbox}
+                            />
+                            <span className={styles.toggleSlider}>
+                                <FaCheck className={styles.checkIcon} />
+                                <FaTimes className={styles.timesIcon} />
+                            </span>
+                            <span className={styles.toggleLabel}>
+                                {isIncluded ? 'Include' : 'Exclude'}
+                            </span>
+                        </label>
                     </div>
                 );
             })}
@@ -90,7 +89,3 @@ function SuggestedPortfolio({ portfolioSuggestions, selectedPortfolio, setSelect
 }
 
 export default SuggestedPortfolio;
-
-
-
-
