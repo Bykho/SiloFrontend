@@ -1,24 +1,24 @@
-
-
-
-import React, { useState, useEffect } from 'react';
-import AddBlocPortfolio from '../AddBlocPortfolio'; // Import the AddBlocPortfolio component
+import React, { useState, useEffect, useRef } from 'react';
+import AddBlocPortfolio from '../AddBlocPortfolio';
 import styles from './layerDisplay.module.css';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/vs.css';
 
-
 const LayerDisplay = ({ layers, isEditing, toggleEdit, updateLayer, updateProjectDetails, initialProjectData }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [showEditor, setShowEditor] = useState(false);
+  const codeContentRefs = useRef({});
 
   useEffect(() => {
     if (isEditing) {
       setShowEditor(true);
     }
+
     // Apply syntax highlighting to all code blocks
-    document.querySelectorAll('pre code').forEach((block) => {
-      hljs.highlightBlock(block);
+    Object.values(codeContentRefs.current).forEach(ref => {
+      if (ref) {
+        hljs.highlightElement(ref.querySelector('code'));
+      }
     });
   }, [isEditing, layers]);
 
@@ -32,7 +32,7 @@ const LayerDisplay = ({ layers, isEditing, toggleEdit, updateLayer, updateProjec
 
   const handleSave = (updatedLayers, updatedProjectDetails) => {
     console.log('Here is the updatedLayers in handleSave, ', updatedLayers);
-    console.log('Here is the updatedProejctDetails in handleSave, ', updatedProjectDetails);
+    console.log('Here is the updatedProjectDetails in handleSave, ', updatedProjectDetails);
     setShowEditor(false);
     toggleEdit();
     updateLayer(updatedLayers);
@@ -42,6 +42,36 @@ const LayerDisplay = ({ layers, isEditing, toggleEdit, updateLayer, updateProjec
   const handleClose = () => {
     setShowEditor(false);
     toggleEdit();
+  };
+
+  const renderCode = (code, language, index) => {
+    const lines = code.split('\n');
+    
+    const handleScroll = (e) => {
+      const lineNumbers = e.target.querySelector(`.${styles.lineNumbers}`);
+      if (lineNumbers) {
+        lineNumbers.scrollTop = e.target.scrollTop;
+      }
+    };
+
+    return (
+      <div 
+        className={styles.codeContent} 
+        onScroll={handleScroll} 
+        ref={el => codeContentRefs.current[index] = el}
+      >
+        <div className={styles.lineNumbers}>
+          {lines.map((_, index) => (
+            <span key={index}>{index + 1}</span>
+          ))}
+        </div>
+        <pre className={styles.code}>
+          <code className={language || ''}>
+            {code}
+          </code>
+        </pre>
+      </div>
+    );
   };
 
   return (
@@ -89,11 +119,7 @@ const LayerDisplay = ({ layers, isEditing, toggleEdit, updateLayer, updateProjec
               )}
               {column.type === 'code' && (
                 <div className={styles.codeContainer}>
-                  <pre>
-                    <code className={`hljs ${column.language || ''}`}>
-                      {column.value}
-                    </code>
-                  </pre>
+                  {renderCode(column.value, column.language, `${layerIndex}-${columnIndex}`)}
                 </div>
               )}
             </div>
@@ -121,5 +147,3 @@ const LayerDisplay = ({ layers, isEditing, toggleEdit, updateLayer, updateProjec
 };
 
 export default LayerDisplay;
-
-
