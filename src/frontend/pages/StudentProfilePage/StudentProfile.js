@@ -13,6 +13,8 @@ import ShareablePreview from '../../components/ShareablePreview';
 import GitPull from '../../components/GitPull';
 import config from '../../config';
 import { FaWindowClose, FaPlusSquare, FaRegEdit } from 'react-icons/fa';
+import { IoSparkles } from "react-icons/io5";
+
 
 function StudentProfile() {
   const [userData, setUserData] = useState(null);
@@ -123,7 +125,7 @@ function StudentProfile() {
       <div className={styles.buttonContainer}>
         <button className={styles.bigButton} onClick={handleAddProjectClick}> <FaPlusSquare /> Add New Project</button>
         <button className={styles.bigButton} onClick={handleEditProfileClick}> <FaRegEdit /> Edit My Profile</button>
-        <button className={styles.bigButton} onClick={handleCheckGithubClick}> <FaRegEdit /> Check GitHub</button>
+        <button className={styles.bigButton} onClick={handleCheckGithubClick}> <IoSparkles /> Generate Projects from GitHub</button>
       </div>
       <div className={styles.contentContainer}>
         {loading ? (

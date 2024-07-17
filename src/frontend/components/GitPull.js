@@ -12,6 +12,7 @@ const GitPull = ({ userData }) => {
   const [error, setError] = useState('');
   const [selectedRepo, setSelectedRepo] = useState(null);
   const [pressedRepos, setPressedRepos] = useState({});
+  const [autoFilling, setAutoFilling] = useState(false);
 
   useEffect(() => {
     if (userData.github_link) {
@@ -109,6 +110,7 @@ const GitPull = ({ userData }) => {
 
     return (
       <div className={styles.fileTree}>
+        {'Relevant files found:'}
         {files
           .filter((file) => file.type === 'file' && (file.name.toLowerCase() === 'readme.md' || isUserFile(file.name)))
           .map((file) => (
@@ -129,20 +131,30 @@ const GitPull = ({ userData }) => {
     }));
   };
 
+  const handleSubmit = () => {
+    setAutoFilling(true);
+    setTimeout(() => {
+      setAutoFilling(false);
+      // Logic for auto-filling the portfolio can go here.
+    }, 2000);
+  };
+
   return (
     <div className={styles.gitPullContainer}>
       <h2 className={styles.heading}>Autofill Portfolio from GitHub</h2>
-      <input
-        type="text"
-        value={githubUsernameOrUrl}
-        onChange={handleInputChange}
-        placeholder="Enter GitHub username or URL"
-        className={styles.input}
-      />
-      <button onClick={fetchRepos} className={styles.fetchButton}>
-        Fetch Repos
-      </button>
-      {loading && <p>Loading...</p>}
+      <div className={styles.inputContainer}>
+        <input
+          type="text"
+          value={githubUsernameOrUrl}
+          onChange={handleInputChange}
+          placeholder="Enter GitHub username or URL"
+          className={styles.input}
+        />
+        <button onClick={fetchRepos} className={styles.fetchButton}>
+          Fetch Repos
+        </button>
+      </div>
+      {loading && <p className={styles.loading}>Loading...</p>}
       {error && <p className={styles.error}>{error}</p>}
       <ul className={styles.repoList}>
         {repos.map((repo) => (
@@ -153,7 +165,6 @@ const GitPull = ({ userData }) => {
                 toggleRepoPressed(repo.name);
                 fetchRepoContents(repo.name);
               }}
-              style={{ width: '100%' }}
             >
               {repo.name}
             </button>
@@ -161,6 +172,15 @@ const GitPull = ({ userData }) => {
           </li>
         ))}
       </ul>
+      <button onClick={handleSubmit} className={styles.submitButton}>
+        Submit Autofilled Portfolio
+      </button>
+      {autoFilling && (
+        <div className={styles.spinnerOverlay}>
+          <div className={styles.spinner}></div>
+          <p>AutoFilling out Portfolio...</p>
+        </div>
+      )}
     </div>
   );
 };
@@ -170,7 +190,5 @@ GitPull.propTypes = {
 };
 
 export default GitPull;
-
-
 
 
