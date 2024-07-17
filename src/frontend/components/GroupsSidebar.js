@@ -1,3 +1,5 @@
+
+
 import React, { useState } from 'react';
 import { Search, Users, Compass, Star, ChevronRight } from 'lucide-react';
 import styles from './groupssidebar.module.css';
@@ -23,31 +25,30 @@ const GroupItem = ({ name, members, onClick, joinable = false }) => (
   </li>
 );
 
-const GroupsSidebar = () => {
+const GroupsSidebar = ({ groups, setMajor, myGroups }) => {
   const [activeSection, setActiveSection] = useState('myGroups');
   const [currentGroup, setCurrentGroup] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const myGroups = [
-    { name: 'Web Development', members: 1500 },
-    { name: 'React Enthusiasts', members: 3200 },
-    { name: 'UI/UX Design', members: 2800 }
-  ];
+  const suggestedGroups = groups.map((group) => ({
+    name: group,
+    members: 75
+  }));
 
-  const suggestedGroups = [
-    { name: 'JavaScript Ninjas', members: 5000 },
-    { name: 'CSS Wizards', members: 4200 },
-    { name: 'Tech Startups', members: 3800 }
-  ];
+  const myGroupsArray = myGroups.map((group) => ({
+    name: group,
+    members: 75
+  }));
 
   const handleGroupClick = (group) => {
     setCurrentGroup(group);
+    setMajor(group.name); // Set the major to the clicked group's name
   };
 
   return (
     <div className={styles.sidebar}>
       <div className={styles.sidebarHeader}>
-        <h2 className={styles.sidebarTitle}> Groups</h2>
+        <h2 className={styles.sidebarTitle}>Groups</h2>
         {currentGroup && (
           <div className={styles.currentGroup}>
             <h3>{currentGroup.name}</h3>
@@ -73,7 +74,7 @@ const GroupsSidebar = () => {
           text="My Groups"
           onClick={() => setActiveSection('myGroups')}
           isActive={activeSection === 'myGroups'}
-          count={myGroups.length}
+          count={myGroupsArray.length}
         />
         <SidebarItem
           icon={<Compass size={20} />}
@@ -93,7 +94,7 @@ const GroupsSidebar = () => {
       <div className={styles.groupsList}>
         {activeSection === 'myGroups' && (
           <ul>
-            {myGroups.map((group, index) => (
+            {myGroupsArray.map((group, index) => (
               <GroupItem
                 key={index}
                 name={group.name}
@@ -125,6 +126,7 @@ const GroupsSidebar = () => {
                 key={index}
                 name={group.name}
                 members={group.members}
+                onClick={() => handleGroupClick(group)}
                 joinable={true}
               />
             ))}
@@ -136,3 +138,4 @@ const GroupsSidebar = () => {
 };
 
 export default GroupsSidebar;
+

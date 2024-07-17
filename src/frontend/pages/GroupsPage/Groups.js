@@ -1,3 +1,5 @@
+
+
 import React, { useState, useEffect, useRef } from 'react';
 import { useUser } from '../../contexts/UserContext';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -5,106 +7,114 @@ import Tagged from '../../components/TagsFeed';
 import GroupsSidebar from '../../components/GroupsSidebar';
 import styles from './groups.module.css';
 import config from '../../config';
-import { FaSearch } from 'react-icons/fa';
-import { FaPlus, FaUserGroup } from 'react-icons/fa6';
+import { FaSearch, FaPlus } from 'react-icons/fa';
+import { FaUserGroup } from 'react-icons/fa6';
 
 const Groups = () => {
-  const [feedStyle, setFeedStyle] = useState('explore');
+  const [feedStyle, setFeedStyle] = useState('users');
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [projects, setProjects] = useState([]);
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [searchText, setSearchText] = useState('');
+  const [major, setMajor] = useState('Mechanical Engineering');
   const [inputText, setInputText] = useState('');
+  const [searchText, setSearchText] = useState('');
   const { user } = useUser();
   const location = useLocation();
   const searchInputRef = useRef(null);
   const navigate = useNavigate();
-
+  const [majorList, setMajorList] = useState([]);
+  const myGroupsList = ['Mechanical Engineering']; // Added this line
 
   useEffect(() => {
-    const fetchProjects = async () => {
-      setLoading(true);
-      setError('');
+    const fetchUsers = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`${config.apiBaseUrl}/returnFeed`, {
+        const response = await fetch(`${config.apiBaseUrl}/genDirectory`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
           },
         });
         if (!response.ok) {
-          throw new Error('Failed to fetch projects');
+          throw new Error('Failed to fetch users');
         }
-        const returnedProjects = await response.json();
-        setProjects(returnedProjects);
-        setLoading(false);
+        const returnedUsers = await response.json();
+        const majors = new Set();
+        returnedUsers.forEach(user => {
+          if (user.major) {
+            majors.add(user.major);
+          }
+        });
+        setMajorList(Array.from(majors));
       } catch (err) {
-        setError('Failed to fetch projects');
-        setLoading(false);
+        console.error(err.message);
       }
     };
-    fetchProjects();
+    fetchUsers();
   }, []);
 
   useEffect(() => {
-    if (location.state && location.state.tag) {
-      const tag = location.state.tag;
-      setSearchText(tag);
-      setInputText(tag);
-      setFeedStyle('explore');
-      searchInputRef.current.focus();
-      setTimeout(() => {
-        handleSearch({ preventDefault: () => {} });
-        navigate('/feed', { replace: true });
-      }, 0); // Adding a timeout to ensure the focus and search trigger properly
-    }
-  }, [location.state]);
+    const fetchProjects = async () => {
+      setLoading(true);
+      setError('');
+
+      if (feedStyle === 'projects') {
+        try {
+          const token = localStorage.getItem('token');
+          const response = await fetch(`${config.apiBaseUrl}/returnFeed`, {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          });
+          if (!response.ok) {
+            throw new Error('Failed to fetch projects');
+          }
+          const returnedProjects = await response.json();
+          setProjects(returnedProjects);
+          setLoading(false);
+        } catch (err) {
+          setError('Failed to fetch projects');
+          setLoading(false);
+        }
+      } else if (feedStyle === 'users') {
+        try {
+          const token = localStorage.getItem('token');
+          const response = await fetch(`${config.apiBaseUrl}/genDirectory`, {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          });
+          if (!response.ok) {
+            throw new Error('Failed to fetch users');
+          }
+          const returnedUsers = await response.json();
+          setUsers(returnedUsers);
+          setLoading(false);
+        } catch (err) {
+          setError('Failed to fetch users');
+          setLoading(false);
+        }
+      }
+    };
+    fetchProjects();
+  }, [feedStyle]);
 
   useEffect(() => {
     console.log('here is the feedStyle: ', feedStyle);
     console.log('here is search text: ', searchText);
-    let filtered = projects;
+    let filtered = [];
 
-    if (feedStyle === 'explore') {
-      filtered = projects.filter(project => {
-        const searchTextLower = searchText.toLowerCase();
-        if (project.projectDescription.toLowerCase().includes(searchTextLower)) {
-          return true;
-        }
-        for (let layer of project.layers) {
-          for (let cell of layer) {
-            if (cell.type === 'text' && cell.value.toLowerCase().includes(searchTextLower)) {
-              return true;
-            }
-          }
-        }
-        if (project.projectName.toLowerCase().includes(searchTextLower)) {
-          return true;
-        }
-        if (project.tags && project.tags.some(tag => tag.toLowerCase().includes(searchTextLower))) {
-          return true;
-        }
-        return false;
-      });
-    } else if (feedStyle === 'trending') {
-      const now = new Date();
-      filtered = projects.map(project => {
-        const createdAt = new Date(project.created_at);
-        const hoursElapsed = (now - createdAt) / (1000 * 60 * 60); // Convert milliseconds to hours
-        const score = (project.upvotes ? project.upvotes.length : 0) / hoursElapsed;
-        return { ...project, score };
-      }).sort((a, b) => b.score - a.score);
-    } else if (feedStyle === 'mostUpvoted') {
-      filtered = projects.map(project => {
-        const score = (project.upvotes ? project.upvotes.length : 0)
-        return { ...project, score };
-      }).sort((a, b) => b.score - a.score);
+    if (feedStyle === 'projects') {
+    } else if (feedStyle === 'users') {
+      filtered = users.filter(individual => individual.major === major);
     }
 
     setFilteredProjects(filtered);
-  }, [projects, searchText, feedStyle]);
+  }, [projects, feedStyle, users, major]);
 
   const handleSearch = (e) => {
     if (e) e.preventDefault();
@@ -119,10 +129,10 @@ const Groups = () => {
         </div>
         <div className={styles.buttonContainer}>
           <input
-            ref={searchInputRef} // Attach the ref to the search input
+            ref={searchInputRef}
             type="search"
             value={inputText}
-            onClick={() => setFeedStyle('explore')} // Change feedStyle to 'explore' on click
+            onClick={() => setFeedStyle('explore')}
             onChange={(e) => setInputText(e.target.value)}
             placeholder="Machine Learning"
             className={styles.searchInput}
@@ -130,17 +140,21 @@ const Groups = () => {
           <button className={styles.navButton} onClick={handleSearch}>Search</button>
         </div>
         <div className={styles.groupsButtons}>   
-            <button className={styles.groupButton} > <FaPlus /> Create Group </button>
-            <button className={styles.groupButton} > <FaUserGroup /> View Members</button>
+          <button className={styles.groupButton} > <FaPlus /> Create Group </button>
+          <button className={styles.groupButton} > <FaUserGroup /> View Members</button>
         </div>
       </div>
 
       <div className={styles.feedBottomContainer}>
         <div className={styles.feedSidebar}>
-          <GroupsSidebar feedStyle={feedStyle} setFeedStyle={setFeedStyle} />
+          <GroupsSidebar feedStyle={feedStyle} groups={majorList} setFeedStyle={setFeedStyle} setMajor={setMajor} myGroups={myGroupsList} /> {/* Updated this line */}
         </div>
         <div className={styles.feedContent}>
-          <Tagged filteredProjects={filteredProjects} loading={loading} error={error} />
+          <div className={styles.filteredProjectsContainer}>
+            {filteredProjects.map((individual, index) => (
+              <div key={index} className={styles.individualItem}>User: {individual.username} ---- major: {individual.major}</div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

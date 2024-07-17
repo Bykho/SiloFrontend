@@ -236,3 +236,15 @@
     color: white; 
     margin-top: 9px;
 }
+
+
+.filteredProjectsContainer {
+    background-color: #f0f0f0; /* Example background color */
+    padding: 20px; /* Optional padding */
+    border-radius: 10px; /* Optional border radius for rounded corners */
+  }
+  
+  .individualItem {
+    margin-bottom: 10px; /* Space between items */
+  }
+  
