@@ -174,11 +174,12 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
 
       if (response.ok) {
         const data = await response.json();
-        console.log('Received summary:', data.summary);
-        const parsedSummary = JSON.parse(data.summary);
+        console.log('Received summary:', data.surrounding_summary);
+        const parsedSummary = JSON.parse(data.surrounding_summary);
         console.log('Parsed summary:', parsedSummary);
+        const parsedSuggestedLayers = JSON.parse(data.summary_content)
         setSuggestedSummary(parsedSummary);
-        return parsedSummary;
+        return { summary:parsedSummary, layers: parsedSuggestedLayers };
       } else {
         console.error('Failed to send extracted text to backend');
       }
@@ -192,23 +193,39 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
   const handleAutofillFileChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = async () => {
-        const result = reader.result;
-        const text = await pdfToText(file);
-        const parsedData = await handleFileSugUpload(text);
+        const reader = new FileReader();
+        reader.onloadend = async () => {
+            const result = reader.result;
+            const text = await pdfToText(file);
+            const parsedData = await handleFileSugUpload(text);
 
-        if (parsedData) {
-          setProjectName(parsedData.name);
-          setProjectDescription(parsedData.description);
-          setTags(parsedData.tags || []);
-          setLinks(parsedData.links || []);
-          setRows(parsedData.layers || [[{ type: '', value: '' }]]);
-        }
-      };
-      reader.readAsText(file);
+            if (parsedData) {
+                setProjectName(parsedData.summary.name);
+                setProjectDescription(parsedData.summary.description);
+                setTags(parsedData.summary.tags || []);
+                setLinks(parsedData.summary.links || []);
+                setRows(structureLayers(parsedData.layers));
+            }
+        };
+        reader.readAsText(file);
     }
   };
+
+  const structureLayers = (paragraphs) => {
+    const rows = [];
+    let currentRow = [];
+
+    paragraphs.forEach((paragraph, index) => {
+        currentRow.push({ type: 'text', value: paragraph.content });
+        if (currentRow.length === 3 || index === paragraphs.length - 1) {
+            rows.push(currentRow);
+            currentRow = [];
+        }
+    });
+
+    return rows;
+  };
+
 
   return (
     <div className={styles.containerWrapper}>
