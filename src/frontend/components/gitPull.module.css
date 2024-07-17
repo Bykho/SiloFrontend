@@ -1,0 +1,54 @@
+.gitPullContainer {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .input {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .fetchButton {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+  
+  .fetchButton:hover {
+    background-color: #0056b3;
+  }
+  
+  .repoList {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .repoItem {
+    margin: 10px 0;
+  }
+  
+  .repoItem a {
+    text-decoration: none;
+    color: #007bff;
+  }
+  
+  .repoItem a:hover {
+    text-decoration: underline;
+  }
+  
+  .error {
+    color: red;
+    margin-top: 10px;
+  }
+  
