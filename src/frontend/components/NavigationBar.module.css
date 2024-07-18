@@ -1,11 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&display=swap');
 
-/* NavigationBar.module.css */
-
 .nav {
   background: linear-gradient(90deg, #2b2b2b 40%, #121212 75%);
   border: 1px solid #1a1a1a;
-  padding: 20px 10px 20px 10px;
+  padding: 20px 10px;
   display: flex;
   width: 100%;
   justify-content: space-between;
@@ -14,60 +12,84 @@
   font-family: 'Inconsolata', monospace;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3), 0 8px 20px rgba(0, 0, 0, 0.3);
   transition: all 0.3s ease;
+  flex-wrap: wrap;
 }
 
-.button {
+.nav > div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; 
+  margin-right: 30px;
+  gap: 20px; 
+}
+
+.button, .clickedButton {
   color: #f0f0f0;
-  padding: 12px 36px;
-  align-items: center;
+  padding: 12px 24px;
   border-radius: 12px;
   text-decoration: none;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: light;
   font-family: 'Inconsolata', monospace;
-  margin-left: 10px;
-  margin-right: 15px;
+  margin: 5px;
   cursor: pointer;
   background: linear-gradient(145deg, #3a3a3a, #2e2e2e);
   border: 1px solid #4f4f4f;
   transition: all 0.3s ease;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3), 0 8px 20px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 100px;
+  max-width: 110px; 
 }
 
-.clickedButton {
+.logoutButton {
   color: #f0f0f0;
-  padding: 12px 36px;
+  padding: 12px 12px;
   border-radius: 12px;
   text-decoration: none;
-  font-size: 20px;
+  font-size: 16px;
   font-weight: light;
   font-family: 'Inconsolata', monospace;
-  margin-left: 10px;
-  margin-right: 15px;
+  margin: 5px;
   cursor: pointer;
-  background: linear-gradient(145deg, #494949, #606060);
+  background: linear-gradient(145deg, #3a3a3a, #2e2e2e);
   border: 1px solid #4f4f4f;
   transition: all 0.3s ease;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3), 0 8px 20px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 50px;
+  max-width: 60px; 
+}
+
+.clickedButton {
+  background: linear-gradient(145deg, #494949, #606060);
 }
 
 .siloButton {
   color: #121212;
-  padding: 12px 36px;
+  padding: 12px 24px;
   border-radius: 12px;
   text-decoration: none;
   font-size: 20px;
   font-family: 'Inconsolata', monospace;
-  margin-left: 10px;
-  margin-right: 15px;
+  margin: 5px;
+  margin-left: 15px ; 
   cursor: pointer;
   background: linear-gradient(140deg, #b9d9eb 20%, #ffffff);
   border: 1px solid #7fc1f4;
   transition: all 0.3s ease;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3), 0 8px 20px rgba(0, 0, 0, 0.3);
+  min-width: 120px;
+  text-align: center;
+  max-width: 200px;
+  
 }
 
-.button:hover {
+.button:hover, .logoutButton:hover {
   background: linear-gradient(145deg, #575757, #494949);
   color: #dedede;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3), 0 10px 25px rgba(0, 0, 0, 0.3);
@@ -81,7 +103,7 @@
   border-color: #5ba4cf;
 }
 
-.button:active {
+.button:active, .logoutButton:active {
   background: #d0d0d0;
   color: #121212;
   box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.3), inset 0 8px 20px rgba(0, 0, 0, 0.3);
@@ -98,36 +120,35 @@
 }
 
 .icon {
-  margin-right: 3px; /* Add space between the icon and the text */
-  font-size: 1.2em; /* Adjust the size of the icon if needed */
+  margin-right: 6px;
+  font-size: 1.2em;
   vertical-align: middle;
-  margin-left: 0px;
-  margin-bottom: 4px; /* Vertically align the icon with the text */
 }
 
-.logoutButton {
-  color: #f0f0f0;
-  border-radius: 12px;
-  padding: 12px 4px 12px 10px;
-  text-decoration: none;
-  font-size: 20px;
-  font-weight: light;
-  font-family: 'Inconsolata', monospace;
-  margin-left: 10px;
-  justify-content: center;
-  margin-right: 30px;
-  height: 50px;
-  max-width: auto;
-  cursor: pointer;
-  background: linear-gradient(145deg, #3a3a3a, #2e2e2e);
-  border: 1px solid #4f4f4f;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3), 0 8px 20px rgba(0, 0, 0, 0.3);
+.logoutIcon{
+  font-size: 1.2em;
+  vertical-align: middle;
+
 }
 
-.logoutButton:hover{
-  background: linear-gradient(145deg, #575757, #494949);
-  color: #dedede;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3), 0 10px 25px rgba(0, 0, 0, 0.3);
-  border-color: #d0d0d0;
+@media (max-width: 768px) {
+  .nav {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .nav > div {
+    margin-top: 10px;
+  }
+
+  .button, .clickedButton, .logoutButton, .siloButton {
+    width: calc(50% - 10px);
+    min-width: unset;
+  }
+}
+
+@media (max-width: 480px) {
+  .button, .clickedButton, .logoutButton, .siloButton {
+    width: 100%;
+  }
 }

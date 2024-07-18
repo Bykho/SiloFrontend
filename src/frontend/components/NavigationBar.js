@@ -69,7 +69,7 @@ const NavigationBar = () => {
               onClick={handleLogout}
               className={`${styles.logoutButton} ${activeLink === 'logout' ? styles.clickedButton : ''}`}
             >
-              <IoLogOutOutline className={styles.icon} />
+              <IoLogOutOutline className={styles.logoutIcon} />
             </button>
           </div>
         </>

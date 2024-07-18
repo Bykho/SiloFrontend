@@ -1,5 +1,5 @@
 .profileContainer {
-  padding: 20px 20px 10px 20px;
+  padding: 20px 20px 0px 20px;
   margin-bottom: 0px;
   margin-top: 20px;
   background-color: #1e1e1e;
@@ -8,82 +8,52 @@
 
 .profileHeader {
   display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
+  flex-direction: column;
   padding: 20px;
   background-color: #2d2d2d;
   border-radius: 8px;
   margin-bottom: 20px;
   position: relative;
-  overflow: hidden; /* Prevent overflow from child elements */
+  overflow: hidden;
 }
 
-.leftColumn {
+.topSection {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  margin-right: 20px;
-  flex-shrink: 0; /* Prevent shrinking */
+  margin-bottom: 20px;
 }
 
-.typeAndName {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 20px;
-}
-
-.userTypeTag {
-  background-color: #8fb8d9;
-  padding: 10px;
-  border-radius: 8px;
-  font-size: 20px;
-  color: #1a1a1a;
-  text-align: center;
-  font-weight: bold;
-}
-
-.rightColumn {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  min-width: 0; /* Allow shrinking */
-}
-
-.nameAndTagsBox {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
+.nameAndInfo {
+  margin-left: 20px;
 }
 
 .userName {
   font-size: 32px;
   margin: 0;
   color: #f0f0f0;
-  flex-grow: 1;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 5px;
+}
+
 .tagsContainer {
   display: flex;
-  gap: 15px;
-  justify-content: flex-end;
-  flex-wrap: wrap;
-  max-width: 70%;
-  min-width: 0; /* Allow shrinking */
+  gap: 20px;
+  margin-bottom: 20px;
 }
 
 .tagSection {
+  flex: 1;
   display: flex;
   align-items: center;
   gap: 10px;
-  flex: 1;
-  min-width: 0; /* Allow shrinking */
-  max-width: 100%;
 }
 
 .tagLabel {
@@ -98,7 +68,7 @@
 }
 
 .tagListWrapper {
-  max-width: calc(100% - 90px); /* Adjust based on your tagLabel width */
+  flex: 1;
   overflow-x: auto;
   overflow-y: hidden;
   scrollbar-width: thin;
@@ -146,6 +116,7 @@
   width: 100%;
   overflow: hidden;
   transition: height 0.3s ease;
+  margin-bottom: 20px;
 }
 
 .bioButton {
@@ -159,7 +130,6 @@
   font-size: 14px;
   font-weight: 600;
   margin-top: 10px;
-  margin-bottom: 10px;
   transition: background-color 0.3s ease;
 }
 
@@ -171,7 +141,6 @@
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-top: 10px;
 }
 
 .linkButton {
@@ -206,20 +175,6 @@
   padding: 10px;
 }
 
-.resumeButton {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  background-color: #3a3a3a;
-  color: #f0f0f0;
-  text-decoration: none;
-  padding: 8px 12px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
 .modal {
   position: fixed;
   top: 0;
@@ -244,26 +199,21 @@
 }
 
 @media (max-width: 768px) {
-  .nameAndTagsBox {
+  .topSection {
     flex-direction: column;
     align-items: flex-start;
   }
 
-  .tagsContainer {
-    justify-content: flex-start;
+  .nameAndInfo {
+    margin-left: 0;
     margin-top: 10px;
-    max-width: 100%;
+  }
+
+  .tagsContainer {
+    flex-direction: column;
   }
 
   .tagSection {
     width: 100%;
-  }
-
-  .tagListWrapper {
-    max-width: calc(100% - 90px);
-  }
-
-  .linksContainer {
-    justify-content: flex-start;
   }
 }
