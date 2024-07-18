@@ -26,7 +26,7 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
   };
 
   const handleAddCell = (rowIndex) => {
-    if (rows[rowIndex].length < 3) {
+    if (rows[rowIndex].length < 2) {
       const newRows = [...rows];
       newRows[rowIndex] = [...newRows[rowIndex], { type: '', value: '' }];
       setRows(newRows);
@@ -217,7 +217,7 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
 
     paragraphs.forEach((paragraph, index) => {
         currentRow.push({ type: 'text', value: paragraph.content });
-        if (currentRow.length === 3 || index === paragraphs.length - 1) {
+        if (currentRow.length === 2 || index === paragraphs.length - 1) {
             rows.push(currentRow);
             currentRow = [];
         }
@@ -261,7 +261,7 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
           />
         </div>
         <h1 className={styles.subTitle}> Project Content: </h1>
-        <p className={styles.subtitle}> Add up to 3 content blocks per row... </p>
+        <p className={styles.subtitle}> Add up to 2 content blocks per row... </p>
         <div className={styles.rowsContainer}>
           {rows.map((row, rowIndex) => (
             <div key={rowIndex} className={styles.row}>
@@ -370,7 +370,7 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
                   )}
                 </div>
               ))}
-              {row.length < 3 && (
+              {row.length < 2 && (
                 <button className={styles.addContentRightButton} onClick={() => handleAddCell(rowIndex)}>
                   <FaPlus />
                 </button>
