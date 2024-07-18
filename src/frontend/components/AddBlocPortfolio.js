@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useUser } from '../contexts/UserContext';
 import styles from './AddBlocPortfolio.module.css';
 import config from '../config';
-import { FaPlus, FaSave, FaTrash } from 'react-icons/fa';
+import { FaPlus, FaSave, FaTrash, FaArrowsAlt, FaArrowUp, FaArrowDown, FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import pdfToText from 'react-pdftotext';
 import { IoSparkles } from "react-icons/io5";
+
 
 
 const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = null, onClose = null }) => {
@@ -20,9 +21,63 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
   const [isLoading, setIsLoading ] = useState(false);
   const [extractedText, setExtractedText] = useState('');
   const [suggestedSummary, setSuggestedSummary] = useState('');
+  const [selectedCell, setSelectedCell] = useState(null);
+
 
   const handleAddRow = () => {
     setRows([...rows, [{ type: '', value: '' }]]);
+  };
+
+  const handleMoveClick = (rowIndex, cellIndex) => {
+    setSelectedCell({ rowIndex, cellIndex });
+  };
+
+  const handleMove = (direction) => {
+    if (!selectedCell) return;
+
+    const { rowIndex, cellIndex } = selectedCell;
+    const newRows = JSON.parse(JSON.stringify(rows)); // Deep copy of rows
+
+    switch (direction) {
+      case 'up':
+        if (rowIndex > 0) {
+          const targetCellIndex = Math.min(cellIndex, newRows[rowIndex - 1].length - 1);
+          const temp = newRows[rowIndex][cellIndex];
+          newRows[rowIndex][cellIndex] = newRows[rowIndex - 1][targetCellIndex];
+          newRows[rowIndex - 1][targetCellIndex] = temp;
+        }
+        break;
+      case 'down':
+        if (rowIndex < newRows.length - 1) {
+          const targetCellIndex = Math.min(cellIndex, newRows[rowIndex + 1].length - 1);
+          const temp = newRows[rowIndex][cellIndex];
+          newRows[rowIndex][cellIndex] = newRows[rowIndex + 1][targetCellIndex];
+          newRows[rowIndex + 1][targetCellIndex] = temp;
+        }
+        break;
+      case 'left':
+        if (cellIndex > 0) {
+          const temp = newRows[rowIndex][cellIndex];
+          newRows[rowIndex][cellIndex] = newRows[rowIndex][cellIndex - 1];
+          newRows[rowIndex][cellIndex - 1] = temp;
+        }
+        break;
+      case 'right':
+        if (cellIndex < newRows[rowIndex].length - 1) {
+          const temp = newRows[rowIndex][cellIndex];
+          newRows[rowIndex][cellIndex] = newRows[rowIndex][cellIndex + 1];
+          newRows[rowIndex][cellIndex + 1] = temp;
+        }
+        break;
+      default:
+        break;
+    }
+
+    // Remove any empty rows that might have been created
+    const cleanedRows = newRows.filter(row => row.length > 0);
+
+    setRows(cleanedRows);
+    setSelectedCell(null);
   };
 
   const handleAddCell = (rowIndex) => {
@@ -281,6 +336,12 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
                       <option value="code">Code</option>
                     </select>
                     <button 
+                    className={styles.moveCellButton}
+                    onClick={() => handleMoveClick(rowIndex, cellIndex)}
+                  >
+                    <FaArrowsAlt />
+                  </button>
+                    <button 
                       className={styles.removeCellButton} 
                       onClick={() => handleRemoveCell(rowIndex, cellIndex)}
                     >
@@ -411,6 +472,15 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
               <button className={styles.modalKeepButton} onClick={handleCloseModal}>Keep Project</button>
             </div>
           </div>
+        </div>
+      )}
+      {selectedCell && (
+        <div className={styles.moveModal}>
+          <button onClick={() => handleMove('up')} disabled={selectedCell.rowIndex === 0}><FaArrowUp /></button>
+          <button onClick={() => handleMove('left')} disabled={selectedCell.cellIndex === 0}><FaArrowLeft /></button>
+          <button onClick={() => handleMove('right')} disabled={selectedCell.cellIndex === rows[selectedCell.rowIndex].length - 1}><FaArrowRight /></button>
+          <button onClick={() => handleMove('down')} disabled={selectedCell.rowIndex === rows.length - 1}><FaArrowDown /></button>
+          <button onClick={() => setSelectedCell(null)}>Cancel</button>
         </div>
       )}
     </div>
