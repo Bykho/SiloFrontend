@@ -48,14 +48,14 @@
   
   .searchContainer {
     position: relative;
-    padding: 20px;
-    background-color: #2a2a2a;
+    padding: 20px 20px 20px 0px;
+    background-color: none;
     border-bottom: 1px solid #444;
   }
   
   .searchIcon {
     position: absolute;
-    left: 30px;
+    left: 10px;
     top: 50%;
     transform: translateY(-50%);
     color: #aaa;
