@@ -8,6 +8,11 @@
     display: flex; 
 }
 
+.feedContent{
+    width: calc(100% - 320px);
+    margin: 0;
+}
+
 .unAuthenticatedText {
     color: white;
     font-size: 20px;
