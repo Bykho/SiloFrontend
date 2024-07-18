@@ -1,6 +1,3 @@
-
-
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProfileImage from '../components/ProfileImage';
@@ -82,60 +79,63 @@ const ProfileHeader = ({ userData, loading, error }) => {
   return (
     <div className={styles.profileContainer}>
       <div className={styles.profileHeader}>
-        <div className={styles.leftColumn}>
-          <ProfileImage username={userData.username} size={'large'} />
-          <div className={styles.typeAndName}>
-            <h3 className={styles.userTypeTag}>{userData.user_type}</h3>
+        <div className={styles.topSection}>
+          <ProfileImage username={userData.username} size={'medium'} />
+          <div className={styles.nameAndInfo}>
+            <h1 className={styles.userName}>{userData.username}</h1>
+            <div className={styles.userInfo}>
+              <span>{userData.user_type}</span>
+              <span>@</span>
+              <span>{userData.university}</span>
+              <span>|</span>
+              <span>{userData.major}</span>
+              <span>{userData.grad}</span>
+            </div>
           </div>
         </div>
-        <div className={styles.rightColumn}>
-          <div className={styles.nameAndTagsBox}>
-            <h1 className={styles.userName}>{userData.username}</h1>
-            <div className={styles.tagsContainer}>
-              <div className={styles.tagSection}>
-                <h4 className={styles.tagLabel}>Skills</h4>
-                  <div className={styles.tagListWrapper}>
-                    <div className={styles.tagList}>
-                      {userData.skills && userData.skills.map((skill, index) => (
-                        <span
-                          key={index}
-                          className={styles.skillTag}
-                          onClick={() => handleSkillClick(skill)}
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-                </div>
-              </div>
-              <div className={styles.tagSection}>
-                <h4 className={styles.tagLabel}>Interests</h4>
-                <div className={styles.tagListWrapper}>
-                  <div className={styles.tagList}>
-                    {userData.interests && userData.interests.map((interest, index) => (
-                      <span key={index} className={styles.interestTag}>{interest}</span>
-                    ))}
-                  </div>
-                </div>
+        <div className={styles.tagsContainer}>
+          <div className={styles.tagSection}>
+            <h4 className={styles.tagLabel}>Skills</h4>
+            <div className={styles.tagListWrapper}>
+              <div className={styles.tagList}>
+                {userData.skills && userData.skills.map((skill, index) => (
+                  <span
+                    key={index}
+                    className={styles.skillTag}
+                    onClick={() => handleSkillClick(skill)}
+                  >
+                    {skill}
+                  </span>
+                ))}
               </div>
             </div>
           </div>
-          <div className={styles.bioContainer}>
-            <p>{showFullBio ? userData.biography : getTruncatedBio(userData.biography)}</p>
-            {bioTruncated && (
-              <button onClick={toggleBio} className={styles.bioButton}>
-                {showFullBio ? 'Less bio' : 'More bio'}
+          <div className={styles.tagSection}>
+            <h4 className={styles.tagLabel}>Interests</h4>
+            <div className={styles.tagListWrapper}>
+              <div className={styles.tagList}>
+                {userData.interests && userData.interests.map((interest, index) => (
+                  <span key={index} className={styles.interestTag}>{interest}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className={styles.bioContainer}>
+          <p>{showFullBio ? userData.biography : getTruncatedBio(userData.biography)}</p>
+          {bioTruncated && (
+            <button onClick={toggleBio} className={styles.bioButton}>
+              {showFullBio ? 'Less bio' : 'More bio'}
             </button>
-            )}
-          </div>
-          <div className={styles.linksContainer}>
-            <button onClick={toggleResume} className={styles.linkButton}>View Resume</button>
-            {userData.github_link && renderLinkButton(userData.github_link, <FaGithub />, 'GitHub')}
-            {userData.personal_website && renderLinkButton(userData.personal_website, <FaGlobe />, 'Personal Website')}
-            {userData.links && userData.links.map((link, index) => (
-              renderLinkButton(link, <FaLink key={index} />)
-            ))}
-          </div>
+          )}
+        </div>
+        <div className={styles.linksContainer}>
+          <button onClick={toggleResume} className={styles.linkButton}>View Resume</button>
+          {userData.github_link && renderLinkButton(userData.github_link, <FaGithub />, 'GitHub')}
+          {userData.personal_website && renderLinkButton(userData.personal_website, <FaGlobe />, 'Personal Website')}
+          {userData.links && userData.links.map((link, index) => (
+            renderLinkButton(link, <FaLink key={index} />)
+          ))}
         </div>
       </div>
       {showResume && (
@@ -154,7 +154,3 @@ const ProfileHeader = ({ userData, loading, error }) => {
 };
 
 export default ProfileHeader;
-
-
-
-

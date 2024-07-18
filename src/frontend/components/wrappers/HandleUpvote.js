@@ -4,6 +4,8 @@ import React from 'react';
 import { useUser } from '../../contexts/UserContext';
 import config from '../../config';
 import styles from './handleUpvote.module.css';
+import { BiSolidUpvote } from "react-icons/bi";
+
 
 const HandleUpvote = (WrappedComponent) => {
   const HandleUpvoteComponent = (props) => {
@@ -65,7 +67,7 @@ const HandleUpvote = (WrappedComponent) => {
           onClick={() => handleUpvote(project, setProject, passedUser, setPassedUser)}
           disabled={findUpvoteOverlap(project)}
         >
-          &#x2B06;
+          <BiSolidUpvote />
         </button>
       </div>
     );

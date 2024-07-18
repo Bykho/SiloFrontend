@@ -39,7 +39,7 @@
 }
 
 .byUsername {
-  font-size: 1rem;
+  font-size: 1.1rem;
   color: #666;
   white-space: nowrap;
 }
@@ -214,11 +214,11 @@
   display: inline-flex;
   align-items: center;
   gap: 10px; 
-  padding: 7px; 
+  padding: 7px 15px 7px 15px; 
   background: none;
-  border: 2px solid #69aed5;
   border-radius: 5px;
-  background-color: #70b9e3;
+  border: none; 
+  background-color: #4a90e2;
   cursor: pointer;
   color: white;
   font-size: 1.2rem;
@@ -228,7 +228,7 @@
 
 .editButton:hover {
   color: white;
-  background-color: #458ab3;
+  background-color: #3a70ae;
 }
 
 .commentBox {
