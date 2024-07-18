@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { ForceGraph2D } from 'react-force-graph';
-import './UserKnowledgeGraph.css';
+import styles from './userKnowledgeGraph.module.css';
 
 // Sample data - replace this with your actual data
 const sampleData = {
@@ -36,7 +36,7 @@ const UserKnowledgeGraph = () => {
   const textColor = useMemo(() => darkMode ? '#ffffff' : '#000000', [darkMode]);
 
   useEffect(() => {
-    document.body.classList.toggle('dark-mode', darkMode);
+    document.body.classList.toggle(styles.darkMode, darkMode);
   }, [darkMode]);
 
   const handleNodeHover = node => {
@@ -63,23 +63,23 @@ const UserKnowledgeGraph = () => {
   };
 
   return (
-    <div className={`graph-container ${darkMode ? 'dark-mode' : ''}`}>
-      <div className="graph-header">
+    <div className={`${styles.graphContainer} ${darkMode ? styles.darkMode : ''}`}>
+      <div className={styles.graphHeader}>
         <span>User Knowledge Graph</span>
-        <div className="dark-mode-toggle">
-          <span className="sun-icon">☀️</span>
-          <label className="switch">
+        <div className={styles.darkModeToggle}>
+          <span className={styles.sunIcon}>☀️</span>
+          <label className={styles.switch}>
             <input
               type="checkbox"
               checked={darkMode}
               onChange={() => setDarkMode(!darkMode)}
             />
-            <span className="slider round"></span>
+            <span className={`${styles.slider} ${styles.round}`}></span>
           </label>
-          <span className="moon-icon">🌙</span>
+          <span className={styles.moonIcon}>🌙</span>
         </div>
       </div>
-      <div className="graph-content">
+      <div className={styles.graphContent}>
         <ForceGraph2D
           ref={graphRef}
           graphData={sampleData}

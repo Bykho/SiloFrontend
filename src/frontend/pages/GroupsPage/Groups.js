@@ -9,6 +9,7 @@ import styles from './groups.module.css';
 import config from '../../config';
 import { FaSearch, FaPlus } from 'react-icons/fa';
 import { FaUserGroup } from 'react-icons/fa6';
+import UserKnowledgeGraph from '../../components/UserKnowledgeGraph';
 
 const Groups = () => {
   const [feedStyle, setFeedStyle] = useState('users');
