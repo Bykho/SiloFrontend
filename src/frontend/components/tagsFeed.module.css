@@ -4,10 +4,12 @@
 
 .feedContainer {
     padding-left: 20px;
-    padding-right: 20px;
+    padding-right: 10px;
     padding-bottom: 20px;
     background-color: #1e1e1e;
     font-family: 'Inconsolata';
+    width: calc(100% - 250px);
+    margin: 0;
   }
   
   .searchBar {
@@ -72,15 +74,18 @@
     display: flex;
     flex-direction: column;
     gap: 0px;
+    width: 100%; 
   }
   
   .projectItem {
     display: flex;
     flex-direction: column;
     gap: 0px;
-    padding: 0px 30px 0px 20px;
+    padding: 0px 20px 0px 20px;
     background-color: #333;
     border-radius: 3px;
+    width: 100% ; 
+    box-sizing: border-box;
   }
 
 .resultsCount {
@@ -92,7 +97,6 @@
     margin-bottom: 30px;
     margin-right: 20px;
     margin-left: 30px; 
-    max-width: fit-content;
     padding: 3px 10px;
     border-radius: 8px;
 }
