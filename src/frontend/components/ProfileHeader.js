@@ -1,7 +1,7 @@
 
 
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProfileImage from '../components/ProfileImage';
 import styles from './profileHeader.module.css';
@@ -13,6 +13,15 @@ const ProfileHeader = ({ userData, loading, error }) => {
   const navigate = useNavigate();
   const [showFullBio, setShowFullBio] = useState(false);
   const [showResume, setShowResume] = useState(false);
+  const [bioTruncated, setBioTruncated] = useState(false);
+
+  const BIO_LENGTH_LIMIT = 300;
+
+  useEffect(() => {
+    if (userData && userData.biography) {
+      setBioTruncated(userData.biography.length > BIO_LENGTH_LIMIT);
+    }
+  }, [userData]);
 
   const toggleBio = () => {
     setShowFullBio(!showFullBio);
@@ -33,11 +42,11 @@ const ProfileHeader = ({ userData, loading, error }) => {
     }
   };
 
-  const getTruncatedBio = (bio, length) => {
-    if (bio.length <= length) {
+  const getTruncatedBio = (bio) => {
+    if (bio.length <= BIO_LENGTH_LIMIT) {
       return bio;
     }
-    return bio.substring(0, length) + '...';
+    return bio.substring(0, BIO_LENGTH_LIMIT) + '...';
   };
 
   const ensureProtocol = (url) => {
@@ -112,10 +121,12 @@ const ProfileHeader = ({ userData, loading, error }) => {
             </div>
           </div>
           <div className={styles.bioContainer}>
-            <p>{showFullBio ? userData.biography : getTruncatedBio(userData.biography, 300)}</p>
-            <button onClick={toggleBio} className={styles.bioButton}>
-              {showFullBio ? 'Less bio' : 'More bio'}
+            <p>{showFullBio ? userData.biography : getTruncatedBio(userData.biography)}</p>
+            {bioTruncated && (
+              <button onClick={toggleBio} className={styles.bioButton}>
+                {showFullBio ? 'Less bio' : 'More bio'}
             </button>
+            )}
           </div>
           <div className={styles.linksContainer}>
             <button onClick={toggleResume} className={styles.linkButton}>View Resume</button>
