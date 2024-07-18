@@ -228,7 +228,7 @@ const ProjectEntry = ({ project, passedUser, UpvoteButton }) => {
         </div>
         {user.username === localProject.createdBy && (
           <button className={styles.editButton} onClick={toggleEdit}>
-            <FaEdit />
+            <FaEdit /> Modify Content
           </button>
         )}
       </div>

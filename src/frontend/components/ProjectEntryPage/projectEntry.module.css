@@ -62,7 +62,7 @@
   color: #4a90e2;
   padding: 4px 10px;
   border-radius: 15px;
-  font-size: 0.85rem;
+  font-size: 1.2rem;
   font-weight: 500;
   transition: background-color 0.2s ease;
 }
@@ -211,17 +211,24 @@
 }
 
 .editButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px; 
+  padding: 7px; 
   background: none;
-  border: none;
+  border: 2px solid #69aed5;
+  border-radius: 5px;
+  background-color: #70b9e3;
   cursor: pointer;
-  color: #79acc9;
-  font-size: 1.5rem;
-  margin-left: 10px;
+  color: white;
+  font-size: 1.2rem;
+  margin-left: 25px;
   transition: color 0.3s ease;
 }
 
 .editButton:hover {
-  color: #1e1e1e;
+  color: white;
+  background-color: #458ab3;
 }
 
 .commentBox {
