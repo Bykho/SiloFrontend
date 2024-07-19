@@ -137,7 +137,6 @@ const GroupsSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGroup })
   return (
     <div className={styles.sidebar}>
       <div className={styles.sidebarHeader}>
-        <h2 className={styles.sidebarTitle}>Groups</h2>
         {activeGroup && (
           <div className={styles.currentGroup}>
             <h3>{activeGroup.name}</h3>

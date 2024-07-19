@@ -33,24 +33,8 @@ const Groups = () => {
   return (
     <div className={styles.feedContainer}>
       <div className={styles.searchBar}>
-        <div className={styles.searchWords}>
-          <p style={{ textAlign: 'left' }}><FaSearch /></p>
-        </div>
-        <div className={styles.buttonContainer}>
-          <input
-            ref={searchInputRef}
-            type="search"
-            value={inputText}
-            onClick={() => setFeedStyle('discover')}
-            onChange={(e) => setInputText(e.target.value)}
-            placeholder="Machine Learning"
-            className={styles.searchInput}
-          />
-          <button className={styles.navButton} onClick={handleSearch}>Search</button>
-        </div>
         <div className={styles.groupsButtons}>   
           <button className={styles.groupButton} onClick={handleCreateGroupClick}> <FaPlus /> Create Group </button>
-          <button className={styles.groupButton} > <FaUserGroup /> View Members</button>
         </div>
       </div>
 
