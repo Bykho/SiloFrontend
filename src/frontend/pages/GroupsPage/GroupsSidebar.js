@@ -4,8 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { Search, Users, Compass, Star, ChevronRight } from 'lucide-react';
 import styles from './groupssidebar.module.css';
 import config from '../../config';
-import { FaPlus } from 'react-icons/fa';
-import GroupCreator from './GroupCreator'; // Import GroupCreator component
 
 
 const SidebarItem = ({ icon, text, onClick, isActive, count }) => (
@@ -33,7 +31,6 @@ const GroupsSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGroup })
   const [currentGroup, setCurrentGroup] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [groupList, setGroupList] = useState([]);
-  const [showGroupCreator, setShowGroupCreator] = useState(false);
 
   useEffect(() => {
     if (feedStyle === 'discover') {
@@ -105,9 +102,6 @@ const GroupsSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGroup })
     console.log('here are availableGroups: ', groupList);
   }, [groupList]);
 
-  const handleCreateGroupClick = () => {
-    setShowGroupCreator(!showGroupCreator);
-  };
 
   const handleGroupJoin = async (groupId) => {
     try {
@@ -144,17 +138,6 @@ const GroupsSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGroup })
 
   return (
     <div className={styles.sidebar}>
-      <div className={styles.groupsButtons}>   
-        <button className={styles.groupButton} onClick={handleCreateGroupClick}> <FaPlus /> Create Group </button>
-      </div>
-      <div className={styles.sidebarHeader}>
-        {activeGroup && (
-          <div className={styles.currentGroup}>
-            <h3>{activeGroup.name}</h3>
-            <p>{activeGroup.members} members</p>
-          </div>
-        )}
-      </div>
 
       <nav className={styles.sidebarNav}>
         <SidebarItem
@@ -166,13 +149,13 @@ const GroupsSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGroup })
         />
         <SidebarItem
           icon={<Compass size={20} />}
-          text="Discover"
+          text="Discover Groups"
           onClick={() => setFeedStyle('discover')}
           isActive={feedStyle === 'discover'}
         />
         <SidebarItem
           icon={<Star size={20} />}
-          text="Suggested"
+          text="Suggested Groups"
           onClick={() => setFeedStyle('suggested')}
           isActive={feedStyle === 'suggested'}
           count={availableGroups.length}
@@ -180,16 +163,16 @@ const GroupsSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGroup })
       </nav>
 
       <div className={styles.groupsList}>
-      <div className={styles.searchContainer}>
-        <Search className={styles.searchIcon} />
-        <input
-          type="text"
-          placeholder="Search groups..."
-          className={styles.searchInput}
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-      </div>
+        <div className={styles.searchContainer}>
+          <Search className={styles.searchIcon} />
+          <input
+            type="text"
+            placeholder="Search groups..."
+            className={styles.searchInput}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
         {feedStyle === 'mygroups' && (
           <ul>
             {availableGroups.map((group, index) => (
@@ -233,11 +216,6 @@ const GroupsSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGroup })
           </ul>
         )}
       </div>
-      {showGroupCreator && (
-        <div className={styles.modalOverlay}>
-          <GroupCreator onClose={handleCreateGroupClick} />
-        </div>
-      )}
     </div>
   );
 };

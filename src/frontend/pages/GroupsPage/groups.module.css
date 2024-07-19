@@ -8,6 +8,16 @@
     display: flex; 
 }
 
+.feedContent{
+  margin-top: 10px;
+}
+
+.topBar{
+  border-radius: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 97%;
+}
+
 .unAuthenticatedText {
     color: white;
     font-size: 20px;
