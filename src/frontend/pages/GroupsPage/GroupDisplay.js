@@ -4,14 +4,17 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styles from './groupDisplay.module.css';
 import { FaUserGroup, FaPlus } from 'react-icons/fa6';
+import { FaUser, FaInfoCircle } from 'react-icons/fa';
 import AddProjectToGroup from './AddProjectToGroup';
-import Tagged from '../../components/TagsFeed';
 import config from '../../config';
+import GroupCreator from './GroupCreator'; // Import GroupCreator component
+
 
 const GroupDisplay = ({ group }) => {
   const [showMembers, setShowMembers] = useState(false);
   const [showAddProjectToGroup, setShowAddProjectToGroup] = useState(false);
   const [fullProjects, setFullProjects] = useState([]);
+  const [showGroupCreator, setShowGroupCreator] = useState(false);
 
   const toggleMembersView = () => {
     setShowMembers(!showMembers);
@@ -19,6 +22,10 @@ const GroupDisplay = ({ group }) => {
 
   const toggleAddProjectToGroupView = () => {
     setShowAddProjectToGroup(!showAddProjectToGroup);
+  };
+
+  const handleCreateGroupClick = () => {
+    setShowGroupCreator(!showGroupCreator);
   };
 
   useEffect(() => {
@@ -57,16 +64,35 @@ const GroupDisplay = ({ group }) => {
   }
 
   return (
-    <div className={styles.groupContainer}>
-      <h1 className={styles.groupTitle}>Name: {group.name}</h1>
-      <p className={styles.groupDescription}>Description: {group.description}</p>
-      <p className={styles.groupDescription}>Group Members: {group.members}</p>
-      <p className={styles.groupDescription}>Created By: {group.createdBy}</p>
-      {group.users && group.users.length > 0 && (
-        <button className={styles.groupButton} onClick={toggleMembersView}>
-          <FaUserGroup /> {showMembers ? 'Hide Members' : 'View Members'}
+    <div className={styles.groupDisplayContainer}>
+      <div className={styles.groupHeader}>
+        <div className={styles.groupTitleRow}>
+          <h2 className={styles.groupTitle}>{group.name}</h2>
+          <div className={styles.groupMetadata}>
+            <span className={styles.groupMetadataItem}>
+              <FaUser className={styles.icon} />
+              Created by {group.createdBy}
+            </span>
+          </div>
+          <button className={styles.createGroupButton} onClick={() => setShowGroupCreator(true)}>
+            <FaPlus /> Create New Group
+          </button>
+        </div>
+        <p className={styles.groupDescription} title={group.description}>
+          <FaInfoCircle className={styles.icon} />
+          {group.description}
+        </p>
+      </div>
+
+      <div className={styles.groupButtonsContainer}>
+        <button className={styles.groupButton} onClick={() => setShowMembers(!showMembers)}>
+          <FaUserGroup /> {showMembers ? 'Hide Members' : `View ${group.members} Members`}
         </button>
-      )}
+        <button className={styles.addGroupButton} onClick={() => setShowAddProjectToGroup(true)}>
+          <FaPlus /> Add Project to Group
+        </button>
+      </div>
+
       {showMembers && group.users && (
         <ul className={styles.membersList}>
           {group.users.map((userId, index) => (
@@ -74,12 +100,16 @@ const GroupDisplay = ({ group }) => {
           ))}
         </ul>
       )}
-      <button className={styles.groupButton} onClick={toggleAddProjectToGroupView}>
-        <FaPlus /> Add Project to Group
-      </button>
+
       {showAddProjectToGroup && (
         <div className={styles.modalOverlay}>
           <AddProjectToGroup group={group} onClose={toggleAddProjectToGroupView} />
+        </div>
+      )}
+
+      {showGroupCreator && (
+        <div className={styles.modalOverlay}>
+          <GroupCreator onClose={handleCreateGroupClick} />
         </div>
       )}
     </div>

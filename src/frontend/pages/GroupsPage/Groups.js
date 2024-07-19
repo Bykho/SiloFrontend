@@ -2,17 +2,13 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useUser } from '../../contexts/UserContext';
-import { useNavigate, useLocation } from 'react-router-dom';
 import GroupsSidebar from './GroupsSidebar';
 import GroupDisplay from './GroupDisplay'; // Import GroupDisplay component
 import styles from './groups.module.css';
-import config from '../../config';
-import { FaPlus } from 'react-icons/fa';
-import { FaUserGroup } from 'react-icons/fa6';
 import GroupsFeed from './GroupsFeed';
 
 const Groups = () => {
-  const [feedStyle, setFeedStyle] = useState('discover');
+  const [feedStyle, setFeedStyle] = useState('mygroups');
   const [projects, setProjects] = useState([]);
   const [inputText, setInputText] = useState('');
   const [searchText, setSearchText] = useState('');
@@ -27,7 +23,7 @@ const Groups = () => {
 
   return (
     <div className={styles.feedContainer}>
-      <div className={styles.searchBar}>
+      <div className={styles.topBar}>
         {activeGroup && <GroupDisplay group={activeGroup}/>}
       </div>
 
