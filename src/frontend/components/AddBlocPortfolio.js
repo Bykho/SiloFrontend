@@ -1,3 +1,6 @@
+
+
+
 import React, { useState, useEffect } from 'react';
 import { useUser } from '../contexts/UserContext';
 import styles from './AddBlocPortfolio.module.css';
@@ -5,12 +8,9 @@ import config from '../config';
 import { FaPlus, FaSave, FaTrash, FaArrowsAlt, FaArrowUp, FaArrowDown, FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import pdfToText from 'react-pdftotext';
 import { IoSparkles } from "react-icons/io5";
-
-
+import AddBlocPortfolioPreview from "./AddBlocPortfolioPreview";
 
 const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = null, onClose = null }) => {
-  console.log('this is initialProjectData._id: ', initialProjectData._id);
-
   const [rows, setRows] = useState(initialRows.length ? initialRows : [[{ type: '', value: '' }]]);
   const [projectName, setProjectName] = useState(initialProjectData?.projectName || '');
   const [projectDescription, setProjectDescription] = useState(initialProjectData?.projectDescription || '');
@@ -22,6 +22,22 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
   const [extractedText, setExtractedText] = useState('');
   const [suggestedSummary, setSuggestedSummary] = useState('');
   const [selectedCell, setSelectedCell] = useState(null);
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
+  const [previewProject, setPreviewProject] = useState({});
+
+  useEffect(() => {
+    console.log('here is previewProject in useEffect: ', previewProject)
+    const updatedPreviewProject = {
+      projectName: projectName,
+      projectDescription: projectDescription,
+      layers: rows,
+      tags: tags,
+      links: links,
+      comments: [],
+      upvotes: [],
+    };
+    setPreviewProject(updatedPreviewProject);
+  }, [rows, projectName, projectDescription, tags, links]);
 
 
   const handleAddRow = () => {
@@ -73,9 +89,7 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
         break;
     }
 
-    // Remove any empty rows that might have been created
     const cleanedRows = newRows.filter(row => row.length > 0);
-
     setRows(cleanedRows);
     setSelectedCell(null);
   };
@@ -90,7 +104,7 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
 
   const handleCellTypeChange = (rowIndex, cellIndex, type) => {
     const newRows = [...rows];
-    newRows[rowIndex][cellIndex] = { ...newRows[rowIndex][cellIndex], type, value: '' }; // Reset value on type change
+    newRows[rowIndex][cellIndex] = { ...newRows[rowIndex][cellIndex], type, value: '' };
     setRows(newRows);
   };
 
@@ -126,7 +140,6 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
       links,
       username: user.username
     };
-    console.log('were trying to saave');
     if (initialProjectData._id) {
       projectData._id = initialProjectData._id;
     }
@@ -141,9 +154,8 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
         body: JSON.stringify({ data: projectData }),
       });
       if (response.ok) {
-        const savedProject = await response.json(); // Assuming your API returns the saved project
+        const savedProject = await response.json();
         alert('Project saved successfully');
-        console.log('here is the savedProject ahead of the onSave call', savedProject)
         if (onSave) {
           if (initialProjectData._id) {
             onSave(savedProject.layers, savedProject);
@@ -202,10 +214,9 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
         body: JSON.stringify({ projectId: initialProjectData._id, userId: user._id }),
       });
       if (response.ok) {
-        console.log('modal delete project button was clicked.');
         setShowDeleteModal(false);
         if (onClose) {
-          onClose(); // Close the AddBlocPortfolio modal
+          onClose();
         }
       } else {
         console.error('Error deleting project:', response.statusText);
@@ -214,7 +225,6 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
       console.error('Error deleting project:', error);
     }
   };
-
 
   const handleFileSugUpload = async (text) => {
     setIsLoading(true);
@@ -229,9 +239,7 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
 
       if (response.ok) {
         const data = await response.json();
-        console.log('Received summary:', data.surrounding_summary);
         const parsedSummary = JSON.parse(data.surrounding_summary);
-        console.log('Parsed summary:', parsedSummary);
         const parsedSuggestedLayers = JSON.parse(data.summary_content)
         setSuggestedSummary(parsedSummary);
         return { summary:parsedSummary, layers: parsedSuggestedLayers };
@@ -250,7 +258,6 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
     if (file) {
         const reader = new FileReader();
         reader.onloadend = async () => {
-            const result = reader.result;
             const text = await pdfToText(file);
             const parsedData = await handleFileSugUpload(text);
 
@@ -281,23 +288,31 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
     return rows;
   };
 
-
   return (
     <div className={styles.containerWrapper}>
       {isLoading && <div className={styles.spinner}></div>}
       <div className={styles.container}>
         <div className={styles.header}>
           <h1 className={styles.title}>Project Builder</h1>
-          <label htmlFor="autofillInput" className={styles.autofillLabel}>
-            <IoSparkles /> Autofill Project from PDF
-          </label>
-          <input 
-            type="file" 
-            id="autofillInput"
-            className={styles.autofillInput} 
-            onChange={handleAutofillFileChange} 
-            accept=".pdf"
-          />
+          <div className={styles.headerButtons}>
+            <label htmlFor="autofillInput" className={styles.autofillLabel}>
+              <IoSparkles /> Autofill Project from PDF
+            </label>
+            <input 
+              type="file" 
+              id="autofillInput"
+              className={styles.autofillInput} 
+              onChange={handleAutofillFileChange} 
+              accept=".pdf"
+            />
+            <button 
+              className={styles.previewButton} 
+              onMouseEnter={() => setShowPreviewModal(true)}
+              onMouseLeave={() => setShowPreviewModal(false)}
+            >
+              Preview
+            </button>
+          </div>
         </div>
         <p className={styles.subtitle}>Create a new project for your portfolio, edit an existing one or upload PDF to autofill text content</p>
         <div className={styles.projectInfo}>
@@ -483,14 +498,19 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
           <button onClick={() => setSelectedCell(null)}>Cancel</button>
         </div>
       )}
+      {showPreviewModal && (
+        <div className={styles.previewModal}>
+          <div className={styles.modalContent}>
+            <h2>Preview Content</h2>
+            <AddBlocPortfolioPreview project={previewProject} passedUser={user}/>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
 export default AddBlocPortfolio;
-
-
-
 
 
 
