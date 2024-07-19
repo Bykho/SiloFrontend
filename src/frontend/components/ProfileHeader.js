@@ -100,6 +100,7 @@ const ProfileHeader = ({ userData, loading, error }) => {
           {renderTagsPreview(userData.interests, 'interest')}
         </div>
         </div>
+        <div className={styles.divider}></div>
         <div className={styles.bioContainer}>
           <p className={styles.bio}>{showFullBio ? userData.biography : getTruncatedBio(userData.biography)}</p>
           {bioTruncated && (
