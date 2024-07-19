@@ -24,21 +24,17 @@ const AddProjectToGroup = ({ group, onClose }) => {
           },
           body: JSON.stringify({ userId: user._id }),
         });
-
         if (!response.ok) {
           throw new Error('Failed to fetch projects');
         }
-
         const returnedProjects = await response.json();
         setProjects(returnedProjects);
       } catch (err) {
         console.error('Error fetching projects:', err);
       }
     };
-
     fetchProjects();
-  }, []);
-
+  }, [user._id]);
 
   const toggleIncludeProject = (projectId) => {
     setIncludedProjects((prevIncluded) =>
@@ -46,6 +42,31 @@ const AddProjectToGroup = ({ group, onClose }) => {
         ? prevIncluded.filter((id) => id !== projectId)
         : [...prevIncluded, projectId]
     );
+  };
+
+  const handleSaveProjectToGroup = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${config.apiBaseUrl}/saveProjectToGroup`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ groupId: group.id, projectIds: includedProjects }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save projects to group');
+      }
+
+      const result = await response.json();
+      console.log('Successfully saved projects to group:', result);
+      // Optionally, close the modal or show a success message
+      onClose();
+    } catch (err) {
+      console.error('Error saving projects to group:', err);
+    }
   };
 
   return (
@@ -72,11 +93,15 @@ const AddProjectToGroup = ({ group, onClose }) => {
             </li>
           ))}
         </ul>
+        <button className={styles.postProjectsButton} onClick={handleSaveProjectToGroup}>
+          Post Projects to Group
+        </button>
       </div>
     </div>
   );
 };
 
 export default AddProjectToGroup;
+
 
 

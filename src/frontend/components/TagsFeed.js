@@ -10,7 +10,7 @@ import SmallProjectEntry from './ProjectEntryPage/SmallProjectEntry';
 import config from '../config';
 import LoadingIndicator from './LoadingIndicator';
 
-const TagsFeed = ({ filteredProjects, loading, error }) => {
+const TagsFeed = ({ filteredProjects, loading= null, error=null }) => {
   const { user } = useUser();
 
   return (

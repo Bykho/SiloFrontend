@@ -130,7 +130,8 @@ const GroupsSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGroup })
     createdBy: group.createdBy,
     project_content: group.project_content,
     members: group.users.length,
-    users: group.users
+    users: group.users,
+    projects: group.projects
   }));
 
   return (
