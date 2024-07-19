@@ -24,7 +24,8 @@ function SignUp() {
     resume: '',
     interests: [],
     skills: [],
-    biography: ''
+    biography: '',
+    groups: []
   });
   const [extractedText, setExtractedText] = useState('');
   const [suggestedSummary, setSuggestedSummary] = useState({});
@@ -183,7 +184,8 @@ function SignUp() {
       resume: formData.resume,
       interests: formData.interests,
       skills: formData.skills,
-      biography: formData.biography
+      biography: formData.biography,
+      groups: formData.groups
     };
 
     console.log("Here is userData: ", userData);
