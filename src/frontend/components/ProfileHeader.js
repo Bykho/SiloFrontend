@@ -10,6 +10,7 @@ const ProfileHeader = ({ userData, loading, error }) => {
   const [bioTruncated, setBioTruncated] = useState(false);
   const skillsSectionRef = useRef(null);
   const interestsSectionRef = useRef(null);
+  const [showResume, setShowResume] = useState(false);
 
   const BIO_LENGTH_LIMIT = 300;
   const VISIBLE_TAGS = 2;
@@ -18,7 +19,12 @@ const ProfileHeader = ({ userData, loading, error }) => {
     if (userData && userData.biography) {
       setBioTruncated(userData.biography.length > BIO_LENGTH_LIMIT);
     }
+    console.log('this is yumbi snack', userData);
   }, [userData]);
+
+  const toggleResume = () => {
+    setShowResume(!showResume);
+  }
 
   const toggleBio = () => setShowFullBio(!showFullBio);
 
@@ -29,7 +35,7 @@ const ProfileHeader = ({ userData, loading, error }) => {
       <div className={styles.tagSection} ref={type === 'skill' ? skillsSectionRef : interestsSectionRef}>
         <span className={styles.tagLabel}>{type === 'skill' ? 'Skills:' : 'Interests:'}</span>
         {previewTags.map((tag, index) => (
-          <span key={index} className={styles.tag}>
+          <span key={index} className={styles.tag} onClick={() => handleSkillClick(tag)}>
             {tag}
           </span>
         ))}
@@ -82,6 +88,10 @@ const ProfileHeader = ({ userData, loading, error }) => {
     );
   };
 
+  const handleSkillClick = (skill) => {
+    navigate('/GenDirectory', { state: { skill: skill } });
+  }
+
   if (loading) return <p className={styles.loadingError}>Loading...</p>;
   if (error) return <p className={styles.loadingError}>Error: {error}</p>;
   if (!userData) return <p className={styles.loadingError}>No user data available</p>;
@@ -110,7 +120,7 @@ const ProfileHeader = ({ userData, loading, error }) => {
           )}
         </div>
         <div className={styles.linksContainer}>
-          <button className={styles.linkButton}>View Resume</button>
+          <button className={styles.linkButton} onClick={toggleResume}>View Resume</button>
           {userData.github_link && renderLinkButton(userData.github_link, <FaGithub />)}
           {userData.personal_website && renderLinkButton(userData.personal_website, <FaGlobe />)}
           {userData.links && userData.links.map((link, index) => (
@@ -118,6 +128,12 @@ const ProfileHeader = ({ userData, loading, error }) => {
           ))}
         </div>
       </div>
+      {showResume && (
+        <div className={styles.modal}>
+          <button className={styles.closeButton} onClick={toggleResume}>X</button>
+          <embed src={userData.resume} type="application/pdf" width="80%" height="80%" />
+        </div>
+      )}
     </div>
   );
 };
