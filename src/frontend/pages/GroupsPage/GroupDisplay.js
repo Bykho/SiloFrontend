@@ -83,9 +83,6 @@ const GroupDisplay = ({ group }) => {
           <AddProjectToGroup group={group} onClose={toggleAddProjectToGroupView} />
         </div>
       )}
-      <div>
-        <Tagged filteredProjects={fullProjects}/>
-      </div>
     </div>
   );
 };

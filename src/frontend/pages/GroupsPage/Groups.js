@@ -10,6 +10,7 @@ import styles from './groups.module.css';
 import config from '../../config';
 import { FaSearch, FaPlus } from 'react-icons/fa';
 import { FaUserGroup } from 'react-icons/fa6';
+import GroupsFeed from './GroupsFeed';
 
 const Groups = () => {
   const [feedStyle, setFeedStyle] = useState('discover');
@@ -48,7 +49,7 @@ const Groups = () => {
           />
         </div>
         <div className={styles.feedContent}>
-          { activeGroup && <GroupDisplay group={activeGroup} />}
+          { activeGroup && <GroupsFeed group={activeGroup} />}
           {!showGroupCreator && !activeGroup && <h1 className={styles.comingSoon}>Holder before group is selected...</h1>}
         </div>
       </div>
