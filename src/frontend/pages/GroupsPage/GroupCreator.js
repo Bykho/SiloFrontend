@@ -44,7 +44,7 @@ const GroupCreator = ({ onClose }) => {
     <div className={styles.modal}>
       <div className={styles.modalContent}>
         <button className={styles.closeButton} onClick={onClose}>X</button>
-        <h1>Create a group</h1>
+        <h1 style={{ color: 'black' }}>Create a group</h1>
         <form onSubmit={handleSubmit}>
           <input
             type="text"

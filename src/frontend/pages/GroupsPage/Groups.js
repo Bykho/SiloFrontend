@@ -4,11 +4,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useUser } from '../../contexts/UserContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import GroupsSidebar from './GroupsSidebar';
-import GroupCreator from './GroupCreator'; // Import GroupCreator component
 import GroupDisplay from './GroupDisplay'; // Import GroupDisplay component
 import styles from './groups.module.css';
 import config from '../../config';
-import { FaSearch, FaPlus } from 'react-icons/fa';
+import { FaPlus } from 'react-icons/fa';
 import { FaUserGroup } from 'react-icons/fa6';
 import GroupsFeed from './GroupsFeed';
 
@@ -20,23 +19,16 @@ const Groups = () => {
   const { user } = useUser();
   const searchInputRef = useRef(null);
   const [activeGroup, setActiveGroup] = useState(null);
-  const [showGroupCreator, setShowGroupCreator] = useState(false);
 
   const handleSearch = (e) => {
     if (e) e.preventDefault();
     setSearchText(inputText);
   };
 
-  const handleCreateGroupClick = () => {
-    setShowGroupCreator(!showGroupCreator); // Toggle the state
-  };
-
   return (
     <div className={styles.feedContainer}>
       <div className={styles.searchBar}>
-        <div className={styles.groupsButtons}>   
-          <button className={styles.groupButton} onClick={handleCreateGroupClick}> <FaPlus /> Create Group </button>
-        </div>
+        {activeGroup && <GroupDisplay group={activeGroup}/>}
       </div>
 
       <div className={styles.feedBottomContainer}>
@@ -49,21 +41,15 @@ const Groups = () => {
           />
         </div>
         <div className={styles.feedContent}>
-          { activeGroup && <GroupsFeed group={activeGroup} />}
-          {!showGroupCreator && !activeGroup && <h1 className={styles.comingSoon}>Holder before group is selected...</h1>}
+          {activeGroup && <GroupsFeed group={activeGroup} />}
+          {!activeGroup && <h1 className={styles.comingSoon}>Holder before group is selected...</h1>}
         </div>
       </div>
-      {showGroupCreator && (
-        <div className={styles.modalOverlay}>
-          <GroupCreator onClose={handleCreateGroupClick} />
-        </div>
-      )}
     </div>
   );
 };
 
 export default Groups;
-
 
 
 

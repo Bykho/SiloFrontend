@@ -4,6 +4,9 @@ import React, { useState, useEffect } from 'react';
 import { Search, Users, Compass, Star, ChevronRight } from 'lucide-react';
 import styles from './groupssidebar.module.css';
 import config from '../../config';
+import { FaPlus } from 'react-icons/fa';
+import GroupCreator from './GroupCreator'; // Import GroupCreator component
+
 
 const SidebarItem = ({ icon, text, onClick, isActive, count }) => (
   <li className={`${styles.sidebarItem} ${isActive ? styles.active : ''}`} onClick={onClick}>
@@ -30,6 +33,7 @@ const GroupsSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGroup })
   const [currentGroup, setCurrentGroup] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [groupList, setGroupList] = useState([]);
+  const [showGroupCreator, setShowGroupCreator] = useState(false);
 
   useEffect(() => {
     if (feedStyle === 'discover') {
@@ -101,6 +105,10 @@ const GroupsSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGroup })
     console.log('here are availableGroups: ', groupList);
   }, [groupList]);
 
+  const handleCreateGroupClick = () => {
+    setShowGroupCreator(!showGroupCreator);
+  };
+
   const handleGroupJoin = async (groupId) => {
     try {
       const token = localStorage.getItem('token');
@@ -136,6 +144,9 @@ const GroupsSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGroup })
 
   return (
     <div className={styles.sidebar}>
+      <div className={styles.groupsButtons}>   
+        <button className={styles.groupButton} onClick={handleCreateGroupClick}> <FaPlus /> Create Group </button>
+      </div>
       <div className={styles.sidebarHeader}>
         {activeGroup && (
           <div className={styles.currentGroup}>
@@ -222,6 +233,11 @@ const GroupsSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGroup })
           </ul>
         )}
       </div>
+      {showGroupCreator && (
+        <div className={styles.modalOverlay}>
+          <GroupCreator onClose={handleCreateGroupClick} />
+        </div>
+      )}
     </div>
   );
 };
