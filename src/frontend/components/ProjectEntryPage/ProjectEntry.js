@@ -218,6 +218,12 @@ const ProjectEntry = ({ project, passedUser, UpvoteButton }) => {
     <div className={styles.projectContainer}>
       <div className={styles.headerContainer}>
         <div className={styles.titleAndUsernameContainer}>
+            <UpvoteButton
+            project={localProject}
+            setProject={setLocalProject}
+            passedUser={localUser}
+            setPassedUser={setLocalUser}
+          />
           <h3 className={styles.projectTitle}>{localProject.projectName}</h3>
           <span className={styles.byUsername}>by <span className={styles.username}>{localProject.createdBy}</span></span>
         </div>
@@ -240,13 +246,6 @@ const ProjectEntry = ({ project, passedUser, UpvoteButton }) => {
       <div className={styles.buttonContainer}>
         {localProject.links && localProject.links.map((link, index) => (renderLinkButton(link)))}
       </div>
-
-      <UpvoteButton
-        project={localProject}
-        setProject={setLocalProject}
-        passedUser={localUser}
-        setPassedUser={setLocalUser}
-      />
 
       <div className={styles.commentBox} onClick={toggleExpand}>
         <FaComment className={styles.commentIcon} />
