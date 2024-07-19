@@ -13,7 +13,7 @@
 
 .column {
   flex: 1 1 300px;
-  background-color: #ffffff;
+  background-color: #fcfbfb;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -34,6 +34,7 @@
   padding: 1.5rem;
   white-space: pre-wrap;
   flex-grow: 1;
+  background-color: #fcfbfb;
 }
 
 .editableText:focus {
@@ -169,7 +170,7 @@
 
 /* Updated styles for code display */
 .codeContainer {
-  background-color: #f5f5f5;
+  background-color: #fcfbfb;
   border-radius: 8px;
   margin: 0.5rem;
   overflow: hidden;

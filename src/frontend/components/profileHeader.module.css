@@ -35,7 +35,7 @@
 }
 
 .userInfo {
-  font-size: 16px;
+  font-size: 15px;
   margin: 0;
   color: #bbb;
 }
@@ -64,7 +64,7 @@
   color: #f0f0f0;
   padding: 4px 8px;
   border-radius: 4px;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .moreTagsContainer {
@@ -106,9 +106,10 @@
 }
 
 .bio {
-  font-size: 14px;
+  font-size: 17px;
   line-height: 1.5;
   margin: 0 0 10px 0;
+  text-align: justify;
 }
 
 .bioButton {
@@ -122,6 +123,7 @@
 }
 
 .linksContainer {
+  margin-top: 10px; 
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
