@@ -7,9 +7,11 @@ import config from '../../config';
 const GroupsFeed = ({ group }) => {
   const [fullProjects, setFullProjects] = useState([]);
 
+
   useEffect(() => {
     const fetchProjectsFromIds = async () => {
-      console.log('here is fetchProjectsFromIds: ', group.projects )
+      //console.log('here is fetchProjectsFromIds: ', group.projects);
+      console.log('GROUP FEED here is group: ', group)
       try {
         const token = localStorage.getItem('token');
         const response = await fetch(`${config.apiBaseUrl}/returnProjectsFromIds`, {
@@ -24,17 +26,18 @@ const GroupsFeed = ({ group }) => {
           throw new Error('Failed to fetch projects');
         }
         const returnedProjects = await response.json();
-        console.log('here are returnedProjects in the fetchProjectFromIds', returnedProjects)
+        //console.log('here are returnedProjects in the fetchProjectFromIds', returnedProjects);
         setFullProjects(returnedProjects);
       } catch (err) {
         console.error('Error fetching projects:', err);
       }
     };
     fetchProjectsFromIds();
-  }, []);
+  }, [group.projects]);
 
-
-  useEffect (() => {}, [fullProjects])
+  //useEffect (() => {
+  //  console.log('fullProjects in GroupsFeed.js: ', fullProjects)
+  //}, [fullProjects])
 
   if (!group) {
     return <div className={styles.noGroup}>No group selected.</div>;

@@ -5,13 +5,11 @@ import { Search, Users, Compass, Star, ChevronRight } from 'lucide-react';
 import styles from './groupssidebar.module.css';
 import config from '../../config';
 
-
 const SidebarItem = ({ icon, text, onClick, isActive, count }) => (
   <li className={`${styles.sidebarItem} ${isActive ? styles.active : ''}`} onClick={onClick}>
     <div className={styles.sidebarLink}>
       <span className={styles.sidebarIcon}>{icon}</span>
       <span className={styles.sidebarText}>{text}</span>
-      {/*{count && <span className={styles.sidebarCount}>{count}</span>}*/}
     </div>
   </li>
 );
@@ -27,81 +25,54 @@ const GroupItem = ({ name, members, onClick, joinable = false, onJoin }) => (
   </li>
 );
 
-const GroupsSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGroup }) => {
+const GroupsSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGroup, isLoading, setIsLoading }) => {
   const [currentGroup, setCurrentGroup] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [groupList, setGroupList] = useState([]);
 
   useEffect(() => {
-    if (feedStyle === 'discover') {
-      const fetchGroups = async () => {
-        try {
-          const token = localStorage.getItem('token');
-          const response = await fetch(`${config.apiBaseUrl}/returnGroups`, {
+    //console.log('this message checks if the useEffect in GroupsSidebar.js is getting triggered on load')
+    const fetchGroups = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        let response;
+        if (feedStyle === 'discover' || feedStyle === 'suggested') {
+          response = await fetch(`${config.apiBaseUrl}/returnGroups`, {
             method: 'GET',
             headers: {
               'Authorization': `Bearer ${token}`,
             },
           });
-          if (!response.ok) {
-            throw new Error('Failed to fetch groups');
-          }
-          const returnedGroups = await response.json();
-          setGroupList(returnedGroups);
-        } catch (err) {
-          console.error(err.message);
-        }
-      };
-      fetchGroups();
-    }
-    if (feedStyle === 'mygroups') {
-      const fetchGroups = async () => {
-        try {
-          const token = localStorage.getItem('token');
-          const response = await fetch(`${config.apiBaseUrl}/returnMyGroups`, {
+        } else if (feedStyle === 'mygroups') {
+          response = await fetch(`${config.apiBaseUrl}/returnMyGroups`, {
             method: 'GET',
             headers: {
               'Authorization': `Bearer ${token}`,
             },
           });
-          if (!response.ok) {
-            throw new Error('Failed to fetch groups');
-          }
-          const returnedGroups = await response.json();
-          setGroupList(returnedGroups);
-        } catch (err) {
-          console.error(err.message);
         }
-      };
-      fetchGroups();
-    }
-    if (feedStyle === 'suggested') {
-      const fetchGroups = async () => {
-        try {
-          const token = localStorage.getItem('token');
-          const response = await fetch(`${config.apiBaseUrl}/returnGroups`, {
-            method: 'GET',
-            headers: {
-              'Authorization': `Bearer ${token}`,
-            },
-          });
-          if (!response.ok) {
-            throw new Error('Failed to fetch groups');
-          }
-          const returnedGroups = await response.json();
-          setGroupList(returnedGroups);
-        } catch (err) {
-          console.error(err.message);
+        if (!response.ok) {
+          throw new Error('Failed to fetch groups');
         }
-      };
-      fetchGroups();
-    }
-  }, [feedStyle]);
+        const returnedGroups = await response.json();
+        setGroupList(returnedGroups);
+        setIsLoading(false);
+      } catch (err) {
+        console.error(err.message);
+        setIsLoading(false);
+      }
+    };
+    fetchGroups();
+  }, [feedStyle, setIsLoading]);
 
   useEffect(() => {
-    console.log('here are availableGroups: ', groupList);
-  }, [groupList]);
-
+   // console.log('here is isLoading: ', isLoading);
+    if (!isLoading && groupList.length > 0) {
+      //console.log('here is groupList: ', groupList);
+      //console.log('here is groupList[0]: ', groupList[0]);
+      setActiveGroup(groupList[0]);
+    }
+  }, [isLoading, groupList, setActiveGroup]);
 
   const handleGroupJoin = async (groupId) => {
     try {
@@ -119,33 +90,20 @@ const GroupsSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGroup })
       }
       const result = await response.json();
       console.log('Successfully joined group:', result);
-      // Update the UI or state as needed to reflect the joined group
     } catch (err) {
       console.error('Error joining group:', err);
     }
   };
 
-  const availableGroups = groupList.map((group) => ({
-    id: group._id,
-    name: group.name,
-    description: group.description,
-    createdBy: group.createdBy,
-    project_content: group.project_content,
-    members: group.users.length,
-    users: group.users,
-    projects: group.projects
-  }));
-
   return (
     <div className={styles.sidebar}>
-
       <nav className={styles.sidebarNav}>
         <SidebarItem
           icon={<Users size={20} />}
           text="My Groups"
           onClick={() => setFeedStyle('mygroups')}
           isActive={feedStyle === 'mygroups'}
-          count={availableGroups.length}
+          count={groupList.length}
         />
         <SidebarItem
           icon={<Compass size={20} />}
@@ -158,62 +116,68 @@ const GroupsSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGroup })
           text="Suggested Groups"
           onClick={() => setFeedStyle('suggested')}
           isActive={feedStyle === 'suggested'}
-          count={availableGroups.length}
+          count={groupList.length}
         />
       </nav>
 
       <div className={styles.groupsList}>
-        <div className={styles.searchContainer}>
-          <Search className={styles.searchIcon} />
-          <input
-            type="text"
-            placeholder="Search groups..."
-            className={styles.searchInput}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-        {feedStyle === 'mygroups' && (
-          <ul>
-            {availableGroups.map((group, index) => (
-              <GroupItem
-                key={index}
-                name={group.name}
-                members={group.members}
-                onClick={() => setActiveGroup(group)}
+        {isLoading ? (
+          <div>Loading...</div>
+        ) : (
+          <>
+            <div className={styles.searchContainer}>
+              <Search className={styles.searchIcon} />
+              <input
+                type="text"
+                placeholder="Search groups..."
+                className={styles.searchInput}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
-            ))}
-          </ul>
-        )}
-        {feedStyle === 'discover' && (
-          <div className={styles.discoverSection}>
-            <ul>
-              {availableGroups.map((group, index) => (
-                <GroupItem
-                  key={index}
-                  name={group.name}
-                  members={group.members}
-                  onClick={() => setActiveGroup(group)}
-                  joinable={true}
-                  onJoin={() => handleGroupJoin(group.id)}
-                />
-              ))}
-            </ul>
-          </div>
-        )}
-        {feedStyle === 'suggested' && (
-          <ul>
-            {availableGroups.map((group, index) => (
-              <GroupItem
-                key={index}
-                name={group.name}
-                members={group.members}
-                onClick={() => setActiveGroup(group)}
-                joinable={true}
-                onJoin={() => handleGroupJoin(group.id)}
-              />
-            ))}
-          </ul>
+            </div>
+            {feedStyle === 'mygroups' && (
+              <ul>
+                {groupList.map((group, index) => (
+                  <GroupItem
+                    key={index}
+                    name={group.name}
+                    members={group.members}
+                    onClick={() => setActiveGroup(group)}
+                  />
+                ))}
+              </ul>
+            )}
+            {feedStyle === 'discover' && (
+              <div className={styles.discoverSection}>
+                <ul>
+                  {groupList.map((group, index) => (
+                    <GroupItem
+                      key={index}
+                      name={group.name}
+                      members={group.members}
+                      onClick={() => setActiveGroup(group)}
+                      joinable={true}
+                      onJoin={() => handleGroupJoin(group._id)}
+                    />
+                  ))}
+                </ul>
+              </div>
+            )}
+            {feedStyle === 'suggested' && (
+              <ul>
+                {groupList.map((group, index) => (
+                  <GroupItem
+                    key={index}
+                    name={group.name}
+                    members={group.members}
+                    onClick={() => setActiveGroup(group)}
+                    joinable={true}
+                    onJoin={() => handleGroupJoin(group._id)}
+                  />
+                ))}
+              </ul>
+            )}
+          </>
         )}
       </div>
     </div>

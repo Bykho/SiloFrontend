@@ -53,7 +53,7 @@ const HandleUpvote = (WrappedComponent) => {
     };
 
     const findUpvoteOverlap = (project) => {
-      if (!Array.isArray(user.upvotes) || !Array.isArray(project.upvotes)) {
+      if (!user || !Array.isArray(user.upvotes) || !Array.isArray(project.upvotes)) {
         return false;
       }
       return user.upvotes.some(userUpvote => project.upvotes.includes(userUpvote));

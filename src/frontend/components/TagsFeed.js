@@ -13,6 +13,10 @@ import LoadingIndicator from './LoadingIndicator';
 const TagsFeed = ({ filteredProjects, loading= null, error=null }) => {
   const { user } = useUser();
 
+  //useEffect(() => {
+  //  console.log('tagsFeed filteredProjects: ', filteredProjects)
+  //}, [])
+
   return (
     <div className={styles.feedContainer}>
       <div className={styles.projectList}>
@@ -30,6 +34,7 @@ const TagsFeed = ({ filteredProjects, loading= null, error=null }) => {
           ))
         )}
       </div>
+
     </div>
   );
 };

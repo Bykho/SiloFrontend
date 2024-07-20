@@ -19,6 +19,7 @@ const Groups = () => {
   const { user } = useUser();
   const searchInputRef = useRef(null);
   const [activeGroup, setActiveGroup] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleSearch = (e) => {
     if (e) e.preventDefault();
@@ -38,12 +39,14 @@ const Groups = () => {
             setFeedStyle={setFeedStyle} 
             activeGroup={activeGroup}
             setActiveGroup={setActiveGroup}
+            isLoading={isLoading}
+            setIsLoading={setIsLoading}
           />
         </div>
         <div className={styles.feedContent}>
-          {activeGroup && groupsDisplayStyle === 'projects' && <GroupsFeed group={activeGroup} />}
-          {activeGroup && groupsDisplayStyle === 'groupInfo' && <GroupInfo group={activeGroup} />}
-          {activeGroup && groupsDisplayStyle === 'members' && <GroupMembers group={activeGroup} />}
+          {!isLoading && activeGroup && groupsDisplayStyle === 'projects' && <GroupsFeed group={activeGroup} />}
+          {!isLoading && activeGroup && groupsDisplayStyle === 'groupInfo' && <GroupInfo group={activeGroup} />}
+          {!isLoading && activeGroup && groupsDisplayStyle === 'members' && <GroupMembers group={activeGroup} />}
           {!activeGroup && <h1 className={styles.comingSoon}>Holder before group is selected...</h1>}
         </div>
       </div>

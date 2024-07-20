@@ -39,7 +39,8 @@ const GroupDisplay = ({ group, setGroupsDisplayStyle }) => {
 
   useEffect(() => {
     const fetchProjectsFromIds = async () => {
-      console.log('here is fetchProjectsFromIds: ', group.projects);
+      //console.log('here is fetchProjectsFromIds: ', group.projects);
+      console.log('GROUP DISPLAY here is group: ', group)
       try {
         const token = localStorage.getItem('token');
         const response = await fetch(`${config.apiBaseUrl}/returnProjectsFromIds`, {
@@ -54,7 +55,7 @@ const GroupDisplay = ({ group, setGroupsDisplayStyle }) => {
           throw new Error('Failed to fetch projects');
         }
         const returnedProjects = await response.json();
-        console.log('here are returnedProjects in the fetchProjectFromIds', returnedProjects);
+        //console.log('here are returnedProjects in the fetchProjectFromIds', returnedProjects);
         setFullProjects(returnedProjects);
       } catch (err) {
         console.error('Error fetching projects:', err);
@@ -63,10 +64,10 @@ const GroupDisplay = ({ group, setGroupsDisplayStyle }) => {
     fetchProjectsFromIds();
   }, [group.projects]);
 
-  useEffect(() => {
-    console.log('here is the group in groupdisplay: ', group);
-    console.log('here are the returnedProjects (in full projects)', fullProjects);
-  }, [fullProjects]);
+  //useEffect(() => {
+    //console.log('here is the group in groupdisplay: ', group);
+  //  console.log('here are the returnedProjects (in full projects)', fullProjects);
+  //}, [fullProjects]);
 
   if (!group) {
     return <div className={styles.noGroup}>No group selected.</div>;
@@ -77,6 +78,8 @@ const GroupDisplay = ({ group, setGroupsDisplayStyle }) => {
       <div className={styles.groupHeader}>
         <div className={styles.groupTitleRow}>
           <h2 className={styles.groupTitle}>{group.name}</h2>
+          <div>
+          </div>
           <div className={styles.groupMetadata}>
             <span className={styles.groupMetadataItem}>
               <FaUser className={styles.icon} />
@@ -94,15 +97,16 @@ const GroupDisplay = ({ group, setGroupsDisplayStyle }) => {
       </div>
 
       <div className={styles.groupButtonsContainer}>
-        <button className={styles.groupButton} onClick={handleMembersButtonClick}>
-          <FaUserGroup /> {showMembers ? 'Hide Members' : `View ${group.members} Members`}
-        </button>
-        <button className={styles.groupButton} onClick={handleInfoButtonClick}>
-          <FaInfoCircle /> View Info
-        </button>
         <button className={styles.groupButton} onClick={handleProjectsButtonClick}>
           <FaUserGroup /> View Projects
         </button>
+        <button className={styles.groupButton} onClick={handleMembersButtonClick}>
+          <FaUserGroup /> {showMembers ? 'Hide Members' : `View ${group.members} Members`}
+        </button>
+        {/*
+        <button className={styles.groupButton} onClick={handleInfoButtonClick}>
+          <FaInfoCircle /> View Info
+        </button>*/}
         <button className={styles.addGroupButton} onClick={() => setShowAddProjectToGroup(true)}>
           <FaPlus /> Add Project to Group
         </button>      
@@ -111,6 +115,10 @@ const GroupDisplay = ({ group, setGroupsDisplayStyle }) => {
       {showMembers && group.users && (
         <ul className={styles.membersList}>
           {group.users.map((userId, index) => (
+            <li key={index} className={styles.memberItem}>{userId}</li>
+          ))}
+          {'heres the project ids'}
+          {group.projects.map((userId, index) => (
             <li key={index} className={styles.memberItem}>{userId}</li>
           ))}
         </ul>

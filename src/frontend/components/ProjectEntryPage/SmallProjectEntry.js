@@ -1,15 +1,14 @@
 
 
 import React, { useState, useEffect, useRef } from 'react';
-import { FaComment, FaChevronDown, FaChevronUp, FaArrowUp } from 'react-icons/fa';
+import { FaComment, FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { IoIosExpand } from 'react-icons/io';
 import styles from './smallProjectEntry.module.css';
 import { useUser } from '../../contexts/UserContext';
 import CommentSection from './CommentSection';
 import config from '../../config';
 import ProjectEntry from './ProjectEntry';
 import HandleUpvote from '../wrappers/HandleUpvote';
-import { IoIosExpand } from 'react-icons/io';
-
 
 const SmallProjectEntry = ({ project, UpvoteButton }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -156,7 +155,7 @@ const SmallProjectEntry = ({ project, UpvoteButton }) => {
   };
 
   const findUpvoteOverlap = (user, localProject) => {
-    if (!Array.isArray(user.upvotes) || !Array.isArray(localProject.upvotes)) {
+    if (!user || !localProject || !Array.isArray(user.upvotes) || !Array.isArray(localProject.upvotes)) {
       return false;
     }
     return user.upvotes.some((userUpvote) => localProject.upvotes.includes(userUpvote));
@@ -216,5 +215,6 @@ const SmallProjectEntry = ({ project, UpvoteButton }) => {
 };
 
 export default HandleUpvote(SmallProjectEntry);
+
 
 

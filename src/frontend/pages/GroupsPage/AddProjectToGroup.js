@@ -45,6 +45,8 @@ const AddProjectToGroup = ({ group, onClose }) => {
   };
 
   const handleSaveProjectToGroup = async () => {
+    //console.log('here are the includedProjects: ', includedProjects )
+    console.log('here are the group._id: ', group._id )
     try {
       const token = localStorage.getItem('token');
       const response = await fetch(`${config.apiBaseUrl}/saveProjectToGroup`, {
@@ -53,7 +55,7 @@ const AddProjectToGroup = ({ group, onClose }) => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({ groupId: group.id, projectIds: includedProjects }),
+        body: JSON.stringify({ groupId: group._id, projectIds: includedProjects }),
       });
 
       if (!response.ok) {
@@ -68,6 +70,10 @@ const AddProjectToGroup = ({ group, onClose }) => {
       console.error('Error saving projects to group:', err);
     }
   };
+
+  useEffect(() => {
+    console.log('ADDPROJECTOGROUP Group parameter:', group);
+  }, [group]);
 
   return (
     <div className={styles.modal}>
