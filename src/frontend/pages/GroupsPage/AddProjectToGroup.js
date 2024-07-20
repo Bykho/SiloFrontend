@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styles from './addProjectToGroup.module.css';
-import { FaTimes } from 'react-icons/fa';
+import { FaTimes, FaPlus, FaSave } from 'react-icons/fa';
 import { useUser } from '../../contexts/UserContext';
 import config from '../../config';
 
@@ -75,7 +75,7 @@ const AddProjectToGroup = ({ group, onClose }) => {
         <button className={styles.closeButton} onClick={onClose}>
           <FaTimes />
         </button>
-        <h2>Add Project to Group</h2>
+        <h2>Add Projects to Group</h2>
         <ul className={styles.projectList}>
           {projects.map((project) => (
             <li key={project._id} className={styles.projectItem}>
@@ -88,13 +88,13 @@ const AddProjectToGroup = ({ group, onClose }) => {
                 }
                 onClick={() => toggleIncludeProject(project._id)}
               >
-                {includedProjects.includes(project._id) ? 'Included' : 'Include'}
+                {includedProjects.includes(project._id) ? 'Added' : <FaPlus />} Add
               </button>
             </li>
           ))}
         </ul>
         <button className={styles.postProjectsButton} onClick={handleSaveProjectToGroup}>
-          Post Projects to Group
+          <FaSave /> Add Selected Projects to Current Group
         </button>
       </div>
     </div>

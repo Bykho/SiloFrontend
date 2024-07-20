@@ -11,17 +11,20 @@
   }
   
   .modalContent {
-    background-color: #fefefe;
+    background-color: #3a3a3a;
+    color: white; 
     margin: 15% auto;
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
     max-width: 600px;
     position: relative;
+    border-radius: 12px;
   }
   
   .closeButton {
     position: absolute;
+    color: white; 
     top: 10px;
     right: 10px;
     background: none;
@@ -50,7 +53,10 @@
     padding: 5px 10px;
     cursor: pointer;
     border-radius: 4px;
-  }
+    display: inline-flex;
+    align-items: center;
+    gap: 10px; 
+    }
   
   .includeButtonActive {
     background-color: #28a745;
@@ -61,4 +67,18 @@
     border-radius: 4px;
   }
   
+  .postProjectsButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
   
+  .postProjectsButton:hover, .includeButton:hover {
+    background-color: #0056b3;
+  }
