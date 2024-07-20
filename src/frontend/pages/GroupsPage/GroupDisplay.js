@@ -3,29 +3,38 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styles from './groupDisplay.module.css';
-import { FaUserGroup, FaPlus } from 'react-icons/fa6';
-import { FaUser, FaInfoCircle } from 'react-icons/fa';
+import { FaPlus, FaUser, FaInfoCircle } from 'react-icons/fa';
+import { FaUserGroup } from "react-icons/fa6";
 import AddProjectToGroup from './AddProjectToGroup';
 import config from '../../config';
 import GroupCreator from './GroupCreator'; // Import GroupCreator component
 
-
-const GroupDisplay = ({ group }) => {
+const GroupDisplay = ({ group, setGroupsDisplayStyle }) => {
   const [showMembers, setShowMembers] = useState(false);
   const [showAddProjectToGroup, setShowAddProjectToGroup] = useState(false);
   const [fullProjects, setFullProjects] = useState([]);
   const [showGroupCreator, setShowGroupCreator] = useState(false);
-
-  const toggleMembersView = () => {
-    setShowMembers(!showMembers);
-  };
-
   const toggleAddProjectToGroupView = () => {
     setShowAddProjectToGroup(!showAddProjectToGroup);
   };
 
   const handleCreateGroupClick = () => {
     setShowGroupCreator(!showGroupCreator);
+  };
+
+  const handleInfoButtonClick = () => {
+    setGroupsDisplayStyle('groupInfo');
+    setShowMembers(false);
+  };
+
+  const handleProjectsButtonClick = () => {
+    setGroupsDisplayStyle('projects');
+    setShowMembers(false);
+  };
+
+  const handleMembersButtonClick = () => {
+    setGroupsDisplayStyle('members');
+    setShowMembers(true);
   };
 
   useEffect(() => {
@@ -85,12 +94,18 @@ const GroupDisplay = ({ group }) => {
       </div>
 
       <div className={styles.groupButtonsContainer}>
-        <button className={styles.groupButton} onClick={() => setShowMembers(!showMembers)}>
+        <button className={styles.groupButton} onClick={handleMembersButtonClick}>
           <FaUserGroup /> {showMembers ? 'Hide Members' : `View ${group.members} Members`}
+        </button>
+        <button className={styles.groupButton} onClick={handleInfoButtonClick}>
+          <FaInfoCircle /> View Info
+        </button>
+        <button className={styles.groupButton} onClick={handleProjectsButtonClick}>
+          <FaUserGroup /> View Projects
         </button>
         <button className={styles.addGroupButton} onClick={() => setShowAddProjectToGroup(true)}>
           <FaPlus /> Add Project to Group
-        </button>
+        </button>      
       </div>
 
       {showMembers && group.users && (
@@ -118,4 +133,5 @@ const GroupDisplay = ({ group }) => {
 
 
 export default GroupDisplay;
+
 

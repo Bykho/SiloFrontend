@@ -1,0 +1,30 @@
+
+
+
+
+.groupInfoContainer {
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .groupName {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin: 0 0 10px 0;
+  }
+  
+  .inputField {
+    margin-bottom: 10px;
+  }
+  
+  .inputField:before {
+    content: "• ";
+  }
+  
+  .inputField > span {
+    font-weight: bold;
+  }
+  
+

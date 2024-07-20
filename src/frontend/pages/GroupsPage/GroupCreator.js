@@ -1,7 +1,7 @@
 
 
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styles from './groupCreator.module.css';
 import config from '../../config';
@@ -9,6 +9,20 @@ import config from '../../config';
 const GroupCreator = ({ onClose }) => {
   const [groupName, setGroupName] = useState('');
   const [groupDescription, setGroupDescription] = useState('');
+  const [projectContent, setProjectContent] = useState({
+    classMaterials: '',
+    externalResources: '',
+    faqs: '',
+    discussionBoard: '',
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setProjectContent((prevContent) => ({
+      ...prevContent,
+      [name]: value,
+    }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,6 +30,7 @@ const GroupCreator = ({ onClose }) => {
     const groupData = {
       groupName,
       groupDescription,
+      groupProject_Content : projectContent
     };
 
     try {
@@ -31,7 +46,7 @@ const GroupCreator = ({ onClose }) => {
 
       if (response.ok) {
         alert('Group created successfully');
-        onClose(); // Close the modal after saving the group
+        onClose();
       } else {
         console.error('Failed to create group:', response.statusText);
       }
@@ -61,6 +76,36 @@ const GroupCreator = ({ onClose }) => {
             required
             className={styles.textarea}
           />
+          <div className={styles.gridContainer}>
+            <textarea
+              name="classMaterials"
+              value={projectContent.classMaterials}
+              onChange={handleInputChange}
+              placeholder="Class Materials"
+              className={styles.textarea}
+            />
+            <textarea
+              name="externalResources"
+              value={projectContent.externalResources}
+              onChange={handleInputChange}
+              placeholder="External Resources"
+              className={styles.textarea}
+            />
+            <textarea
+              name="faqs"
+              value={projectContent.faqs}
+              onChange={handleInputChange}
+              placeholder="FAQs"
+              className={styles.textarea}
+            />
+            <textarea
+              name="discussionBoard"
+              value={projectContent.discussionBoard}
+              onChange={handleInputChange}
+              placeholder="Discussion Board"
+              className={styles.textarea}
+            />
+          </div>
           <button type="submit" className={styles.saveButton}>Save</button>
         </form>
       </div>
