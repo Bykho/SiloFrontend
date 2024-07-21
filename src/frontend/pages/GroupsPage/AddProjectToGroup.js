@@ -71,9 +71,9 @@ const AddProjectToGroup = ({ group, onClose }) => {
     }
   };
 
-  useEffect(() => {
-    console.log('ADDPROJECTOGROUP Group parameter:', group);
-  }, [group]);
+  //useEffect(() => {
+  //  console.log('ADDPROJECTOGROUP Group parameter:', group);
+  //}, [group]);
 
   return (
     <div className={styles.modal}>
