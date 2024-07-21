@@ -11,7 +11,6 @@ const GroupsFeed = ({ group }) => {
   useEffect(() => {
     const fetchProjectsFromIds = async () => {
       //console.log('here is fetchProjectsFromIds: ', group.projects);
-      console.log('GROUP FEED here is group: ', group)
       try {
         const token = localStorage.getItem('token');
         const response = await fetch(`${config.apiBaseUrl}/returnProjectsFromIds`, {

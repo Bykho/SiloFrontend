@@ -31,7 +31,6 @@ const GroupsSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGroup, i
   const [groupList, setGroupList] = useState([]);
 
   useEffect(() => {
-    //console.log('this message checks if the useEffect in GroupsSidebar.js is getting triggered on load')
     const fetchGroups = async () => {
       try {
         const token = localStorage.getItem('token');
@@ -66,10 +65,7 @@ const GroupsSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGroup, i
   }, [feedStyle, setIsLoading]);
 
   useEffect(() => {
-   // console.log('here is isLoading: ', isLoading);
     if (!isLoading && groupList.length > 0) {
-      //console.log('here is groupList: ', groupList);
-      //console.log('here is groupList[0]: ', groupList[0]);
       setActiveGroup(groupList[0]);
     }
   }, [isLoading, groupList, setActiveGroup]);
@@ -185,6 +181,7 @@ const GroupsSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGroup, i
 };
 
 export default GroupsSidebar;
+
 
 
 

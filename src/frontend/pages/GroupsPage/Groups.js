@@ -8,7 +8,8 @@ import GroupDisplay from './GroupDisplay';
 import styles from './groups.module.css';
 import GroupsFeed from './GroupsFeed';
 import GroupInfo from './GroupInfo';
-import GroupMembers from './GroupMembers'; // Import GroupMembers component
+import GroupMembers from './GroupMembers';
+import DiscussionBoard from './DiscussionBoard'; // Import DiscussionBoard component
 
 const Groups = () => {
   const [feedStyle, setFeedStyle] = useState('mygroups');
@@ -47,6 +48,7 @@ const Groups = () => {
           {!isLoading && activeGroup && groupsDisplayStyle === 'projects' && <GroupsFeed group={activeGroup} />}
           {!isLoading && activeGroup && groupsDisplayStyle === 'groupInfo' && <GroupInfo group={activeGroup} />}
           {!isLoading && activeGroup && groupsDisplayStyle === 'members' && <GroupMembers group={activeGroup} />}
+          {!isLoading && activeGroup && groupsDisplayStyle === 'discussion' && <DiscussionBoard group={activeGroup} />}
           {!activeGroup && <h1 className={styles.comingSoon}>Holder before group is selected...</h1>}
         </div>
       </div>

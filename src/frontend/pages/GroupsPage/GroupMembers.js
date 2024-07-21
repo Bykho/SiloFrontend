@@ -13,7 +13,6 @@ const GroupMembers = ({ group }) => {
 
   useEffect(() => {
     const fetchMembers = async () => {
-      console.log('GROUP MEMBERS.js here are group.users: ', group.users)
       setLoading(true);
       setError('');
       try {

@@ -114,9 +114,9 @@ export const UserProvider = ({ children }) => {
     setUser(updatedUser);
   };
 
-  useEffect(() => {
-    console.log('User state after update:', user);
-  }, [user]);
+  //useEffect(() => {
+  //  console.log('User state after update:', user);
+  //}, [user]);
   
   const addUpvoteToUser = (upvoteId) => {
     console.log('here is the upvoteID in addUpvotetoUser: ', upvoteId)

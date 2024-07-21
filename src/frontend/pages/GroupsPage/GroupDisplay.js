@@ -37,37 +37,10 @@ const GroupDisplay = ({ group, setGroupsDisplayStyle }) => {
     setShowMembers(true);
   };
 
-  useEffect(() => {
-    const fetchProjectsFromIds = async () => {
-      //console.log('here is fetchProjectsFromIds: ', group.projects);
-      console.log('GROUP DISPLAY here is group: ', group)
-      try {
-        const token = localStorage.getItem('token');
-        const response = await fetch(`${config.apiBaseUrl}/returnProjectsFromIds`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          },
-          body: JSON.stringify({ projectIds: group.projects }),
-        });
-        if (!response.ok) {
-          throw new Error('Failed to fetch projects');
-        }
-        const returnedProjects = await response.json();
-        //console.log('here are returnedProjects in the fetchProjectFromIds', returnedProjects);
-        setFullProjects(returnedProjects);
-      } catch (err) {
-        console.error('Error fetching projects:', err);
-      }
-    };
-    fetchProjectsFromIds();
-  }, [group.projects]);
-
-  //useEffect(() => {
-    //console.log('here is the group in groupdisplay: ', group);
-  //  console.log('here are the returnedProjects (in full projects)', fullProjects);
-  //}, [fullProjects]);
+  const handleDiscussionButtonClick = () => {
+    setGroupsDisplayStyle('discussion');
+    setShowMembers(false);
+  };
 
   if (!group) {
     return <div className={styles.noGroup}>No group selected.</div>;
@@ -103,10 +76,9 @@ const GroupDisplay = ({ group, setGroupsDisplayStyle }) => {
         <button className={styles.groupButton} onClick={handleMembersButtonClick}>
           <FaUserGroup /> {showMembers ? 'Hide Members' : `View ${group.members} Members`}
         </button>
-        {/*
-        <button className={styles.groupButton} onClick={handleInfoButtonClick}>
-          <FaInfoCircle /> View Info
-        </button>*/}
+        <button className={styles.groupButton} onClick={handleDiscussionButtonClick}>
+          <FaUserGroup /> Discussion Board
+        </button>
         <button className={styles.addGroupButton} onClick={() => setShowAddProjectToGroup(true)}>
           <FaPlus /> Add Project to Group
         </button>      
@@ -139,7 +111,7 @@ const GroupDisplay = ({ group, setGroupsDisplayStyle }) => {
   );
 };
 
-
 export default GroupDisplay;
+
 
 
