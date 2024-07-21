@@ -1,115 +1,50 @@
 
 
 
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import styles from './userSearch.module.css';
-import { useUser } from '../contexts/UserContext';
 import ProfileImage from './ProfileImage';
-import { useNavigate, useLocation } from 'react-router-dom';
-import config from '../config';
-import { Search, User, Briefcase, Mail, Tag } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { User, Briefcase, Mail, Tag } from 'lucide-react';
 
-const UserCards = () => {
+const UserCard = ({ user }) => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const searchInputRef = useRef(null);
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [searchText, setSearchText] = useState('');
-  const { user } = useUser();
-
-  useEffect(() => {
-    if (location.state && location.state.skill) {
-      setSearchText(location.state.skill);
-      searchInputRef.current.focus();
-      handleSearch({ preventDefault: () => {} });
-      navigate('/GenDirectory', { replace: true });
-    }
-  }, [location.state, navigate]);
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      setLoading(true);
-      setError('');
-      try {
-        const token = localStorage.getItem('token');
-        const response = await fetch(`${config.apiBaseUrl}/userFilteredSearch`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-        if (!response.ok) {
-          throw new Error('Failed to fetch users');
-        }
-        const userData = await response.json();
-        setUsers(userData);
-        setLoading(false);
-      } catch (err) {
-        setError('Failed to fetch users');
-        setLoading(false);
-      }
-    };
-    fetchUsers();
-  }, []);
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-  };
 
   return (
-    <div className={styles.feedContainer}>
-      <h1 className={styles.title}>Students In Group</h1>
-      <div className={styles.searchSection}>
-        <div className={styles.resultsCount}>
-          Results: {users.length}
+    <div className={styles.userCard}>
+      <div className={styles.userHeader}>
+        <ProfileImage username={user.username} size='large' />
+        <div className={styles.userMainInfo}>
+          <h3 className={styles.username}>{user.username}</h3>
+          <p className={styles.userType}>
+            <User size={16} />
+            {user.user_type}
+          </p>
         </div>
       </div>
-      <div className={styles.userList}>
-        {loading ? (
-          <div className={styles.loadingSpinner}></div>
-        ) : error ? (
-          <p className={styles.errorMessage}>{error}</p>
-        ) : (
-          users.map((specificUser, index) => (
-            <div key={index} className={styles.userCard}>
-              <div className={styles.userHeader}>
-                <ProfileImage username={specificUser.username} size='large' />
-                <div className={styles.userMainInfo}>
-                  <h3 className={styles.username}>{specificUser.username}</h3>
-                  <p className={styles.userType}>
-                    <User size={16} />
-                    {specificUser.user_type}
-                  </p>
-                </div>
-              </div>
-              <div className={styles.userDetails}>
-                <p>
-                  <Mail size={16} />
-                  {specificUser.email}
-                </p>
-                <p>
-                  <Tag size={16} />
-                  {specificUser.interests ? specificUser.interests.join(', ') : 'No interests listed'}
-                </p>
-                <p>
-                  <Briefcase size={16} />
-                  {specificUser.orgs ? specificUser.orgs.join(', ') : 'No orgs listed'}
-                </p>
-              </div>
-              <button className={styles.viewProfileButton} onClick={() => navigate(`/profile/${specificUser.username}`)}>
-                View Profile
-              </button>
-            </div>
-          ))
-        )}
+      <div className={styles.userDetails}>
+        <p>
+          <Mail size={16} />
+          {user.email}
+        </p>
+        <p>
+          <Tag size={16} />
+          {user.interests ? user.interests.join(', ') : 'No interests listed'}
+        </p>
+        <p>
+          <Briefcase size={16} />
+          {user.orgs ? user.orgs.join(', ') : 'No orgs listed'}
+        </p>
       </div>
+      <button className={styles.viewProfileButton} onClick={() => navigate(`/profile/${user.username}`)}>
+        View Profile
+      </button>
     </div>
   );
 };
 
-export default UserCards;
+export default UserCard;
+
 
 
 
