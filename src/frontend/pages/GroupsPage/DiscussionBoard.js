@@ -26,10 +26,47 @@ const convertObjectIdToString = (obj) => {
 const DiscussionBoard = ({ group }) => {
   const [commentJson, setCommentJson] = useState(group.comment_json ? convertObjectIdToString(group.comment_json) : {});
   const [newComment, setNewComment] = useState('');
+  const [comments, setComments] = useState({});
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     console.log('Group parameter in DiscussionBoard:', group);
   }, [group]);
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      const allCommentIds = Object.values(commentJson).flat();
+      if (allCommentIds.length === 0) {
+        setLoading(false);
+        return;
+      }
+
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${config.apiBaseUrl}/getCommentsByIds`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ commentIds: allCommentIds }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const commentsMap = data.reduce((acc, comment) => {
+          acc[comment._id] = comment;
+          return acc;
+        }, {});
+        setComments(commentsMap);
+      } else {
+        console.error('Failed to fetch comments');
+      }
+
+      setLoading(false);
+    };
+
+    fetchComments();
+  }, [commentJson]);
 
   const handleAddComment = async (title) => {
     if (newComment.trim() !== '') {
@@ -60,6 +97,10 @@ const DiscussionBoard = ({ group }) => {
     }
   };
 
+  if (loading) {
+    return <div>Loading comments...</div>;
+  }
+
   return (
     <div className={styles.discussionBoardContainer}>
       <h2>Discussion Board for {group.name}</h2>
@@ -69,8 +110,18 @@ const DiscussionBoard = ({ group }) => {
             <div key={index} className={styles.commentSection}>
               <h3 className={styles.commentTitle}>{title}</h3>
               <div className={styles.commentContent}>
-                {Object.entries(content).map(([key, value]) => (
-                  <p key={key}>{value}</p>
+                {content.map((commentId) => (
+                  <div key={commentId}>
+                    {comments[commentId] ? (
+                      <>
+                        <p>Comment text: {comments[commentId].text}</p>
+                        <p>Comment Author: {comments[commentId].author}</p>
+                        <hr />
+                      </>
+                    ) : (
+                      <p>Loading...</p>
+                    )}
+                  </div>
                 ))}
               </div>
               <div className={styles.commentInputContainer}>
@@ -106,8 +157,5 @@ DiscussionBoard.propTypes = {
 };
 
 export default DiscussionBoard;
-
-
-
 
 

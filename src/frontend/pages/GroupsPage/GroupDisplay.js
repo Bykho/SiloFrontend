@@ -14,6 +14,11 @@ const GroupDisplay = ({ group, setGroupsDisplayStyle }) => {
   const [showAddProjectToGroup, setShowAddProjectToGroup] = useState(false);
   const [fullProjects, setFullProjects] = useState([]);
   const [showGroupCreator, setShowGroupCreator] = useState(false);
+  
+  useEffect(() => {
+    console.log('GROUPDISPLAY group: ', group)
+  }, [])
+  
   const toggleAddProjectToGroupView = () => {
     setShowAddProjectToGroup(!showAddProjectToGroup);
   };
