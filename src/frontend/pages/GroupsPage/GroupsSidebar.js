@@ -14,13 +14,14 @@ const SidebarItem = ({ icon, text, onClick, isActive, count }) => (
   </li>
 );
 
-const GroupItem = ({ name, members, onClick, joinable = false, onJoin }) => (
+const GroupItem = ({ name, members, onClick, joinable = false, joined = false, onJoin }) => (
   <li className={styles.groupItem} onClick={onClick}>
     <div className={styles.groupInfo}>
       <span className={styles.groupName}>{name}</span>
       <span className={styles.groupMembers}>{members} members</span>
     </div>
-    {joinable && <button className={styles.joinButton} onClick={onJoin}>Join</button>}
+    {joinable && !joined && <button className={styles.joinButton} onClick={onJoin}>Join</button>}
+    {joinable && joined && <button className={styles.joinButton} disabled>Joined</button>}
     {!joinable && <ChevronRight className={styles.groupArrow} />}
   </li>
 );
@@ -29,6 +30,30 @@ const GroupsSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGroup, i
   const [currentGroup, setCurrentGroup] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [groupList, setGroupList] = useState([]);
+  const [myGroups, setMyGroups] = useState([]);
+  const [joinedGroups, setJoinedGroups] = useState([]);
+
+  useEffect(() => {
+    const fetchMyGroups = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${config.apiBaseUrl}/returnMyGroups`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+        if (!response.ok) {
+          throw new Error('Failed to fetch my groups');
+        }
+        const returnedGroups = await response.json();
+        setMyGroups(returnedGroups);
+      } catch (err) {
+        console.error(err.message);
+      }
+    };
+    fetchMyGroups();
+  }, []);
 
   useEffect(() => {
     const fetchGroups = async () => {
@@ -42,19 +67,15 @@ const GroupsSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGroup, i
               'Authorization': `Bearer ${token}`,
             },
           });
+          if (!response.ok) {
+            throw new Error('Failed to fetch groups');
+          }
+          const returnedGroups = await response.json();
+          const filteredGroups = returnedGroups.filter(group => !myGroups.some(myGroup => myGroup._id === group._id));
+          setGroupList(filteredGroups);
         } else if (feedStyle === 'mygroups') {
-          response = await fetch(`${config.apiBaseUrl}/returnMyGroups`, {
-            method: 'GET',
-            headers: {
-              'Authorization': `Bearer ${token}`,
-            },
-          });
+          setGroupList(myGroups);
         }
-        if (!response.ok) {
-          throw new Error('Failed to fetch groups');
-        }
-        const returnedGroups = await response.json();
-        setGroupList(returnedGroups);
         setIsLoading(false);
       } catch (err) {
         console.error(err.message);
@@ -62,7 +83,7 @@ const GroupsSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGroup, i
       }
     };
     fetchGroups();
-  }, [feedStyle, setIsLoading]);
+  }, [feedStyle, myGroups, setIsLoading]);
 
   useEffect(() => {
     if (!isLoading && groupList.length > 0) {
@@ -85,6 +106,11 @@ const GroupsSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGroup, i
         throw new Error('Failed to join group');
       }
       const result = await response.json();
+      setJoinedGroups([...joinedGroups, groupId]);
+      const newGroup = groupList.find(group => group._id === groupId);
+      if (newGroup) {
+        setMyGroups([...myGroups, newGroup]);
+      }
       console.log('Successfully joined group:', result);
     } catch (err) {
       console.error('Error joining group:', err);
@@ -99,7 +125,7 @@ const GroupsSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGroup, i
           text="My Groups"
           onClick={() => setFeedStyle('mygroups')}
           isActive={feedStyle === 'mygroups'}
-          count={groupList.length}
+          count={myGroups.length}
         />
         <SidebarItem
           icon={<Compass size={20} />}
@@ -153,6 +179,7 @@ const GroupsSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGroup, i
                       members={group.members}
                       onClick={() => setActiveGroup(group)}
                       joinable={true}
+                      joined={joinedGroups.includes(group._id)}
                       onJoin={() => handleGroupJoin(group._id)}
                     />
                   ))}
@@ -168,6 +195,7 @@ const GroupsSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGroup, i
                     members={group.members}
                     onClick={() => setActiveGroup(group)}
                     joinable={true}
+                    joined={joinedGroups.includes(group._id)}
                     onJoin={() => handleGroupJoin(group._id)}
                   />
                 ))}
@@ -181,7 +209,6 @@ const GroupsSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGroup, i
 };
 
 export default GroupsSidebar;
-
 
 
 
