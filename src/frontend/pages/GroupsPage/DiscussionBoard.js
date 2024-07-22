@@ -103,20 +103,20 @@ const DiscussionBoard = ({ group }) => {
 
   return (
     <div className={styles.discussionBoardContainer}>
-      <h2>Discussion Board for {group.name}</h2>
       {commentJson && Object.keys(commentJson).length > 0 ? (
         <div className={styles.commentJsonContainer}>
           {Object.entries(commentJson).map(([title, content], index) => (
             <div key={index} className={styles.commentSection}>
               <h3 className={styles.commentTitle}>{title}</h3>
-              <div className={styles.commentContent}>
+              <div className={styles.commentList}>
                 {content.map((commentId) => (
-                  <div key={commentId}>
+                  <div key={commentId} className={styles.commentCard}>
                     {comments[commentId] ? (
                       <>
-                        <p>Comment text: {comments[commentId].text}</p>
-                        <p>Comment Author: {comments[commentId].author}</p>
-                        <hr />
+                        <div className={styles.commentHeader}>
+                          <span className={styles.commentAuthor}>{comments[commentId].author}</span>
+                        </div>
+                        <p className={styles.commentText}>{comments[commentId].text}</p>
                       </>
                     ) : (
                       <p>Loading...</p>
@@ -127,7 +127,7 @@ const DiscussionBoard = ({ group }) => {
               <div className={styles.commentInputContainer}>
                 <input
                   type="text"
-                  placeholder="Add comment"
+                  placeholder="Write a post..."
                   className={styles.commentInput}
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
@@ -143,7 +143,7 @@ const DiscussionBoard = ({ group }) => {
           ))}
         </div>
       ) : (
-        <p>No comments available</p>
+        <p className={styles.noComments}>No comments available</p>
       )}
     </div>
   );

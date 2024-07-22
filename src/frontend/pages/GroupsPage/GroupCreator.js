@@ -59,7 +59,7 @@ const GroupCreator = ({ onClose }) => {
     <div className={styles.modal}>
       <div className={styles.modalContent}>
         <button className={styles.closeButton} onClick={onClose}>X</button>
-        <h1 style={{ color: 'black' }}>Create a group</h1>
+        <h1 style={{ color: 'white' }}>Create a group</h1>
         <form onSubmit={handleSubmit}>
           <input
             type="text"
@@ -76,36 +76,6 @@ const GroupCreator = ({ onClose }) => {
             required
             className={styles.textarea}
           />
-          <div className={styles.gridContainer}>
-            <textarea
-              name="classMaterials"
-              value={projectContent.classMaterials}
-              onChange={handleInputChange}
-              placeholder="Class Materials"
-              className={styles.textarea}
-            />
-            <textarea
-              name="externalResources"
-              value={projectContent.externalResources}
-              onChange={handleInputChange}
-              placeholder="External Resources"
-              className={styles.textarea}
-            />
-            <textarea
-              name="faqs"
-              value={projectContent.faqs}
-              onChange={handleInputChange}
-              placeholder="FAQs"
-              className={styles.textarea}
-            />
-            <textarea
-              name="discussionBoard"
-              value={projectContent.discussionBoard}
-              onChange={handleInputChange}
-              placeholder="Discussion Board"
-              className={styles.textarea}
-            />
-          </div>
           <button type="submit" className={styles.saveButton}>Save</button>
         </form>
       </div>

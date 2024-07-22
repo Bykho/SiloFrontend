@@ -94,7 +94,7 @@ const AddProjectToGroup = ({ group, onClose }) => {
                 }
                 onClick={() => toggleIncludeProject(project._id)}
               >
-                {includedProjects.includes(project._id) ? 'Shidded.' : <FaPlus />} Fard?
+                {includedProjects.includes(project._id) ? 'Added' : <FaPlus />} 
               </button>
             </li>
           ))}

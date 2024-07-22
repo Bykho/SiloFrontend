@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import styles from './groupDisplay.module.css';
 import { FaPlus, FaUser, FaInfoCircle } from 'react-icons/fa';
 import { FaUserGroup } from "react-icons/fa6";
+import { SiBookstack } from "react-icons/si";
+import { GoCommentDiscussion } from "react-icons/go";
 import AddProjectToGroup from './AddProjectToGroup';
 import config from '../../config';
 import GroupCreator from './GroupCreator'; // Import GroupCreator component
@@ -39,7 +41,7 @@ const GroupDisplay = ({ group, setGroupsDisplayStyle }) => {
 
   const handleMembersButtonClick = () => {
     setGroupsDisplayStyle('members');
-    setShowMembers(true);
+    setShowMembers(false);
   };
 
   const handleDiscussionButtonClick = () => {
@@ -76,14 +78,15 @@ const GroupDisplay = ({ group, setGroupsDisplayStyle }) => {
 
       <div className={styles.groupButtonsContainer}>
         <button className={styles.groupButton} onClick={handleProjectsButtonClick}>
-          <FaUserGroup /> View Projects
-        </button>
-        <button className={styles.groupButton} onClick={handleMembersButtonClick}>
-          <FaUserGroup /> {showMembers ? 'Hide Members' : `View ${group.members} Members`}
+          <SiBookstack /> View Projects
         </button>
         <button className={styles.groupButton} onClick={handleDiscussionButtonClick}>
-          <FaUserGroup /> Discussion Board
+          <GoCommentDiscussion /> Discussion Board
         </button>
+        <button className={styles.groupButton} onClick={handleMembersButtonClick}>
+          <FaUserGroup /> {showMembers ? 'Hide Members' : `View Members`}
+        </button>
+
         <button className={styles.addGroupButton} onClick={() => setShowAddProjectToGroup(true)}>
           <FaPlus /> Add Project to Group
         </button>      

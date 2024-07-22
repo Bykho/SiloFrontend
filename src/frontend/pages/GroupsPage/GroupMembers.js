@@ -41,7 +41,6 @@ const GroupMembers = ({ group }) => {
 
   return (
     <div className={styles.groupMembersContainer}>
-      <h2 className={styles.groupTitle}>Members of {group.name}</h2>
       {loading ? (
         <div>Loading...</div>
       ) : error ? (
