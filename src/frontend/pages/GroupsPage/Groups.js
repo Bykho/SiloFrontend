@@ -49,7 +49,7 @@ const Groups = () => {
           {!isLoading && activeGroup && groupsDisplayStyle === 'groupInfo' && <GroupInfo group={activeGroup} />}
           {!isLoading && activeGroup && groupsDisplayStyle === 'members' && <GroupMembers group={activeGroup} />}
           {!isLoading && activeGroup && groupsDisplayStyle === 'discussion' && <DiscussionBoard group={activeGroup} />}
-          {!activeGroup && <h1 className={styles.comingSoon}>Holder before group is selected...</h1>}
+          {!activeGroup && <h1 className={styles.comingSoon}></h1>}
         </div>
       </div>
     </div>
