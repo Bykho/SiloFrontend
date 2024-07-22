@@ -18,8 +18,11 @@
   position: sticky;
   top: 0;
   z-index: 1;
-  background-color: #B9D9EB;
+  background-image: linear-gradient(to bottom, #9fdcff, #88b1e0);
   padding: 20px;
+  color: rgb(58, 58, 58); 
+  font-weight: bolder;
+  font-stretch: expanded;
   border-radius: 8px;
   margin-top: 0px;
 }
