@@ -117,14 +117,14 @@ const Feed = () => {
     <div className={styles.feedContainer}>
       <div className={styles.searchBar}>
         <div className={styles.searchWords}>
-          <p style={{ textAlign: 'left' }}><FaSearch /></p>
+          <FaSearch />
         </div>
         <div className={styles.buttonContainer}>
           <input
-            ref={searchInputRef} // Attach the ref to the search input
+            ref={searchInputRef}
             type="search"
             value={inputText}
-            onClick={() => setFeedStyle('explore')} // Change feedStyle to 'explore' on click
+            onClick={() => setFeedStyle('explore')}
             onChange={(e) => setInputText(e.target.value)}
             placeholder="Machine Learning"
             className={styles.searchInput}

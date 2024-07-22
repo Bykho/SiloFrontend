@@ -39,7 +39,7 @@
 }
 
 .byUsername {
-  font-size: 1rem;
+  font-size: 1.1rem;
   color: #666;
   white-space: nowrap;
 }
@@ -62,7 +62,7 @@
   color: #4a90e2;
   padding: 4px 10px;
   border-radius: 15px;
-  font-size: 0.85rem;
+  font-size: 1.2rem;
   font-weight: 500;
   transition: background-color 0.2s ease;
 }
@@ -82,6 +82,7 @@
   font-weight: 600;
   margin: 0;
   margin-right: 25px;
+  margin-left: 15px; 
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -165,6 +166,7 @@
   display: flex;
   align-items: center;
   gap: 20px;
+  margin-right: 15px; 
 }
 
 .upvoteButton {
@@ -211,17 +213,24 @@
 }
 
 .editButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px; 
+  padding: 7px 15px 7px 15px; 
   background: none;
-  border: none;
+  border-radius: 5px;
+  border: none; 
+  background-color: #4a90e2;
   cursor: pointer;
-  color: #79acc9;
-  font-size: 1.5rem;
-  margin-left: 10px;
+  color: white;
+  font-size: 1.2rem;
+  margin-left: 25px;
   transition: color 0.3s ease;
 }
 
 .editButton:hover {
-  color: #1e1e1e;
+  color: white;
+  background-color: #3a70ae;
 }
 
 .commentBox {
@@ -231,9 +240,10 @@
   background-color: #f4f2f2;
   padding: 5px 10px;
   border-radius: 5px;
-  margin: 10px 0;
+  margin: 20px 0;
   flex-grow: 1;
   width: 100%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add this line for drop shadow */
 }
 
 .commentIcon {
@@ -411,3 +421,4 @@
   background-color: #ccc;
   margin: 20px 0; /* Space around the divider */
 }
+

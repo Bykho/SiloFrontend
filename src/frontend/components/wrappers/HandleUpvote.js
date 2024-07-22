@@ -4,6 +4,8 @@ import React from 'react';
 import { useUser } from '../../contexts/UserContext';
 import config from '../../config';
 import styles from './handleUpvote.module.css';
+import { BiSolidUpvote } from "react-icons/bi";
+
 
 const HandleUpvote = (WrappedComponent) => {
   const HandleUpvoteComponent = (props) => {
@@ -51,7 +53,7 @@ const HandleUpvote = (WrappedComponent) => {
     };
 
     const findUpvoteOverlap = (project) => {
-      if (!Array.isArray(user.upvotes) || !Array.isArray(project.upvotes)) {
+      if (!user || !Array.isArray(user.upvotes) || !Array.isArray(project.upvotes)) {
         return false;
       }
       return user.upvotes.some(userUpvote => project.upvotes.includes(userUpvote));
@@ -59,13 +61,13 @@ const HandleUpvote = (WrappedComponent) => {
 
     const UpvoteButton = ({ project, setProject, passedUser, setPassedUser }) => (
       <div className={styles.upvoteButtonBox}>
-        <p>Upvotes: {project.upvotes ? project.upvotes.length : 0}</p>
+        <p className={styles.upvoteNumber}> {project.upvotes ? project.upvotes.length : 0}</p>
         <button
           className={findUpvoteOverlap(project) ? styles.clickedUpvoteButton : styles.upvoteButton}
           onClick={() => handleUpvote(project, setProject, passedUser, setPassedUser)}
           disabled={findUpvoteOverlap(project)}
         >
-          &#x2B06;
+          <BiSolidUpvote />
         </button>
       </div>
     );

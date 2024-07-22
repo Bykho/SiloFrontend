@@ -1,23 +1,25 @@
 
 
 
+
+
+
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import EditInPortfolio from '../EditInPortfolio';
-import styles from './projectEntry.module.css';
-import ProfileImage from '../ProfileImage';
-import LayerDisplay from './LayerDisplay';
+import EditInPortfolio from './EditInPortfolio';
+import styles from './ProjectEntryPage/projectEntry.module.css';
+import LayerDisplay from './ProjectEntryPage/LayerDisplay';
 import { FaEdit, FaComment, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { FaGithub, FaGlobe, FaLink } from 'react-icons/fa';
-import { useUser } from '../../contexts/UserContext';
-import CommentSection from './CommentSection';
+import { useUser } from '../contexts/UserContext';
+import CommentSection from './ProjectEntryPage/CommentSection';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
-import config from '../../config';
-import HandleUpvote from '../wrappers/HandleUpvote';
+import config from '../config';
+import HandleUpvote from './wrappers/HandleUpvote';
 
 const isStudentProfilePage = window.location.pathname.includes('/studentProfile'); // Adjust this condition based on your routing
 
-const ProjectEntry = ({ project, passedUser, UpvoteButton }) => {
+const ProjectEntry = ({ project, passedUser }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [showDescription, setShowDescription] = useState(false);
@@ -218,12 +220,6 @@ const ProjectEntry = ({ project, passedUser, UpvoteButton }) => {
     <div className={styles.projectContainer}>
       <div className={styles.headerContainer}>
         <div className={styles.titleAndUsernameContainer}>
-            <UpvoteButton
-            project={localProject}
-            setProject={setLocalProject}
-            passedUser={localUser}
-            setPassedUser={setLocalUser}
-          />
           <h3 className={styles.projectTitle}>{localProject.projectName}</h3>
           <span className={styles.byUsername}>by <span className={styles.username}>{localProject.createdBy}</span></span>
         </div>
@@ -255,12 +251,15 @@ const ProjectEntry = ({ project, passedUser, UpvoteButton }) => {
         </button>
       </div>
 
-      {renderComments()}
     </div>
   );
 };
 
 export default HandleUpvote(ProjectEntry);
+
+
+
+
 
 
 

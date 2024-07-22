@@ -11,15 +11,18 @@
   border-radius: 8px;
   background-color: #1e1e1e;
   overflow-y: auto; /* Enable vertical scrolling if needed */
-  padding: 20px;
+  padding: 0px 20px 20px 20px;
 }
 
 .projectsTitle {
   position: sticky;
   top: 0;
   z-index: 1;
-  background-color: #B9D9EB;
+  background-image: linear-gradient(to bottom, #9fdcff, #88b1e0);
   padding: 20px;
+  color: rgb(58, 58, 58); 
+  font-weight: bolder;
+  font-stretch: expanded;
   border-radius: 8px;
   margin-top: 0px;
 }

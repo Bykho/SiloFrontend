@@ -16,6 +16,7 @@ import ProtectedRoute from './frontend/components/ProtectedRoute';
 import Login from './frontend/pages/LoginPage/Login';
 import GoLive from './frontend/pages/GoLivePage/GoLiveLandingPage'
 import GameofLife from './frontend/components/GameOfLife';
+import Groups from './frontend/pages/GroupsPage/Groups';
 import './App.css'; 
 
 import AddBlocPortfolio from './frontend/components/AddBlocPortfolio';
@@ -45,6 +46,7 @@ function App() {
             <Route path="/addBlockProject" element={<AddBlocPortfolio />} />
             <Route path="/GenDirectory" element={<ProtectedRoute component={GenDirectory} />} />
             <Route path="/profile/:username" element={<ProtectedRoute component={OtherStudentProfile} />} />
+            <Route path="/groups" element={<Groups />} />
           </Routes>
         </div>
       </UserProvider>

@@ -9,9 +9,12 @@ import { useUser } from '../../contexts/UserContext';
 import ProfileHeader from '../../components/ProfileHeader';
 import AddBlocPortfolio from '../../components/AddBlocPortfolio';
 import InfoEditor from '../OLDStudentProfileEditorPage/StudentProfileEditor';
-import ShareablePreview from '../../components/ShareablePreview'; // Import ShareablePreview component
+import ShareablePreview from '../../components/ShareablePreview';
+import GitPull from '../../components/GitPull';
 import config from '../../config';
 import { FaWindowClose, FaPlusSquare, FaRegEdit } from 'react-icons/fa';
+import { IoSparkles } from "react-icons/io5";
+
 
 function StudentProfile() {
   const [userData, setUserData] = useState(null);
@@ -19,6 +22,7 @@ function StudentProfile() {
   const [error, setError] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [showEditor, setShowEditor] = useState(false);
+  const [showGitPull, setShowGitPull] = useState(false);
   const [showSharePreview, setShowSharePreview] = useState(false); // State for ShareablePreview modal
   const { user } = useUser();
   const navigate = useNavigate();
@@ -81,6 +85,14 @@ function StudentProfile() {
     setShowSharePreview(true);
   };
 
+  const handleCheckGithubClick = () => {
+    setShowGitPull(true);
+  };
+
+  const handleCloseGithubPull = () => {
+    setShowGitPull(false);
+  };
+
   const handleCloseSharePreview = () => {
     setShowSharePreview(false);
   };
@@ -99,7 +111,7 @@ function StudentProfile() {
     setShowEditor(false);
     if (newToken) {
       localStorage.setItem('token', newToken);
-      fetchUserData(); // Re-fetch user data with the new token
+      fetchUserData(); 
     }
   };
 
@@ -113,6 +125,7 @@ function StudentProfile() {
       <div className={styles.buttonContainer}>
         <button className={styles.bigButton} onClick={handleAddProjectClick}> <FaPlusSquare /> Add New Project</button>
         <button className={styles.bigButton} onClick={handleEditProfileClick}> <FaRegEdit /> Edit My Profile</button>
+        <button className={styles.bigButton} onClick={handleCheckGithubClick}> <IoSparkles /> Generate Projects from GitHub</button>
       </div>
       <div className={styles.contentContainer}>
         {loading ? (
@@ -147,12 +160,18 @@ function StudentProfile() {
           </div>
         </div>
       )}
+      {showGitPull && (
+        <div className={styles.modal}>
+          <div className={styles.modalContent}>
+            <button className={styles.closeButton} onClick={handleCloseGithubPull}><FaWindowClose /></button>
+            <GitPull userData={userData} />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
 export default StudentProfile;
-
-
 
 

@@ -4,6 +4,7 @@ import { useUser } from '../contexts/UserContext';
 import { IoHomeOutline, IoPersonOutline, IoChatboxEllipsesOutline, IoLogOutOutline, IoLogInOutline, IoNewspaperOutline } from 'react-icons/io5'; // Import new icons
 import {PiAddressBookLight, PiAddressBook} from 'react-icons/pi'; // Import new icons
 import { LuUserSquare2 } from 'react-icons/lu';
+import { FaUserGroup } from 'react-icons/fa6';
 import styles from './NavigationBar.module.css';
 
 const NavigationBar = () => {
@@ -44,6 +45,13 @@ const NavigationBar = () => {
               <IoNewspaperOutline className={styles.icon} /> feed
             </a>
             <a
+              href="/groups"
+              className={`${styles.button} ${activeLink === 'groups' ? styles.clickedButton : ''}`}
+              onClick={() => handleLinkClick('groups')}
+            >
+              <FaUserGroup className={styles.icon} /> Groups
+            </a>
+            <a
               href="/studentProfile"
               className={`${styles.button} ${(activeLink === 'folio' && currentPath !== '/siloDescription') ? styles.clickedButton : ''}`}
               onClick={() => handleLinkClick('folio')}
@@ -61,7 +69,7 @@ const NavigationBar = () => {
               onClick={handleLogout}
               className={`${styles.logoutButton} ${activeLink === 'logout' ? styles.clickedButton : ''}`}
             >
-              <IoLogOutOutline className={styles.icon} />
+              <IoLogOutOutline className={styles.logoutIcon} />
             </button>
           </div>
         </>

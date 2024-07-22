@@ -1,0 +1,60 @@
+.upvoteButtonBox {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background-color: #ffffff;
+  border-radius: 20px;
+  padding: 0px 15px 0px 12px;
+  border: 1px solid rgba(0, 0, 0, 0.1); 
+}
+
+.upvoteButton {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  color: #878A8C;
+  transition: color 0.2s ease;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+  box-sizing: border-box;
+  font-size: 20px;
+}
+
+.upvoteButton:hover {
+  color: #FF4500;
+}
+
+.upvoteButton:disabled {
+  cursor: default;
+  opacity: 1;
+}
+
+.clickedUpvoteButton,
+.clickedUpvoteButton:disabled {
+  color: #FF4500;
+  background-color: transparent;
+  outline: none;
+  font-size: 20px;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.upvoteNumber {
+  font-size: 16px;
+  font-weight: bold;
+  color: #1a1a1b;
+  min-width: 20px;
+  text-align: center;
+}

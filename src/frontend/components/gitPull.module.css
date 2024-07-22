@@ -1,0 +1,161 @@
+.gitPullContainer {
+  padding: 24px;
+  background-color: #1e1e1e;
+  color: #e0e0e0;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.heading {
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.headingIcon {
+  margin-right: 12px;
+}
+
+.subtitle {
+  text-align: center;
+  color: #b0b0b0;
+  margin-bottom: 24px;
+}
+
+.inputContainer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.input {
+  flex: 1;
+  padding: 12px;
+  background-color: #333333;
+  color: #ffffff;
+  border: 1px solid #4a4a4a;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.input::placeholder {
+  color: #888888;
+}
+
+.fetchButton, .submitButton {
+  padding: 12px 20px;
+  background-color: #4a4aff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.fetchButton:hover, .submitButton:hover {
+  background-color: #3a3aff;
+}
+
+.repoList {
+  list-style-type: none;
+  padding: 0;
+  margin-bottom: 24px;
+}
+
+.repoItem {
+  margin-bottom: 12px;
+}
+
+.repoButton {
+  background-color: #2a2a2a;
+  color: #ffffff;
+  border: none;
+  padding: 12px;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: background-color 0.3s ease;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+}
+
+.repoButton:hover {
+  background-color: #3a3a3a;
+}
+
+.fileTree {
+  list-style-type: none;
+  padding-left: 20px;
+  margin-top: 8px;
+}
+
+.fileItem {
+  margin-bottom: 8px;
+}
+
+.folderToggle, .fileToggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: #e0e0e0;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  transition: background-color 0.3s ease;
+}
+
+.folderToggle:hover, .fileToggle:hover {
+  background-color: #2a2a2a;
+}
+
+.icon {
+  margin-right: 8px;
+  color: #8099ff;
+}
+
+.error {
+  color: #ff4a4a;
+  margin-top: 12px;
+}
+
+.loading {
+  color: #4a4aff;
+  margin-top: 12px;
+}
+
+.submitButton {
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  margin: 24px auto 0;
+}
+
+.noRepos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #2a2a2a;
+  border-radius: 6px;
+  padding: 16px;
+  margin-top: 16px;
+}
+
+.noRepos p {
+  margin: 0;
+  margin-left: 12px;
+  color: #e0e0e0;
+}
+
+.alertIcon {
+  color: #ff4a4a;
+}

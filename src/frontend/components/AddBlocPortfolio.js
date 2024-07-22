@@ -1,15 +1,16 @@
+
+
+
 import React, { useState, useEffect } from 'react';
 import { useUser } from '../contexts/UserContext';
 import styles from './AddBlocPortfolio.module.css';
 import config from '../config';
-import { FaPlus, FaSave, FaTrash } from 'react-icons/fa';
+import { FaPlus, FaSave, FaTrash, FaArrowsAlt, FaArrowUp, FaArrowDown, FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import pdfToText from 'react-pdftotext';
 import { IoSparkles } from "react-icons/io5";
-
+import AddBlocPortfolioPreview from "./AddBlocPortfolioPreview";
 
 const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = null, onClose = null }) => {
-  console.log('this is initialProjectData._id: ', initialProjectData._id);
-
   const [rows, setRows] = useState(initialRows.length ? initialRows : [[{ type: '', value: '' }]]);
   const [projectName, setProjectName] = useState(initialProjectData?.projectName || '');
   const [projectDescription, setProjectDescription] = useState(initialProjectData?.projectDescription || '');
@@ -20,13 +21,81 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
   const [isLoading, setIsLoading ] = useState(false);
   const [extractedText, setExtractedText] = useState('');
   const [suggestedSummary, setSuggestedSummary] = useState('');
+  const [selectedCell, setSelectedCell] = useState(null);
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
+  const [previewProject, setPreviewProject] = useState({});
+
+  useEffect(() => {
+    console.log('here is previewProject in useEffect: ', previewProject)
+    const updatedPreviewProject = {
+      projectName: projectName,
+      projectDescription: projectDescription,
+      layers: rows,
+      tags: tags,
+      links: links,
+      comments: [],
+      upvotes: [],
+    };
+    setPreviewProject(updatedPreviewProject);
+  }, [rows, projectName, projectDescription, tags, links]);
+
 
   const handleAddRow = () => {
     setRows([...rows, [{ type: '', value: '' }]]);
   };
 
+  const handleMoveClick = (rowIndex, cellIndex) => {
+    setSelectedCell({ rowIndex, cellIndex });
+  };
+
+  const handleMove = (direction) => {
+    if (!selectedCell) return;
+
+    const { rowIndex, cellIndex } = selectedCell;
+    const newRows = JSON.parse(JSON.stringify(rows)); // Deep copy of rows
+
+    switch (direction) {
+      case 'up':
+        if (rowIndex > 0) {
+          const targetCellIndex = Math.min(cellIndex, newRows[rowIndex - 1].length - 1);
+          const temp = newRows[rowIndex][cellIndex];
+          newRows[rowIndex][cellIndex] = newRows[rowIndex - 1][targetCellIndex];
+          newRows[rowIndex - 1][targetCellIndex] = temp;
+        }
+        break;
+      case 'down':
+        if (rowIndex < newRows.length - 1) {
+          const targetCellIndex = Math.min(cellIndex, newRows[rowIndex + 1].length - 1);
+          const temp = newRows[rowIndex][cellIndex];
+          newRows[rowIndex][cellIndex] = newRows[rowIndex + 1][targetCellIndex];
+          newRows[rowIndex + 1][targetCellIndex] = temp;
+        }
+        break;
+      case 'left':
+        if (cellIndex > 0) {
+          const temp = newRows[rowIndex][cellIndex];
+          newRows[rowIndex][cellIndex] = newRows[rowIndex][cellIndex - 1];
+          newRows[rowIndex][cellIndex - 1] = temp;
+        }
+        break;
+      case 'right':
+        if (cellIndex < newRows[rowIndex].length - 1) {
+          const temp = newRows[rowIndex][cellIndex];
+          newRows[rowIndex][cellIndex] = newRows[rowIndex][cellIndex + 1];
+          newRows[rowIndex][cellIndex + 1] = temp;
+        }
+        break;
+      default:
+        break;
+    }
+
+    const cleanedRows = newRows.filter(row => row.length > 0);
+    setRows(cleanedRows);
+    setSelectedCell(null);
+  };
+
   const handleAddCell = (rowIndex) => {
-    if (rows[rowIndex].length < 3) {
+    if (rows[rowIndex].length < 2) {
       const newRows = [...rows];
       newRows[rowIndex] = [...newRows[rowIndex], { type: '', value: '' }];
       setRows(newRows);
@@ -35,7 +104,7 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
 
   const handleCellTypeChange = (rowIndex, cellIndex, type) => {
     const newRows = [...rows];
-    newRows[rowIndex][cellIndex] = { ...newRows[rowIndex][cellIndex], type, value: '' }; // Reset value on type change
+    newRows[rowIndex][cellIndex] = { ...newRows[rowIndex][cellIndex], type, value: '' };
     setRows(newRows);
   };
 
@@ -71,7 +140,6 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
       links,
       username: user.username
     };
-    console.log('were trying to saave');
     if (initialProjectData._id) {
       projectData._id = initialProjectData._id;
     }
@@ -86,9 +154,8 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
         body: JSON.stringify({ data: projectData }),
       });
       if (response.ok) {
-        const savedProject = await response.json(); // Assuming your API returns the saved project
+        const savedProject = await response.json();
         alert('Project saved successfully');
-        console.log('here is the savedProject ahead of the onSave call', savedProject)
         if (onSave) {
           if (initialProjectData._id) {
             onSave(savedProject.layers, savedProject);
@@ -147,10 +214,9 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
         body: JSON.stringify({ projectId: initialProjectData._id, userId: user._id }),
       });
       if (response.ok) {
-        console.log('modal delete project button was clicked.');
         setShowDeleteModal(false);
         if (onClose) {
-          onClose(); // Close the AddBlocPortfolio modal
+          onClose();
         }
       } else {
         console.error('Error deleting project:', response.statusText);
@@ -159,7 +225,6 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
       console.error('Error deleting project:', error);
     }
   };
-
 
   const handleFileSugUpload = async (text) => {
     setIsLoading(true);
@@ -174,11 +239,10 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
 
       if (response.ok) {
         const data = await response.json();
-        console.log('Received summary:', data.summary);
-        const parsedSummary = JSON.parse(data.summary);
-        console.log('Parsed summary:', parsedSummary);
+        const parsedSummary = JSON.parse(data.surrounding_summary);
+        const parsedSuggestedLayers = JSON.parse(data.summary_content)
         setSuggestedSummary(parsedSummary);
-        return parsedSummary;
+        return { summary:parsedSummary, layers: parsedSuggestedLayers };
       } else {
         console.error('Failed to send extracted text to backend');
       }
@@ -192,22 +256,36 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
   const handleAutofillFileChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = async () => {
-        const result = reader.result;
-        const text = await pdfToText(file);
-        const parsedData = await handleFileSugUpload(text);
+        const reader = new FileReader();
+        reader.onloadend = async () => {
+            const text = await pdfToText(file);
+            const parsedData = await handleFileSugUpload(text);
 
-        if (parsedData) {
-          setProjectName(parsedData.name);
-          setProjectDescription(parsedData.description);
-          setTags(parsedData.tags || []);
-          setLinks(parsedData.links || []);
-          setRows(parsedData.layers || [[{ type: '', value: '' }]]);
-        }
-      };
-      reader.readAsText(file);
+            if (parsedData) {
+                setProjectName(parsedData.summary.name);
+                setProjectDescription(parsedData.summary.description);
+                setTags(parsedData.summary.tags || []);
+                setLinks(parsedData.summary.links || []);
+                setRows(structureLayers(parsedData.layers));
+            }
+        };
+        reader.readAsText(file);
     }
+  };
+
+  const structureLayers = (paragraphs) => {
+    const rows = [];
+    let currentRow = [];
+
+    paragraphs.forEach((paragraph, index) => {
+        currentRow.push({ type: 'text', value: paragraph.content });
+        if (currentRow.length === 2 || index === paragraphs.length - 1) {
+            rows.push(currentRow);
+            currentRow = [];
+        }
+    });
+
+    return rows;
   };
 
   return (
@@ -216,16 +294,25 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
       <div className={styles.container}>
         <div className={styles.header}>
           <h1 className={styles.title}>Project Builder</h1>
-          <label htmlFor="autofillInput" className={styles.autofillLabel}>
-            <IoSparkles /> Autofill Project from PDF
-          </label>
-          <input 
-            type="file" 
-            id="autofillInput"
-            className={styles.autofillInput} 
-            onChange={handleAutofillFileChange} 
-            accept=".pdf"
-          />
+          <div className={styles.headerButtons}>
+            <label htmlFor="autofillInput" className={styles.autofillLabel}>
+              <IoSparkles /> Autofill Project from PDF
+            </label>
+            <input 
+              type="file" 
+              id="autofillInput"
+              className={styles.autofillInput} 
+              onChange={handleAutofillFileChange} 
+              accept=".pdf"
+            />
+            <button 
+              className={styles.previewButton} 
+              onMouseEnter={() => setShowPreviewModal(true)}
+              onMouseLeave={() => setShowPreviewModal(false)}
+            >
+              Preview
+            </button>
+          </div>
         </div>
         <p className={styles.subtitle}>Create a new project for your portfolio, edit an existing one or upload PDF to autofill text content</p>
         <div className={styles.projectInfo}>
@@ -244,7 +331,7 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
           />
         </div>
         <h1 className={styles.subTitle}> Project Content: </h1>
-        <p className={styles.subtitle}> Add up to 3 content blocks per row... </p>
+        <p className={styles.subtitle}> Add up to 2 content blocks per row... </p>
         <div className={styles.rowsContainer}>
           {rows.map((row, rowIndex) => (
             <div key={rowIndex} className={styles.row}>
@@ -263,6 +350,12 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
                       <option value="pdf">PDF</option>
                       <option value="code">Code</option>
                     </select>
+                    <button 
+                    className={styles.moveCellButton}
+                    onClick={() => handleMoveClick(rowIndex, cellIndex)}
+                  >
+                    <FaArrowsAlt />
+                  </button>
                     <button 
                       className={styles.removeCellButton} 
                       onClick={() => handleRemoveCell(rowIndex, cellIndex)}
@@ -353,7 +446,7 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
                   )}
                 </div>
               ))}
-              {row.length < 3 && (
+              {row.length < 2 && (
                 <button className={styles.addContentRightButton} onClick={() => handleAddCell(rowIndex)}>
                   <FaPlus />
                 </button>
@@ -396,14 +489,28 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
           </div>
         </div>
       )}
+      {selectedCell && (
+        <div className={styles.moveModal}>
+          <button onClick={() => handleMove('up')} disabled={selectedCell.rowIndex === 0}><FaArrowUp /></button>
+          <button onClick={() => handleMove('left')} disabled={selectedCell.cellIndex === 0}><FaArrowLeft /></button>
+          <button onClick={() => handleMove('right')} disabled={selectedCell.cellIndex === rows[selectedCell.rowIndex].length - 1}><FaArrowRight /></button>
+          <button onClick={() => handleMove('down')} disabled={selectedCell.rowIndex === rows.length - 1}><FaArrowDown /></button>
+          <button onClick={() => setSelectedCell(null)}>Cancel</button>
+        </div>
+      )}
+      {showPreviewModal && (
+        <div className={styles.previewModal}>
+          <div className={styles.modalContent}>
+            <h2>Preview Content</h2>
+            <AddBlocPortfolioPreview project={previewProject} passedUser={user}/>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
 export default AddBlocPortfolio;
-
-
-
 
 
 

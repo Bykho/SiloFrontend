@@ -102,8 +102,8 @@
 
 .userHeader {
   display: flex;
-  align-items: flex-start;
-  margin-bottom: 1rem;
+  align-items: center;
+  margin-bottom: .5rem;
 }
 
 .userMainInfo {
@@ -139,6 +139,7 @@
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  color: white; 
 }
 
 .userDetails p {

@@ -7,6 +7,7 @@ import { useUser } from '../contexts/UserContext';
 import ProfileImage from './ProfileImage';
 import { useNavigate, useLocation } from 'react-router-dom';
 import config from '../config';
+import { FaAward } from 'react-icons/fa';
 import { Search, User, Briefcase, Mail, Tag } from 'lucide-react';
 
 const UserSearch = () => {
@@ -56,6 +57,27 @@ const UserSearch = () => {
     fetchUsers();
   }, [value]);
 
+  const fetchProjectsForUser = async (portfolio) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${config.apiBaseUrl}/returnProjectsFromIds`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ projectIds: portfolio }),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch projects');
+      }
+      const projectData = await response.json();
+      return projectData;
+    } catch (err) {
+      throw new Error('Failed to fetch projects');
+    }
+  };
+
   const handleSearch = (e) => {
     e.preventDefault();
     setValue(searchText || 'student'); // Use 'student' if searchText is empty
@@ -88,35 +110,7 @@ const UserSearch = () => {
           <p className={styles.errorMessage}>{error}</p>
         ) : (
           users.map((specificUser, index) => (
-            <div key={index} className={styles.userCard}>
-              <div className={styles.userHeader}>
-                <ProfileImage username={specificUser.username} size='large' />
-                <div className={styles.userMainInfo}>
-                  <h3 className={styles.username}>{specificUser.username}</h3>
-                  <p className={styles.userType}>
-                    <User size={16} />
-                    {specificUser.user_type}
-                  </p>
-                </div>
-              </div>
-              <div className={styles.userDetails}>
-                <p>
-                  <Mail size={16} />
-                  {specificUser.email}
-                </p>
-                <p>
-                  <Tag size={16} />
-                  {specificUser.interests ? specificUser.interests.join(', ') : 'No interests listed'}
-                </p>
-                <p>
-                  <Briefcase size={16} />
-                  {specificUser.orgs ? specificUser.orgs.join(', ') : 'No orgs listed'}
-                </p>
-              </div>
-              <button className={styles.viewProfileButton} onClick={() => navigate(`/profile/${specificUser.username}`)}>
-                View Profile
-              </button>
-            </div>
+            <UserCard key={index} user={specificUser} navigate={navigate} fetchProjectsForUser={fetchProjectsForUser} />
           ))
         )}
       </div>
@@ -124,7 +118,68 @@ const UserSearch = () => {
   );
 };
 
+const UserCard = ({ user, navigate, fetchProjectsForUser }) => {
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [totalUpvotes, setTotalUpvotes] = useState(0);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      setLoading(true);
+      setError('');
+      try {
+        const projectData = await fetchProjectsForUser(user.portfolio);
+        setProjects(projectData);
+        const upvotesSum = projectData.reduce((sum, project) => sum + (project.upvotes ? project.upvotes.length : 0), 0);
+        setTotalUpvotes(upvotesSum);
+        setLoading(false);
+      } catch (err) {
+        setError('Failed to fetch projects');
+        setLoading(false);
+      }
+    };
+    fetchProjects();
+  }, [user.portfolio, fetchProjectsForUser]);
+
+  return (
+    <div className={styles.userCard}>
+      <div className={styles.userHeader}>
+        <ProfileImage username={user.username} size='large' />
+        <div className={styles.userMainInfo}>
+          <h3 className={styles.username}>{user.username}</h3>
+          <p className={styles.userType}>
+            <User size={16} />
+            {user.user_type}
+          </p>
+        </div>
+      </div>
+      <div className={styles.userDetails}>
+        <p>
+          <FaAward size={16} /> Score: {totalUpvotes*10}
+        </p>
+        <p>
+          <Mail size={16} />
+          {user.email}
+        </p>
+        <p>
+          <Tag size={16} />
+          {user.interests ? user.interests.join(', ') : 'No interests listed'}
+        </p>
+        <p>
+          <Briefcase size={16} />
+          {user.orgs ? user.orgs.join(', ') : 'No orgs listed'}
+        </p>
+      </div>
+      <button className={styles.viewProfileButton} onClick={() => navigate(`/profile/${user.username}`)}>
+        View Profile
+      </button>
+    </div>
+  );
+};
+
 export default UserSearch;
+
 
 
 

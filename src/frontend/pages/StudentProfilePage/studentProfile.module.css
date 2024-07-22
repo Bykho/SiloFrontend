@@ -35,6 +35,11 @@
     color: #1e1e1e;
     text-decoration: none;
   }
+  .buttonContainer{
+    display: inline-flex; 
+    gap: 10px;
+    width: 99%; 
+  }
   
   .button {
     font-family: inconsolata;
