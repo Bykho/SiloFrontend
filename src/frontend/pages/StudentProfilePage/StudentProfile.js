@@ -27,8 +27,6 @@ function StudentProfile() {
   const { user } = useUser();
   const navigate = useNavigate();
   const location = useLocation();
-  const [selectedFiles, setSelectedFiles] = useState([]);
-
 
   const fetchUserData = async () => {
     try {
@@ -99,30 +97,6 @@ function StudentProfile() {
     setShowSharePreview(false);
   };
 
-  const handlePortfolioUpdate = (selectedProjects) => {
-    setSelectedFiles(selectedProjects);
-    setShowGitPull(false);
-    setShowModal(true);
-  };
-
-  const getLanguageFromFilename = (filename) => {
-    const extension = filename.split('.').pop().toLowerCase();
-    const languageMap = {
-      js: 'javascript',
-      py: 'python',
-      java: 'java',
-      html: 'html',
-      css: 'css',
-      cpp: 'c++',
-      c: 'c',
-      rb: 'ruby',
-      php: 'php',
-      rs: 'rust',
-      // Add more mappings as needed
-    };
-    return languageMap[extension] || '';
-  };
-
   const handleSaveProject = (newProject) => {
     setShowModal(false);
     if (newProject) {
@@ -139,18 +113,6 @@ function StudentProfile() {
       localStorage.setItem('token', newToken);
       fetchUserData(); 
     }
-  };
-
-  const prepareInitialRows = () => {
-    return selectedFiles.map(file => {
-      const language = getLanguageFromFilename(file.filePath);
-      const cellType = language ? 'code' : 'text';
-      return [{
-        type: cellType,
-        value: file.content,
-        language: language
-      }];
-    });
   };
 
   return (
@@ -202,24 +164,7 @@ function StudentProfile() {
         <div className={styles.modal}>
           <div className={styles.modalContent}>
             <button className={styles.closeButton} onClick={handleCloseGithubPull}><FaWindowClose /></button>
-            <GitPull userData={userData} onPortfolioUpdate={handlePortfolioUpdate} />
-          </div>
-        </div>
-      )}
-      {showModal && (
-        <div className={styles.modal}>
-          <div className={styles.modalContent}>
-            <button className={styles.closeButton} onClick={handleCloseModal}><FaWindowClose /></button>
-            <AddBlocPortfolio 
-              onSave={handleSaveProject} 
-              initialRows={prepareInitialRows()}
-              initialProjectData={{
-                projectName: selectedFiles.length > 0 ? `${selectedFiles[0].repoName} Project` : '',
-                projectDescription: `Generated from GitHub repository: ${selectedFiles[0]?.repoName || ''}`,
-                tags: ['GitHub', 'Generated'],
-                links: [`https://github.com/${userData.github_link}/${selectedFiles[0]?.repoName || ''}`],
-              }}
-            />
+            <GitPull userData={userData} />
           </div>
         </div>
       )}
