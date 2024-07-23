@@ -27,6 +27,27 @@ function StudentProfile() {
   const { user } = useUser();
   const navigate = useNavigate();
   const location = useLocation();
+  const [selectedGitFiles, setSelectedGitFiles] = useState([]);
+
+  const languageLookup = {
+    js: 'javascript',
+    jsx: 'javascript',
+    ts: 'javascript', // TypeScript files often use JavaScript syntax highlighting
+    tsx: 'javascript',
+    py: 'python',
+    java: 'java',
+    css: 'css',
+    html: 'html',
+    htm: 'html',
+    c: 'c',
+    cpp: 'c++',
+    h: 'c',
+    hpp: 'c++',
+    rb: 'ruby',
+    php: 'php',
+    rs: 'rust',
+    // Add more mappings as needed
+  };
 
   const fetchUserData = async () => {
     try {
@@ -65,6 +86,39 @@ function StudentProfile() {
     return <p> Loading ... </p>;
   }
 
+  const handleGitPullUpdate = (selectedProjects) => {
+    const processedFiles = selectedProjects.map(file => {
+      const extension = file.filePath.split('.').pop().toLowerCase();
+      let cellType = 'code';
+      let language = languageLookup[extension] || extension;
+
+      if (['txt', 'md'].includes(extension)) {
+        cellType = 'text';
+        language = '';
+      } else if (['jpg', 'jpeg', 'png', 'gif', 'svg'].includes(extension)) {
+        cellType = 'image';
+        language = '';
+      } else if (extension === 'pdf') {
+        cellType = 'pdf';
+        language = '';
+      } else if (!languageLookup[extension]) {
+        // If the extension is not in our lookup table, default to 'text'
+        cellType = 'text';
+        language = '';
+      }
+
+      return {
+        type: cellType,
+        value: file.content,
+        language: language
+      };
+    });
+
+    setSelectedGitFiles(processedFiles);
+    setShowGitPull(false);
+    setShowModal(true);
+  };
+
   const handleEditProfileClick = () => {
     setShowEditor(true);
   };
@@ -74,11 +128,14 @@ function StudentProfile() {
   };
 
   const handleAddProjectClick = () => {
+    // Reset selectedGitFiles before opening an empty AddBlocPortfolio modal
+    setSelectedGitFiles([]);
     setShowModal(true);
   };
 
   const handleCloseModal = () => {
     setShowModal(false);
+    setSelectedGitFiles([]);
   };
 
   const handleShareProfileClick = () => {
@@ -105,6 +162,8 @@ function StudentProfile() {
         portfolio: [...prevState.portfolio, newProject],
       }));
     }
+    // Reset selectedGitFiles after closing the modal
+    setSelectedGitFiles([]);
   };
 
   const handleSaveProfile = (newToken = null) => {
@@ -148,7 +207,11 @@ function StudentProfile() {
         <div className={styles.modal}>
           <div className={styles.modalContent}>
             <button className={styles.closeButton} onClick={handleCloseModal}><FaWindowClose /></button>
-            <AddBlocPortfolio onSave={handleSaveProject} />
+            <AddBlocPortfolio 
+              onSave={handleSaveProject} 
+              initialRows={selectedGitFiles.length > 0 ? [selectedGitFiles] : []}
+              onClose={handleCloseModal}
+            />
           </div>
         </div>
       )}
@@ -164,7 +227,7 @@ function StudentProfile() {
         <div className={styles.modal}>
           <div className={styles.modalContent}>
             <button className={styles.closeButton} onClick={handleCloseGithubPull}><FaWindowClose /></button>
-            <GitPull userData={userData} />
+            <GitPull userData={userData} onPortfolioUpdate={handleGitPullUpdate} />
           </div>
         </div>
       )}
