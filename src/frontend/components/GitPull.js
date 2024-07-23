@@ -47,6 +47,20 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
     }
   };
 
+
+  const fetchFileContent = async (repoName, filePath) => {
+    if (!githubUsername || !repoName || !filePath) return null;
+    try {
+      const response = await fetch(`https://api.github.com/repos/${githubUsername}/${repoName}/contents/${filePath}`);
+      if (!response.ok) throw new Error('Failed to fetch file content');
+      const data = await response.json();
+      return atob(data.content); // Decode base64 content
+    } catch (err) {
+      console.error('Failed to fetch file content:', err);
+      return null;
+    }
+  };
+
   const fetchContents = async (repoName, path = '') => {
     if (!githubUsername || !repoName) return;
     setLoading(true);
@@ -99,13 +113,17 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
     }));
   };
 
-  const handleSubmit = () => {
-    const selectedProjects = Object.entries(selectedFiles)
-      .filter(([, isSelected]) => isSelected)
-      .map(([path]) => {
-        const [repoName, ...fileParts] = path.split('/');
-        return { repoName, filePath: fileParts.join('/') };
-      });
+  const handleSubmit = async () => {
+    const selectedProjects = await Promise.all(
+      Object.entries(selectedFiles)
+        .filter(([, isSelected]) => isSelected)
+        .map(async ([path]) => {
+          const [repoName, ...fileParts] = path.split('/');
+          const filePath = fileParts.join('/');
+          const content = await fetchFileContent(repoName, filePath);
+          return { repoName, filePath, content };
+        })
+    );
 
     onPortfolioUpdate(selectedProjects);
   };
