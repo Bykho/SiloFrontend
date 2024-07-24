@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styles from './gitPull.module.css';
 import { GitHub, Folder, File, CheckSquare, Square, ChevronRight, ChevronDown, AlertCircle } from 'react-feather';
+import config from '../config';
 
 const GitPull = ({ userData, onPortfolioUpdate }) => {
   const [githubUsername, setGithubUsername] = useState('');
@@ -125,7 +126,41 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
         })
     );
 
-    onPortfolioUpdate(selectedProjects);
+    // Prepare data for API request
+    //WHY ARE WE SENDING THE GITHUB USERNAME????
+    const requestData = {
+      user: githubUsername,
+      projects: selectedProjects
+    };
+
+    try {
+      const response = await fetch(`${config.apiBaseUrl}/autofillCodeProject`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to add projects to portfolio');
+      }
+
+      const result = await response.json();
+      console.log('API response:', result);
+
+
+      const combinedData = [
+        ...selectedProjects,
+        ...result.summary.map(([key, value]) => ({ repoName: null, filePath: key, content: value, language: 'text' }))
+      ];
+
+
+      onPortfolioUpdate(combinedData);
+    } catch (error) {
+      console.error('Error adding projects to portfolio:', error);
+      alert('Failed to add projects to portfolio. Please try again.');
+    }
   };
 
   const renderTree = (repoName, items, currentPath = '') => {

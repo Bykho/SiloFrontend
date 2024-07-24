@@ -50,7 +50,7 @@ function HomePage() {
           'Content-Type': 'application/json', 
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({ created_by: user.sub }) // Pass the user who created the key
+        body: JSON.stringify({ created_by: "GOD" }) // Pass the user who created the key
       }); 
 
       if (response.ok) {
