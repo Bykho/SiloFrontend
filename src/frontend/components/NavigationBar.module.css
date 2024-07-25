@@ -1,10 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&display=swap');
 @import url("https://fonts.googleapis.com/css2?family=Tiny5&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=DotGothic16&display=swap"); 
+@import url("https://fonts.googleapis.com/css2?family=Jacquard+12&display=swap");
 .nav {
   background: linear-gradient(90deg, #2b2b2b 40%, #121212 75%);
   border: 1px solid #1a1a1a;
-  padding: 20px 10px;
+  padding: 17px 10px;
   display: flex;
   width: 100%;
   justify-content: space-between;
@@ -71,27 +73,25 @@
 }
 
 .siloButton {
-  color: #ffffff;
-  background: linear-gradient(135deg, #2196f3, #216ef3);
+  color: white; 
+  background: linear-gradient(135deg,  #4c7a9d, #244782);
   padding: 12px 24px;
   border-radius: 8px;
   text-decoration: none;
   font-weight: 600;
   font-size: 20px;
-  font-family: 'Montserrat', sans-serif;
-  letter-spacing: 1px;
-  text-transform: uppercase;
+  font-family: "Inconsolata", system-ui;
   margin: 5px;
   margin-left: 15px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(33, 150, 243, 0.3);
+  box-shadow: 0 4px 6px rgba(38, 141, 226, 0.3);
   position: relative;
   overflow: hidden;
   display: inline-block;
   min-width: 120px;
   text-align: center;
-  letter-spacing: 7px;
+  letter-spacing: 10px;
   max-width: 200px;
   border: none;
   outline: none;

@@ -18,12 +18,14 @@
   position: sticky;
   top: 0;
   z-index: 1;
-  background-image: linear-gradient(to bottom, #9fdcff, #88b1e0);
+  background-image: linear-gradient(to bottom, #33383c, rgba(41, 48, 55, 0.4));  
   padding: 20px;
-  color: rgb(58, 58, 58); 
-  font-weight: bolder;
+  color: white; 
+  font-family: "Inconsolata", system-ui;
+  font-size: 20px;
   font-stretch: expanded;
   border-radius: 8px;
+  letter-spacing: 5px;
   margin-top: 0px;
 }
 
