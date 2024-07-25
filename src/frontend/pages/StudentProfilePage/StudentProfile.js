@@ -153,11 +153,14 @@ function StudentProfile() {
   };
 
   const handleFileUploadChange = (e) => {
-    console.log("STUDENTPROFILE handleFileUploadChange: triggered")
     const file = e.target.files[0];
     if (file) {
       setFileToUpload(file);
     }
+  };
+
+  const handleFileButtonClick = () => {
+    document.getElementById('fileInput').click();
   };
 
   const handleCloseModal = () => {
@@ -272,11 +275,15 @@ function StudentProfile() {
         <div className={styles.modal}>
           <div className={styles.modalContent}>
             <button className={styles.closeButton} onClick={handleCloseAutofillModal}><FaWindowClose /></button>
+            <button className={styles.bigButton} onClick={handleFileButtonClick}>Autofill from File</button>
             <input 
               type="file"
+              id="fileInput"
               onChange={handleFileUploadChange}
               className={styles.fileInput}
+              style={{ display: 'none' }} // Hide the input field
             />
+            <button className={styles.bigButton} >Autofill from GitHub</button>
           </div>
         </div>
       )}
@@ -292,8 +299,6 @@ function StudentProfile() {
 }
 
 export default StudentProfile;
-
-
 
 
 
