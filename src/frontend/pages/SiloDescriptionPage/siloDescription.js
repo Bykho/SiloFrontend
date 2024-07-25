@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'; // Import useNavigate from react
 import styles from './siloDescription.module.css';
 import GameOfLife from './GameOfLife';
 
+
 function SiloDescription() {
   const [isLoaded, setIsLoaded] = useState(false);
   const navigate = useNavigate(); // Initialize useNavigate hook
@@ -24,10 +25,10 @@ function SiloDescription() {
         <div className={styles.testTitle}>
           <h1 className={`${styles.aboutHeader} ${isLoaded ? styles.headerLoaded : ''}`}>
             <div className={styles.helloLine}>
-              <span>H</span><span>e</span><span>l</span><span>l</span><span>o</span>
+              <span className={styles.letters}>H</span><span className={styles.letters}>e</span><span className={styles.letters}>l</span><span className={styles.letters}>l</span><span className={styles.letters}>o</span>
             </div>
             <div className={styles.worldLine}>
-              <span>W</span><span>o</span><span>r</span><span>l</span><span>d</span>
+              <span className={styles.letters}>W</span><span className={styles.letters}>o</span><span className={styles.letters}>r</span><span className={styles.letters}>l</span><span className={styles.letters}>d</span>
             </div>
           </h1>
         </div>

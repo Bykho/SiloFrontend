@@ -7,7 +7,7 @@ import { FaTimes, FaPlus, FaSave } from 'react-icons/fa';
 import { useUser } from '../../contexts/UserContext';
 import config from '../../config';
 
-const AddProjectToGroup = ({ group, onClose }) => {
+const AddProjectToGroup = ({ group, onClose, updateGroupProjects }) => {
   const { user } = useUser();
   const [projects, setProjects] = useState([]);
   const [includedProjects, setIncludedProjects] = useState([]);
@@ -64,6 +64,8 @@ const AddProjectToGroup = ({ group, onClose }) => {
 
       const result = await response.json();
       console.log('Successfully saved projects to group:', result);
+
+      updateGroupProjects(includedProjects);
       // Optionally, close the modal or show a success message
       onClose();
     } catch (err) {

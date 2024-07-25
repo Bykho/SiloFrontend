@@ -11,7 +11,7 @@ import AddProjectToGroup from './AddProjectToGroup';
 import config from '../../config';
 import GroupCreator from './GroupCreator'; // Import GroupCreator component
 
-const GroupDisplay = ({ group, setGroupsDisplayStyle }) => {
+const GroupDisplay = ({ group, setGroupsDisplayStyle, updateGroupProjects }) => {
   const [showMembers, setShowMembers] = useState(false);
   const [showAddProjectToGroup, setShowAddProjectToGroup] = useState(false);
   const [fullProjects, setFullProjects] = useState([]);
@@ -106,7 +106,7 @@ const GroupDisplay = ({ group, setGroupsDisplayStyle }) => {
 
       {showAddProjectToGroup && (
         <div className={styles.modalOverlay}>
-          <AddProjectToGroup group={group} onClose={toggleAddProjectToGroupView} />
+          <AddProjectToGroup group={group} onClose={toggleAddProjectToGroupView} updateGroupProjects={updateGroupProjects} />
         </div>
       )}
 

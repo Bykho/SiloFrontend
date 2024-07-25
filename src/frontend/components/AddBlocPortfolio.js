@@ -1,17 +1,18 @@
 
 
 
+// AddBlocPortfolio.js
 import React, { useState, useEffect } from 'react';
 import { useUser } from '../contexts/UserContext';
 import styles from './AddBlocPortfolio.module.css';
 import config from '../config';
 import { FaPlus, FaSave, FaTrash, FaArrowsAlt, FaArrowUp, FaArrowDown, FaArrowLeft, FaArrowRight } from 'react-icons/fa';
-import pdfToText from 'react-pdftotext';
-import { IoSparkles } from "react-icons/io5";
 import AddBlocPortfolioPreview from "./AddBlocPortfolioPreview";
+import AutofillProjectFromPDF from './AddProjectUtility_AutofillProject';
 
 const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = null, onClose = null }) => {
   const [rows, setRows] = useState(initialRows.length ? initialRows : [[{ type: '', value: '' }]]);
+  const [needsReorganization, setNeedsReorganization] = useState(true);
   const [projectName, setProjectName] = useState(initialProjectData?.projectName || '');
   const [projectDescription, setProjectDescription] = useState(initialProjectData?.projectDescription || '');
   const [tags, setTags] = useState(initialProjectData?.tags || []);
@@ -19,14 +20,11 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
   const { user } = useUser();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isLoading, setIsLoading ] = useState(false);
-  const [extractedText, setExtractedText] = useState('');
-  const [suggestedSummary, setSuggestedSummary] = useState('');
   const [selectedCell, setSelectedCell] = useState(null);
   const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [previewProject, setPreviewProject] = useState({});
 
   useEffect(() => {
-    console.log('here is previewProject in useEffect: ', previewProject)
     const updatedPreviewProject = {
       projectName: projectName,
       projectDescription: projectDescription,
@@ -39,6 +37,34 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
     setPreviewProject(updatedPreviewProject);
   }, [rows, projectName, projectDescription, tags, links]);
 
+  useEffect(() => {
+    if (needsReorganization) {
+      const reorganizeRows = () => {
+        const newRows = [];
+        let currentRow = [];
+
+        rows.forEach(row => {
+          row.forEach(cell => {
+            if (currentRow.length < 2) {
+              currentRow.push(cell);
+            } else {
+              newRows.push(currentRow);
+              currentRow = [cell];
+            }
+          });
+          if (currentRow.length > 0) {
+            newRows.push(currentRow);
+            currentRow = [];
+          }
+        });
+
+        setRows(newRows);
+      };
+
+      reorganizeRows();
+      setNeedsReorganization(false);
+    }
+  }, [needsReorganization, rows]);
 
   const handleAddRow = () => {
     setRows([...rows, [{ type: '', value: '' }]]);
@@ -119,6 +145,10 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
     reader.onloadend = () => {
       handleCellValueChange(rowIndex, cellIndex, reader.result);
     };
+    reader.onerror = (error) => {
+      console.error('Error reading file:', error);
+      alert('Failed to read file. Please try again.');
+    };
     reader.readAsDataURL(file);
   };
 
@@ -198,6 +228,12 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
     setRows(newRows);
   };
 
+  const handleHeaderChange = (rowIndex, cellIndex, textHeader) => {
+    const newRows = [...rows];
+    newRows[rowIndex][cellIndex] = { ...newRows[rowIndex][cellIndex], textHeader};
+    setRows(newRows);
+  };
+
   const handleCloseModal = () => {
     setShowDeleteModal(false);
   };
@@ -226,93 +262,27 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
     }
   };
 
-  const handleFileSugUpload = async (text) => {
-    setIsLoading(true);
-    try {
-      const response = await fetch(`${config.apiBaseUrl}/projectFileParser`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ fileText: text }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        const parsedSummary = JSON.parse(data.surrounding_summary);
-        const parsedSuggestedLayers = JSON.parse(data.summary_content)
-        setSuggestedSummary(parsedSummary);
-        return { summary:parsedSummary, layers: parsedSuggestedLayers };
-      } else {
-        console.error('Failed to send extracted text to backend');
-      }
-    } catch (error) {
-      console.error('Failed to extract text from pdf', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleAutofillFileChange = async (e) => {
-    const file = e.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onloadend = async () => {
-            const text = await pdfToText(file);
-            const parsedData = await handleFileSugUpload(text);
-
-            if (parsedData) {
-                setProjectName(parsedData.summary.name);
-                setProjectDescription(parsedData.summary.description);
-                setTags(parsedData.summary.tags || []);
-                setLinks(parsedData.summary.links || []);
-                setRows(structureLayers(parsedData.layers));
-            }
-        };
-        reader.readAsText(file);
-    }
-  };
-
-  const structureLayers = (paragraphs) => {
-    const rows = [];
-    let currentRow = [];
-
-    paragraphs.forEach((paragraph, index) => {
-        currentRow.push({ type: 'text', value: paragraph.content });
-        if (currentRow.length === 2 || index === paragraphs.length - 1) {
-            rows.push(currentRow);
-            currentRow = [];
-        }
-    });
-
-    return rows;
-  };
-
   return (
     <div className={styles.containerWrapper}>
       {isLoading && <div className={styles.spinner}></div>}
       <div className={styles.container}>
         <div className={styles.header}>
           <h1 className={styles.title}>Project Builder</h1>
-          <div className={styles.headerButtons}>
-            <label htmlFor="autofillInput" className={styles.autofillLabel}>
-              <IoSparkles /> Autofill Project from PDF
-            </label>
-            <input 
-              type="file" 
-              id="autofillInput"
-              className={styles.autofillInput} 
-              onChange={handleAutofillFileChange} 
-              accept=".pdf"
-            />
-            <button 
-              className={styles.previewButton} 
-              onMouseEnter={() => setShowPreviewModal(true)}
-              onMouseLeave={() => setShowPreviewModal(false)}
-            >
-              Preview
-            </button>
-          </div>
+          <AutofillProjectFromPDF
+            setProjectName={setProjectName}
+            setProjectDescription={setProjectDescription}
+            setTags={setTags}
+            setLinks={setLinks}
+            setRows={setRows}
+            setIsLoading={setIsLoading}
+          />
+          <button 
+            className={styles.previewButton} 
+            onMouseEnter={() => setShowPreviewModal(true)}
+            onMouseLeave={() => setShowPreviewModal(false)}
+          >
+            Preview
+          </button>
         </div>
         <p className={styles.subtitle}>Create a new project for your portfolio, edit an existing one or upload PDF to autofill text content</p>
         <div className={styles.projectInfo}>
@@ -351,11 +321,11 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
                       <option value="code">Code</option>
                     </select>
                     <button 
-                    className={styles.moveCellButton}
-                    onClick={() => handleMoveClick(rowIndex, cellIndex)}
-                  >
-                    <FaArrowsAlt />
-                  </button>
+                      className={styles.moveCellButton}
+                      onClick={() => handleMoveClick(rowIndex, cellIndex)}
+                    >
+                      <FaArrowsAlt />
+                    </button>
                     <button 
                       className={styles.removeCellButton} 
                       onClick={() => handleRemoveCell(rowIndex, cellIndex)}
@@ -364,12 +334,21 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
                     </button>
                   </div>
                   {cell.type === 'text' && (
+                    <>
+                      <textarea
+                      value={cell.textHeader || ''}
+                      onChange={(e) => handleHeaderChange(rowIndex, cellIndex, e.target.value)}
+                      placeholder="Enter section title"
+                      className={styles.headerTextArea}
+                    />
+  
                     <textarea
                       value={cell.value || ''}
                       onChange={(e) => handleCellValueChange(rowIndex, cellIndex, e.target.value)}
-                      placeholder="Enter text"
+                      placeholder="Enter section text"
                       className={styles.cellTextArea}
                     />
+                 </>
                   )}
                   {cell.type === 'image' && (
                     <div className={styles.fileUploadContainer}>

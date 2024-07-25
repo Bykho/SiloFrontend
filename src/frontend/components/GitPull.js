@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styles from './gitPull.module.css';
 import { GitHub, Folder, File, CheckSquare, Square, ChevronRight, ChevronDown, AlertCircle } from 'react-feather';
+import config from '../config';
 
 const GitPull = ({ userData, onPortfolioUpdate }) => {
   const [githubUsername, setGithubUsername] = useState('');
@@ -24,6 +25,19 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
     const urlPattern = /^(?:https?:\/\/)?(?:www\.)?github\.com\/([a-zA-Z0-9-]+)\/?$/;
     const match = input.match(urlPattern);
     return match ? match[1] : input;
+  };
+
+  const fetchFileContent = async (repoName, filePath) => {
+    if (!githubUsername || !repoName || !filePath) return null;
+    try {
+      const response = await fetch(`https://api.github.com/repos/${githubUsername}/${repoName}/contents/${filePath}`);
+      if (!response.ok) throw new Error('Failed to fetch file content');
+      const data = await response.json();
+      return atob(data.content); // Decode base64 content
+    } catch (err) {
+      console.error('Failed to fetch file content:', err);
+      return null;
+    }
   };
 
   const fetchRepos = async (username) => {
@@ -99,15 +113,54 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
     }));
   };
 
-  const handleSubmit = () => {
-    const selectedProjects = Object.entries(selectedFiles)
-      .filter(([, isSelected]) => isSelected)
-      .map(([path]) => {
-        const [repoName, ...fileParts] = path.split('/');
-        return { repoName, filePath: fileParts.join('/') };
+  const handleSubmit = async () => {
+    const selectedProjects = await Promise.all(
+      Object.entries(selectedFiles)
+        .filter(([, isSelected]) => isSelected)
+        .map(async ([path]) => {
+          const [repoName, ...fileParts] = path.split('/');
+          const filePath = fileParts.join('/');
+          const content = await fetchFileContent(repoName, filePath);
+          const language = filePath.split('.').pop(); // Get file extension as language
+          return { repoName, filePath, content, language };
+        })
+    );
+
+    // Prepare data for API request
+    //WHY ARE WE SENDING THE GITHUB USERNAME????
+    const requestData = {
+      user: githubUsername,
+      projects: selectedProjects
+    };
+
+    try {
+      const response = await fetch(`${config.apiBaseUrl}/autofillCodeProject`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestData),
       });
 
-    onPortfolioUpdate(selectedProjects);
+      if (!response.ok) {
+        throw new Error('Failed to add projects to portfolio');
+      }
+
+      const result = await response.json();
+      console.log('API response:', result);
+
+
+      const combinedData = [
+        ...selectedProjects,
+        ...result.summary.map(([key, value]) => ({ repoName: null, filePath: key, content: value, language: 'text' }))
+      ];
+
+
+      onPortfolioUpdate(combinedData);
+    } catch (error) {
+      console.error('Error adding projects to portfolio:', error);
+      alert('Failed to add projects to portfolio. Please try again.');
+    }
   };
 
   const renderTree = (repoName, items, currentPath = '') => {

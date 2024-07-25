@@ -1,5 +1,6 @@
 
 
+// GroupsSidebar.js
 import React, { useState, useEffect } from 'react';
 import { Search, Users, Compass, Star, ChevronRight } from 'lucide-react';
 import styles from './groupssidebar.module.css';
@@ -20,7 +21,17 @@ const GroupItem = ({ name, members, onClick, joinable = false, joined = false, o
       <span className={styles.groupName}>{name}</span>
       <span className={styles.groupMembers}>{members} members</span>
     </div>
-    {joinable && !joined && <button className={styles.joinButton} onClick={onJoin}>Join</button>}
+    {joinable && !joined && (
+      <button
+        className={styles.joinButton}
+        onClick={(e) => {
+          e.stopPropagation();
+          onJoin();
+        }}
+      >
+        Join
+      </button>
+    )}
     {joinable && joined && <button className={styles.joinButton} disabled>Joined</button>}
     {!joinable && <ChevronRight className={styles.groupArrow} />}
   </li>
@@ -85,12 +96,6 @@ const GroupsSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGroup, i
     fetchGroups();
   }, [feedStyle, myGroups, setIsLoading]);
 
-  useEffect(() => {
-    if (!isLoading && groupList.length > 0) {
-      setActiveGroup(groupList[0]);
-    }
-  }, [isLoading, groupList, setActiveGroup]);
-
   const handleGroupJoin = async (groupId) => {
     try {
       const token = localStorage.getItem('token');
@@ -110,6 +115,7 @@ const GroupsSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGroup, i
       const newGroup = groupList.find(group => group._id === groupId);
       if (newGroup) {
         setMyGroups([...myGroups, newGroup]);
+        setActiveGroup(newGroup); 
       }
       console.log('Successfully joined group:', result);
     } catch (err) {
@@ -209,6 +215,7 @@ const GroupsSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGroup, i
 };
 
 export default GroupsSidebar;
+
 
 
 

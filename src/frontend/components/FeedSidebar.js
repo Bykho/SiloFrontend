@@ -1,12 +1,13 @@
-
-
 import React from 'react';
+import { Compass, Flame, ArrowBigUp, Home } from 'lucide-react';
 import styles from './feedSidebar.module.css';
 
-const SidebarItem = ({ icon, text, onClick, isActive }) => (
+const SidebarItem = ({ Icon, text, onClick, isActive }) => (
   <li className={`${styles.sidebarItem} ${isActive ? styles.active : ''}`} onClick={onClick}>
     <a href="#" className={styles.sidebarLink}>
-      <span className={styles.sidebarIcon}>{icon}</span>
+      <span className={styles.sidebarIcon}>
+        <Icon size={20} />
+      </span>
       <span className={styles.sidebarText}>{text}</span>
     </a>
   </li>
@@ -15,17 +16,18 @@ const SidebarItem = ({ icon, text, onClick, isActive }) => (
 const FeedSidebar = ({ feedStyle, setFeedStyle }) => {
   return (
     <div className={styles.sidebar}>
-      <h2 className={styles.sidebarTitle}>MY FEED</h2>
+      <h2 className={styles.sidebarTitle}>Feed</h2>
       <ul className={styles.sidebarMenu}>
-        <SidebarItem icon="🧭" text="Explore" onClick={() => setFeedStyle('explore')} isActive={feedStyle === 'explore'} />
-        <SidebarItem icon="🔥" text="Trending" onClick={() => setFeedStyle('trending')} isActive={feedStyle === 'trending'} />
-        <SidebarItem icon="🚀" text="Most Upvoted" onClick={() => setFeedStyle('mostUpvoted')} isActive={feedStyle === 'mostUpvoted'} />
-        <SidebarItem icon="🏠" text="For You" onClick={() => setFeedStyle('forYou')} isActive={feedStyle === 'forYou'} />
-        <SidebarItem icon="👥" text="Groups" onClick={() => setFeedStyle('groups')} isActive={feedStyle === 'groups'} />
+        <SidebarItem Icon={Compass} text="Explore" onClick={() => setFeedStyle('explore')} isActive={feedStyle === 'explore'} />
+        <SidebarItem Icon={Flame} text="Trending" onClick={() => setFeedStyle('trending')} isActive={feedStyle === 'trending'} />
+        <SidebarItem Icon={ArrowBigUp} text="Most Upvoted" onClick={() => setFeedStyle('mostUpvoted')} isActive={feedStyle === 'mostUpvoted'} />
+        <SidebarItem Icon={Home} text="For You" onClick={() => setFeedStyle('forYou')} isActive={feedStyle === 'forYou'} />
       </ul>
+      <div className={styles.sidebarFooter}>
+        <p> More features coming soon!</p>
+      </div>
     </div>
   );
 };
 
 export default FeedSidebar;
-

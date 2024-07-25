@@ -35,14 +35,14 @@ const NavigationBar = () => {
     <div className={styles.nav}>
       {user ? (
         <>
-          <a href="/siloDescription" className={styles.siloButton} onClick={() => handleLinkClick('other')}>S i l o _ Beta</a>
+          <a href="/siloDescription" className={styles.siloButton} onClick={() => handleLinkClick('other')}>Silo_Beta</a>
           <div>
             <a
               href="/feed"
               className={`${styles.button} ${activeLink === 'feed' ? styles.clickedButton : ''}`}
               onClick={() => handleLinkClick('feed')}
             >
-              <IoNewspaperOutline className={styles.icon} /> feed
+              <IoNewspaperOutline className={styles.icon} /> Feed
             </a>
             <a
               href="/groups"
@@ -56,14 +56,14 @@ const NavigationBar = () => {
               className={`${styles.button} ${(activeLink === 'folio' && currentPath !== '/siloDescription') ? styles.clickedButton : ''}`}
               onClick={() => handleLinkClick('folio')}
             >
-              <LuUserSquare2 className={styles.icon} /> profile
+              <LuUserSquare2 className={styles.icon} /> Profile
             </a>
             <a
               href="/GenDirectory"
               className={`${styles.button} ${activeLink === 'find' ? styles.clickedButton : ''}`}
               onClick={() => handleLinkClick('find')}
             >
-              <PiAddressBook className={styles.icon} /> network
+              <PiAddressBook className={styles.icon} /> Network
             </a>
             <button
               onClick={handleLogout}

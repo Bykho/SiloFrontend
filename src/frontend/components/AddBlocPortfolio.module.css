@@ -106,6 +106,18 @@
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+.headerTextArea {
+  width: auto;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  background-color: var(--input-bg);
+  color: var(--primary-text);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
 .cellTypeSelect {
   cursor: pointer;
   width: 100%;
@@ -194,7 +206,8 @@
   justify-content: space-between;
   width: 100%;
   border-bottom: 1px solid var(--border-color); 
-  padding-bottom: 1.2rem; /* Add padding to create space between border and content */
+  padding-bottom: 1.2rem;
+
 }
 
 .cellTypeSelect {
@@ -599,10 +612,10 @@
 }
 
 
-
 .headerButtons {
   display: flex;
   align-items: center;
+  justify-content: flex-end; /* This will right-align the content */
   gap: 20px; /* Adjust as needed */
 }
 
@@ -612,6 +625,7 @@
   color: white;
   padding: 15px;
   border-radius: 5px;
+  min-height: 10px;
   cursor: pointer;
   font-size: 20px;
   white-space: nowrap;
