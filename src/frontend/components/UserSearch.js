@@ -170,7 +170,7 @@ const UserCard = ({ user, navigate, fetchProjectsForUser }) => {
           {user.orgs ? user.orgs.join(', ') : 'No orgs listed'}
         </p>
       </div>
-      <button className={styles.viewProfileButton} onClick={() => navigate(`/profile/${user.username}`)}>
+      <button className={styles.viewProfileButton} onClick={() => navigate(`/profile/${user._id}`)}>
         View Profile
       </button>
     </div>
