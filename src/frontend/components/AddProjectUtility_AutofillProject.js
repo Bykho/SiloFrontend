@@ -31,6 +31,7 @@ const AutofillProjectFromPDF = ({ setProjectName, setProjectDescription, setTags
         const parsedData = data;
         const parsedSummary = parsedData.surrounding_summary;
         const parsedSuggestedLayers = parsedData.summary_content;
+        console.log('AutofillProjectFromPDF here parsedSuggestedLayers: ', parsedSuggestedLayers)
         return { summary: parsedSummary, layers: parsedSuggestedLayers };
       } catch (jsonError) {
         console.error('Failed to parse JSON:', jsonError);
