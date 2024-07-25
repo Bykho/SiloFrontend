@@ -6,6 +6,7 @@ import styles from './studentProfile.module.css'; // Import the CSS module
 import { useUser } from '../../contexts/UserContext';
 import ProfileHeader from '../../components/ProfileHeader';
 import AddBlocPortfolio from '../../components/AddBlocPortfolio';
+import AddProject from '../../components/AddProjectComponent/AddProject';
 import InfoEditor from '../OLDStudentProfileEditorPage/StudentProfileEditor';
 import ShareablePreview from '../../components/ShareablePreview';
 import GitPull from '../../components/GitPull';
@@ -243,7 +244,7 @@ function StudentProfile() {
         <div className={styles.modal}>
           <div className={styles.modalContent}>
             <button className={styles.closeButton} onClick={handleCloseModal}><FaWindowClose /></button>
-            <AddBlocPortfolio 
+            <AddProject 
               onSave={handleSaveProject} 
               initialRows={selectedGitFiles.length > 0 ? [selectedGitFiles] : []}
               onClose={handleCloseModal}
