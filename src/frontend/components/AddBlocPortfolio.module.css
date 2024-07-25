@@ -194,7 +194,8 @@
   justify-content: space-between;
   width: 100%;
   border-bottom: 1px solid var(--border-color); 
-  padding-bottom: 1.2rem; /* Add padding to create space between border and content */
+  padding-bottom: 1.2rem;
+
 }
 
 .cellTypeSelect {
@@ -599,10 +600,10 @@
 }
 
 
-
 .headerButtons {
   display: flex;
   align-items: center;
+  justify-content: flex-end; /* This will right-align the content */
   gap: 20px; /* Adjust as needed */
 }
 
