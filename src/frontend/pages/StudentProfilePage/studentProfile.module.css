@@ -163,19 +163,19 @@
   
   @media (min-width: 768px) {
     .modalContent {
-      width: 80%; /* Adjust width for larger screens */
+      width: 90%; /* Adjust width for larger screens */
     }
   }
   
   @media (min-width: 1024px) {
     .modalContent {
-      width: 80%; /* Adjust width for even larger screens */
+      width: 90%; /* Adjust width for even larger screens */
     }
   }
   
   @media (min-width: 1280px) {
     .modalContent {
-      width: 80%; /* Adjust width for even larger screens */
+      width: 90%; /* Adjust width for even larger screens */
     }
   }
   

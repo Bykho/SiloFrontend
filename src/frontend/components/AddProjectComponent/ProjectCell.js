@@ -2,22 +2,28 @@ import React from 'react';
 import { FaTrash, FaArrowsAlt } from 'react-icons/fa';
 import styles from './addProject.module.css';
 
-const ProjectCell = ({ cell, rowIndex, cellIndex, handleCellTypeChange, handleCellValueChange, handleFileChange, handleLanguageChange, handleHeaderChange, handleRemoveCell, handleMoveClick, isValidURL }) => {
+const ProjectCell = ({ 
+  cell, 
+  rowIndex, 
+  cellIndex, 
+  handleCellTypeChange, 
+  handleCellValueChange, 
+  handleFileChange, 
+  handleLanguageChange, 
+  handleHeaderChange, 
+  handleRemoveCell, 
+  handleMoveClick, 
+  isValidURL 
+}) => {
   return (
     <div className={styles.cell}>
       <div className={styles.cellHeader}>
-        <select
-          value={cell.type}
-          onChange={(e) => handleCellTypeChange(rowIndex, cellIndex, e.target.value)}
-          className={styles.cellTypeSelect}
-        >
-          <option value="">Select Type</option>
-          <option value="text">Text</option>
-          <option value="image">Image</option>
-          <option value="video">Video</option>
-          <option value="pdf">PDF</option>
-          <option value="code">Code</option>
-        </select>
+      <textarea
+            value={cell.textHeader || ''}
+            onChange={(e) => handleHeaderChange(rowIndex, cellIndex, e.target.value)}
+            placeholder="Enter section title"
+            className={styles.headerTextArea}
+          />
         <button 
           className={styles.moveCellButton}
           onClick={() => handleMoveClick(rowIndex, cellIndex)}
@@ -34,12 +40,6 @@ const ProjectCell = ({ cell, rowIndex, cellIndex, handleCellTypeChange, handleCe
       {cell.type === 'text' && (
         <>
           <textarea
-            value={cell.textHeader || ''}
-            onChange={(e) => handleHeaderChange(rowIndex, cellIndex, e.target.value)}
-            placeholder="Enter section title"
-            className={styles.headerTextArea}
-          />
-          <textarea
             value={cell.value || ''}
             onChange={(e) => handleCellValueChange(rowIndex, cellIndex, e.target.value)}
             placeholder="Enter section text"
@@ -48,13 +48,15 @@ const ProjectCell = ({ cell, rowIndex, cellIndex, handleCellTypeChange, handleCe
         </>
       )}
       {cell.type === 'image' && (
-        <div className={styles.fileUploadContainer}>
-          <input
-            type="file"
-            onChange={(e) => handleFileChange(rowIndex, cellIndex, e.target.files[0])}
-            accept="image/*"
-            className={styles.fileInput}
-          />
+        <div className={`${styles.fileUploadContainer} ${isValidURL(cell.value) ? styles.noMargin : ''}`}>
+            {!isValidURL(cell.value) && (
+            <input
+              type="file"
+              onChange={(e) => handleFileChange(rowIndex, cellIndex, e.target.files[0])}
+              accept="image/*"
+              className={styles.fileInput}
+            />
+          )}
           {isValidURL(cell.value) && (
             <div className={styles.previewContainer}>
               <img src={cell.value} alt="Preview" className={styles.preview} />
@@ -95,7 +97,7 @@ const ProjectCell = ({ cell, rowIndex, cellIndex, handleCellTypeChange, handleCe
       {cell.type === 'code' && (
         <>
           <select
-            value={cell.language}
+            value={cell.language || ''}
             onChange={(e) => handleLanguageChange(rowIndex, cellIndex, e.target.value)}
             className={styles.languageSelect}
           >

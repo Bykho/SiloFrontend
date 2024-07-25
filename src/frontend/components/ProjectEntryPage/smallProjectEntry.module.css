@@ -306,8 +306,10 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: #333333;
+  color: white;
   transition: color 0.2s ease;
+  background-color: rgb(255, 47, 0);
+  border-radius: 30px;
 }
 
 .closeButton:hover {
