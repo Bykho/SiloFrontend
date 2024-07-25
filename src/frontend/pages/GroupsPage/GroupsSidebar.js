@@ -1,6 +1,5 @@
 
 
-// GroupsSidebar.js
 import React, { useState, useEffect } from 'react';
 import { Search, Users, Compass, Star, ChevronRight } from 'lucide-react';
 import styles from './groupssidebar.module.css';
@@ -95,6 +94,12 @@ const GroupsSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGroup, i
     };
     fetchGroups();
   }, [feedStyle, myGroups, setIsLoading]);
+
+  useEffect(() => {
+    if (!activeGroup && myGroups.length > 0) {
+      setActiveGroup(myGroups[0]);
+    }
+  }, [myGroups, activeGroup, setActiveGroup]);
 
   const handleGroupJoin = async (groupId) => {
     try {
@@ -215,6 +220,7 @@ const GroupsSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGroup, i
 };
 
 export default GroupsSidebar;
+
 
 
 

@@ -215,3 +215,10 @@
     background-color: #8fb8d9;
     border-radius: 3px;
   }
+
+
+  .fileInput {
+    display: block;
+    margin: 20px 0;
+  }
+  

@@ -13,7 +13,7 @@ import config from '../../config';
 
 
 function OtherStudentProfile() {
-  const { username } = useParams(); // Get the username from the URL parameters
+  const { id } = useParams(); // Get the id from the URL parameters
   const navigate = useNavigate(); // Initialize navigate
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -24,12 +24,12 @@ function OtherStudentProfile() {
     const fetchUserData = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`${config.apiBaseUrl}/profile/${username}`, {
+        const response = await fetch(`${config.apiBaseUrl}/profile/${id}`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
           },
-        });
+        });        
         console.log('this is the useeffect userdata response: ', response)
         if (!response.ok) {
           throw new Error('Failed to fetch user data');
@@ -46,7 +46,7 @@ function OtherStudentProfile() {
     };
 
     fetchUserData();
-  }, [username]);
+  }, []);
 
   if (!user || !userData) {
     return <p> Loading ... </p>;
