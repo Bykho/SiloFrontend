@@ -35,7 +35,7 @@ const NavigationBar = () => {
     <div className={styles.nav}>
       {user ? (
         <>
-          <a href="/siloDescription" className={styles.siloButton} onClick={() => handleLinkClick('other')}>S i l o _ Beta</a>
+          <a href="/siloDescription" className={styles.siloButton} onClick={() => handleLinkClick('other')}>SILO_Beta</a>
           <div>
             <a
               href="/feed"
