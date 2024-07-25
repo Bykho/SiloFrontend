@@ -81,7 +81,10 @@ const LayerDisplay = ({ layers, isEditing, toggleEdit, updateLayer, updateProjec
           {layer.map((column, columnIndex) => (
             <div key={columnIndex} className={styles.column}>
               {column.type === 'text' && (
+                <div className={styles.textContainer}>
+                <div className={styles.textHeader}>{column.textHeader}</div>
                 <div className={styles.text}>{column.value}</div>
+                </div>
               )}
               {column.type === 'image' && (
                 <div 

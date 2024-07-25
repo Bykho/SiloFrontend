@@ -228,6 +228,12 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
     setRows(newRows);
   };
 
+  const handleHeaderChange = (rowIndex, cellIndex, textHeader) => {
+    const newRows = [...rows];
+    newRows[rowIndex][cellIndex] = { ...newRows[rowIndex][cellIndex], textHeader};
+    setRows(newRows);
+  };
+
   const handleCloseModal = () => {
     setShowDeleteModal(false);
   };
@@ -328,12 +334,21 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
                     </button>
                   </div>
                   {cell.type === 'text' && (
+                    <>
+                      <textarea
+                      value={cell.textHeader || ''}
+                      onChange={(e) => handleHeaderChange(rowIndex, cellIndex, e.target.value)}
+                      placeholder="Enter section title"
+                      className={styles.headerTextArea}
+                    />
+  
                     <textarea
                       value={cell.value || ''}
                       onChange={(e) => handleCellValueChange(rowIndex, cellIndex, e.target.value)}
-                      placeholder="Enter text"
+                      placeholder="Enter section text"
                       className={styles.cellTextArea}
                     />
+                 </>
                   )}
                   {cell.type === 'image' && (
                     <div className={styles.fileUploadContainer}>
