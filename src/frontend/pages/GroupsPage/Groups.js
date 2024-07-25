@@ -22,6 +22,13 @@ const Groups = () => {
   const [activeGroup, setActiveGroup] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const updateGroupProjects = (newProjects) => {
+    setActiveGroup((prevGroup) => ({
+      ...prevGroup,
+      projects: [...prevGroup.projects, ...newProjects],
+    }));
+  };
+
   const handleSearch = (e) => {
     if (e) e.preventDefault();
     setSearchText(inputText);
@@ -30,7 +37,7 @@ const Groups = () => {
   return (
     <div className={styles.feedContainer}>
       <div className={styles.topBar}>
-        {activeGroup && <GroupDisplay group={activeGroup} setGroupsDisplayStyle={setGroupsDisplayStyle}/>}
+        {activeGroup && <GroupDisplay group={activeGroup} setGroupsDisplayStyle={setGroupsDisplayStyle} updateGroupProjects={updateGroupProjects}/>}
       </div>
 
       <div className={styles.feedBottomContainer}>

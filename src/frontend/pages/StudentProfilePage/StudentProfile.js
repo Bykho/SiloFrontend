@@ -106,7 +106,6 @@ function StudentProfile() {
         cellType = 'text';
         language = '';
       }
-
       return {
         type: cellType,
         value: file.content,
