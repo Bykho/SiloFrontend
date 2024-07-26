@@ -84,7 +84,7 @@ const UserSearch = () => {
 
   return (
     <div className={styles.feedContainer}>
-      <h1 className={styles.title}>User Directory</h1>
+      <h1 className={styles.title}>Directory</h1>
       <div className={styles.searchSection}>
         <form onSubmit={handleSearch} className={styles.searchBar}>
           <Search className={styles.searchIcon} />
@@ -154,8 +154,8 @@ const UserCard = ({ user, navigate, fetchProjectsForUser }) => {
         </div>
       </div>
       <div className={styles.userDetails}>
-        <p>
-          <FaAward size={16} /> Score: {totalUpvotes*10}
+        <p className={styles.score}>
+          <FaAward className={styles.scoreIcon}/> Score: {totalUpvotes*10}
         </p>
         <p>
           <Mail size={16} />
