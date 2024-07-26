@@ -13,7 +13,7 @@ function SiloDescription() {
   }, []);
 
   const handleCreateProjectClick = () => {
-    navigate('/studentProfile', { state: { buildPortfolio: true } }); // Navigate to /studentProfile
+    navigate('/studentProfile'); // Navigate to /studentProfile
   };
 
   return (

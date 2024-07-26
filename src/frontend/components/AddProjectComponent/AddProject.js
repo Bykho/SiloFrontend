@@ -69,7 +69,19 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
     }
   };
 
-  const handleSave = async (projectData, token, onSave) => {
+  const handleSave = async () => {
+    const projectData = {
+      projectName,
+      projectDescription,
+      layers: layers,
+      tags,
+      links,
+      username: user.username
+    };
+    if (initialProjectData._id) {
+      projectData._id = initialProjectData._id;
+    }
+    const token = localStorage.getItem('token');
     try {
       const response = await fetch(`${config.apiBaseUrl}/addBlocProject`, {
         method: 'POST',
@@ -83,7 +95,7 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
         const savedProject = await response.json();
         alert('Project saved successfully');
         if (onSave) {
-          if (projectData._id) {
+          if (initialProjectData._id) {
             onSave(savedProject.layers, savedProject);
           } else {
             onSave(savedProject);
@@ -96,7 +108,6 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
       console.error('Error saving project:', error);
     }
   };
-
   const handleDelete = async (projectId, userId, token, onClose) => {
     try {
       const response = await fetch(`${config.apiBaseUrl}/deleteProject`, {

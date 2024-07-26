@@ -75,22 +75,37 @@ const NavigationBar = () => {
         </>
       ) : (
         <>
-          <a href="/siloDescription" className={styles.siloButton} onClick={() => handleLinkClick('other')}>S i l o</a>
+          <a href="/siloDescription" className={styles.siloButton} onClick={() => handleLinkClick('other')}>Silo_Beta</a>
           <div>
             <a
               href="/feed"
               className={`${styles.button} ${activeLink === 'feed' ? styles.clickedButton : ''}`}
-              onClick={() => handleLinkClick('feed')}
             >
-              <IoHomeOutline className={styles.icon} /> feed
+              <IoNewspaperOutline className={styles.icon} /> Feed
             </a>
             <a
-              href="/login"
-              className={`${styles.button} ${activeLink === 'login' ? styles.clickedButton : ''}`}
-              onClick={() => handleLinkClick('login')}
+              href="/groups"
+              className={`${styles.button} ${activeLink === 'groups' ? styles.clickedButton : ''}`}
             >
-              <IoLogInOutline className={styles.icon} /> login
+              <FaUserGroup className={styles.icon} /> Groups
             </a>
+            <a
+              href="/studentProfile"
+              className={`${styles.button} ${(activeLink === 'folio' && currentPath !== '/siloDescription') ? styles.clickedButton : ''}`}
+            >
+              <LuUserSquare2 className={styles.icon} /> Profile
+            </a>
+            <a
+              href="/GenDirectory"
+              className={`${styles.button} ${activeLink === 'find' ? styles.clickedButton : ''}`}
+            >
+              <PiAddressBook className={styles.icon} /> Network
+            </a>
+            <button
+              className={`${styles.logoutButton} ${activeLink === 'logout' ? styles.clickedButton : ''}`}
+            >
+              <IoLogOutOutline className={styles.logoutIcon} />
+            </button>
           </div>
         </>
       )}
