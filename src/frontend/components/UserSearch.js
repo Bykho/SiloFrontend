@@ -19,7 +19,6 @@ const UserSearch = () => {
   const [error, setError] = useState('');
   const [value, setValue] = useState('student');
   const [searchText, setSearchText] = useState('');
-  const { user } = useUser();
 
   useEffect(() => {
     if (location.state && location.state.skill) {
@@ -85,7 +84,7 @@ const UserSearch = () => {
 
   return (
     <div className={styles.feedContainer}>
-      <h1 className={styles.title}>User Directory</h1>
+      <h1 className={styles.title}>Directory</h1>
       <div className={styles.searchSection}>
         <form onSubmit={handleSearch} className={styles.searchBar}>
           <Search className={styles.searchIcon} />
@@ -110,7 +109,7 @@ const UserSearch = () => {
           <p className={styles.errorMessage}>{error}</p>
         ) : (
           users.map((specificUser, index) => (
-            <UserCard key={index} user={specificUser} navigate={navigate} fetchProjectsForUser={fetchProjectsForUser} />
+            <UserCard user={specificUser} navigate={navigate} fetchProjectsForUser={fetchProjectsForUser} />
           ))
         )}
       </div>
@@ -155,8 +154,8 @@ const UserCard = ({ user, navigate, fetchProjectsForUser }) => {
         </div>
       </div>
       <div className={styles.userDetails}>
-        <p>
-          <FaAward size={16} /> Score: {totalUpvotes*10}
+        <p className={styles.score}>
+          <FaAward className={styles.scoreIcon}/> Score: {totalUpvotes*10}
         </p>
         <p>
           <Mail size={16} />
@@ -171,7 +170,7 @@ const UserCard = ({ user, navigate, fetchProjectsForUser }) => {
           {user.orgs ? user.orgs.join(', ') : 'No orgs listed'}
         </p>
       </div>
-      <button className={styles.viewProfileButton} onClick={() => navigate(`/profile/${user.username}`)}>
+      <button className={styles.viewProfileButton} onClick={() => navigate(`/profile/${user._id}`)}>
         View Profile
       </button>
     </div>

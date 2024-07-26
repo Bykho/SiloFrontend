@@ -3,6 +3,7 @@
   padding: 20px;
   border: 1px solid #e0e0e0;
   border-radius: 12px;
+  background-color: #e9eaec;
   background-color: #ffffff;
   color: #333333;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -19,6 +20,7 @@
   align-items: center;
   margin-bottom: 15px;
   cursor: pointer; 
+  margin-top: 5px; 
 }
 
 .upvotesContainer {
@@ -306,8 +308,10 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: #333333;
+  color: white;
   transition: color 0.2s ease;
+  background-color: rgb(255, 47, 0);
+  border-radius: 30px;
 }
 
 .closeButton:hover {

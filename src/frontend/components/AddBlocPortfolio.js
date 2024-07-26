@@ -276,15 +276,7 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
             setRows={setRows}
             setIsLoading={setIsLoading}
           />
-          <button 
-            className={styles.previewButton} 
-            onMouseEnter={() => setShowPreviewModal(true)}
-            onMouseLeave={() => setShowPreviewModal(false)}
-          >
-            Preview
-          </button>
         </div>
-        <p className={styles.subtitle}>Create a new project for your portfolio, edit an existing one or upload PDF to autofill text content</p>
         <div className={styles.projectInfo}>
           <input
             type="text"
@@ -300,8 +292,6 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
             className={styles.projectDescriptionInput}
           />
         </div>
-        <h1 className={styles.subTitle}> Project Content: </h1>
-        <p className={styles.subtitle}> Add up to 2 content blocks per row... </p>
         <div className={styles.rowsContainer}>
           {rows.map((row, rowIndex) => (
             <div key={rowIndex} className={styles.row}>
@@ -475,14 +465,6 @@ const AddBlocPortfolio = ({ initialRows = [], initialProjectData = {}, onSave = 
           <button onClick={() => handleMove('right')} disabled={selectedCell.cellIndex === rows[selectedCell.rowIndex].length - 1}><FaArrowRight /></button>
           <button onClick={() => handleMove('down')} disabled={selectedCell.rowIndex === rows.length - 1}><FaArrowDown /></button>
           <button onClick={() => setSelectedCell(null)}>Cancel</button>
-        </div>
-      )}
-      {showPreviewModal && (
-        <div className={styles.previewModal}>
-          <div className={styles.modalContent}>
-            <h2>Preview Content</h2>
-            <AddBlocPortfolioPreview project={previewProject} passedUser={user}/>
-          </div>
         </div>
       )}
     </div>

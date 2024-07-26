@@ -45,7 +45,7 @@ function App() {
             <Route path="/studentProfileEditor" element={<StudentProfileEditor />} />
             <Route path="/addBlockProject" element={<AddBlocPortfolio />} />
             <Route path="/GenDirectory" element={<ProtectedRoute component={GenDirectory} />} />
-            <Route path="/profile/:username" element={<ProtectedRoute component={OtherStudentProfile} />} />
+            <Route path="/profile/:id" element={<ProtectedRoute component={OtherStudentProfile} />} />
             <Route path="/groups" element={<Groups />} />
           </Routes>
         </div>
