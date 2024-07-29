@@ -4,7 +4,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import EditInPortfolio from '../EditInPortfolio';
-import AddProject from '../AddProjectComponent/AddProject';
 import styles from './projectEntry.module.css';
 import ProfileImage from '../ProfileImage';
 import LayerDisplay from './LayerDisplay';
@@ -140,7 +139,7 @@ const ProjectEntry = ({ project, passedUser, UpvoteButton }) => {
 
   const renderEditableField = (projectField) => {
     return isEditing && (
-      <AddProject
+      <EditInPortfolio
         project={localProject}
         projectField={projectField}
         project_id={localProject._id}
