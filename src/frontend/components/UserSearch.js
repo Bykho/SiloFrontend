@@ -164,10 +164,6 @@ const UserCard = ({ user, navigate, fetchProjectsForUser }) => {
           <Tag size={16} />
           {user.interests ? user.interests.join(', ') : 'No interests listed'}
         </p>
-        <p>
-          <Briefcase size={16} />
-          {user.orgs ? user.orgs.join(', ') : 'No orgs listed'}
-        </p>
       </div>
       <button className={styles.viewProfileButton} onClick={() => navigate(`/profile/${user._id}`)}>
         View Profile
