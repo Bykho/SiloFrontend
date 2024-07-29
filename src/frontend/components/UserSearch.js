@@ -84,7 +84,6 @@ const UserSearch = () => {
 
   return (
     <div className={styles.feedContainer}>
-      <h1 className={styles.title}>Directory</h1>
       <div className={styles.searchSection}>
         <form onSubmit={handleSearch} className={styles.searchBar}>
           <Search className={styles.searchIcon} />

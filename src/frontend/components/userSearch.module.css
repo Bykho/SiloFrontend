@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&family=Gruppo&family=Jacquard+24&family=Jacquarda+Bastarda+9&family=Jersey+10&family=Silkscreen:wght@400;700&display=swap');
+
 .feedContainer {
   padding: 1rem 2rem;
   background-color: #1e1e1e;
@@ -11,12 +13,14 @@
 }
 
 .title {
-  font-size: 4rem;
+  font-size: 3rem;
   margin: 0.5rem 0 1rem;
   color: #7faacb;
   text-align: left;
-  font-family: 'Jacquard 12';
-  letter-spacing: 10px;
+  font-family: 'Exo 2';
+  font-weight: light;
+  letter-spacing: 20px;
+  margin-bottom: 1rem;
 }
 
 .searchSection {
