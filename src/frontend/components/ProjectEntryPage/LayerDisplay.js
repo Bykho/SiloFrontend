@@ -74,6 +74,40 @@ const LayerDisplay = ({ layers, isEditing, toggleEdit, updateLayer, updateProjec
     );
   };
 
+  const getYouTubeEmbedUrl = (url) => {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    if (match && match[2].length === 11) {
+      return `https://www.youtube.com/embed/${match[2]}`;
+    }
+    return null;
+  };
+
+  const renderVideo = (videoSrc) => {
+    const youtubeEmbedUrl = getYouTubeEmbedUrl(videoSrc);
+    
+    if (youtubeEmbedUrl) {
+      return (
+        <iframe
+          width="100%"
+          height="315"
+          src={youtubeEmbedUrl}
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          className={styles.video}
+        ></iframe>
+      );
+    } else {
+      return (
+        <video controls className={styles.video}>
+          <source src={videoSrc} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      );
+    }
+  };
+
   return (
     <div className={styles.container}>
       {layers.map((layer, layerIndex) => (
@@ -114,10 +148,7 @@ const LayerDisplay = ({ layers, isEditing, toggleEdit, updateLayer, updateProjec
               )}
               {column.type === 'video' && (
                 <div className={styles.videoContainer}>
-                  <video controls className={styles.video}>
-                    <source src={column.value} type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
+                  {renderVideo(column.value)}
                 </div>
               )}
               {column.type === 'code' && (

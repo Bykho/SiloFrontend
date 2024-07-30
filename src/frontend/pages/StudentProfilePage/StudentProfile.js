@@ -12,7 +12,7 @@ import ShareablePreview from '../../components/ShareablePreview';
 import GitPull from '../../components/GitPull';
 import FileAutoFill from '../../components/FileAutofill';
 import config from '../../config';
-import { FaWindowClose, FaPlusSquare, FaRegEdit } from 'react-icons/fa';
+import { FaWindowClose, FaPlusSquare, FaRegEdit, FaRegShareSquare, FaGithub } from 'react-icons/fa';
 import { IoSparkles } from "react-icons/io5";
 
 function StudentProfile() {
@@ -30,6 +30,7 @@ function StudentProfile() {
   const navigate = useNavigate();
   const location = useLocation();
   const [selectedGitFiles, setSelectedGitFiles] = useState([]);
+  const [showCopiedConfirmation, setShowCopiedConfirmation] = useState(false);
 
   const languageLookup = {
     js: 'javascript',
@@ -49,6 +50,18 @@ function StudentProfile() {
     php: 'php',
     rs: 'rust',
     // Add more mappings as needed
+  };
+
+  const handleShareProfile = () => {
+    const currentUrl = window.location.href;
+    navigator.clipboard.writeText(currentUrl).then(() => {
+      setShowCopiedConfirmation(true);
+      setTimeout(() => {
+        setShowCopiedConfirmation(false);
+      }, 2000); // Hide the confirmation after 2 seconds
+    }).catch((err) => {
+      console.error('Failed to copy URL: ', err);
+    });
   };
 
   const fetchUserData = async () => {
@@ -212,19 +225,12 @@ function StudentProfile() {
         error={error}
       />
       <div className={styles.buttonContainer}>
-        {showProjectButtons ? (
-          <div className={styles.buttonContainer}>
-            <button className={styles.bigButton} onClick={handleBuildFromScratchClick}>Build From Scratch</button>
-            <button className={styles.bigButton} onClick={handleAutofillClick}>Autofill</button>
-            <button className={styles.bigButton} onClick={handleBackButtonClick}>Back</button>
-          </div>
-        ) : (
           <>
-            <button className={styles.bigButton} onClick={handleAddProjectClick}> <FaPlusSquare /> Add New Project</button>
+            <button className={styles.bigButtonAdd} onClick={handleBuildFromScratchClick}> <FaPlusSquare /> Add New Project</button>
+            <button className={styles.bigButton} onClick={handleCheckGithubClick}> <FaGithub /> Connect GitHub</button>
             <button className={styles.bigButton} onClick={handleEditProfileClick}> <FaRegEdit /> Edit My Profile</button>
-            <button className={styles.bigButton} onClick={handleCheckGithubClick}> <IoSparkles /> Generate Projects from GitHub</button>
+            <button className={styles.bigButton} onClick={handleShareProfile}> <FaRegShareSquare /> Share My Profile</button>
           </>
-        )}
       </div>
       <div className={styles.contentContainer}>
         {loading ? (
@@ -293,6 +299,10 @@ function StudentProfile() {
           setShowAutofillModal(false);
           fetchUserData();
         }} />
+      )}
+
+      {showCopiedConfirmation && (
+        <div className={styles.copyConfirmation}>URL copied to clipboard!</div>
       )}
     </div>
   );

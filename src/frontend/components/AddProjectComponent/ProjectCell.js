@@ -15,6 +15,16 @@ const ProjectCell = ({
   handleMoveClick, 
   isValidURL 
 }) => {
+
+  const getYouTubeEmbedUrl = (url) => {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    if (match && match[2].length === 11) {
+      return `https://www.youtube.com/embed/${match[2]}`;
+    }
+    return null;
+  };
+
   return (
     <div className={styles.cell}>
       <div className={styles.cellHeader}>
@@ -67,14 +77,23 @@ const ProjectCell = ({
       {cell.type === 'video' && (
         <div className={styles.fileUploadContainer}>
           <input
-            type="file"
-            onChange={(e) => handleFileChange(rowIndex, cellIndex, e.target.files[0])}
-            accept="video/*"
-            className={styles.fileInput}
+            type="text"
+            value={cell.value || ''}
+            onChange={(e) => handleCellValueChange(rowIndex, cellIndex, e.target.value)}
+            placeholder="Enter YouTube URL"
+            className={styles.urlInput}
           />
-          {isValidURL(cell.value) && (
+          {cell.value && getYouTubeEmbedUrl(cell.value) && (
             <div className={styles.previewContainer}>
-              <video src={cell.value} controls className={styles.preview} />
+              <iframe
+                width="560"
+                height="315"
+                src={getYouTubeEmbedUrl(cell.value)}
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className={styles.preview}
+              ></iframe>
             </div>
           )}
         </div>

@@ -40,6 +40,18 @@
     gap: 10px;
     width: 99%; 
   }
+
+  .copyConfirmation {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: opacity 0.3s ease-in-out;
+  }
   
   .button {
     font-family: inconsolata;
@@ -90,7 +102,43 @@
   .bigButton:active {
     transform: translateY(2px);
   }
+
+  .bigButtonAdd {
+    display: inline-block;
+    font-family: inconsolata;
+    margin-right: 5px; /* Adjust margin to make buttons less wide */
+    margin-bottom: 0px;
+    padding: 8px 16px;
+    background-color: #2e3e50;
+    color: #D9D9D9;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    height: 60px;
+    width: calc(100% / 2 - 30px); /* Adjusted calculation */
+    font-size: 20px;
+    margin-left: 20px; /* Adjust margin to make buttons less wide */
+    transition: background-color 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid #c3c3c3;
+    justify-content: center;
+    gap: 10px; 
+  }
+
+  .bigButtonAdd:hover {
+    background-color: #537c9b;
+    color: white;
+  }
   
+  .bigButtonAdd:focus {
+    outline: none;
+  }
+  
+  .bigButton:active {
+    transform: translateY(2px);
+  }
+
   .button:hover {
     background-color: #7FAACB;
   }
