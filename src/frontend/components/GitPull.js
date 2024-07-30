@@ -127,7 +127,6 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
     );
 
     // Prepare data for API request
-    //WHY ARE WE SENDING THE GITHUB USERNAME????
     const requestData = {
       user: githubUsername,
       projects: selectedProjects
@@ -148,13 +147,21 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
 
       const result = await response.json();
       console.log('API response:', result);
-
+      console.log('API response.summary_content: ', result.summary_content)
+      if (!Array.isArray(result.summary_content)) {
+        console.log('summary_content is not an array');
+      }
 
       const combinedData = [
         ...selectedProjects,
-        ...result.summary.map(([key, value]) => ({ repoName: null, filePath: key, content: value, language: 'text' }))
+        ...result.summary_content.map(item => {
+          // Extract the key and value from the single key-value pair object
+          const key = Object.keys(item)[0];
+          const value = item[key];
+          return { repoName: null, filePath: key, content: value, language: 'text' };
+        })
       ];
-
+      console.log("GITPULL HANDLESUBMIT combinedData: ", combinedData)
 
       onPortfolioUpdate(combinedData);
     } catch (error) {
