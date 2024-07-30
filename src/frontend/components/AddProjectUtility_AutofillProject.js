@@ -184,7 +184,9 @@ const AutofillProjectFromPDF = ({ setProjectName, setProjectDescription, setTags
     let imageIndex = 0;
   
     paragraphs.forEach((paragraph, index) => {
-      currentRow.push({ type: 'text', value: paragraph.content });
+      const header = Object.keys(paragraph)[0];
+      const content = paragraph[header]
+      currentRow.push({ type: 'text', value: content, textHeader: header });
       if (imageIndex < images.length) {
         currentRow.push({ type: 'image', value: images[imageIndex] });
         imageIndex++;
@@ -194,7 +196,7 @@ const AutofillProjectFromPDF = ({ setProjectName, setProjectDescription, setTags
         currentRow = [];
       }
     });
-  
+    console.log('ADDPROJECTUTILITY_AUTOFILLPROJECT.JS here is rows: ', rows)
     return rows;
   };
 

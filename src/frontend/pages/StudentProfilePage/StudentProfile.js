@@ -31,6 +31,10 @@ function StudentProfile() {
   const location = useLocation();
   const [selectedGitFiles, setSelectedGitFiles] = useState([]);
 
+  useEffect(() => {
+    console.log('useEffect for selectedGitFiles, ', selectedGitFiles);
+  }, [selectedGitFiles]);
+
   const languageLookup = {
     js: 'javascript',
     jsx: 'javascript',
@@ -88,12 +92,44 @@ function StudentProfile() {
     return <p> Loading ... </p>;
   }
 
+  const structureLayers = (files) => {
+    const rows = [];
+    let currentRow = [];
+    files.forEach((file, index) => {
+      const isTextOrCode = ['text', 'code'].includes(file.type);
+      if (isTextOrCode) {
+        let fileObject;
+        if (file.type === 'text') {
+          fileObject = {
+            type: file.type,
+            value: file.value,
+            textHeader: file.filePath
+          };
+        } else if (file.type === 'code') {
+          fileObject = {
+            type: file.type,
+            value: file.value,
+            textHeader: file.filePath,
+            language: file.language
+          };
+        }
+        currentRow.push(fileObject);
+        if (currentRow.length === 2 || index === files.length - 1) {
+          rows.push(currentRow);
+          currentRow = [];
+        }
+      }
+    });
+    return rows;
+  };
+
   const handleGitPullUpdate = (selectedProjects) => {
     const processedFiles = selectedProjects.map(file => {
+      console.log('STUDENTPROFILE HANDLEGITPULLUPDATE these is file: ', file);
       const extension = file.filePath.split('.').pop().toLowerCase();
       let cellType = 'code';
       let language = languageLookup[extension] || extension;
-
+  
       if (['txt', 'md'].includes(extension)) {
         cellType = 'text';
         language = '';
@@ -111,11 +147,18 @@ function StudentProfile() {
       return {
         type: cellType,
         value: file.content,
-        language: language
+        language: language,
+        filePath: file.filePath
       };
     });
-
-    setSelectedGitFiles(processedFiles);
+    
+    console.log('STUDENTPROFILE HANDLEGITPULLUPDATE these is processedFiles: ', processedFiles);
+  
+    const updatedFiles = structureLayers(processedFiles);
+    console.log('STUDENTPROFILE HANDLEGITPULLUPDATE these is updatedFiles: ', updatedFiles);
+  
+    setSelectedGitFiles(updatedFiles);
+    console.log('selectedGitFiles after update:', updatedFiles);
     setShowGitPull(false);
     setShowModal(true);
   };
@@ -247,9 +290,10 @@ function StudentProfile() {
         <div className={styles.modal}>
           <div className={styles.modalContent}>
             <button className={styles.closeButton} onClick={handleCloseModal}><FaWindowClose /></button>
+            {console.log('Passing initialRows to AddProject:', selectedGitFiles)}
             <AddProject 
               onSave={handleSaveProject} 
-              initialRows={selectedGitFiles.length > 0 ? [selectedGitFiles] : []}
+              initialRows={selectedGitFiles.length > 0 ? selectedGitFiles : []}
               onClose={handleCloseModal}
             />
           </div>

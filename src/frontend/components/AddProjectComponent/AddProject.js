@@ -12,6 +12,8 @@ import { FaFont, FaImage, FaVideo, FaFilePdf, FaCode } from 'react-icons/fa';
 
 const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, onClose = null }) => {
   const [layers, setRows] = useState(initialRows.length ? initialRows : []);
+  console.log('AddProject initialRows:', initialRows);
+  console.log('AddProject layers after initialization:', layers);
   const [needsReorganization, setNeedsReorganization] = useState(true);
   const [projectName, setProjectName] = useState(initialProjectData?.projectName || '');
   const [projectDescription, setProjectDescription] = useState(initialProjectData?.projectDescription || '');
