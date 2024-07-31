@@ -8,7 +8,6 @@ const PublicPortfolioDisplay = ({ user }) => {
   return (
     <div className={styles.container}>
       <div className={styles.projectDirectory}>
-        <h3 className={styles.projectsTitle}>Projects</h3>
         {user.portfolio.map((project, index) => (
           <PublicSmallProjectEntry
             key={index}
