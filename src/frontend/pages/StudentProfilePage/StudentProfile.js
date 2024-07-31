@@ -56,17 +56,35 @@ function StudentProfile() {
     // Add more mappings as needed
   };
 
-  const handleShareProfile = () => {
-    const currentUrl = window.location.href;
-    navigator.clipboard.writeText(currentUrl).then(() => {
-      setShowCopiedConfirmation(true);
-      setTimeout(() => {
-        setShowCopiedConfirmation(false);
-      }, 2000); // Hide the confirmation after 2 seconds
-    }).catch((err) => {
-      console.error('Failed to copy URL: ', err);
-    });
+
+  const handleShareProfile = async () => {
+    try {
+      const response = await fetch(`${config.apiBaseUrl}/toggleShareProfile`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + localStorage.getItem('token'),
+        },
+        body: JSON.stringify({ user_id: user._id }),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to share profile');
+      }
+      const modifiedUsername = user.username.replace(/ /g, "_");
+      const currentUrl = `${window.location.origin}/public/${modifiedUsername}/${user._id}`;
+      navigator.clipboard.writeText(currentUrl).then(() => {
+        setShowCopiedConfirmation(true);
+        setTimeout(() => {
+          setShowCopiedConfirmation(false);
+        }, 2000); // Hide the confirmation after 2 seconds
+      }).catch((err) => {
+        console.error('Failed to copy URL: ', err);
+      });
+    } catch (err) {
+      console.error('Error sharing profile: ', err);
+    }
   };
+  
 
   const fetchUserData = async () => {
     try {

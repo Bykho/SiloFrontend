@@ -1,0 +1,77 @@
+
+
+/* publicProfile.module.css */
+
+.container {
+    background-color: #252525;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 0 auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .loading, .error {
+    font-size: 18px;
+    color: #333;
+    text-align: center;
+    margin-top: 50px;
+  }
+  
+  .profileHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 10px;
+  }
+  
+  .profileHeader h1 {
+    font-size: 24px;
+    color: #333;
+    margin: 0;
+  }
+  
+  .profileDetails {
+    margin-bottom: 20px;
+  }
+  
+  .profileDetails p {
+    font-size: 18px;
+    color: #555;
+    margin: 5px 0;
+  }
+  
+  .portfolio {
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .portfolio h2 {
+    font-size: 22px;
+    color: #333;
+    margin-bottom: 15px;
+  }
+  
+  .portfolioItem {
+    background-color: #fafafa;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .portfolioItem p {
+    font-size: 16px;
+    color: #666;
+  }
+  
+  .profileNotFound {
+    font-size: 18px;
+    color: #ff0000;
+    text-align: center;
+    margin-top: 50px;
+  }
+
+  
+  
