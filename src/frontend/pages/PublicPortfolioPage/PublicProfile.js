@@ -1,8 +1,10 @@
 
+
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import config from '../../config';
 import ProfileHeader from '../../components/ProfileHeader'; // Import the ProfileHeader component
+import PublicPortfolioDisplay from './PublicPortfolioDisplay'; // Import the PublicPortfolioDisplay component
 import styles from './publicProfile.module.css'; // Import the CSS module
 
 const PublicProfile = () => {
@@ -49,14 +51,8 @@ const PublicProfile = () => {
             {/* Add other details here */}
           </div>
           <div className={styles.portfolio}>
-            <h2>Portfolio</h2>
-            {profileData.portfolio.map((item, index) => (
-              <div key={index} className={styles.portfolioItem}>
-                <p>{JSON.stringify(item)}</p>
-              </div>
-            ))}
+            <PublicPortfolioDisplay user={profileData} /> {/* Use PublicPortfolioDisplay */}
           </div>
-          {/* Add other fields you want to display */}
         </div>
       ) : (
         <p className={styles.profileNotFound}>Profile not found or not shared.</p>

@@ -1,34 +1,28 @@
 
 
 import React, { useState, useEffect, useRef } from 'react';
-import { FaComment, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { IoIosExpand } from 'react-icons/io';
 import styles from './publicSmallProjectEntry.module.css';
 import config from '../../config';
-import ProjectEntry from '../../components/ProjectEntryPage/ProjectEntry';
+import ProjectEntry from './PublicProjectEntry';
 
 const PublicSmallProjectEntry = ({ project }) => {
-  const [isEditing, setIsEditing] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [showFullContent, setShowFullContent] = useState(false);
   const [localProject, setLocalProject] = useState(project);
-  const modalRef = useRef(null);
-  const descriptionRef = useRef(null);
-  const imageRef = useRef(null);
   const [showPopup, setShowPopup] = useState(false);
 
-  const [comments, setComments] = useState(() => {
-    try {
-      return JSON.parse(JSON.stringify(project.comments));
-    } catch (e) {
-      console.error('Failed to parse comments:', e);
-      return [];
-    }
-  });
+  const imageRef = useRef(null);
+
+  useEffect(() => {
+    setLocalProject(project);
+  }, [project]);
+
+  const toggleExpand = () => setIsExpanded(!isExpanded);
+  const togglePopup = () => setShowPopup(!showPopup);
 
   const renderDescription = () => (
     <div className={styles.descContainer}>
-      <div ref={descriptionRef} className={styles.description}>
+      <div className={styles.description}>
         {localProject.projectDescription}
       </div>
     </div>
@@ -69,20 +63,6 @@ const PublicSmallProjectEntry = ({ project }) => {
     );
   };
 
-  const renderComments = () => {
-    if (!isExpanded) return null;
-    return (
-      <div className={styles.commentSection}>
-        {comments.map((comment, index) => (
-          <div key={index} className={styles.comment}>
-            <p>{comment.text}</p>
-            <p>by {comment.author}</p>
-          </div>
-        ))}
-      </div>
-    );
-  };
-
   return (
     <div className={styles.projectContainer}>
       <div className={styles.headerContainer}>
@@ -112,20 +92,10 @@ const PublicSmallProjectEntry = ({ project }) => {
             <button className={styles.closeButton} onClick={togglePopup}>
               &times;
             </button>
-            <ProjectEntry project={project} passedUser={user} />
+            <ProjectEntry project={project} />
           </div>
         </div>
       )}
-      <div className={styles.commentBox} onClick={toggleExpand}>
-        <div className={styles.commentIconContainer}>
-          <FaComment className={styles.commentIcon} />
-          <span className={styles.commentText}>Comments...</span>
-        </div>
-        <button className={styles.expandButton} onClick={toggleExpand}>
-          {isExpanded ? <FaChevronUp /> : <FaChevronDown />}
-        </button>
-      </div>
-      {renderComments()}
     </div>
   );
 };

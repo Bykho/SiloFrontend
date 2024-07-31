@@ -1,0 +1,116 @@
+
+
+/* publicProjectEntry.module.css */
+
+.projectContainer {
+    border: 1px solid #ccc;
+    padding: 16px;
+    margin: 16px auto;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    max-width: 800px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .headerContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  
+  .titleAndUsernameContainer {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 8px;
+  }
+  
+  .projectTitle {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  .byUsername {
+    font-size: 1em;
+    color: #666;
+  }
+  
+  .username {
+    color: #007bff;
+  }
+  
+  .tagsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+  
+  .tag {
+    background-color: #007bff;
+    color: white;
+    padding: 4px 8px;
+    margin: 4px;
+    border-radius: 4px;
+    font-size: 0.875em;
+  }
+  
+  .projectDescriptionContainer {
+    margin-top: 16px;
+    margin-bottom: 16px;
+  }
+  
+  .projDescription {
+    font-size: 1em;
+    color: #333;
+    line-height: 1.5;
+  }
+  
+  .collapsedDescription {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  
+  .seeMoreButton {
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    padding: 0;
+    margin-top: 8px;
+    font-size: 0.875em;
+  }
+  
+  .divider {
+    height: 1px;
+    background-color: #ddd;
+    margin: 16px 0;
+  }
+  
+  .layerDisplayContainer {
+    margin-top: 16px;
+  }
+  
+  .buttonContainer {
+    margin-top: 16px;
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .linkButton {
+    display: flex;
+    align-items: center;
+    margin-right: 16px;
+    color: #007bff;
+    text-decoration: none;
+    font-size: 1em;
+    margin-bottom: 8px;
+  }
+  
+  .linkButton span {
+    margin-left: 8px;
+  }
+  
+  
