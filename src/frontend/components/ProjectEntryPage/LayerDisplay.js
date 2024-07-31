@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import AddBlocPortfolio from '../AddBlocPortfolio';
+import AddProject from '../AddProjectComponent/AddProject';
 import styles from './layerDisplay.module.css';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/vs.css';
@@ -171,7 +172,7 @@ const LayerDisplay = ({ layers, isEditing, toggleEdit, updateLayer, updateProjec
       {showEditor && (
         <div className={styles.modal} onClick={() => setShowEditor(false)}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-            <AddBlocPortfolio initialRows={layers} initialProjectData={initialProjectData} onSave={handleSave} onClose={handleClose} />
+            <AddProject initialRows={layers} initialProjectData={initialProjectData} onSave={handleSave} onClose={handleClose} />
             <button className={styles.closeButton} onClick={() => setShowEditor(false)}>×</button>
           </div>
         </div>
