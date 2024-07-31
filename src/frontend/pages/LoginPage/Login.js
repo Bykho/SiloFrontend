@@ -8,6 +8,7 @@ import styles from './login.module.css';
 import GameOfLife from './GameOfLife';
 import { Mail, Lock, User } from 'lucide-react';
 import config from '../../config';
+import PasswordReset from './PasswordReset'; // Import the PasswordReset component
 
 
 const MobileMessage = ({ message }) => (
@@ -24,6 +25,7 @@ function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [showLoginForm, setShowLoginForm] = useState(false);
+  const [showPasswordReset, setShowPasswordReset] = useState(false);
   const navigate = useNavigate();
   const { login } = useUser();
 
@@ -54,6 +56,7 @@ function Login() {
   };
 
   const toggleLoginForm = () => setShowLoginForm(!showLoginForm);
+  const togglePasswordReset = () => setShowPasswordReset(!showPasswordReset); // Function to toggle the password reset modal
 
   return (
     <div style={{ position: 'relative', zIndex: 0 }}>
@@ -95,12 +98,14 @@ function Login() {
                     />
                   </div>
                   <button type="submit" className={`${styles.button} ${styles.submitButton}`}>Sign In</button>
+                  <button type="button" className={styles.forgotPasswordButton} onClick={togglePasswordReset}>Forgot Password?</button>
                 </form>
               </>
             )}
           </>
         )}
       </div>
+      {showPasswordReset && <PasswordReset onClose={togglePasswordReset} />} {/* Render the PasswordReset component */}
     </div>
   );
 }
