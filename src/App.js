@@ -17,6 +17,7 @@ import Login from './frontend/pages/LoginPage/Login';
 import GoLive from './frontend/pages/GoLivePage/GoLiveLandingPage'
 import GameofLife from './frontend/components/GameOfLife';
 import Groups from './frontend/pages/GroupsPage/Groups';
+import PublicProfile from './frontend/pages/PublicPortfolioPage/PublicProfile';
 import './App.css'; 
 
 import AddBlocPortfolio from './frontend/components/AddBlocPortfolio';
@@ -47,6 +48,7 @@ function App() {
             <Route path="/GenDirectory" element={<ProtectedRoute component={GenDirectory} />} />
             <Route path="/profile/:id" element={<ProtectedRoute component={OtherStudentProfile} />} />
             <Route path="/groups" element={<Groups />} />
+            <Route path="/public/:username/:user_id" element={<PublicProfile />} /> 
           </Routes>
         </div>
       </UserProvider>
@@ -56,9 +58,13 @@ function App() {
 
 function NavigationWithConditionalRender() {
   const location = useLocation();
-  const noNavBarPaths = ['/', '/login', '/SignUp'];
+  const noNavBarPaths = ['/', '/login', '/SignUp', '/public']; // Add /public to the noNavBarPaths
 
-  return !noNavBarPaths.includes(location.pathname) ? <NavigationBar /> : null;
+  // Check if the current pathname includes '/public/'
+  const isPublicProfile = location.pathname.includes('/public/');
+
+  // Conditionally render the NavigationBar component
+  return (!noNavBarPaths.includes(location.pathname) && !isPublicProfile) ? <NavigationBar /> : null;
 }
 
 export default App;
