@@ -3,14 +3,15 @@ import React, { useState, useEffect } from 'react';
 import styles from './groupDisplay.module.css';
 import Tagged from '../../components/TagsFeed';
 import config from '../../config';
+import { useUser } from '../../contexts/UserContext';
 
 const GroupsFeed = ({ group }) => {
   const [fullProjects, setFullProjects] = useState([]);
-
+  const [userUpvotes, setUserUpvotes] = useState([]);
+  const { user } = useUser();
 
   useEffect(() => {
     const fetchProjectsFromIds = async () => {
-      //console.log('here is fetchProjectsFromIds: ', group.projects);
       try {
         const token = localStorage.getItem('token');
         const response = await fetch(`${config.apiBaseUrl}/returnProjectsFromIds`, {
@@ -25,14 +26,42 @@ const GroupsFeed = ({ group }) => {
           throw new Error('Failed to fetch projects');
         }
         const returnedProjects = await response.json();
-        //console.log('here are returnedProjects in the fetchProjectFromIds', returnedProjects);
         setFullProjects(returnedProjects);
       } catch (err) {
         console.error('Error fetching projects:', err);
       }
     };
+
+    const fetchUpvotes = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found in local storage');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${config.apiBaseUrl}/getUserUpvotes`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({user_id: user._id})
+        });
+        const data = await response.json();
+        if (response.ok) {
+          setUserUpvotes(data.upvotes);
+        } else {
+          console.error('Failed to fetch upvotes:', data.message);
+        }
+      } catch (error) {
+        console.error('Error fetching upvotes:', error);
+      }
+    };
+
     fetchProjectsFromIds();
-  }, [group.projects]);
+    fetchUpvotes();
+  }, [group.projects, user]);
 
   //useEffect (() => {
   //  console.log('fullProjects in GroupsFeed.js: ', fullProjects)
@@ -45,7 +74,7 @@ const GroupsFeed = ({ group }) => {
   return (
     <div className={styles.groupContainer}>
         <div>
-            <Tagged filteredProjects={fullProjects}/>
+          <Tagged filteredProjects={fullProjects} userUpvotes={userUpvotes} setUserUpvotes={setUserUpvotes} />
         </div>
     </div>
   );

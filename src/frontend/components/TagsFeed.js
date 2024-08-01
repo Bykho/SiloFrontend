@@ -10,7 +10,7 @@ import SmallProjectEntry from './ProjectEntryPage/SmallProjectEntry';
 import config from '../config';
 import LoadingIndicator from './LoadingIndicator';
 
-const TagsFeed = ({ filteredProjects, loading= null, error=null }) => {
+const TagsFeed = ({ filteredProjects, loading = null, error = null, userUpvotes, setUserUpvotes }) => {
   const { user } = useUser();
 
   //useEffect(() => {
@@ -29,7 +29,7 @@ const TagsFeed = ({ filteredProjects, loading= null, error=null }) => {
         ) : (
           filteredProjects.map((project, index) => (
             <div key={index} className={styles.projectItem}>
-              {<SmallProjectEntry project={project}/>}
+              <SmallProjectEntry project={project} userUpvotes={userUpvotes} setUserUpvotes={setUserUpvotes} />
             </div>
           ))
         )}

@@ -10,7 +10,7 @@ import config from '../../config';
 import ProjectEntry from './ProjectEntry';
 import HandleUpvote from '../wrappers/HandleUpvote';
 
-const SmallProjectEntry = ({ project, UpvoteButton }) => {
+const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [showFullContent, setShowFullContent] = useState(false);
@@ -154,13 +154,6 @@ const SmallProjectEntry = ({ project, UpvoteButton }) => {
     );
   };
 
-  const findUpvoteOverlap = (user, localProject) => {
-    if (!user || !localProject || !Array.isArray(user.upvotes) || !Array.isArray(localProject.upvotes)) {
-      return false;
-    }
-    return user.upvotes.some((userUpvote) => localProject.upvotes.includes(userUpvote));
-  };
-
   return (
     <div className={styles.projectContainer}>
       <div className={styles.headerContainer}>
@@ -169,6 +162,8 @@ const SmallProjectEntry = ({ project, UpvoteButton }) => {
           setProject={setLocalProject}
           passedUser={localUser}
           setPassedUser={setLocalUser}
+          userUpvotes={userUpvotes}
+          setUserUpvotes={setUserUpvotes}
         />
         <div className={styles.titleAndUsernameContainer} onClick={togglePopup}>
           <h3 className={styles.projectTitle}>{localProject.projectName}</h3>
@@ -196,7 +191,7 @@ const SmallProjectEntry = ({ project, UpvoteButton }) => {
             <button className={styles.closeButton} onClick={togglePopup}>
               &times;
             </button>
-            <ProjectEntry project={project} passedUser={user} />
+            <ProjectEntry project={project} passedUser={user} userUpvotes={userUpvotes} setUserUpvotes={setUserUpvotes} />
           </div>
         </div>
       )}

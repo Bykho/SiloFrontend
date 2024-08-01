@@ -18,6 +18,7 @@ const Feed = () => {
   const [error, setError] = useState('');
   const [searchText, setSearchText] = useState('');
   const [inputText, setInputText] = useState('');
+  const [userUpvotes, setUserUpvotes] = useState([]);
   const { user } = useUser();
   const location = useLocation();
   const searchInputRef = useRef(null);
@@ -47,8 +48,39 @@ const Feed = () => {
         setLoading(false);
       }
     };
+
+    const fetchUpvotes = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found in local storage');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${config.apiBaseUrl}/getUserUpvotes`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ user_id: user._id })
+        });
+        const data = await response.json();
+        if (response.ok) {
+          setUserUpvotes(data.upvotes);
+        } else {
+          console.error('Failed to fetch upvotes:', data.message);
+        }
+      } catch (error) {
+        console.error('Error fetching upvotes:', error);
+      }
+    };
+
     fetchProjects();
-  }, []);
+    if (user) {
+      fetchUpvotes();
+    }
+  }, [user]);
 
   useEffect(() => {
     if (location.state && location.state.tag) {
@@ -147,7 +179,7 @@ const Feed = () => {
           <FeedSidebar feedStyle={feedStyle} setFeedStyle={setFeedStyle} />
         </div>
         <div className={styles.feedContent}>
-          <Tagged filteredProjects={filteredProjects} loading={loading} error={error} />
+          <Tagged filteredProjects={filteredProjects} loading={loading} error={error} userUpvotes={userUpvotes} setUserUpvotes={setUserUpvotes} />
         </div>
       </div>
     </div>

@@ -17,7 +17,7 @@ import HandleUpvote from '../wrappers/HandleUpvote';
 
 const isStudentProfilePage = window.location.pathname.includes('/studentProfile'); // Adjust this condition based on your routing
 
-const ProjectEntry = ({ project, passedUser, UpvoteButton }) => {
+const ProjectEntry = ({ project, passedUser, UpvoteButton, userUpvotes, setUserUpvotes }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [showDescription, setShowDescription] = useState(false);
@@ -218,11 +218,13 @@ const ProjectEntry = ({ project, passedUser, UpvoteButton }) => {
     <div className={styles.projectContainer}>
       <div className={styles.headerContainer}>
         <div className={styles.titleAndUsernameContainer}>
-            <UpvoteButton
+          <UpvoteButton
             project={localProject}
             setProject={setLocalProject}
             passedUser={localUser}
             setPassedUser={setLocalUser}
+            userUpvotes={userUpvotes}
+            setUserUpvotes={setUserUpvotes}
           />
           <h3 className={styles.projectTitle}>{localProject.projectName}</h3>
           <span className={styles.byUsername}>by <span className={styles.username}>{localProject.createdBy}</span></span>

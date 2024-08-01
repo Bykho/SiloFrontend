@@ -11,7 +11,7 @@ const HandleUpvote = (WrappedComponent) => {
   const HandleUpvoteComponent = (props) => {
     const { user, addUpvoteToUser } = useUser();
 
-    const handleUpvote = async (project, setProject, passedUser, setPassedUser) => {
+    const handleUpvote = async (project, setProject, passedUser, setPassedUser, userUpvotes, setUserUpvotes) => {
       const token = localStorage.getItem('token');
       if (!token) {
         console.error('No token found in local storage');
@@ -42,6 +42,7 @@ const HandleUpvote = (WrappedComponent) => {
             ...prevUser,
             upvotes: [...(prevUser.upvotes || []), actualUpvoteId],
           }));
+          setUserUpvotes((prevUpvotes) => [...prevUpvotes, actualUpvoteId]);
           console.log("Updating user context with upvotes:", actualUpvoteId);
           addUpvoteToUser(actualUpvoteId);
         } else {
@@ -52,20 +53,20 @@ const HandleUpvote = (WrappedComponent) => {
       }
     };
 
-    const findUpvoteOverlap = (project) => {
-      if (!user || !Array.isArray(user.upvotes) || !Array.isArray(project.upvotes)) {
+    const findUpvoteOverlap = (project, userUpvotes) => {
+      if (!user || !Array.isArray(userUpvotes) || !Array.isArray(project.upvotes)) {
         return false;
       }
-      return user.upvotes.some(userUpvote => project.upvotes.includes(userUpvote));
+      return userUpvotes.some(userUpvote => project.upvotes.includes(userUpvote));
     };
 
-    const UpvoteButton = ({ project, setProject, passedUser, setPassedUser }) => (
+    const UpvoteButton = ({ project, setProject, passedUser, setPassedUser, userUpvotes, setUserUpvotes }) => (
       <div className={styles.upvoteButtonBox}>
-        <p className={styles.upvoteNumber}> {project.upvotes ? project.upvotes.length : 0}</p>
+        <p className={styles.upvoteNumber}>{project.upvotes ? project.upvotes.length : 0}</p>
         <button
-          className={findUpvoteOverlap(project) ? styles.clickedUpvoteButton : styles.upvoteButton}
-          onClick={() => handleUpvote(project, setProject, passedUser, setPassedUser)}
-          disabled={findUpvoteOverlap(project)}
+          className={findUpvoteOverlap(project, userUpvotes) ? styles.clickedUpvoteButton : styles.upvoteButton}
+          onClick={() => handleUpvote(project, setProject, passedUser, setPassedUser, userUpvotes, setUserUpvotes)}
+          disabled={findUpvoteOverlap(project, userUpvotes)}
         >
           <BiSolidUpvote />
         </button>
