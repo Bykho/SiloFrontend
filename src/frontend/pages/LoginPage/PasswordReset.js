@@ -84,16 +84,17 @@ function PasswordReset({ onClose }) {
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
-        <button className={styles.closeButton} onClick={onClose}>X</button>
+        <button className={styles.closeButton} onClick={onClose}>x</button>
         {step === 1 && (
           <form onSubmit={handleEmailSubmit}>
             <h2>Reset Password</h2>
             <input 
               type="email" 
-              placeholder="Input email associated with account" 
+              placeholder="Enter email" 
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              className ={styles.submitEmail}
             />
             <button type="submit">Submit</button>
           </form>
