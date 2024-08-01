@@ -6,12 +6,17 @@
   background-color: #e9eaec;
   background-color: #ffffff;
   color: #333333;
+  border: 4px solid rgba(59, 137, 255, 0); 
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.3s ease;
+  transition: border 0.3s ease;
 }
 
 .projectContainer:hover {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  border: 4px solid rgba(59, 137, 255, 0.7); 
+  border-radius: 10px;
+  transition: border 0.3s ease;
 }
 
 .headerContainer {
@@ -132,6 +137,10 @@
   max-height: 250px;
 }
 
+.descAndPreviewContainer:hover{
+  cursor: pointer;
+}
+
 .descContainer {
   flex: 1;
   width: 50%;
@@ -192,16 +201,15 @@
 }
 
 .previewText {
-  font-size: 0.9rem;
-  color: #333;
-  text-align: center;
-  max-height: 200px;
+  line-height: 2;
+  color: #555;
+  height: 100%;
   overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 8;
-  -webkit-box-orient: vertical;
-  width: 100%;
+  position: relative;
+  text-align: justify;
+  text-justify: inter-word;
+  margin-left: 20px;
+  margin-right: 20px;
 }
 
 .seeMoreButton {
@@ -290,7 +298,6 @@
 }
 
 .popupContent {
-  background-color: #ffffff;
   padding: 20px;
   border-radius: 12px;
   width: 90%;

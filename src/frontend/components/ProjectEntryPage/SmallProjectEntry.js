@@ -137,7 +137,7 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
       <div className={styles.preview}>
         {imgSrc && <img ref={imageRef} src={imgSrc} alt="Project Preview" className={styles.previewImage} />}
         {!imgSrc && textContent && <p className={styles.previewText}>{textContent}</p>}
-        {!imgSrc && !textContent && <p>No preview available</p>}
+        {!imgSrc && !textContent && <p></p>}
       </div>
     );
   };
@@ -176,15 +176,12 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
         </div>
       </div>
       <div className={styles.divider} />
-      <div className={styles.descAndPreviewContainer}>
+      <div className={styles.descAndPreviewContainer} onClick={togglePopup}>
         {renderDescription()}
         <div className={styles.previewContainer}>
           {renderContentPreview()}
         </div>
       </div>
-      <button className={styles.seeMoreButton} onClick={togglePopup}>
-        <IoIosExpand /> See Full Project
-      </button>
       {showPopup && (
         <div className={styles.popupOverlay}>
           <div className={styles.popupContent}>
