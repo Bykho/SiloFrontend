@@ -31,6 +31,7 @@ const PublicSmallProjectEntry = ({ project }) => {
   const renderContentPreview = () => {
     let imgSrc = null;
     let textContent = null;
+    console.log('localProject.tags', localProject.tags);
 
     for (let layer of localProject.layers) {
       for (let cell of layer) {
@@ -68,7 +69,6 @@ const PublicSmallProjectEntry = ({ project }) => {
       <div className={styles.headerContainer}>
         <div className={styles.titleAndUsernameContainer} onClick={togglePopup}>
           <h3 className={styles.projectTitle}>{localProject.projectName}</h3>
-          <span className={styles.byUsername}>by <span className={styles.username}>{localProject.createdBy}</span></span>
         </div>
         <div className={styles.tagsContainer}>
           {localProject.tags?.map((tag, index) => (
@@ -77,15 +77,12 @@ const PublicSmallProjectEntry = ({ project }) => {
         </div>
       </div>
       <div className={styles.divider} />
-      <div className={styles.descAndPreviewContainer}>
+      <div className={styles.descAndPreviewContainer} onClick={togglePopup} >
         {renderDescription()}
         <div className={styles.previewContainer}>
           {renderContentPreview()}
         </div>
       </div>
-      <button className={styles.seeMoreButton} onClick={togglePopup}>
-        <IoIosExpand /> See Full Project
-      </button>
       {showPopup && (
         <div className={styles.popupOverlay}>
           <div className={styles.popupContent}>

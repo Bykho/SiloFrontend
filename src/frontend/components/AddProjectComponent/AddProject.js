@@ -225,7 +225,7 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
   };
 
   const handleTagsChange = (e) => {
-    setTags(e.target.value.split(',').map(tag => tag.trim()));
+    setTags(e.target.value.split(',').map(tags => tags.trim()));
   };
 
   const handleLinksChange = (e) => {

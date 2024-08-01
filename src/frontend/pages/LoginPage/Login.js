@@ -62,8 +62,8 @@ function Login() {
     <div style={{ position: 'relative', zIndex: 0 }}>
       <GameOfLife />
       <div className={styles.container}>
-        <img src={`${config.apiBaseUrl}/static/images/silo_logo.png`} alt="Logo" className={styles.logo} />
-        <div className={styles.siloStyle}>S    i   l    o</div>
+      <img src="/silo_logo.png" alt="Silo Logo" className={styles.logo} />
+      <div className={styles.siloStyle}>S    i   l    o</div>
         {isMobile ? (
           <MobileMessage message="While we're in beta, please use a laptop or desktop computer for the best experience."/>
         ) : (

@@ -1,0 +1,387 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin: 0 auto;
+  background-color: #1e1e1e;
+  color: #e1e1e1;
+}
+
+.layer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.textContainer{
+  display: flex;
+  flex-direction: column;
+}
+
+.textHeader{
+  font-size: 24px;
+  font-weight: bold;
+  color: #70b9e3;
+  padding: 1.5rem 1.5rem 0 1.5rem; 
+}
+
+.textHeader:empty{
+  padding: 0; 
+}
+
+.column {
+  flex: 1 1 300px;
+  background-color: #2d2d2d;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.column:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+.text, .editableText {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #e1e1e1;
+  padding: 1.5rem;
+  white-space: pre-wrap;
+  flex-grow: 1;
+  background-color: #2d2d2d;
+}
+
+.editableText:focus {
+  outline: 2px solid #70b9e3;
+  border-radius: 4px;
+}
+
+.imageContainer {
+  width: 100%;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  box-sizing: border-box;
+  background-color: #1e1e1e;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.image {
+  max-width: calc(100% - 20px);
+  max-height: calc(100% - 20px);
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.imageOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.expandIcon {
+  color: #70b9e3;
+  font-size: 24px;
+}
+
+.imageContainer:hover .imageOverlay {
+  opacity: 1;
+}
+
+.imageContainer:hover .image {
+  transform: scale(1.05);
+}
+
+.videoContainer, .pdfContainer {
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  position: relative;
+  overflow: hidden;
+  background-color: #1e1e1e;
+}
+
+.video, .pdf {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.editInput {
+  font-size: 16px;
+  line-height: 1.5;
+  padding: 0.75rem;
+  margin: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #444;
+  box-sizing: border-box;
+  width: calc(100% - 1rem);
+  transition: border-color 0.3s ease;
+  background-color: #2d2d2d;
+  color: #e1e1e1;
+}
+
+.editInput:focus {
+  outline: none;
+  border-color: #70b9e3;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  position: relative;
+  padding: 20px;
+  border-radius: 8px;
+  max-height: 80%;
+  overflow: auto;
+  width: 85%; 
+  background-color: #2d2d2d;
+}
+
+.modalImage {
+  max-width: 100%;
+  max-height: calc(80vh - 40px);
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}
+
+.closeButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #444;
+  border-radius: 5px;
+  border: none;
+  color: #70b9e3;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px;
+  line-height: 1;
+}
+
+/* Updated styles for code display */
+.codeContainer {
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  margin: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  position: relative;
+  max-height: 400px;
+}
+
+.codeContent {
+  display: flex;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  overflow: auto;
+  max-height: 100%;
+}
+
+.lineNumbers {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 1.4rem 10px 0.5rem 0;
+  border-right: 1px solid #444;
+  color: #666;
+  user-select: none;
+  text-align: right;
+  min-width: 25px;
+  background-color: #252525;
+  gap: 1.16px; 
+}
+
+.lineNumbers span {
+  height: 20px;
+  line-height: 20px;
+}
+
+.code {
+  flex: 1;
+  padding: 0.5rem 0 0.5rem 10px;
+  margin: 0;
+  overflow: visible;
+  background-color: transparent;
+}
+
+.code code {
+  display: block;
+  min-width: 100%;
+  padding: 0;
+  margin: 0;
+  background-color: transparent !important;
+  white-space: pre;
+}
+
+/* Override highlight.js styles for dark mode */
+.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0;
+  background-color: transparent !important;
+  color: #e1e1e1;
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: #7a7a7a;
+  font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-subst {
+  color: #70b9e3;
+  font-weight: bold;
+}
+
+.hljs-number,
+.hljs-literal,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag .hljs-attr {
+  color: #e6db74;
+}
+
+.hljs-string,
+.hljs-doctag {
+  color: #a6e22e;
+}
+
+.hljs-title,
+.hljs-section,
+.hljs-selector-id {
+  color: #fd971f;
+  font-weight: bold;
+}
+
+.hljs-subst {
+  font-weight: normal;
+}
+
+.hljs-type,
+.hljs-class .hljs-title {
+  color: #66d9ef;
+  font-weight: bold;
+}
+
+.hljs-tag,
+.hljs-name,
+.hljs-attribute {
+  color: #f92672;
+  font-weight: normal;
+}
+
+.hljs-regexp,
+.hljs-link {
+  color: #ae81ff;
+}
+
+.hljs-symbol,
+.hljs-bullet {
+  color: #66d9ef;
+}
+
+.hljs-built_in,
+.hljs-builtin-name {
+  color: #a6e22e;
+}
+
+.hljs-meta {
+  color: #7a7a7a;
+  font-weight: bold;
+}
+
+.hljs-deletion {
+  background: #75715e;
+}
+
+.hljs-addition {
+  background: #46830c;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .layer {
+    flex-direction: column;
+  }
+
+  .column {
+    flex-basis: 100%;
+  }
+
+  .imageContainer {
+    height: 250px;
+  }
+
+  .modalContent {
+    max-width: 90%;
+    max-height: 90%;
+  }
+
+  .modalImage {
+    max-height: calc(90vh - 40px);
+  }
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #383838;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #666;
+  border-radius: 6px;
+  border: 3px solid #383838;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #888;
+}

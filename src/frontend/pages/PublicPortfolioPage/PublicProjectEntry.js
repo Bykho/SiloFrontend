@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './publicProjectEntry.module.css';
-import LayerDisplay from '../../components/ProjectEntryPage/LayerDisplay';
+import PublicLayerDisplay from './PublicLayerDisplay';
 import { FaEdit, FaGithub, FaGlobe, FaLink } from 'react-icons/fa';
 import config from '../../config';
 
@@ -128,7 +128,6 @@ const PublicProjectEntry = ({ project }) => {
       <div className={styles.headerContainer}>
         <div className={styles.titleAndUsernameContainer}>
           <h3 className={styles.projectTitle}>{localProject.projectName}</h3>
-          <span className={styles.byUsername}>by <span className={styles.username}>{localProject.createdBy}</span></span>
         </div>
         <div className={styles.tagsContainer}>
           {localProject.tags?.map((tag, index) => (
@@ -138,7 +137,7 @@ const PublicProjectEntry = ({ project }) => {
       </div>
       {renderProjectDescription()}
       <div className={styles.layerDisplayContainer}>
-        <LayerDisplay layers={localProject.layers} isEditing={isEditing} toggleEdit={toggleEdit} updateLayer={updateLayer} updateProjectDetails={updateProjectDetails} initialProjectData={localProject} />
+        <PublicLayerDisplay layers={localProject.layers} isEditing={isEditing} toggleEdit={toggleEdit} updateLayer={updateLayer} updateProjectDetails={updateProjectDetails} initialProjectData={localProject} />
       </div>
       <div className={styles.buttonContainer}>
         {localProject.links && localProject.links.map((link, index) => (renderLinkButton(link)))}

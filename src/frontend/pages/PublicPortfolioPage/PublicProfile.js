@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import config from '../../config';
-import ProfileHeader from '../../components/ProfileHeader'; // Import the ProfileHeader component
+import PublicProfileHeader from './PublicProfileHeader'; // Import the ProfileHeader component
 import PublicPortfolioDisplay from './PublicPortfolioDisplay'; // Import the PublicPortfolioDisplay component
 import styles from './publicProfile.module.css'; // Import the CSS module
 
@@ -46,7 +46,7 @@ const PublicProfile = () => {
     <div className={styles.container}>
       {profileData ? (
         <div>
-          <ProfileHeader userData={profileData} loading={loading} error={error} /> {/* Use ProfileHeader */}
+          <PublicProfileHeader userData={profileData} loading={loading} error={error} /> {/* Use ProfileHeader */}
           <div className={styles.profileDetails}>
             {/* Add other details here */}
           </div>
