@@ -133,7 +133,7 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
     };
 
     try {
-      const response = await fetch(`${config.apiBaseUrl}/autofillCodeProject`, {
+      const response = await fetch(`${config.apiBaseUrl}/groqAutofillCodeProject`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -148,9 +148,12 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
       const result = await response.json();
       console.log('API response:', result);
       console.log('API response.summary_content: ', result.summary_content)
+      console.log('API response surrounding_summary: ', result.surrounding_summary)
       if (!Array.isArray(result.summary_content)) {
         console.log('summary_content is not an array');
       }
+
+
 
       const combinedData = [
         ...selectedProjects,
@@ -163,7 +166,7 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
       ];
       console.log("GITPULL HANDLESUBMIT combinedData: ", combinedData)
 
-      onPortfolioUpdate(combinedData);
+      onPortfolioUpdate(combinedData, result.surrounding_summary);
     } catch (error) {
       console.error('Error adding projects to portfolio:', error);
       alert('Failed to add projects to portfolio. Please try again.');

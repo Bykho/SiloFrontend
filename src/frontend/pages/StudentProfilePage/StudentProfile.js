@@ -30,6 +30,7 @@ function StudentProfile() {
   const navigate = useNavigate();
   const location = useLocation();
   const [selectedGitFiles, setSelectedGitFiles] = useState([]);
+  const [selectedGitSurroundingInfo, setSelectedGitSurroundingInfo] = useState({});
   const [showCopiedConfirmation, setShowCopiedConfirmation] = useState(false);
 
   useEffect(() => {
@@ -154,9 +155,9 @@ function StudentProfile() {
     return rows;
   };
 
-  const handleGitPullUpdate = (selectedProjects) => {
+  const handleGitPullUpdate = (selectedProjects, surroundingInfo) => {
     const processedFiles = selectedProjects.map(file => {
-      console.log('STUDENTPROFILE HANDLEGITPULLUPDATE these is file: ', file);
+      console.log('STUDENTPROFILE HANDLEGITPULLUPDATE these is file being sent from the backend: ', file);
       const extension = file.filePath.split('.').pop().toLowerCase();
       let cellType = 'code';
       let language = languageLookup[extension] || extension;
@@ -190,6 +191,7 @@ function StudentProfile() {
   
     setSelectedGitFiles(updatedFiles);
     console.log('selectedGitFiles after update:', updatedFiles);
+    setSelectedGitSurroundingInfo(surroundingInfo);
     setShowGitPull(false);
     setShowModal(true);
   };
@@ -318,6 +320,7 @@ function StudentProfile() {
             <AddProject 
               onSave={handleSaveProject} 
               initialRows={selectedGitFiles.length > 0 ? selectedGitFiles : []}
+              initialProjectData={selectedGitSurroundingInfo}
               onClose={handleCloseModal}
             />
           </div>
