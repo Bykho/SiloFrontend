@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './GoLiveLandingPage.module.css';
 import config from '../../config';
-import GameOfLife from './GameOfLife';
+import GameOfLife from '../LoginPage/GameOfLife';
 
 function GoLiveLanding() {
   const [accessKey, setAccessKey] = useState('');
@@ -73,7 +73,7 @@ function GoLiveLanding() {
       <GameOfLife />
       <div className={styles.centralContainer}>
         <div className={styles.container}>
-          <h2 className={styles.subtitle}>Have an Access Key?</h2>
+          <h2 className={styles.subtitle}>Have An Access Key?</h2>
           {error && <p className={styles.errorText}>{error}</p>}
           <form onSubmit={handleSubmit} className={styles.form}>
             <div className={styles.inputContainer}>
@@ -89,7 +89,7 @@ function GoLiveLanding() {
           </form>
         </div>
         <div className={styles.container}>
-          <h2 className={styles.subtitle}>No key? Join the waitlist!</h2>
+          <h2 className={styles.subtitle}>No Key? Join The waitlist!</h2>
           <form onSubmit={handleWaitlistSubmit} className={styles.form}>
             <div className={styles.inputContainer}>
               <input 

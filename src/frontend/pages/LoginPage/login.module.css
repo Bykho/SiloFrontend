@@ -13,10 +13,10 @@ body, html {
   max-width: 400px;
   background-color: rgba(45, 45, 45, 0.3) !important;
   border-radius: 24px;
-  box-shadow: 0 0 20px rgba(0, 11, 31, 0.4);
+  box-shadow: 0 0 70px rgba(90, 105, 113, 0.3);
   text-align: center;
   color: #E0E0E0;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(4px);
 }
 
 .logo {
@@ -89,7 +89,7 @@ body, html {
 }
 
 .loginButton, .createButton, .submitButton {
-  background-color: #1e1e1e !important;
+  background-color: #454545 !important;
 }
 
 .formInfoContainer {

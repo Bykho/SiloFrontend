@@ -6,6 +6,8 @@ import {PiAddressBookLight, PiAddressBook} from 'react-icons/pi'; // Import new 
 import { LuUserSquare2 } from 'react-icons/lu';
 import { FaUserGroup } from 'react-icons/fa6';
 import styles from './NavigationBar.module.css';
+import SiloBetaButton from './AnimatedSiloButton';
+
 
 const NavigationBar = () => {
   const { user, logout, activeLink, setActiveLink } = useUser();
@@ -35,7 +37,7 @@ const NavigationBar = () => {
     <div className={styles.nav}>
       {user ? (
         <>
-          <a href="/siloDescription" className={styles.siloButton} onClick={() => handleLinkClick('other')}>Silo_Beta</a>
+          <SiloBetaButton onClick={() => handleLinkClick('other')} />
           <div>
             <a
               href="/feed"

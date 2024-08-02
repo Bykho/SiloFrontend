@@ -1,0 +1,125 @@
+.siloButton {
+    color: rgb(241, 240, 240); 
+    background: linear-gradient(135deg, #4c7a9d, #244782);
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 20px;
+    font-family: "Inconsolata", system-ui;
+    margin: 5px;
+    margin-left: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(38, 141, 226, 0.3);
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    width: 228px;
+    text-align: center;
+    letter-spacing: 10px;
+    border: none;
+    outline: none;
+  }
+  
+  .siloButton::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(315deg, #ffffff, #2196f3);
+    z-index: -1;
+    filter: blur(10px);
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+  }
+  
+  .siloButton:hover::before {
+    opacity: 1;
+  }
+  
+  .siloButton:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 12px rgba(33, 150, 243, 0.4);
+  }
+  
+  .siloButton:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px rgba(33, 150, 243, 0.4);
+  }
+  
+  .buttonText {
+    position: relative;
+    z-index: 2;
+    display: inline-block;
+  }
+  
+  .letter {
+    display: inline-block;
+    transition: transform 0.3s ease, text-shadow 0.3s ease;
+  }
+  
+  .siloButton:hover .letter {
+    transform: translateY(-2px);
+    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.5);
+  }
+  
+  .gameOfLife {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.2;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .row {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .cell {
+    width: 4px;
+    height: 4px;
+    margin: 1px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+  }
+  
+  .alive {
+    animation: pulse 2s infinite;
+  }
+  
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+  }
+  
+  @keyframes glowing {
+    0% { text-shadow: 0 0 5px rgba(255, 255, 255, 0.7); }
+    50% { text-shadow: 0 0 20px rgba(255, 255, 255, 0.9); }
+    100% { text-shadow: 0 0 5px rgba(255, 255, 255, 0.7); }
+  }
+  
+  .siloButton:hover .buttonText {
+    animation: glowing 2s infinite;
+  }
+  
+  @media (max-width: 768px) {
+    .siloButton {
+      width: calc(50% - 10px);
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .siloButton {
+      width: 100%;
+    }
+  }
