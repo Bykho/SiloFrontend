@@ -1,0 +1,215 @@
+.sidebar {
+    width: 320px;
+    height: 100vh;
+    background-color: #1a1a1a;
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  
+  .sidebarMenu {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .sidebarItem {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .sidebarItem:hover {
+    background-color: #2a2a2a;
+  }
+  
+  .sidebarItem.active {
+    background-color: #3a3a3a;
+  }
+  
+  .sidebarItem svg {
+    margin-right: 12px;
+  }
+  
+  .divider {
+    height: 1px;
+    background-color: #3a3a3a;
+    margin: 16px 0;
+  }
+  
+  .groupsHeader {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    font-weight: 600;
+    padding: 0 20px 16px;
+    margin: 0;
+  }
+  
+  .groupsHeader svg {
+    margin-right: 8px;
+  }
+  
+  .searchContainer {
+    display: flex;
+    align-items: center;
+    padding: 8px 20px;
+    background-color: #2a2a2a;
+    margin-bottom: 16px;
+  }
+  
+  .searchContainer input {
+    width: 100%;
+    padding: 8px;
+    border: none;
+    background-color: transparent;
+    color: #ffffff;
+    font-size: 14px;
+    margin-left: 8px;
+  }
+  
+  .searchContainer input::placeholder {
+    color: #888;
+  }
+  
+  .groupsList {
+    padding: 0 20px;
+  }
+  
+  .groupSection {
+    margin-bottom: 16px;
+  }
+  
+  .groupsSubHeader {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #888;
+    margin: 16px 0 8px;
+    cursor: pointer;
+  }
+  
+  .groupsSubHeader svg {
+    margin-right: 4px;
+  }
+  
+  .groupList {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .groupItem {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .groupItem:hover {
+    background-color: #2a2a2a;
+  }
+  
+  .groupInfo {
+    display: flex;
+    align-items: flex-start;
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .groupIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background-color: #3a3a3a;
+    border-radius: 4px;
+    margin-right: 8px;
+    flex-shrink: 0;
+  }
+  
+  .groupDetails {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .groupName {
+    font-size: 14px;
+    font-weight: 500;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+  
+  .groupMembers {
+    font-size: 12px;
+    color: #888;
+  }
+  
+  .joinButtonContainer {
+    display: flex;
+    align-items: center;
+    margin-left: 8px;
+  }
+  
+  .joinButton {
+    background-color: #4a90e2;
+    color: #ffffff;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  
+  .joinButton:hover {
+    background-color: #3a7bc8;
+  }
+  
+  .joinedStatus {
+    font-size: 12px;
+    color: #4a90e2;
+    white-space: nowrap;
+  }
+  
+  /* Scrollbar styles */
+  .sidebar::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .sidebar::-webkit-scrollbar-track {
+    background: #1a1a1a;
+  }
+  
+  .sidebar::-webkit-scrollbar-thumb {
+    background-color: #3a3a3a;
+    border-radius: 3px;
+  }
+  
+  .sidebar::-webkit-scrollbar-thumb:hover {
+    background-color: #4a4a4a;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .sidebar {
+      width: 100%;
+      height: auto;
+    }
+  }
