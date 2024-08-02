@@ -12,7 +12,7 @@ const AutofillProjectFromPDF = ({ setProjectName, setProjectDescription, setTags
   async function handleFileSugUpload(text) {
     try {
       setIsLoading(true);
-      const response = await fetch(`${config.apiBaseUrl}/projectFileParser`, {
+      const response = await fetch(`${config.apiBaseUrl}/groqProjectFileParser`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

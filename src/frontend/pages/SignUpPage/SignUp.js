@@ -87,7 +87,7 @@ function SignUp() {
       const text = await pdfToText(file);
       setExtractedText(text);
 
-      const response = await fetch(`${config.apiBaseUrl}/resumeParser`, {
+      const response = await fetch(`${config.apiBaseUrl}/groqResumeParser`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -98,9 +98,10 @@ function SignUp() {
       if (response.ok) {
         const data = await response.json();
         console.log('Received summary:', data.summary);
-        const parsedSummary = JSON.parse(data.summary);
-        console.log('Parsed summary:', parsedSummary);
-        setSuggestedSummary(parsedSummary);
+        //const parsedSummary = JSON.parse(data.summary);
+        //console.log('Parsed summary:', parsedSummary);
+        //setSuggestedSummary(parsedSummary);
+        setSuggestedSummary(data.summary)
       } else {
         console.error('Failed to send extracted text to backend');
       }
@@ -169,6 +170,8 @@ function SignUp() {
         major: suggestedSummary.major || '',
         grad: suggestedSummary.grad_yr || ''
       }));
+
+      handleNext();
     }
   }, [suggestedSummary]);
 
