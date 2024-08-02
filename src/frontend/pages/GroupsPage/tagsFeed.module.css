@@ -1,0 +1,104 @@
+
+
+
+
+.feedContainer {
+    padding-left: 20px;
+    padding-right: 10px;
+    padding-bottom: 20px;
+    background-color: #1e1e1e;
+    font-family: 'Inconsolata';
+    width: 100%; 
+    margin: 0;
+    box-sizing: border-box;
+  }
+  
+  .searchBar {
+    display: flex;
+    margin-bottom: 20px;
+    background-color: #2d2d2d;
+    border-radius: 8px;
+    width: 100%;
+  }
+
+  .buttonContainer {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+    align-items: center;
+    width: 75%;
+  }
+
+  .searchInput {
+    width: 20px;
+    padding: 8px;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-top: 20px;
+    background-color: #6A6969;
+    border: none;
+    color: #E0E0E0;
+    padding: 10px;
+    width: 95%;
+    margin-bottom: 20px;
+    text-align: center;
+    transition: background-color 0.3s;
+
+  }
+
+  .navButton {
+    background-color: #555;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+}
+
+  .searchWords {
+    display: flex;
+    flex-wrap: nowrap;
+    font-size: 20px;
+    font-family: 'Inconsolata';
+    white-space: nowrap;
+    margin-left: 20px;
+    margin-top: 5px; 
+    margin-right: 20px;
+    color: rgb(251, 251, 251);
+  }
+  
+  .projectList {
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    width: 100%; 
+  }
+  
+  .projectItem {
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    padding: 0px 20px 0px 20px;
+    background-color: #333;
+    border-radius: 15px;
+    width: 97% ; 
+    box-sizing: border-box;
+  }
+
+.resultsCount {
+    font-size: auto;
+    font-family: 'Inconsolata';
+    color: rgb(167, 167, 167);
+    background-color: #484545;
+    margin-top: 25px;
+    margin-bottom: 30px;
+    margin-right: 20px;
+    margin-left: 30px; 
+    padding: 3px 10px;
+    border-radius: 8px;
+}
+

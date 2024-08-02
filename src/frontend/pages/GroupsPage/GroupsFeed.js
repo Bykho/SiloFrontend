@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import styles from './groupDisplay.module.css';
-import Tagged from '../../components/TagsFeed';
+import Tagged from './TagsFeed';
 import config from '../../config';
 import { useUser } from '../../contexts/UserContext';
 
