@@ -151,19 +151,9 @@ const Feed = () => {
   };
 
   return (
-    <div className={styles.feedContainer}>
-      <div className={styles.feedSidebar}>
-        <CombinedFeedSidebar
-          feedStyle={feedStyle}
-          setFeedStyle={setFeedStyle}
-          activeGroup={activeGroup}
-          setActiveGroup={setActiveGroup}
-        />
-      </div>
-      <div className={styles.feedMainContent}>
-        <div className={styles.headerBox}>
-          <h2>{getHeaderText()}</h2>
-        </div>
+    <div className={styles.parentContainer}>
+      <div className={styles.headerBox}>
+        <h2>{getHeaderText()}</h2>
         <div className={styles.searchBar}>
           <div className={styles.searchWords}>
             <FaSearch />
@@ -183,6 +173,17 @@ const Feed = () => {
             Results: {filteredProjects.length}
           </div>
         </div>
+      </div>
+    <div className={styles.feedContainer}>
+      <div className={styles.feedSidebar}>
+        <CombinedFeedSidebar
+          feedStyle={feedStyle}
+          setFeedStyle={setFeedStyle}
+          activeGroup={activeGroup}
+          setActiveGroup={setActiveGroup}
+        />
+      </div>
+      <div className={styles.feedMainContent}>
         <div className={styles.feedContent}>
           <Tagged
             filteredProjects={filteredProjects}
@@ -193,6 +194,7 @@ const Feed = () => {
           />
         </div>
       </div>
+    </div>
     </div>
   );
 };

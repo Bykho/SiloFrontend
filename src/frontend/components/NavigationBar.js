@@ -44,14 +44,7 @@ const NavigationBar = () => {
               className={`${styles.button} ${activeLink === 'feed' ? styles.clickedButton : ''}`}
               onClick={() => handleLinkClick('feed')}
             >
-              <IoNewspaperOutline className={styles.icon} /> Feed
-            </a>
-            <a
-              href="/groups"
-              className={`${styles.button} ${activeLink === 'groups' ? styles.clickedButton : ''}`}
-              onClick={() => handleLinkClick('groups')}
-            >
-              <FaUserGroup className={styles.icon} /> Groups
+              <IoNewspaperOutline className={styles.icon} /> Community
             </a>
             <a
               href="/studentProfile"
@@ -65,7 +58,7 @@ const NavigationBar = () => {
               className={`${styles.button} ${activeLink === 'find' ? styles.clickedButton : ''}`}
               onClick={() => handleLinkClick('find')}
             >
-              <PiAddressBook className={styles.icon} /> Network
+              <PiAddressBook className={styles.icon} /> Members
             </a>
             <button
               onClick={handleLogout}

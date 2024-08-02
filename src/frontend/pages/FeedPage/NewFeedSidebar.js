@@ -18,7 +18,6 @@ const GroupItem = ({ name, members, onClick, joinable = false, joined = false, o
       </div>
       <div className={styles.groupDetails}>
         <span className={styles.groupName}>{name}</span>
-        <span className={styles.groupMembers}>{members} members</span>
       </div>
     </div>
     <div className={styles.joinButtonContainer}>

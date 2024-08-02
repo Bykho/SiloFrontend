@@ -6,7 +6,7 @@
   --sidebar-main-gap: 30px;
   --main-bg-color: #121212;
   --sidebar-bg-color: #1A1A1A;
-  --header-bg-color: #1E1E1E;
+  --header-bg-color: #333333;
   --search-bg-color: #2D2D2D;
   --text-color: #E0E0E0;
   --secondary-text-color: #888;
@@ -17,6 +17,10 @@ body {
   padding: 0;
   background-color: var(--main-bg-color);
   color: var(--text-color);
+}
+
+.parentContainer {
+ background-color: none;
 }
 
 .feedContainer {
@@ -30,9 +34,6 @@ body {
 
 .feedSidebar {
   background-color: var(--sidebar-bg-color);
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding-right: var(--content-margin);
   box-sizing: border-box;
   flex-shrink: 0;
 }
@@ -50,8 +51,13 @@ body {
   background-color: var(--header-bg-color);
   border-radius: 8px;
   padding: 15px 20px;
+  width: 92%; 
+  margin-left: 15px;
+  margin-top: 10px; 
   color: white; 
-  margin-bottom: var(--content-margin);
+  display: flex; 
+  justify-content: space-between;
+  align-items: center;
 }
 
 .headerBox h2 {
@@ -68,7 +74,7 @@ body {
   background-color: var(--search-bg-color);
   border-radius: 8px;
   padding: 10px 15px;
-  margin-bottom: var(--content-margin);
+  width: 90%; 
 }
 
 .searchWords {
