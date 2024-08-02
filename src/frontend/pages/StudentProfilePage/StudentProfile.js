@@ -14,6 +14,9 @@ import FileAutoFill from '../../components/FileAutofill';
 import config from '../../config';
 import { FaWindowClose, FaPlusSquare, FaRegEdit, FaRegShareSquare, FaGithub } from 'react-icons/fa';
 import { IoSparkles } from "react-icons/io5";
+import { Plus, Edit2, Share } from 'lucide-react';
+import { LuGithub } from "react-icons/lu";
+import PublicProfileHeader from "../PublicPortfolioPage/PublicProfileHeader";
 
 function StudentProfile() {
   const [userData, setUserData] = useState(null);
@@ -289,10 +292,10 @@ function StudentProfile() {
       />
       <div className={styles.buttonContainer}>
           <>
-            <button className={styles.bigButtonAdd} onClick={handleBuildFromScratchClick}> <FaPlusSquare /> Add New Project</button>
-            <button className={styles.bigButton} onClick={handleCheckGithubClick}> <FaGithub /> Connect GitHub</button>
-            <button className={styles.bigButton} onClick={handleEditProfileClick}> <FaRegEdit /> Edit My Profile</button>
-            <button className={styles.bigButton} onClick={handleShareProfile}> <FaRegShareSquare /> Share My Profile</button>
+            <button className={styles.bigButton} onClick={handleBuildFromScratchClick}> <Plus /> Add New Project</button>
+            <button className={styles.bigButton} onClick={handleCheckGithubClick}> <LuGithub /> Connect GitHub</button>
+            <button className={styles.bigButton} onClick={handleEditProfileClick}> <Edit2 /> Edit My Profile</button>
+            <button className={styles.bigButton} onClick={handleShareProfile}> <Share /> Share My Profile</button>
           </>
       </div>
       <div className={styles.contentContainer}>

@@ -1,9 +1,8 @@
 .projectContainer {
   padding: 20px 35px 20px 35px;
-  border: 5px solid rgba(30, 127, 255, 0.5);
   border-radius: 8px;
-  background-color: #f7f7f7;
-  color: #1e1e1e;
+  background-color: #252525;
+  color: #d9d9d9;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
 }
@@ -236,9 +235,10 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  background-color: #f4f2f2;
+  background-color: #383838;
   padding: 5px 10px;
   border-radius: 5px;
+  height: 40px; 
   margin: 20px 0;
   flex-grow: 1;
   width: 100%;
@@ -251,7 +251,7 @@
 }
 
 .commentText {
-  color: #1e1e1e;
+  color: #b8b8b8;
   font-size: 1rem;
 }
 

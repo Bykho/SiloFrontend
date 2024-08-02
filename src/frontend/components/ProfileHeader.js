@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProfileImage from '../components/ProfileImage';
 import styles from './profileHeader.module.css';
-import { FaGithub, FaGlobe, FaLink } from 'react-icons/fa';
+import { FaGithub, FaGlobe, FaLink, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 
 const ProfileHeader = ({ userData, loading, error }) => {
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ const ProfileHeader = ({ userData, loading, error }) => {
   const [showResume, setShowResume] = useState(false);
 
   const BIO_LENGTH_LIMIT = 300;
-  const VISIBLE_TAGS = 2;
+  const VISIBLE_TAGS = 3;
 
   useEffect(() => {
     if (userData && userData.biography) {
@@ -105,17 +105,17 @@ const ProfileHeader = ({ userData, loading, error }) => {
             <h1 className={styles.userName}>{userData.username}</h1>
             <p className={styles.userInfo}>{userData.user_type} @ {userData.university} | {userData.major} {userData.grad}</p>
           </div>
-          <div className={styles.tagsContainer}>
+        </div>
+        <div className={styles.tagsContainer}>
           {renderTagsPreview(userData.skills, 'skill')}
           {renderTagsPreview(userData.interests, 'interest')}
         </div>
-        </div>
-        <div className={styles.divider}></div>
+        <div className={styles.divider}> </div>
         <div className={styles.bioContainer}>
-          <p className={styles.bio}>{showFullBio ? userData.biography : getTruncatedBio(userData.biography)}</p>
+          <p className={styles.bio} onClick={toggleBio}>{showFullBio ? userData.biography : getTruncatedBio(userData.biography)}</p>
           {bioTruncated && (
             <button onClick={toggleBio} className={styles.bioButton}>
-              {showFullBio ? 'Show less' : 'Show more'}
+              {showFullBio ? <FaChevronUp /> : <FaChevronDown/>}
             </button>
           )}
         </div>

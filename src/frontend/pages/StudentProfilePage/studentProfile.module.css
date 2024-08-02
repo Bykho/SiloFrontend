@@ -69,14 +69,15 @@
   }
   .bigButton {
     display: inline-block;
-    font-family: inconsolata;
+    font-family: 'inconsolata';
+    font-weight: bolder; 
     margin-right: 5px; /* Adjust margin to make buttons less wide */
-    margin-bottom: 0px;
-    padding: 8px 16px;
-    background-color: #262d35;
+    margin-bottom: 10px;
+    margin-top: 10px; 
+    background-color: #37485c;
     color: #D9D9D9;
     border: none;
-    border-radius: 8px;
+    border-radius: 80px;
     cursor: pointer;
     height: 60px;
     width: calc(100% / 2 - 30px); /* Adjusted calculation */
@@ -85,7 +86,6 @@
     transition: background-color 0.3s ease;
     display: inline-flex;
     align-items: center;
-    border: 1px solid #c3c3c3;
     justify-content: center;
     gap: 10px; 
   }
