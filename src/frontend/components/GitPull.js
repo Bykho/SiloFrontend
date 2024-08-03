@@ -133,7 +133,7 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
     };
 
     try {
-      const response = await fetch(`${config.apiBaseUrl}/groqAutofillCodeProject`, {
+      const response = await fetch(`${config.apiBaseUrl}/newSplittingMethodForCodeAutofill`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
