@@ -1,115 +1,84 @@
 import React, { useState, useEffect } from 'react';
 
-const FractalLoadingBar = () => {
-  const [matrix, setMatrix] = useState([]);
-  const [loading, setLoading] = useState(true);
+const CleanOrbitingRingLoader = () => {
+  const [cells, setCells] = useState([]);
   const [message, setMessage] = useState('Initializing...');
   
-  const rows = 20;
-  const cols = 150;
+  const size = 41; // Odd size to ensure a center pixel
+  const centerX = Math.floor(size / 2);
+  const centerY = Math.floor(size / 2);
+  const outerRadius = Math.floor(size / 2) - 1; // Outer radius of the ring
+  const innerRadius = outerRadius - 2; // Inner radius, creating a 3-pixel thick ring
 
   const messages = [
-    'Digesting PDF',
-    'Inferring Details',
-    'Analyzing Images',
-    'Writing Content',
-    'Finalizing Report'
+    'Analyzing Data',
+    'Processing Information',
+    'Calculating Results',
+    'Generating Insights',
+    'Optimizing Performance'
   ];
 
   useEffect(() => {
-    const emptyMatrix = Array(rows).fill().map(() => Array(cols).fill(0));
-    setMatrix(emptyMatrix);
+    const initialCells = Array(size).fill().map(() => Array(size).fill(0));
+    setCells(initialCells);
 
-    let messageIndex = 0;
+    let angle = 0;
+    const sweepWidth = Math.PI / 3; // 60 degrees sweep
 
-    const growthInterval = setInterval(() => {
-      setMatrix(prevMatrix => {
-        const newMatrix = JSON.parse(JSON.stringify(prevMatrix));
+    const updateInterval = setInterval(() => {
+      setCells(prevCells => {
+        const newCells = JSON.parse(JSON.stringify(prevCells));
         
-        if (newMatrix[Math.floor(rows/2)][0] === 0) {
-          newMatrix[Math.floor(rows/2)][0] = 1;
-          return newMatrix;
-        }
+        // Apply Game of Life rules and sweeping effect
+        for (let i = 0; i < size; i++) {
+          for (let j = 0; j < size; j++) {
+            const dx = i - centerX;
+            const dy = j - centerY;
+            const distanceFromCenter = Math.sqrt(dx * dx + dy * dy);
+            const cellAngle = Math.atan2(dy, dx);
+            
+            const isInRing = distanceFromCenter >= innerRadius && distanceFromCenter <= outerRadius;
+            const isInSweep = (cellAngle > angle && cellAngle < angle + sweepWidth) || 
+                              (cellAngle + 2 * Math.PI > angle && cellAngle + 2 * Math.PI < angle + sweepWidth);
 
-        const growthCandidates = [];
-
-        for (let i = 0; i < rows; i++) {
-          for (let j = 0; j < cols; j++) {
-            if (newMatrix[i][j] === 0) {
+            if (isInRing && isInSweep) {
               const neighbors = [
-                i > 0 ? newMatrix[i-1][j] : 0,
-                j > 0 ? newMatrix[i][j-1] : 0,
-                j < cols - 1 ? newMatrix[i][j+1] : 0,
-                i < rows - 1 ? newMatrix[i+1][j] : 0,
+                (i > 0 && j > 0) ? prevCells[i-1][j-1] : 0,
+                (i > 0) ? prevCells[i-1][j] : 0,
+                (i > 0 && j < size - 1) ? prevCells[i-1][j+1] : 0,
+                (j > 0) ? prevCells[i][j-1] : 0,
+                (j < size - 1) ? prevCells[i][j+1] : 0,
+                (i < size - 1 && j > 0) ? prevCells[i+1][j-1] : 0,
+                (i < size - 1) ? prevCells[i+1][j] : 0,
+                (i < size - 1 && j < size - 1) ? prevCells[i+1][j+1] : 0,
               ];
               
-              const activeNeighbors = neighbors.filter(n => n === 1).length;
+              const liveNeighbors = neighbors.filter(Boolean).length;
               
-              if (activeNeighbors > 0) {
-                growthCandidates.push([i, j, activeNeighbors]);
+              if (prevCells[i][j] === 1) {
+                newCells[i][j] = (liveNeighbors === 2 || liveNeighbors === 3) ? 1 : 0;
+              } else {
+                newCells[i][j] = (liveNeighbors === 3 || Math.random() < 0.3) ? 1 : 0;
               }
+            } else {
+              newCells[i][j] = 0; // Clear cells outside the ring or sweep
             }
           }
         }
 
-        const maxGrowthColumn = Math.max(...newMatrix.map(row => row.lastIndexOf(1)));
-
-        growthCandidates.forEach(([i, j, activeNeighbors]) => {
-          const isLeadingEdge = j > maxGrowthColumn - 5;
-          const distanceFromCenter = Math.abs(i - rows / 2) / (rows / 2);
-          const isMiddle = distanceFromCenter < 0.3;
-
-          let growthProbability = isLeadingEdge ? 0.4 : 0.1;
-          growthProbability += activeNeighbors * 0.05;
-
-          // Symmetric growth
-          growthProbability += 0.2 * (1 - distanceFromCenter);
-
-          // Boost middle growth even more
-          if (isMiddle) {
-            growthProbability += 0.25; // Increased from 0.15
-          }
-
-          if (Math.random() < growthProbability) {
-            newMatrix[i][j] = 1;
-            
-            // Enhanced branching for tree-like appearance
-            if (Math.random() < (isLeadingEdge ? 0.3 : 0.1)) {
-              const branchDirections = [[-1, 0], [1, 0], [0, -1]];
-              const branchCount = Math.floor(Math.random() * 2) + 1; // 1 or 2 branches
-              for (let b = 0; b < branchCount; b++) {
-                const [di, dj] = branchDirections[Math.floor(Math.random() * branchDirections.length)];
-                if (i + di >= 0 && i + di < rows && j + dj >= 0 && j + dj < cols) {
-                  newMatrix[i + di][j + dj] = 1;
-                }
-                // Mirror branch for symmetry
-                const mirroredI = rows - 1 - i;
-                if (mirroredI + di >= 0 && mirroredI + di < rows && j + dj >= 0 && j + dj < cols) {
-                  newMatrix[mirroredI + di][j + dj] = 1;
-                }
-              }
-            }
-          }
-        });
-
-        const progress = newMatrix.flat().filter(cell => cell === 1).length / (rows * cols);
-        const newMessageIndex = Math.floor(progress * messages.length);
-        if (newMessageIndex > messageIndex && newMessageIndex < messages.length) {
-          setMessage(messages[newMessageIndex]);
-          messageIndex = newMessageIndex;
-        }
-
-        if (newMatrix.some(row => row[cols - 1] === 1)) {
-          setLoading(false);
-          setMessage('Process Complete!');
-          clearInterval(growthInterval);
-        }
-
-        return newMatrix;
+        return newCells;
       });
+
+      // Update sweep position
+      angle = (angle + 0.1) % (2 * Math.PI);
+
+      // Change message periodically
+      if (Math.random() < 0.01) {
+        setMessage(messages[Math.floor(Math.random() * messages.length)]);
+      }
     }, 50);
 
-    return () => clearInterval(growthInterval);
+    return () => clearInterval(updateInterval);
   }, []);
 
   return (
@@ -117,24 +86,37 @@ const FractalLoadingBar = () => {
       <div className="mb-4 text-blue-400 text-xl font-bold">
         {message}
       </div>
-      <div className="w-full max-w-3xl bg-gray-800 rounded-full p-1">
-        <div className="grid gap-0 rounded-full overflow-hidden" style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}>
-          {matrix.map((row, i) =>
-            row.map((cell, j) => (
-              <div
-                key={`${i}-${j}`}
-                className={`w-1 h-1 ${cell ? 'bg-blue-400' : 'bg-transparent'}`}
-                style={{
-                  transition: 'background-color 0.2s ease',
-                  boxShadow: cell ? '0 0 3px #60a5fa, 0 0 5px #3b82f6' : 'none'
-                }}
-              />
-            ))
-          )}
+      <div className="relative w-64 h-64">
+        <div className="absolute inset-0 rounded-full overflow-hidden">
+          <div 
+            className="grid" 
+            style={{ 
+              gridTemplateColumns: `repeat(${size}, 1fr)`,
+              aspectRatio: '1 / 1',
+              width: '100%',
+              height: '100%'
+            }}
+          >
+            {cells.map((row, i) =>
+              row.map((cell, j) => (
+                <div
+                  key={`${i}-${j}`}
+                  className={`${cell ? 'bg-blue-400' : 'bg-transparent'}`}
+                  style={{
+                    transition: 'background-color 0.1s ease',
+                    boxShadow: cell ? '0 0 2px #60a5fa, 0 0 3px #3b82f6' : 'none',
+                    aspectRatio: '1 / 1',
+                    width: '100%',
+                    height: '100%'
+                  }}
+                />
+              ))
+            )}
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default FractalLoadingBar;
+export default CleanOrbitingRingLoader;
