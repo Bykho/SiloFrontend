@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import ProfileImage from '../components/ProfileImage';
 import styles from './profileHeader.module.css';
 import { FaGithub, FaGlobe, FaLink, FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { IoMdMail } from "react-icons/io";
+
 
 const ProfileHeader = ({ userData, loading, error }) => {
   const navigate = useNavigate();
@@ -11,6 +13,7 @@ const ProfileHeader = ({ userData, loading, error }) => {
   const skillsSectionRef = useRef(null);
   const interestsSectionRef = useRef(null);
   const [showResume, setShowResume] = useState(false);
+  const [showCopiedConfirmation, setShowCopiedConfirmation] = useState(false);
 
   const BIO_LENGTH_LIMIT = 300;
   const VISIBLE_TAGS = 3;
@@ -19,7 +22,7 @@ const ProfileHeader = ({ userData, loading, error }) => {
     if (userData && userData.biography) {
       setBioTruncated(userData.biography.length > BIO_LENGTH_LIMIT);
     }
-    console.log('this is yumbi snack', userData);
+    console.log('user', userData);
   }, [userData]);
 
   const toggleResume = () => {
@@ -73,6 +76,21 @@ const ProfileHeader = ({ userData, loading, error }) => {
     }
   };
 
+  const handleContactButton = () => {
+    const email = userData.email;
+    navigator.clipboard.writeText(email).then(() => {
+      setShowCopiedConfirmation(true);
+      setTimeout(() => {
+        setShowCopiedConfirmation(false);
+      }, 2000); // Hide the confirmation after 2 seconds
+    }).catch((err) => {
+      console.error('Failed to copy URL: ', err);
+    });
+    console.log('Contact button clicked'); 
+  }; 
+
+
+
   const renderLinkButton = (link, icon) => {
     const label = getLinkLabel(link);
     return (
@@ -120,12 +138,16 @@ const ProfileHeader = ({ userData, loading, error }) => {
           )}
         </div>
         <div className={styles.linksContainer}>
+          <button className={styles.contactMeButton} onClick={handleContactButton}> <IoMdMail /> Contact </button>
           <button className={styles.linkButton} onClick={toggleResume}>View Resume</button>
           {userData.github_link && renderLinkButton(userData.github_link, <FaGithub />)}
           {userData.personal_website && renderLinkButton(userData.personal_website, <FaGlobe />)}
           {userData.links && userData.links.map((link, index) => (
             renderLinkButton(link, <FaLink key={index} />)
           ))}
+          {showCopiedConfirmation && (
+          <div className={styles.copyConfirmation}>Email copied to clipboard!</div>
+         )}
         </div>
       </div>
       {showResume && (
