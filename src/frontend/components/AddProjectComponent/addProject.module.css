@@ -557,7 +557,6 @@
     cursor: pointer;
   }
   
-
   .loaderOverlay {
     position: fixed;
     top: 0;
@@ -570,6 +569,11 @@
     align-items: center;
     z-index: 50000;
     backdrop-filter: blur(5px);
+  }
+  
+  /* Ensure the loader is visible */
+  .loaderOverlay > div {
+    z-index: 50001;
   }
 
 
