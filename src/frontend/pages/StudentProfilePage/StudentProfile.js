@@ -268,10 +268,9 @@ function StudentProfile() {
     if (newProject) {
       setUserData((prevState) => ({
         ...prevState,
-        portfolio: [...prevState.portfolio, newProject],
+        portfolio: [newProject, ...prevState.portfolio],
       }));
     }
-    // Reset selectedGitFiles after closing the modal
     setSelectedGitFiles([]);
   };
 
