@@ -5,6 +5,7 @@ import styles from './addProject.module.css';
 import config from '../../config';
 import { FaPlus, FaSave, FaTrash } from 'react-icons/fa';
 import AutofillProjectFromPDF from '../AddProjectUtility_AutofillProject';
+import CleanOrbitingRingLoader from '../FractalLoadingBar';
 import MoveModal from './MoveModal';
 import Canvas from './Canvas';
 import { FaFont, FaImage, FaVideo, FaFilePdf, FaCode, FaTimes, FaCheck } from 'react-icons/fa';
@@ -12,8 +13,6 @@ import { FaFont, FaImage, FaVideo, FaFilePdf, FaCode, FaTimes, FaCheck } from 'r
 
 const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, onClose = null }) => {
   const [layers, setRows] = useState(initialRows.length ? initialRows : []);
-  console.log('AddProject initialRows:', initialRows);
-  console.log('AddProject layers after initialization:', layers);
   const [needsReorganization, setNeedsReorganization] = useState(true);
   const [projectName, setProjectName] = useState(initialProjectData?.projectName || '');
   const [projectDescription, setProjectDescription] = useState(initialProjectData?.projectDescription || '');
@@ -23,6 +22,9 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
   const { user } = useUser();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showLoadingBar, setShowLoadingBar] = useState(false);
+  const [forceComplete, setForceComplete] = useState(false);
+  const [fileSize, setFileSize] = useState(0);
   const [selectedCell, setSelectedCell] = useState(null);
   const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [previewProject, setPreviewProject] = useState({});
@@ -267,9 +269,27 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
     setShowDeleteModal(false);
   };
 
+  const calculateLoadingDuration = (size) => {
+    const MB = size / (1024 * 1024);
+    const A = 40.7;
+    const E = 18;
+    const C = 25;
+    const D = -8;
+
+    // Calculate the loading duration using the given formula
+    const duration = A * Math.tanh(((MB - E) / C) + 1) + D;
+
+    // Return the duration in seconds
+    return `${duration.toFixed(2)}s`;
+  };
+
   return (
     <div className={styles.containerWrapper}>
-      {isLoading && <div className={styles.spinner}></div>}
+      {isLoading && (
+        <div className={styles.loaderOverlay}> 
+          < CleanOrbitingRingLoader />
+        </div>
+      )}
       <div className={styles.container}>
         <div className={styles.header}>
           <h1 className={styles.title}>Project Builder</h1>
@@ -280,6 +300,7 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
             setLinks={setLinks}
             setRows={setRows}
             setIsLoading={setIsLoading}
+            setFileSize={setFileSize}
           />
 
         </div>

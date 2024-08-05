@@ -11,11 +11,10 @@ const CleanOrbitingRingLoader = () => {
   const innerRadius = outerRadius - 2; // Inner radius, creating a 3-pixel thick ring
 
   const messages = [
-    'Analyzing Data',
     'Processing Information',
-    'Calculating Results',
-    'Generating Insights',
-    'Optimizing Performance'
+    'Analyzing Data',
+    'Inference',
+    'Structuring Response',
   ];
 
   useEffect(() => {
