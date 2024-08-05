@@ -1,17 +1,14 @@
-
-
 import React, { useState, useEffect, useRef } from 'react';
 import { useUser } from '../../contexts/UserContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Tagged from '../../components/TagsFeed';
-import FeedSidebar from '../../components/FeedSidebar';
+import CombinedFeedSidebar from './NewFeedSidebar';
 import styles from './feed.module.css';
-import GameOfLife from '../SiloDescriptionPage/GameOfLife';
 import config from '../../config';
 import { FaSearch } from 'react-icons/fa';
 
 const Feed = () => {
-  const [feedStyle, setFeedStyle] = useState('explore');
+  const [feedStyle, setFeedStyle] = useState('home');
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,11 +16,11 @@ const Feed = () => {
   const [searchText, setSearchText] = useState('');
   const [inputText, setInputText] = useState('');
   const [userUpvotes, setUserUpvotes] = useState([]);
+  const [activeGroup, setActiveGroup] = useState(null);
   const { user } = useUser();
   const location = useLocation();
   const searchInputRef = useRef(null);
   const navigate = useNavigate();
-
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -87,21 +84,19 @@ const Feed = () => {
       const tag = location.state.tag;
       setSearchText(tag);
       setInputText(tag);
-      setFeedStyle('explore');
+      setFeedStyle('home');
       searchInputRef.current.focus();
       setTimeout(() => {
-        handleSearch({ preventDefault: () => {} });
+        handleSearch();
         navigate('/feed', { replace: true });
-      }, 0); // Adding a timeout to ensure the focus and search trigger properly
+      }, 0);
     }
-  }, [location.state]);
+  }, [location.state, navigate]);
 
   useEffect(() => {
-    console.log('here is the feedStyle: ', feedStyle);
-    console.log('here is search text: ', searchText);
     let filtered = projects;
 
-    if (feedStyle === 'explore') {
+    if (feedStyle === 'home' || feedStyle === 'popular') {
       filtered = projects.filter(project => {
         const searchTextLower = searchText.toLowerCase();
         if (project.projectDescription.toLowerCase().includes(searchTextLower)) {
@@ -122,70 +117,86 @@ const Feed = () => {
         }
         return false;
       });
-    } else if (feedStyle === 'trending') {
+    }
+
+    if (feedStyle === 'popular') {
       const now = new Date();
-      filtered = projects.map(project => {
+      filtered = filtered.map(project => {
         const createdAt = new Date(project.created_at);
-        const hoursElapsed = (now - createdAt) / (1000 * 60 * 60); // Convert milliseconds to hours
+        const hoursElapsed = (now - createdAt) / (1000 * 60 * 60);
         const score = (project.upvotes ? project.upvotes.length : 0) / hoursElapsed;
-        return { ...project, score };
-      }).sort((a, b) => b.score - a.score);
-    } else if (feedStyle === 'mostUpvoted') {
-      filtered = projects.map(project => {
-        const score = (project.upvotes ? project.upvotes.length : 0)
         return { ...project, score };
       }).sort((a, b) => b.score - a.score);
     }
 
-    setFilteredProjects(filtered);
-  }, [projects, searchText, feedStyle]);
+    if (activeGroup) {
+      filtered = filtered.filter(project => project.groupId === activeGroup._id);
+    }
 
-  const handleSearch = (e) => {
-    if (e) e.preventDefault();
+    setFilteredProjects(filtered);
+  }, [projects, searchText, feedStyle, activeGroup]);
+
+  const handleSearch = () => {
     setSearchText(inputText);
   };
 
-  return (
-    <div className={styles.feedContainer}>
-      <div className={styles.searchBar}>
-        <div className={styles.searchWords}>
-          <FaSearch />
-        </div>
-        <div className={styles.buttonContainer}>
-          <input
-            ref={searchInputRef}
-            type="search"
-            value={inputText}
-            onClick={() => setFeedStyle('explore')}
-            onChange={(e) => setInputText(e.target.value)}
-            placeholder="Machine Learning"
-            className={styles.searchInput}
-          />
-          <button className={styles.navButton} onClick={handleSearch}>Search</button>
-        </div>
-        <div className={styles.sortDropdown}>
-          <select className={styles.sortSelect}>
-            <option value="top">Top</option>
-            <option value="newest">Newest</option>
-          </select>
-        </div>
-        <div className={styles.resultsCount}>
-          Results: {filteredProjects.length}
-        </div>
-      </div>
+  const handleInputChange = (e) => {
+    setInputText(e.target.value);
+    setSearchText(e.target.value);
+  };
 
-      <div className={styles.feedBottomContainer}>
-        <div className={styles.feedSidebar}>
-          <FeedSidebar feedStyle={feedStyle} setFeedStyle={setFeedStyle} />
-        </div>
-        <div className={styles.feedContent}>
-          <Tagged filteredProjects={filteredProjects} loading={loading} error={error} userUpvotes={userUpvotes} setUserUpvotes={setUserUpvotes} />
+  const getHeaderText = () => {
+    if (activeGroup) return activeGroup.name;
+    return feedStyle.charAt(0).toUpperCase() + feedStyle.slice(1);
+  };
+
+  return (
+    <div className={styles.parentContainer}>
+      <div className={styles.headerBox}>
+        <h2>{getHeaderText()}</h2>
+        <div className={styles.searchBar}>
+          <div className={styles.searchWords}>
+            <FaSearch />
+          </div>
+          <div className={styles.buttonContainer}>
+            <input
+              ref={searchInputRef}
+              type="search"
+              value={inputText}
+              onChange={handleInputChange}
+              onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+              placeholder="Search projects..."
+              className={styles.searchInput}
+            />
+          </div>
+          <div className={styles.resultsCount}>
+            Results: {filteredProjects.length}
+          </div>
         </div>
       </div>
+    <div className={styles.feedContainer}>
+      <div className={styles.feedSidebar}>
+        <CombinedFeedSidebar
+          feedStyle={feedStyle}
+          setFeedStyle={setFeedStyle}
+          activeGroup={activeGroup}
+          setActiveGroup={setActiveGroup}
+        />
+      </div>
+      <div className={styles.feedMainContent}>
+        <div className={styles.feedContent}>
+          <Tagged
+            filteredProjects={filteredProjects}
+            loading={loading}
+            error={error}
+            userUpvotes={userUpvotes}
+            setUserUpvotes={setUserUpvotes}
+          />
+        </div>
+      </div>
+    </div>
     </div>
   );
 };
 
 export default Feed;
-
-

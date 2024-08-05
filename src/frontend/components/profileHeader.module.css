@@ -34,6 +34,18 @@
   letter-spacing: 5px;
 }
 
+.copyConfirmation {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 14px;
+  transition: opacity 0.3s ease-in-out;
+}
+
 .userInfo {
   font-size: 18px;
   margin: 0;
@@ -172,6 +184,20 @@
 
 .linkButton:hover {
   background-color: #4a4a4a;
+}
+.contactMeButton{
+  display: flex; 
+  align-items: center;
+  gap: 10px; 
+  background-color: #34383f;
+  color: #f0f0f0;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 .loadingError {
