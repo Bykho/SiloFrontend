@@ -10,6 +10,7 @@ const NotificationsComponent = () => {
   const fetchNotifications = async () => {
     try {
       const response = await fetch(`${config.apiBaseUrl}/api/notifications`, {
+        method: 'GET',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
