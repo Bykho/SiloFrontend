@@ -121,7 +121,7 @@ const UserCard = ({ user, navigate, fetchProjectsForUser }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [totalUpvotes, setTotalUpvotes] = useState(0);
-
+  console.log('USERCARD here is user: ', user)
   useEffect(() => {
     const fetchProjects = async () => {
       setLoading(true);

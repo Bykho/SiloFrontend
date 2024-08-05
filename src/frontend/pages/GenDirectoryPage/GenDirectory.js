@@ -17,7 +17,7 @@ function Directory() {
     <div className={styles.container}>
       <div className={styles.feedContainer}>
         <UserSearch />
-=      </div>
+      </div>
     </div>
   );  
 }
