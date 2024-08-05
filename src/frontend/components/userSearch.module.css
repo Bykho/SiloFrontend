@@ -91,7 +91,7 @@
 }
 
 .userCard {
-  background-color: #2d2d2d;
+  background-color: #292828;
   border-radius: 8px;
   padding: 1.5rem;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -99,6 +99,7 @@
   flex-direction: column;
   height: 100%;
   box-sizing: border-box;
+  box-shadow: 0 0 10px rgba(196, 196, 196, 0.25);
 }
 
 .userCard:hover {
@@ -121,7 +122,7 @@
 .username {
   font-size: 1.5rem;
   margin: 10px 0 0 0;
-  color: #bcbcbc;
+  color: #d3d3d3;
   word-wrap: break-word;
   line-height: 1.2;
   max-width: 100%;
@@ -147,7 +148,7 @@
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  color: white; 
+  color: rgb(217, 217, 217); 
   padding: 10px; 
 }
 
