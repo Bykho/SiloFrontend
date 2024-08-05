@@ -1,15 +1,18 @@
 
 
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { IoIosExpand } from 'react-icons/io';
 import styles from './publicSmallProjectEntry.module.css';
 import config from '../../config';
 import ProjectEntry from './PublicProjectEntry';
 
 const PublicSmallProjectEntry = ({ project }) => {
+  const navigate = useNavigate();
   const [isExpanded, setIsExpanded] = useState(false);
   const [localProject, setLocalProject] = useState(project);
   const [showPopup, setShowPopup] = useState(false);
+  const VISIBLE_TAGS = 3;
 
   const imageRef = useRef(null);
 
@@ -59,7 +62,37 @@ const PublicSmallProjectEntry = ({ project }) => {
       <div className={styles.preview}>
         {imgSrc && <img ref={imageRef} src={imgSrc} alt="Project Preview" className={styles.previewImage} />}
         {!imgSrc && textContent && <p className={styles.previewText}>{textContent}</p>}
-        {!imgSrc && !textContent && <p>No preview available</p>}
+        {!imgSrc && !textContent && <p></p>}
+      </div>
+    );
+  };
+
+  const handleSkillClick = (skill) => {
+    navigate('/GenDirectory', { state: { skill: skill } });
+  };
+
+  
+  const renderTagsPreview = (tags) => {
+
+    if (!tags || tags.length === 0) {
+      return null;
+    };
+
+    const previewTags = tags.slice(0, VISIBLE_TAGS);
+    console.log('previewTags', previewTags);
+    const remainingTags = tags.slice(VISIBLE_TAGS);
+    return (
+      <div className={styles.tagsContainer}>
+        {previewTags.map((tag, index) => (
+          <span key={index} className={styles.tag} onClick={() => handleSkillClick(tag)}>
+            {tag}
+          </span>
+        ))}
+        {remainingTags.length > 0 && (
+          <div className={styles.moreTagsContainer}>
+            <span className={styles.moreButton}>+{remainingTags.length} more</span>
+          </div>
+        )}
       </div>
     );
   };
@@ -71,9 +104,7 @@ const PublicSmallProjectEntry = ({ project }) => {
           <h3 className={styles.projectTitle}>{localProject.projectName}</h3>
         </div>
         <div className={styles.tagsContainer}>
-          {localProject.tags?.map((tag, index) => (
-            <span key={index} className={styles.tag}>{tag}</span>
-          ))}
+          {renderTagsPreview(localProject.tags)}
         </div>
       </div>
       <div className={styles.divider} />

@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import config from '../../config';
 import PublicProfileHeader from './PublicProfileHeader'; // Import the ProfileHeader component
 import PublicPortfolioDisplay from './PublicPortfolioDisplay'; // Import the PublicPortfolioDisplay component
+import PortfolioDisplay from '../../components/PortfolioDisplay'; // Import the PortfolioDisplay component
 import styles from './publicProfile.module.css'; // Import the CSS module
 
 const PublicProfile = () => {

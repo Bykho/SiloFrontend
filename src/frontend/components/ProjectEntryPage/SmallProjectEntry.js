@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FaComment, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { IoIosExpand } from 'react-icons/io';
+import { useNavigate } from 'react-router-dom';
 import styles from './smallProjectEntry.module.css';
 import { useUser } from '../../contexts/UserContext';
 import CommentSection from './CommentSection';
@@ -12,6 +13,7 @@ import HandleUpvote from '../wrappers/HandleUpvote';
 
 const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const navigate = useNavigate();
   const [isExpanded, setIsExpanded] = useState(false);
   const [showFullContent, setShowFullContent] = useState(false);
   const [localProject, setLocalProject] = useState(project);
@@ -21,6 +23,7 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
   const descriptionRef = useRef(null);
   const imageRef = useRef(null);
   const [showPopup, setShowPopup] = useState(false);
+  const VISIBLE_TAGS = 4;
 
   const [comments, setComments] = useState(() => {
     try {
@@ -107,6 +110,35 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
     </div>
   );
 
+  const handleSkillClick = (skill) => {
+    navigate('/GenDirectory', { state: { skill: skill } });
+  };
+
+  const renderTagsPreview = (tags) => {
+
+    if (!tags || tags.length === 0) {
+      return null;
+    };
+
+    const previewTags = tags.slice(0, VISIBLE_TAGS);
+    console.log('previewTags', previewTags);
+    const remainingTags = tags.slice(VISIBLE_TAGS);
+    return (
+      <div className={styles.tagsContainer}>
+        {previewTags.map((tag, index) => (
+          <span key={index} className={styles.tag} onClick={() => handleSkillClick(tag)}>
+            {tag}
+          </span>
+        ))}
+        {remainingTags.length > 0 && (
+          <div className={styles.moreTagsContainer}>
+            <span className={styles.moreButton}>+{remainingTags.length} more</span>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   const renderContentPreview = () => {
     let imgSrc = null;
     let textContent = null;
@@ -170,9 +202,7 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
           <span className={styles.byUsername}>by <span className={styles.username}>{localProject.createdBy}</span></span>
         </div>
         <div className={styles.tagsContainer}>
-          {localProject.tags?.map((tag, index) => (
-            <span key={index} className={styles.tag}>{tag}</span>
-          ))}
+          {renderTagsPreview(localProject.tags)}
         </div>
       </div>
       <div className={styles.divider} />

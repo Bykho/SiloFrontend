@@ -139,6 +139,12 @@
 .descAndPreviewContainer:hover{
   cursor: pointer;
 }
+.moreButton {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+}
 
 .descContainer {
   flex: 1;

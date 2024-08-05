@@ -10,6 +10,7 @@
   box-sizing: border-box;
   max-width: 90vw;
   margin: 16px auto;
+  box-shadow: 0 2px 4px rgba(245, 245, 245, 0.1); /* Add this line */
 }
 
 .headerContainer {
@@ -63,8 +64,10 @@
   color: #70b9e3;
   padding: 4px 10px;
   border-radius: 15px;
-  font-size: 1.2rem;
+  font-size: .8rem;
   font-weight: 500;
+  margin-top: 5px; 
+  margin-bottom: 5px;
   transition: background-color 0.2s ease;
 }
 
