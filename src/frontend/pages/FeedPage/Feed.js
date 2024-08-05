@@ -154,7 +154,18 @@ const Feed = () => {
     <div className={styles.parentContainer}>
       <div className={styles.headerBox}>
         <h2>{getHeaderText()}</h2>
-        <div className={styles.searchBar}>
+      </div>
+    <div className={styles.feedContainer}>
+      <div className={styles.feedSidebar}>
+        <CombinedFeedSidebar
+          feedStyle={feedStyle}
+          setFeedStyle={setFeedStyle}
+          activeGroup={activeGroup}
+          setActiveGroup={setActiveGroup}
+        />
+      </div>
+      <div className={styles.feedMainContent}>
+      <div className={styles.searchBar}>
           <div className={styles.searchWords}>
             <FaSearch />
           </div>
@@ -173,17 +184,6 @@ const Feed = () => {
             Results: {filteredProjects.length}
           </div>
         </div>
-      </div>
-    <div className={styles.feedContainer}>
-      <div className={styles.feedSidebar}>
-        <CombinedFeedSidebar
-          feedStyle={feedStyle}
-          setFeedStyle={setFeedStyle}
-          activeGroup={activeGroup}
-          setActiveGroup={setActiveGroup}
-        />
-      </div>
-      <div className={styles.feedMainContent}>
         <div className={styles.feedContent}>
           <Tagged
             filteredProjects={filteredProjects}

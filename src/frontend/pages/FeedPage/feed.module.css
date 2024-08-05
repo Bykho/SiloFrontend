@@ -74,7 +74,8 @@ body {
   background-color: var(--search-bg-color);
   border-radius: 8px;
   padding: 10px 15px;
-  width: 90%; 
+  width: 93%; 
+  margin-bottom: 10px; 
 }
 
 .searchWords {
