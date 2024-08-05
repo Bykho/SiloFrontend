@@ -12,7 +12,7 @@ const PublicSmallProjectEntry = ({ project }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [localProject, setLocalProject] = useState(project);
   const [showPopup, setShowPopup] = useState(false);
-  const VISIBLE_TAGS = 3;
+  const VISIBLE_TAGS = 5;
 
   const imageRef = useRef(null);
 
