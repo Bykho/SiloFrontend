@@ -229,18 +229,19 @@ const ProjectEntry = ({ project, passedUser, UpvoteButton, userUpvotes, setUserU
           <h3 className={styles.projectTitle}>{localProject.projectName}</h3>
           <span className={styles.byUsername}>by <span className={styles.username}>{localProject.createdBy}</span></span>
         </div>
-        <div className={styles.tagsContainer}>
-          {localProject.tags?.map((tag, index) => (
-            <span key={index} className={styles.tag}>{tag}</span>
-          ))}
-        </div>
         {user.username === localProject.createdBy && (
           <button className={styles.editButton} onClick={toggleEdit}>
             <FaEdit /> Modify Content
           </button>
         )}
       </div>
+      <div className={styles.tagsContainer}>
+          {localProject.tags?.map((tag, index) => (
+            <span key={index} className={styles.tag}>{tag}</span>
+          ))}
+        </div>
       {renderProjectDescription()}
+
       <div className={styles.layerDisplayContainer}>
         <LayerDisplay layers={localProject.layers} isEditing={isEditing} toggleEdit={toggleEdit} updateLayer={updateLayer} updateProjectDetails={updateProjectDetails} initialProjectData={localProject} />
       </div>
