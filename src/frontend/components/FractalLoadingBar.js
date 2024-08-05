@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 const CleanOrbitingRingLoader = () => {
   const [cells, setCells] = useState([]);
-  const [message, setMessage] = useState('Initializing...');
+  const [message, setMessage] = useState('Digesting Data...');
   
   const size = 41; // Odd size to ensure a center pixel
   const centerX = Math.floor(size / 2);
@@ -14,7 +14,7 @@ const CleanOrbitingRingLoader = () => {
     'Processing Information',
     'Analyzing Data',
     'Inference',
-    'Structuring Response',
+    'Structuring Project',
   ];
 
   useEffect(() => {
@@ -22,7 +22,7 @@ const CleanOrbitingRingLoader = () => {
     setCells(initialCells);
 
     let angle = 0;
-    const sweepWidth = Math.PI / 3; // 60 degrees sweep
+    const sweepWidth = Math.PI; // 60 degrees sweep
 
     const updateInterval = setInterval(() => {
       setCells(prevCells => {
@@ -69,7 +69,7 @@ const CleanOrbitingRingLoader = () => {
       });
 
       // Update sweep position
-      angle = (angle + 0.1) % (2 * Math.PI);
+      angle = (angle + 0.25) % (2 * Math.PI);
 
       // Change message periodically
       if (Math.random() < 0.01) {
@@ -86,7 +86,6 @@ const CleanOrbitingRingLoader = () => {
     alignItems: 'center',
     justifyContent: 'center',
     height: '100vh',
-    backgroundColor: '#1a202c',
     padding: '1rem',
   };
 
