@@ -2,13 +2,14 @@
 
 
 // AutofillProjectFromPDF.js
-import React from 'react';
+import React, { useState } from 'react';
 import { IoSparkles } from "react-icons/io5";
 import pdfToText from 'react-pdftotext';
 import config from '../config';
 import styles from './AddBlocPortfolio.module.css';
 
-const AutofillProjectFromPDF = ({ setProjectName, setProjectDescription, setTags, setLinks, setRows, setIsLoading }) => {
+const AutofillProjectFromPDF = ({ setProjectName, setProjectDescription, setTags, setLinks, setRows, setIsLoading, setFileSize }) => {
+
   async function handleFileSugUpload(text) {
     try {
       setIsLoading(true);
@@ -27,6 +28,7 @@ const AutofillProjectFromPDF = ({ setProjectName, setProjectDescription, setTags
       const data = await response.json();
       console.log('AutofillProjectFromPDF here data from response: ', data)
 
+      
       try {
         const parsedData = data;
         const parsedSummary = parsedData.surrounding_summary;
@@ -138,6 +140,7 @@ const AutofillProjectFromPDF = ({ setProjectName, setProjectDescription, setTags
   const handleAutofillFileChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
+      setFileSize(file.size)
       setIsLoading(true); // Start loading
       try {
         console.log('Starting PDF processing...');
@@ -196,7 +199,6 @@ const AutofillProjectFromPDF = ({ setProjectName, setProjectDescription, setTags
         currentRow = [];
       }
     });
-    console.log('ADDPROJECTUTILITY_AUTOFILLPROJECT.JS here is rows: ', rows)
     return rows;
   };
 
