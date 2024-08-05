@@ -110,7 +110,11 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
       console.error('Error saving project:', error);
     }
   };
-  const handleDelete = async (projectId, userId, token, onClose) => {
+
+  const handleDelete = async (projectId, userId) => {
+    console.log('here is projectID: ', projectId);
+    console.log('here is userID: ', userId);
+    const token = localStorage.getItem('token');
     try {
       const response = await fetch(`${config.apiBaseUrl}/deleteProject`, {
         method: 'DELETE',
@@ -123,6 +127,10 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
       if (response.ok) {
         if (onClose) {
           onClose();
+        }
+        // Notify parent component that the project was deleted
+        if (onSave) {
+          onSave(null, { projectId });
         }
       } else {
         console.error('Error deleting project:', response.statusText);

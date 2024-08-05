@@ -263,12 +263,19 @@ function StudentProfile() {
     setShowSharePreview(false);
   };
 
-  const handleSaveProject = (newProject) => {
+  const handleSaveProject = (newProject, deleteInfo) => {
     setShowModal(false);
     if (newProject) {
       setUserData((prevState) => ({
         ...prevState,
         portfolio: [newProject, ...prevState.portfolio],
+      }));
+    } else if (deleteInfo && deleteInfo.projectId) {
+      setUserData((prevState) => ({
+        ...prevState,
+        portfolio: prevState.portfolio.filter(
+          (project) => project._id !== deleteInfo.projectId
+        ),
       }));
     }
     setSelectedGitFiles([]);

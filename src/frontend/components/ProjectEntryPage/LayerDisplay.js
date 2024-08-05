@@ -10,6 +10,8 @@ const LayerDisplay = ({ layers, isEditing, toggleEdit, updateLayer, updateProjec
   const [showEditor, setShowEditor] = useState(false);
   const codeContentRefs = useRef({});
 
+  layers = layers ?? [[]];
+
   useEffect(() => {
     if (isEditing) {
       setShowEditor(true);
