@@ -7,6 +7,7 @@ import { LuUserSquare2 } from 'react-icons/lu';
 import { FaUserGroup } from 'react-icons/fa6';
 import styles from './NavigationBar.module.css';
 import SiloBetaButton from './AnimatedSiloButton';
+import NotificationsComponent from './Notifications';
 
 
 const NavigationBar = () => {
@@ -60,6 +61,7 @@ const NavigationBar = () => {
             >
               <PiAddressBook className={styles.icon} /> Members
             </a>
+            <NotificationsComponent />
             <button
               onClick={handleLogout}
               className={`${styles.logoutButton} ${activeLink === 'logout' ? styles.clickedButton : ''}`}
@@ -76,13 +78,7 @@ const NavigationBar = () => {
               href="/feed"
               className={`${styles.button} ${activeLink === 'feed' ? styles.clickedButton : ''}`}
             >
-              <IoNewspaperOutline className={styles.icon} /> Feed
-            </a>
-            <a
-              href="/groups"
-              className={`${styles.button} ${activeLink === 'groups' ? styles.clickedButton : ''}`}
-            >
-              <FaUserGroup className={styles.icon} /> Groups
+              <IoNewspaperOutline className={styles.icon} /> Community
             </a>
             <a
               href="/studentProfile"
@@ -94,7 +90,7 @@ const NavigationBar = () => {
               href="/GenDirectory"
               className={`${styles.button} ${activeLink === 'find' ? styles.clickedButton : ''}`}
             >
-              <PiAddressBook className={styles.icon} /> Network
+              <PiAddressBook className={styles.icon} /> Members
             </a>
             <button
               className={`${styles.logoutButton} ${activeLink === 'logout' ? styles.clickedButton : ''}`}

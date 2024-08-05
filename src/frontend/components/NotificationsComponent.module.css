@@ -1,0 +1,92 @@
+.notificationContainer {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .notificationButton {
+    background: #333;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-content: center;
+    transition: background-color 0.3s;
+    margin-top: 7px; 
+  }
+  
+  .notificationButton:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .notificationDot {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 8px;
+    height: 8px;
+    background-color: #ff4d4d;
+    border-radius: 50%;
+  }
+  
+  .modal {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 300px;
+    background-color: #2a2a2a;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
+    max-height: 400px;
+    overflow-y: auto;
+    z-index: 1000;
+  }
+  
+  .modalHeader {
+    padding: 12px 16px;
+    border-bottom: 1px solid #3a3a3a;
+    font-weight: bold;
+    color: #ffffff;
+  }
+  
+  .notificationItem {
+    padding: 12px 16px;
+    border-bottom: 1px solid #3a3a3a;
+  }
+  
+  .notificationItem:last-child {
+    border-bottom: none;
+  }
+  
+  .notificationType {
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 4px;
+  }
+  
+  .notificationMessage {
+    color: #b0b0b0;
+    font-size: 0.9em;
+    margin-bottom: 8px;
+  }
+  
+  .markAsReadButton {
+    background: none;
+    border: none;
+    color: #4d9aff;
+    cursor: pointer;
+    font-size: 0.9em;
+    padding: 0;
+    transition: color 0.3s;
+  }
+  
+  .markAsReadButton:hover {
+    color: #7ab6ff;
+  }
+  
+  .noNotifications {
+    padding: 12px 16px;
+    color: #b0b0b0;
+    text-align: center;
+  }

@@ -1,11 +1,8 @@
-
-
 import React from 'react';
 import { useUser } from '../../contexts/UserContext';
 import config from '../../config';
 import styles from './handleUpvote.module.css';
 import { BiSolidUpvote } from "react-icons/bi";
-
 
 const HandleUpvote = (WrappedComponent) => {
   const HandleUpvoteComponent = (props) => {
@@ -32,7 +29,8 @@ const HandleUpvote = (WrappedComponent) => {
         const data = await response.json();
         if (response.ok) {
           const actualUpvoteId = data._id;
-          console.log('actualUpvoteID: ', actualUpvoteId)
+          console.log('actualUpvoteID: ', actualUpvoteId);
+          
           // Update state with actual upvote ID
           setProject((prevProject) => ({
             ...prevProject,
@@ -45,6 +43,25 @@ const HandleUpvote = (WrappedComponent) => {
           setUserUpvotes((prevUpvotes) => [...prevUpvotes, actualUpvoteId]);
           console.log("Updating user context with upvotes:", actualUpvoteId);
           addUpvoteToUser(actualUpvoteId);
+
+          // Create a notification after upvoting the project
+          const notificationPayload = {
+            user_id: project.user_id,
+            type: 'upvote',
+            message: `${project.title}" has been upvoted!`,
+            project_id: project._id,
+            recipient_id: project.user_id,
+          };
+          const notificationResponse = await fetch(`${config.apiBaseUrl}/api/create_notification`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(notificationPayload)
+          });
+          if (!notificationResponse.ok) throw new Error('Failed to create notification');
+          console.log('Notification created successfully');
         } else {
           console.error('Upvote failed:', data.message);
         }
@@ -85,8 +102,3 @@ const HandleUpvote = (WrappedComponent) => {
 };
 
 export default HandleUpvote;
-
-
-
-
-
