@@ -7,7 +7,7 @@ import { FaPlus, FaSave, FaTrash } from 'react-icons/fa';
 import AutofillProjectFromPDF from '../AddProjectUtility_AutofillProject';
 import MoveModal from './MoveModal';
 import Canvas from './Canvas';
-import { FaFont, FaImage, FaVideo, FaFilePdf, FaCode } from 'react-icons/fa';
+import { FaFont, FaImage, FaVideo, FaFilePdf, FaCode, FaTimes, FaCheck } from 'react-icons/fa';
 
 
 const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, onClose = null }) => {
@@ -19,6 +19,7 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
   const [projectDescription, setProjectDescription] = useState(initialProjectData?.projectDescription || '');
   const [tags, setTags] = useState(initialProjectData?.tags || []);
   const [links, setLinks] = useState(initialProjectData?.links || []);
+  const [visibility, setVisibility] = useState(initialProjectData?.visibility ?? true);
   const { user } = useUser();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -78,7 +79,8 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
       layers: layers,
       tags,
       links,
-      username: user.username
+      username: user.username,
+      visibility
     };
     if (initialProjectData._id) {
       projectData._id = initialProjectData._id;
@@ -236,6 +238,11 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
     setTags(e.target.value.split(',').map(tags => tags.trim()));
   };
 
+  const handleVisibilityChange = () => {
+    setVisibility(prevVisibility => !prevVisibility);
+    console.log('visibility:', visibility);
+  };
+
   const handleLinksChange = (e) => {
     setLinks(e.target.value.split(',').map(link => link.trim()));
   };
@@ -340,6 +347,21 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
           <button className={styles.saveButton} onClick={() => handleSave(projectName, projectDescription, layers, tags, links, user, initialProjectData, onSave)}>
             <FaSave className={styles.iconSpacing}/> Save Project
           </button>
+          <label className={styles.toggleButton}>
+            <input
+              type="checkbox"
+              checked={visibility}
+              onChange={handleVisibilityChange}
+              className={styles.toggleCheckbox}
+            />
+            <span className={styles.toggleSlider}>
+              <FaCheck className={styles.checkIcon} />
+              <FaTimes className={styles.timesIcon} />
+            </span>
+            <span className={styles.toggleLabel}>
+              {visibility ? 'Visible' : 'Private'}
+            </span>
+        </label>
           {initialProjectData._id && (
             <button className={styles.deleteButton} onClick={handleDeleteClick}>
               <FaTrash className={styles.iconSpacing}/> Delete Project

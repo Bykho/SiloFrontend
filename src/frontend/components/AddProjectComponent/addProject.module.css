@@ -621,6 +621,85 @@
     animation: fadeIn 0.3s ease-out;
     min-width: 50px;
   }
+
+  .toggleButton {
+    position: relative;
+    display: inline-block;
+    width: 160px;
+    height: 40px;
+    margin-top: 15px;
+}
+
+.toggleCheckbox {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggleSlider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #e6630c;
+    transition: .4s;
+    border-radius: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15px;
+}
+
+.toggleSlider:before {
+    position: absolute;
+    content: "";
+    height: 32px;
+    width: 32px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+.toggleCheckbox:checked + .toggleSlider {
+    background-color: #3f8cc8;
+}
+
+.toggleCheckbox:checked + .toggleSlider:before {
+    transform: translateX(120px);
+}
+
+.checkIcon, .timesIcon {
+    color: white;
+    transition: .4s;
+    font-size: 18px;
+}
+
+.checkIcon {
+    opacity: 0;
+}
+
+.toggleCheckbox:checked + .toggleSlider .checkIcon {
+    opacity: 1;
+}
+
+.toggleCheckbox:checked + .toggleSlider .timesIcon {
+    opacity: 0;
+}
+
+.toggleLabel {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: bold;
+    transition: .4s;
+    font-size: 14px;
+}
   
   @keyframes fadeIn {
     from { opacity: 0; transform: translate(-50%, -60%); }
