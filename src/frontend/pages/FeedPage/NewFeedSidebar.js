@@ -31,7 +31,7 @@ const GroupItem = ({ name, members, onClick, joinable = false, joined = false, o
   </li>
 );
 
-const GroupSection = ({ title, groups, joinable, joinedGroups, onJoin, setActiveGroup, activeGroup }) => {
+const GroupSection = ({ title, groups, joinable, joinedGroups, onJoin, setActiveGroup, setFeedStyle, activeGroup }) => {
   const [isOpen, setIsOpen] = useState(true);
 
   return (
@@ -47,7 +47,10 @@ const GroupSection = ({ title, groups, joinable, joinedGroups, onJoin, setActive
               key={group._id}
               name={group.name}
               members={group.members}
-              onClick={() => setActiveGroup(group)}
+              onClick={() => {
+                setActiveGroup(group);
+                setFeedStyle('groupView');
+              }}
               joinable={joinable}
               joined={joinable ? joinedGroups.includes(group._id) : true}
               onJoin={() => onJoin(group._id)}
@@ -68,6 +71,15 @@ const CombinedFeedSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGr
   const [filteredMyGroups, setFilteredMyGroups] = useState([]);
   const [filteredSuggestedGroups, setFilteredSuggestedGroups] = useState([]);
 
+  useEffect(() => {
+    console.log("UseEffect for activeGroup: ", activeGroup)
+  }, [activeGroup] )
+  
+  useEffect(() => {
+    console.log("UseEffect for feedstyle: ", feedStyle)
+  }, [feedStyle] )
+
+  
   useEffect(() => {
     const fetchMyGroups = async () => {
       try {
@@ -168,6 +180,7 @@ const CombinedFeedSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGr
           groups={filteredMyGroups}
           joinable={false}
           setActiveGroup={setActiveGroup}
+          setFeedStyle={setFeedStyle}
           activeGroup={activeGroup}
         />
         <GroupSection
@@ -177,6 +190,7 @@ const CombinedFeedSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGr
           joinedGroups={joinedGroups}
           onJoin={handleGroupJoin}
           setActiveGroup={setActiveGroup}
+          setFeedStyle={setFeedStyle}
           activeGroup={activeGroup}
         />
       </div>

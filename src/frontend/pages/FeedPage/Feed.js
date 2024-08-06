@@ -5,6 +5,9 @@ import Tagged from '../../components/TagsFeed';
 import CombinedFeedSidebar from './NewFeedSidebar';
 import styles from './feed.module.css';
 import config from '../../config';
+import NewAddProjectToGroup from './NewAddProjectToGroup';
+import NewGroupMembers from './NewGroupMembers';
+import NewDiscussionBoard from './NewDiscussionBoard';
 import { FaSearch } from 'react-icons/fa';
 
 const Feed = () => {
@@ -17,6 +20,10 @@ const Feed = () => {
   const [inputText, setInputText] = useState('');
   const [userUpvotes, setUserUpvotes] = useState([]);
   const [activeGroup, setActiveGroup] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [membersShow, setMembersShow] = useState(false);
+  const [projectShow, setProjectShow] = useState(true);
+  const [discussionShow, setDiscussionShow] = useState(false);
   const { user } = useUser();
   const location = useLocation();
   const searchInputRef = useRef(null);
@@ -79,6 +86,39 @@ const Feed = () => {
     }
   }, [user]);
 
+
+  useEffect(() => {
+    const fetchGroupProjects = async () => {
+      setLoading(true);
+      setError('');
+      if (activeGroup) {
+        const group_project_ids = activeGroup.projects;
+        try {
+          const token = localStorage.getItem('token');
+          const response = await fetch(`${config.apiBaseUrl}/returnProjectsFromIds`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ projectIds: group_project_ids })
+          });
+          if (!response.ok) {
+            throw new Error('Failed to fetch projects');
+          }
+          const returnedProjects = await response.json();
+          setFilteredProjects(returnedProjects);
+          setLoading(false);
+        } catch (err) {
+          setError('Failed to fetch projects');
+          setLoading(false);
+        }
+      }
+    };
+    fetchGroupProjects();
+  }, [activeGroup]);
+
+
   useEffect(() => {
     if (location.state && location.state.tag) {
       const tag = location.state.tag;
@@ -95,7 +135,7 @@ const Feed = () => {
 
   useEffect(() => {
     let filtered = projects;
-
+  
     if (feedStyle === 'home' || feedStyle === 'popular') {
       filtered = projects.filter(project => {
         const searchTextLower = searchText.toLowerCase();
@@ -118,7 +158,7 @@ const Feed = () => {
         return false;
       });
     }
-
+  
     if (feedStyle === 'popular') {
       const now = new Date();
       filtered = filtered.map(project => {
@@ -128,14 +168,18 @@ const Feed = () => {
         return { ...project, score };
       }).sort((a, b) => b.score - a.score);
     }
-
-    if (activeGroup) {
-      filtered = filtered.filter(project => project.groupId === activeGroup._id);
+  
+    if (!activeGroup || feedStyle !== 'groupView') {
+      setFilteredProjects(filtered);
     }
-
-    setFilteredProjects(filtered);
   }, [projects, searchText, feedStyle, activeGroup]);
 
+
+  useEffect(() => {
+    console.log('FEED.js, here is filtered: ', filteredProjects)
+  }, [filteredProjects])
+
+  
   const handleSearch = () => {
     setSearchText(inputText);
   };
@@ -150,51 +194,87 @@ const Feed = () => {
     return feedStyle.charAt(0).toUpperCase() + feedStyle.slice(1);
   };
 
+  const updateGroupProjects = (newProjects) => {
+    setActiveGroup((prevGroup) => ({
+      ...prevGroup,
+      projects: [...prevGroup.projects, ...newProjects],
+    }));
+  };
+  
   return (
     <div className={styles.parentContainer}>
       <div className={styles.headerBox}>
         <h2>{getHeaderText()}</h2>
+        {activeGroup && <button onClick={() => setIsModalOpen(true)}>add project to group</button>}
+        {activeGroup && <button onClick={() => {setMembersShow(true); setProjectShow(false); setDiscussionShow(false)}}>Members</button>}
+        {activeGroup && <button onClick={() => {setProjectShow(true); setMembersShow(false); setDiscussionShow(false)}}>Projects</button>}
+        {activeGroup && <button onClick={() => {setDiscussionShow(true); setMembersShow(false); setProjectShow(false)}}>Discussion</button>}
       </div>
-    <div className={styles.feedContainer}>
-      <div className={styles.feedSidebar}>
-        <CombinedFeedSidebar
-          feedStyle={feedStyle}
-          setFeedStyle={setFeedStyle}
-          activeGroup={activeGroup}
-          setActiveGroup={setActiveGroup}
-        />
-      </div>
-      <div className={styles.feedMainContent}>
-      <div className={styles.searchBar}>
-          <div className={styles.searchWords}>
-            <FaSearch />
-          </div>
-          <div className={styles.buttonContainer}>
-            <input
-              ref={searchInputRef}
-              type="search"
-              value={inputText}
-              onChange={handleInputChange}
-              onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-              placeholder="Search projects..."
-              className={styles.searchInput}
-            />
-          </div>
-          <div className={styles.resultsCount}>
-            Results: {filteredProjects.length}
-          </div>
-        </div>
-        <div className={styles.feedContent}>
-          <Tagged
-            filteredProjects={filteredProjects}
-            loading={loading}
-            error={error}
-            userUpvotes={userUpvotes}
-            setUserUpvotes={setUserUpvotes}
+      <div className={styles.feedContainer}>
+        <div className={styles.feedSidebar}>
+          <CombinedFeedSidebar
+            feedStyle={feedStyle}
+            setFeedStyle={setFeedStyle}
+            activeGroup={activeGroup}
+            setActiveGroup={setActiveGroup}
           />
         </div>
+        <div className={styles.feedMainContent}>
+          <div className={styles.searchBar}>
+            <div className={styles.searchWords}>
+              <FaSearch />
+            </div>
+            <div className={styles.buttonContainer}>
+              <input
+                ref={searchInputRef}
+                type="search"
+                value={inputText}
+                onChange={handleInputChange}
+                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                placeholder="Search projects..."
+                className={styles.searchInput}
+              />
+            </div>
+            <div className={styles.resultsCount}>
+              Results: {filteredProjects.length}
+            </div>
+          </div>
+          <div className={styles.feedContent}>
+            {feedStyle === 'home' || feedStyle === 'popular' ? (
+              <Tagged
+                filteredProjects={filteredProjects}
+                loading={loading}
+                error={error}
+                userUpvotes={userUpvotes}
+                setUserUpvotes={setUserUpvotes}
+              />
+            ) : feedStyle === 'groupView' && membersShow ? (
+              <NewGroupMembers group={activeGroup} />
+            ) : feedStyle === 'groupView' && projectShow ? (
+              <Tagged
+                filteredProjects={filteredProjects}
+                loading={loading}
+                error={error}
+                userUpvotes={userUpvotes}
+                setUserUpvotes={setUserUpvotes}
+              />
+            ) : feedStyle === 'groupView' && discussionShow ? (
+              <NewDiscussionBoard group={activeGroup}  />
+            ) : null}
+          </div>
+        </div>
       </div>
-    </div>
+      {isModalOpen && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent}>
+            <NewAddProjectToGroup 
+              group={activeGroup} 
+              onClose={() => setIsModalOpen(false)} 
+              updateGroupProjects={updateGroupProjects} 
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

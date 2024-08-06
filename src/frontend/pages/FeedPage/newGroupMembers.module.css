@@ -1,0 +1,27 @@
+
+
+.groupMembersContainer {
+    padding: 10px;
+    border-radius: 5px;
+  }
+  
+  .groupTitle {
+    font-size: 1.5em;
+    font-weight: bold;
+  }
+  
+  .membersList {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .memberItem {
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .memberItem:last-child {
+    border-bottom: none;
+  }
+
+  
+  
