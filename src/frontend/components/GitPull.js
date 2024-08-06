@@ -7,11 +7,14 @@ import config from '../config';
 const GitPull = ({ userData, onPortfolioUpdate }) => {
   const [githubUsername, setGithubUsername] = useState('');
   const [repos, setRepos] = useState([]);
-  const [expandedItems, setExpandedItems] = useState({});
+  const [expandedRepo, setExpandedRepo] = useState(null);
+  const [expandedSubItems, setExpandedSubItems] = useState({});
   const [selectedFiles, setSelectedFiles] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [noRepos, setNoRepos] = useState(false);
+  const [apiErrorMessage, setApiErrorMessage] = useState('');
+
 
   useEffect(() => {
     if (userData.github_link) {
@@ -33,7 +36,7 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
       const response = await fetch(`https://api.github.com/repos/${githubUsername}/${repoName}/contents/${filePath}`);
       if (!response.ok) throw new Error('Failed to fetch file content');
       const data = await response.json();
-      return atob(data.content); // Decode base64 content
+      return atob(data.content);
     } catch (err) {
       console.error('Failed to fetch file content:', err);
       return null;
@@ -79,14 +82,24 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
     }
   };
 
+  const handleRepoToggle = async (repoName) => {
+    if (expandedRepo === repoName) {
+      setExpandedRepo(null); // Collapse the repo if it's already expanded
+    } else {
+      setExpandedRepo(repoName); // Expand the repo
+      const contents = await fetchContents(repoName);
+      setRepos(prev => prev.map(repo => repo.name === repoName ? { ...repo, contents } : repo));
+    }
+  };
+
   const handleItemToggle = async (repoName, path = '') => {
     const itemKey = `${repoName}:${path}`;
-    setExpandedItems(prev => ({
+    setExpandedSubItems(prev => ({
       ...prev,
       [itemKey]: !prev[itemKey]
     }));
 
-    if (!expandedItems[itemKey]) {
+    if (!expandedSubItems[itemKey]) {
       const contents = await fetchContents(repoName, path);
       setRepos(prev => {
         const updateNestedContents = (items) => {
@@ -141,8 +154,17 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
         body: JSON.stringify(requestData),
       });
 
+      console.log('API response status:', response.status);
+      console.log('API response object:', response);
+
       if (!response.ok) {
-        throw new Error('Failed to add projects to portfolio');
+        if (response.status === 413) {
+          setApiErrorMessage('The combined code exceeds the maximum allowed limit for processing. Please select fewer files.');
+          throw new Error('The combined code exceeds the maximum allowed limit for processing. Please select fewer files.');
+        } else {
+          setApiErrorMessage('Failed to add projects to portfolio. Please try again.');
+          throw new Error('Failed to add projects to portfolio');
+        }
       }
 
       const result = await response.json();
@@ -152,8 +174,6 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
       if (!Array.isArray(result.summary_content)) {
         console.log('summary_content is not an array');
       }
-
-
 
       const combinedData = [
         ...selectedProjects,
@@ -167,10 +187,15 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
       console.log("GITPULL HANDLESUBMIT combinedData: ", combinedData)
 
       onPortfolioUpdate(combinedData, result.surrounding_summary);
+      setApiErrorMessage('');
     } catch (error) {
       console.error('Error adding projects to portfolio:', error);
       alert('Failed to add projects to portfolio. Please try again.');
     }
+  };
+
+  const closeModal = () => {
+    setApiErrorMessage('');
   };
 
   const renderTree = (repoName, items, currentPath = '') => {
@@ -181,7 +206,7 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
         {items.map(item => {
           const fullPath = currentPath ? `${currentPath}/${item.name}` : item.name;
           const itemKey = `${repoName}:${fullPath}`;
-          const isExpanded = expandedItems[itemKey];
+          const isExpanded = expandedSubItems[itemKey];
           const isSelected = selectedFiles[`${repoName}/${fullPath}`];
 
           if (item.type === 'dir') {
@@ -244,6 +269,15 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
           <p>No public repositories found for this user.</p>
         </div>
       )}
+      {apiErrorMessage && (
+        <>
+          <div className={styles.apiErrorBackdrop} onClick={closeModal}></div>
+          <div className={styles.apiErrorModal}>
+            <button className={styles.apiErrorCloseButton} onClick={closeModal}>×</button>
+            <p className={styles.apiErrorText}>{apiErrorMessage}</p>
+          </div>
+        </>
+      )}
       {!noRepos && (
         <>
           <ul className={styles.repoList}>
@@ -251,12 +285,12 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
               <li key={repo.id} className={styles.repoItem}>
                 <button
                   className={styles.repoButton}
-                  onClick={() => handleItemToggle(repo.name)}
+                  onClick={() => handleRepoToggle(repo.name)}
                 >
-                  {expandedItems[`${repo.name}:`] ? <ChevronDown size={20} /> : <ChevronRight size={20} />}
+                  {expandedRepo === repo.name ? <ChevronDown size={20} /> : <ChevronRight size={20} />}
                   {repo.name}
                 </button>
-                {expandedItems[`${repo.name}:`] && renderTree(repo.name, repo.contents)}
+                {expandedRepo === repo.name && renderTree(repo.name, repo.contents)}
               </li>
             ))}
           </ul>
@@ -275,3 +309,6 @@ GitPull.propTypes = {
 };
 
 export default GitPull;
+
+
+

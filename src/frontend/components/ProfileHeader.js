@@ -22,7 +22,6 @@ const ProfileHeader = ({ userData, loading, error }) => {
     if (userData && userData.biography) {
       setBioTruncated(userData.biography.length > BIO_LENGTH_LIMIT);
     }
-    console.log('user', userData);
   }, [userData]);
 
   const toggleResume = () => {
