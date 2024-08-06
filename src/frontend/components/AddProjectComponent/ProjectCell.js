@@ -35,12 +35,6 @@ const ProjectCell = ({
             className={styles.headerTextArea}
           />
         <button 
-          className={styles.moveCellButton}
-          onClick={() => handleMoveClick(rowIndex, cellIndex)}
-        >
-          <FaArrowsAlt />
-        </button>
-        <button 
           className={styles.removeCellButton} 
           onClick={() => handleRemoveCell(rowIndex, cellIndex)}
         >

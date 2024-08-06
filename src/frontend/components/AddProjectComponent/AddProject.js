@@ -337,17 +337,17 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
             <FaCode /> Code
           </button>
       </div>
-        <Canvas 
-          layers={layers}
-          handleCellTypeChange={handleCellTypeChange}
-          handleCellValueChange={handleCellValueChange}
-          handleFileChange={handleFileChange}
-          handleLanguageChange={handleLanguageChange}
-          handleHeaderChange={handleHeaderChange}
-          handleRemoveCell={handleRemoveCell}
-          handleMoveClick={handleMoveClick}
-          isValidURL={isValidURL}
-        />
+      <Canvas 
+        layers={layers}
+        setRows={setRows}
+        handleCellTypeChange={handleCellTypeChange}
+        handleCellValueChange={handleCellValueChange}
+        handleFileChange={handleFileChange}
+        handleLanguageChange={handleLanguageChange}
+        handleHeaderChange={handleHeaderChange}
+        handleRemoveCell={handleRemoveCell}
+        isValidURL={isValidURL}
+      />
         <div className={styles.addTagsAndLinks}>
           <input
             type="text"
@@ -400,14 +400,6 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
             </div>
           </div>
         </div>
-      )}
-      {selectedCell && (
-        <MoveModal
-          selectedCell={selectedCell}
-          handleMove={handleMove}
-          setSelectedCell={setSelectedCell}
-          layers={layers}
-        />
       )}
     </div>
   );
