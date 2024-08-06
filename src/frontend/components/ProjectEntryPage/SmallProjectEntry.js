@@ -187,6 +187,9 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
 
   return (
     <div className={styles.projectContainer}>
+      <div>
+        {localProject.visibility !== undefined ? (localProject.visibility ? "visible" : "hidden") : "words words words"}
+      </div>
       <div className={styles.headerContainer}>
         <UpvoteButton
           project={localProject}

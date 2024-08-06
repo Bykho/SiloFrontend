@@ -17,6 +17,7 @@ const TagsFeed = ({ filteredProjects, loading = null, error = null, userUpvotes,
   //  console.log('tagsFeed filteredProjects: ', filteredProjects)
   //}, [])
 
+
   return (
     <div className={styles.feedContainer}>
       <div className={styles.projectList}>
@@ -27,20 +28,24 @@ const TagsFeed = ({ filteredProjects, loading = null, error = null, userUpvotes,
         ) : error ? (
           <p>{error}</p>
         ) : (
-          filteredProjects.map((project, index) => (
-            <div key={index} className={styles.projectItem}>
-              <SmallProjectEntry project={project} userUpvotes={userUpvotes} setUserUpvotes={setUserUpvotes} />
-            </div>
-          ))
+          filteredProjects.map((project, index) => {
+            console.log('Project visibility settings:', project.visibility);
+            if (project.visibility === false) {
+              return null; // Skip this project if visibility is false
+            }
+            return (
+              <div key={index} className={styles.projectItem}>
+                <SmallProjectEntry project={project} userUpvotes={userUpvotes} setUserUpvotes={setUserUpvotes} />
+              </div>
+            );
+          })
         )}
       </div>
-
     </div>
   );
 };
 
 export default TagsFeed;
-
 
 
 

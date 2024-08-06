@@ -46,15 +46,17 @@ const PortfolioDisplay = ({ user: passedUser }) => {
     <div className={styles.container}>
       <div className={styles.projectDirectory}>
         <h3 className={styles.projectsTitle}>Projects</h3>
-        {passedUser.portfolio.map((project, index) => (
-          <SmallProjectEntry
-            key={index}
-            project={project}
-            passedUser={passedUser}
-            userUpvotes={userUpvotes}
-            setUserUpvotes={setUserUpvotes}
-          />
-        ))}
+        {passedUser.portfolio.map((project, index) => {
+          return (
+            <SmallProjectEntry
+              key={index}
+              project={project}
+              passedUser={passedUser}
+              userUpvotes={userUpvotes}
+              setUserUpvotes={setUserUpvotes}
+            />
+          );
+        })}
       </div>
     </div>
   );
