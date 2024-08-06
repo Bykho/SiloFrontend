@@ -200,7 +200,7 @@ const ProjectEntry = ({ project, passedUser, UpvoteButton, userUpvotes, setUserU
     const description = localProject.projectDescription;
     const isLongDescription = description.length > 200;
     return (
-      <div className={styles.projectDescriptionContainer}>
+      <div className={styles.projectDescriptionContainer} onClick={toggleDescription}>
         <div className={`${styles.projDescription} ${isLongDescription && !showDescription ? styles.collapsedDescription : ''}`}>
           {description}
         </div>

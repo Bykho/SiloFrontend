@@ -839,6 +839,8 @@
     min-height: 100px;
     padding: 10px;
     transition: background-color 0.2s ease;
+    border: 2px dashed rgb(107, 107, 107); 
+    border-radius: 8px;
   }
   
   .canvas {

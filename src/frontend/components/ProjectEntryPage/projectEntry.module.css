@@ -226,7 +226,7 @@
   background: none;
   border-radius: 5px;
   border: none; 
-  background-color: #4a90e2;
+  background-color: #4895c5;
   cursor: pointer;
   color: white;
   font-size: 1rem;
@@ -398,6 +398,7 @@
 .projectDescriptionContainer {
   margin-bottom: 20px;
   position: relative; /* Add this line */
+  cursor: pointer;
 }
 
 .projDescription {
@@ -414,9 +415,9 @@
 }
 
 .seeMoreButton {
-  background-color: #b9d9eb; /* Color of the button */
+  background-color: #486c81; /* Color of the button */
   border: none;
-  color: #1e1e1e; /* Dark color for text */
+  color: #cfcfcf; /* Dark color for text */
   cursor: pointer;
   font-size: .75rem; /* Size of the text */
   padding: 5px 10px; /* Padding for the button */

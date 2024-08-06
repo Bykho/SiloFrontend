@@ -8,7 +8,7 @@ import AutofillProjectFromPDF from '../AddProjectUtility_AutofillProject';
 import CleanOrbitingRingLoader from '../FractalLoadingBar';
 import MoveModal from './MoveModal';
 import Canvas from './Canvas';
-import { FaFont, FaImage, FaVideo, FaFilePdf, FaCode, FaTimes, FaCheck } from 'react-icons/fa';
+import { FaFont, FaImage, FaVideo, FaFilePdf, FaCode, FaTimes, FaCheck, FaExchangeAlt } from 'react-icons/fa';
 
 
 const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, onClose = null }) => {
@@ -28,6 +28,7 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
   const [selectedCell, setSelectedCell] = useState(null);
   const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [previewProject, setPreviewProject] = useState({});
+  const [isRearranging, setIsRearranging] = useState(false);
 
   useEffect(() => {
     const updatedPreviewProject = {
@@ -63,6 +64,10 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
       return row;
     });
     setRows(newLayers);
+  };
+
+  const toggleRearrange = () => {
+    setIsRearranging(!isRearranging);
   };
 
   const isValidURL = (url) => {
@@ -194,48 +199,6 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
     setRows(newLayers);
   };
 
-  const handleMove = (direction) => {
-    if (!selectedCell) return;
-    const { layerIndex, cellIndex } = selectedCell;
-    const newLayers = JSON.parse(JSON.stringify(layers));
-
-    switch (direction) {
-      case 'up':
-        if (layerIndex > 0) {
-          const temp = newLayers[layerIndex][cellIndex];
-          newLayers[layerIndex][cellIndex] = newLayers[layerIndex - 1][cellIndex] || { type: '', value: '' };
-          newLayers[layerIndex - 1][cellIndex] = temp;
-        }
-        break;
-      case 'down':
-        if (layerIndex < newLayers.length - 1) {
-          const temp = newLayers[layerIndex][cellIndex];
-          newLayers[layerIndex][cellIndex] = newLayers[layerIndex + 1][cellIndex] || { type: '', value: '' };
-          newLayers[layerIndex + 1][cellIndex] = temp;
-        }
-        break;
-      case 'left':
-        if (cellIndex > 0) {
-          const temp = newLayers[layerIndex][cellIndex];
-          newLayers[layerIndex][cellIndex] = newLayers[layerIndex][cellIndex - 1];
-          newLayers[layerIndex][cellIndex - 1] = temp;
-        }
-        break;
-      case 'right':
-        if (cellIndex < newLayers[layerIndex].length - 1) {
-          const temp = newLayers[layerIndex][cellIndex];
-          newLayers[layerIndex][cellIndex] = newLayers[layerIndex][cellIndex + 1];
-          newLayers[layerIndex][cellIndex + 1] = temp;
-        }
-        break;
-      default:
-        break;
-    }
-
-    setRows(newLayers);
-    setSelectedCell(null);
-  };
-
   const handleTagsChange = (e) => {
     setTags(e.target.value.split(',').map(tags => tags.trim()));
   };
@@ -336,6 +299,9 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
           <button onClick={() => addCell('code')} className={styles.toolbarButton}>
             <FaCode /> Code
           </button>
+          <button onClick={toggleRearrange} className={`${styles.toolbarButton} ${isRearranging ? styles.active : ''}`}>
+          <FaExchangeAlt /> {isRearranging ? 'Finish Rearranging' : 'Rearrange'}
+        </button>
       </div>
       <Canvas 
         layers={layers}
@@ -347,6 +313,7 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
         handleHeaderChange={handleHeaderChange}
         handleRemoveCell={handleRemoveCell}
         isValidURL={isValidURL}
+        isRearranging={isRearranging}
       />
         <div className={styles.addTagsAndLinks}>
           <input

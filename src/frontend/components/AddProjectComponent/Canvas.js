@@ -6,7 +6,7 @@ import styles from './addProject.module.css';
 import { LuFileWarning } from "react-icons/lu";
 import { FaArrowsAlt } from 'react-icons/fa';
 
-const DraggableCell = ({ cell, index, moveCell, ...props }) => {
+const DraggableCell = ({ cell, index, moveCell, isRearranging, ...props }) => {
   const [{ isDragging }, drag] = useDrag({
     type: 'cell',
     item: { index },
@@ -27,7 +27,7 @@ const DraggableCell = ({ cell, index, moveCell, ...props }) => {
 
   return (
     <div ref={(node) => drag(drop(node))} className={`${styles.draggableItem} ${isDragging ? styles.dragging : ''}`}>
-      <div className={styles.dragHandle}><FaArrowsAlt />  </div>
+      {isRearranging && <div className={styles.dragHandle}><FaArrowsAlt /></div>}
       <ProjectCell
         cell={cell}
         rowIndex={Math.floor(index / 2)}
@@ -38,7 +38,8 @@ const DraggableCell = ({ cell, index, moveCell, ...props }) => {
   );
 };
 
-const Canvas = ({ layers, setRows, ...props }) => {
+const Canvas = ({ layers, setRows, isRearranging, ...props }) => {
+
   const moveCell = useCallback((dragIndex, hoverIndex) => {
     const flatLayers = layers.flat();
     const dragCell = flatLayers[dragIndex];
@@ -66,6 +67,7 @@ const Canvas = ({ layers, setRows, ...props }) => {
               index={index}
               cell={cell}
               moveCell={moveCell}
+              isRearranging={isRearranging}
               {...props}
             />
           ))

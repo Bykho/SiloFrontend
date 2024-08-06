@@ -39,8 +39,7 @@
 }
 
 .column:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
 }
 
 .text, .editableText {
@@ -158,11 +157,11 @@
 
 .modalContent {
   position: relative;
-  padding: 20px;
+  padding: 0px 0px 20px 0px;
   border-radius: 8px;
   max-height: 80%;
   overflow: auto;
-  width: 85%; 
+  width: 90%; 
 }
 
 .modalImage {
