@@ -175,9 +175,9 @@ const Feed = () => {
   }, [projects, searchText, feedStyle, activeGroup]);
 
 
-  useEffect(() => {
-    console.log('FEED.js, here is filtered: ', filteredProjects)
-  }, [filteredProjects])
+  //useEffect(() => {
+  //  console.log('FEED.js, here is filtered: ', filteredProjects)
+  //}, [filteredProjects])
 
   
   const handleSearch = () => {
@@ -190,8 +190,10 @@ const Feed = () => {
   };
 
   const getHeaderText = () => {
-    if (activeGroup) return activeGroup.name;
-    return feedStyle.charAt(0).toUpperCase() + feedStyle.slice(1);
+    if (feedStyle === 'groupView' && activeGroup) {
+      return activeGroup.name;
+    }
+      return feedStyle.charAt(0).toUpperCase() + feedStyle.slice(1);
   };
 
   const updateGroupProjects = (newProjects) => {
@@ -205,10 +207,10 @@ const Feed = () => {
     <div className={styles.parentContainer}>
       <div className={styles.headerBox}>
         <h2>{getHeaderText()}</h2>
-        {activeGroup && <button onClick={() => setIsModalOpen(true)}>add project to group</button>}
-        {activeGroup && <button onClick={() => {setMembersShow(true); setProjectShow(false); setDiscussionShow(false)}}>Members</button>}
-        {activeGroup && <button onClick={() => {setProjectShow(true); setMembersShow(false); setDiscussionShow(false)}}>Projects</button>}
-        {activeGroup && <button onClick={() => {setDiscussionShow(true); setMembersShow(false); setProjectShow(false)}}>Discussion</button>}
+        {feedStyle === 'groupView' && activeGroup && <button onClick={() => setIsModalOpen(true)}>add project to group</button>}
+        {feedStyle === 'groupView' && activeGroup && <button onClick={() => {setMembersShow(true); setProjectShow(false); setDiscussionShow(false)}}>Members</button>}
+        {feedStyle === 'groupView' && activeGroup && <button onClick={() => {setProjectShow(true); setMembersShow(false); setDiscussionShow(false)}}>Projects</button>}
+        {feedStyle === 'groupView' && activeGroup && <button onClick={() => {setDiscussionShow(true); setMembersShow(false); setProjectShow(false)}}>Discussion</button>}
       </div>
       <div className={styles.feedContainer}>
         <div className={styles.feedSidebar}>

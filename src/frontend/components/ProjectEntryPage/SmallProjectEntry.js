@@ -121,7 +121,6 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
     };
 
     const previewTags = tags.slice(0, VISIBLE_TAGS);
-    console.log('previewTags', previewTags);
     const remainingTags = tags.slice(VISIBLE_TAGS);
     return (
       <div className={styles.tagsContainer}>
