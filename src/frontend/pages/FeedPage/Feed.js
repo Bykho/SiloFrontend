@@ -9,6 +9,11 @@ import NewAddProjectToGroup from './NewAddProjectToGroup';
 import NewGroupMembers from './NewGroupMembers';
 import NewDiscussionBoard from './NewDiscussionBoard';
 import { FaSearch } from 'react-icons/fa';
+import { MdOutlinePostAdd } from "react-icons/md";
+import { FaUsers } from "react-icons/fa";
+import { FaRegListAlt } from "react-icons/fa";
+import { GoCommentDiscussion } from "react-icons/go";
+
 
 const Feed = () => {
   const [feedStyle, setFeedStyle] = useState('home');
@@ -205,12 +210,36 @@ const Feed = () => {
   
   return (
     <div className={styles.parentContainer}>
-      <div className={styles.headerBox}>
+    <div className={styles.headerBox}>
         <h2>{getHeaderText()}</h2>
-        {feedStyle === 'groupView' && activeGroup && <button onClick={() => setIsModalOpen(true)}>add project to group</button>}
-        {feedStyle === 'groupView' && activeGroup && <button onClick={() => {setMembersShow(true); setProjectShow(false); setDiscussionShow(false)}}>Members</button>}
-        {feedStyle === 'groupView' && activeGroup && <button onClick={() => {setProjectShow(true); setMembersShow(false); setDiscussionShow(false)}}>Projects</button>}
-        {feedStyle === 'groupView' && activeGroup && <button onClick={() => {setDiscussionShow(true); setMembersShow(false); setProjectShow(false)}}>Discussion</button>}
+        {feedStyle === 'groupView' && activeGroup && (
+          <div className={styles.headerButtons}>
+            <button 
+              onClick={() => {setProjectShow(true); setMembersShow(false); setDiscussionShow(false)}}
+              className={`${styles.headerButton} ${projectShow ? styles.active : ''}`}
+            >
+              <FaRegListAlt /> Posts
+            </button>
+            <button 
+              onClick={() => {setMembersShow(true); setProjectShow(false); setDiscussionShow(false)}}
+              className={`${styles.headerButton} ${membersShow ? styles.active : ''}`}
+            >
+              <FaUsers /> Members
+            </button>
+            <button 
+              onClick={() => {setDiscussionShow(true); setMembersShow(false); setProjectShow(false)}}
+              className={`${styles.headerButton} ${discussionShow ? styles.active : ''}`}
+            >
+              <GoCommentDiscussion /> Discussion
+            </button>
+            <button 
+              onClick={() => setIsModalOpen(true)}
+              className={`${styles.headerButton} ${styles.primary}`}
+            >
+              <MdOutlinePostAdd /> Post To Group
+            </button>
+          </div>
+        )}
       </div>
       <div className={styles.feedContainer}>
         <div className={styles.feedSidebar}>
