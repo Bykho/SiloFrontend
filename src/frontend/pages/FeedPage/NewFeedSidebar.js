@@ -174,6 +174,7 @@ const CombinedFeedSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGr
           onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
+      <div className={styles.dividerMid}></div>
       <div className={styles.groupsList}>
         <GroupSection
           title="Your Communities"
