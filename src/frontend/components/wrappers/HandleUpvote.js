@@ -48,7 +48,9 @@ const HandleUpvote = (WrappedComponent) => {
           const notificationPayload = {
             user_id: project.user_id,
             type: 'upvote',
-            message: `${project.projectName}" has been upvoted!`,
+            message: `${project.projectName} upvoted ${user.username}!`,
+            project_name: project.projectName,
+            from_user: user.username,
             project_id: project._id,
             recipient_id: project.user_id,
           };

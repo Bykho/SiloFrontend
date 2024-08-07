@@ -15,18 +15,14 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
   const [dictInitProjectData, setDictInitProjectData] = useState(typeof initialProjectData === 'string' ? JSON.parse(initialProjectData) : initialProjectData);
 
   useEffect(() => {
-    console.log('initialProjectData in AddProject (on mount):', initialProjectData);
     if (typeof initialProjectData === 'string') {
-      console.log('initialProjectData is a string:', initialProjectData);
       try {
         const parsedData = JSON.parse(initialProjectData);
         setDictInitProjectData(parsedData);
-        console.log('initialProjectData parsed to dictionary:', parsedData);
       } catch (error) {
         console.error('Failed to parse initialProjectData:', error);
       }
     } else if (typeof initialProjectData === 'object' && initialProjectData !== null) {
-      console.log('initialProjectData is a dictionary:', initialProjectData);
       setDictInitProjectData(initialProjectData);
     } else {
       console.log('initialProjectData is of unexpected type:', typeof initialProjectData);
@@ -55,7 +51,6 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
 
   useEffect(() => {
     if (Object.keys(dictInitProjectData).length > 0) {
-      console.log('initialProjectData in AddProject (on mount):', dictInitProjectData);
       setRows(dictInitProjectData.length ? initialRows : []);
       setProjectName(dictInitProjectData.projectName || '');
       setProjectDescription(dictInitProjectData.projectDescription || '');
@@ -65,9 +60,9 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
     }
   }, [initialRows, initialProjectData]);
 
-  useEffect(() => {
-    console.log('initialProjectData.projectName:', initialProjectData.projectName);
-  }, [initialProjectData]);
+//  useEffect(() => {
+//    console.log('initialProjectData.projectName:', initialProjectData.projectName);
+//  }, [initialProjectData]);
 
   useEffect(() => {
     const updatedPreviewProject = {

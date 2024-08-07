@@ -64,8 +64,8 @@ const NotificationsComponent = () => {
           ) : (
             notifications.map((notification) => (
               <div key={notification.id} className={styles.notificationItem}>
-                <div className={styles.notificationType}>{notification.type}</div>
-                <div className={styles.notificationMessage}>{notification.message}</div>
+                <div className={styles.notificationType}>{notification.project_name} has been Upvoted!</div>
+                <div className={styles.notificationMessage}>{notification.from_user} gives their kudos</div>
                 <button
                   onClick={() => markAsRead(notification.id)}
                   className={styles.markAsReadButton}
