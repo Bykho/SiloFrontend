@@ -107,7 +107,7 @@ const DiscussionBoard = ({ group }) => {
         <div className={styles.commentJsonContainer}>
           {Object.entries(commentJson).map(([title, content], index) => (
             <div key={index} className={styles.commentSection}>
-              <h3 className={styles.commentTitle}>{title}</h3>
+              <h3 className={styles.commentTitle}>Posted Bounties</h3>
               <div className={styles.commentList}>
                 {content.map((commentId) => (
                   <div key={commentId} className={styles.commentCard}>
@@ -116,7 +116,10 @@ const DiscussionBoard = ({ group }) => {
                         <div className={styles.commentHeader}>
                           <span className={styles.commentAuthor}>{comments[commentId].author}</span>
                         </div>
-                        <p className={styles.commentText}>{comments[commentId].text}</p>
+                        <div className={styles.commentRow}>
+                          <p className={styles.commentText}>{comments[commentId].text}</p>
+                          <button className={`${styles.headerButton} ${styles.primary}`} > Respond To Bounty</button>
+                        </div>
                       </>
                     ) : (
                       <p>Loading...</p>
@@ -127,7 +130,7 @@ const DiscussionBoard = ({ group }) => {
               <div className={styles.commentInputContainer}>
                 <input
                   type="text"
-                  placeholder="Write a post..."
+                  placeholder="Post a bounty..."
                   className={styles.commentInput}
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
@@ -136,7 +139,7 @@ const DiscussionBoard = ({ group }) => {
                   className={styles.addCommentButton}
                   onClick={() => handleAddComment(title)}
                 >
-                  Submit
+                  Submit Bounty
                 </button>
               </div>
             </div>

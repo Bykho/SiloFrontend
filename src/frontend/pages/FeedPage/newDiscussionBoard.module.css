@@ -58,6 +58,37 @@
     font-size: 0.95em;
   }
   
+  .commentRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .headerButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--text-color);
+    border: none;
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+  }
+
+  .headerButton.primary {
+    background-color: #e86e22;
+    color: white;
+  }
+
+  .headerButton.primary:hover {
+    background-color: #3a7bc8;
+  }
+
+
   .commentAuthor {
     font-style: italic;
     color: #4a90e2;
@@ -103,3 +134,4 @@
     color: #4a90e2;
     font-style: italic;
   }
+

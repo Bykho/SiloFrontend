@@ -230,7 +230,7 @@ const Feed = () => {
               onClick={() => {setDiscussionShow(true); setMembersShow(false); setProjectShow(false)}}
               className={`${styles.headerButton} ${discussionShow ? styles.active : ''}`}
             >
-              <GoCommentDiscussion /> Discussion
+              <GoCommentDiscussion /> Bounties
             </button>
             <button 
               onClick={() => setIsModalOpen(true)}
