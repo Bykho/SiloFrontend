@@ -71,9 +71,12 @@ function Welcome() {
                 <span className={styles.engineeringPlatform}>For Engineers</span>
               </h1>
               <p className={styles.description}>
-                Build. Share. Collaborate. 
+                Auto-generate a portfolio from code, papers, or from scratch and
+                host your portfolio on a personal URL. Building Linkedin for engineers.
+                Launching at Duke and Columbia.
+                {/*Build. Share. Collaborate. 
                 Silo is the first networking platform designed by engineers, for engineers. 
-                Join our community and maximize your potential.
+                Join our community and maximize your potential.*/}
               </p>
             </div>
             <AnimatedSection 

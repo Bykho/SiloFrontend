@@ -52,7 +52,7 @@ const HandleUpvote = (WrappedComponent) => {
             project_id: project._id,
             recipient_id: project.user_id,
           };
-          const notificationResponse = await fetch(`${config.apiBaseUrl}/api/create_notification`, {
+          const notificationResponse = await fetch(`${config.apiBaseUrl}/create_notification`, {
             method: 'POST',
             headers: {
               'Authorization': `Bearer ${token}`,

@@ -9,10 +9,11 @@ const NotificationsComponent = () => {
 
   const fetchNotifications = async () => {
     try {
-      const response = await fetch(`${config.apiBaseUrl}/api/notifications`, {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${config.apiBaseUrl}/notifications`, {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ` + token
         }
       });
       if (!response.ok) throw new Error('Failed to fetch notifications');
@@ -32,10 +33,11 @@ const NotificationsComponent = () => {
 
   const markAsRead = async (notificationId) => {
     try {
-      const response = await fetch(`${config.apiBaseUrl}/api/notifications/mark_read/${notificationId}`, {
+      const token = localStorage.getItem('token')
+      const response = await fetch(`${config.apiBaseUrl}/notifications_mark_read/${notificationId}`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer  ` + token
         }
       });
       if (!response.ok) throw new Error('Failed to mark notification as read');
