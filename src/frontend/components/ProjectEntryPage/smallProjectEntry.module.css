@@ -71,17 +71,26 @@
 
 .titleAndUsernameContainer {
   display: flex;
-  align-items: baseline;
+  align-items: baseline; /* Center align items vertically */
   flex-grow: 1;
   margin: 0 10px;
   overflow: hidden;
+  gap: 5px; 
+}
+
+.visIcon {
+  color: #4a90e2;
+  font-size: 1.2rem;
+  display: flex;
+  margin-top: 0px;
+  margin-left: 10px; 
 }
 
 .projectTitle {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 600;
   margin: 0;
-  margin-right: 15px;
+  margin-right: 10px;
   margin-left: 8px;
   white-space: nowrap;
   overflow: hidden;
@@ -113,13 +122,13 @@
   color: #a0c8ff;
   padding: 4px 10px;
   border-radius: 15px;
-  font-size: 1rem;
+  font-size: .8rem;
   font-weight: 500;
   transition: background-color 0.2s ease;
 }
 
 .tag:hover {
-  background-color: #d0e0fc;
+  background-color: #456090;
 }
 
 .divider {
