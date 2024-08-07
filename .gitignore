@@ -5,8 +5,7 @@
 /build
 .cache/
 .env
-src/frontend/config
-
+src/frontend/config.js
 .DS_Store
 .DS_Store
 src/.DS_Store
