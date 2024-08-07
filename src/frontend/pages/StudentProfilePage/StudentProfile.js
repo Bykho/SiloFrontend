@@ -36,10 +36,6 @@ function StudentProfile() {
   const [selectedGitSurroundingInfo, setSelectedGitSurroundingInfo] = useState({});
   const [showCopiedConfirmation, setShowCopiedConfirmation] = useState(false);
 
-  useEffect(() => {
-    console.log('useEffect for selectedGitFiles, ', selectedGitFiles);
-  }, [selectedGitFiles]);
-
   const languageLookup = {
     js: 'javascript',
     jsx: 'javascript',
@@ -325,7 +321,8 @@ function StudentProfile() {
         <div className={styles.modal}>
           <div className={styles.modalContent}>
             <button className={styles.closeButton} onClick={handleCloseModal}><FaWindowClose /></button>
-            {console.log('Passing initialRows to AddProject:', selectedGitFiles)}
+            {console.log('Passing initialRows to AddProject: ', selectedGitFiles)}
+            {console.log('Passing initialProjectData to AddProject: ', selectedGitSurroundingInfo)}
             <AddProject 
               onSave={handleSaveProject} 
               initialRows={selectedGitFiles.length > 0 ? selectedGitFiles : []}

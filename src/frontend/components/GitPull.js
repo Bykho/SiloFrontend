@@ -170,7 +170,7 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
       const result = await response.json();
       console.log('API response:', result);
       console.log('API response.summary_content: ', result.summary_content)
-      console.log('API response surrounding_summary: ', result.surrounding_summary)
+      console.log('API response.surrounding_summary: ', result.surrounding_summary)
       if (!Array.isArray(result.summary_content)) {
         console.log('summary_content is not an array');
       }

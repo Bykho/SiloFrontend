@@ -12,13 +12,35 @@ import { FaFont, FaImage, FaVideo, FaFilePdf, FaCode, FaTimes, FaCheck, FaExchan
 
 
 const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, onClose = null }) => {
+  const [dictInitProjectData, setDictInitProjectData] = useState(typeof initialProjectData === 'string' ? JSON.parse(initialProjectData) : initialProjectData);
+
+  useEffect(() => {
+    console.log('initialProjectData in AddProject (on mount):', initialProjectData);
+    if (typeof initialProjectData === 'string') {
+      console.log('initialProjectData is a string:', initialProjectData);
+      try {
+        const parsedData = JSON.parse(initialProjectData);
+        setDictInitProjectData(parsedData);
+        console.log('initialProjectData parsed to dictionary:', parsedData);
+      } catch (error) {
+        console.error('Failed to parse initialProjectData:', error);
+      }
+    } else if (typeof initialProjectData === 'object' && initialProjectData !== null) {
+      console.log('initialProjectData is a dictionary:', initialProjectData);
+      setDictInitProjectData(initialProjectData);
+    } else {
+      console.log('initialProjectData is of unexpected type:', typeof initialProjectData);
+    }
+  }, [initialProjectData]);
+  
+
   const [layers, setRows] = useState(initialRows.length ? initialRows : []);
   const [needsReorganization, setNeedsReorganization] = useState(true);
-  const [projectName, setProjectName] = useState(initialProjectData?.projectName || '');
-  const [projectDescription, setProjectDescription] = useState(initialProjectData?.projectDescription || '');
-  const [tags, setTags] = useState(initialProjectData?.tags || []);
-  const [links, setLinks] = useState(initialProjectData?.links || []);
-  const [visibility, setVisibility] = useState(initialProjectData?.visibility ?? true);
+  const [projectName, setProjectName] = useState(dictInitProjectData?.projectName || '');
+  const [projectDescription, setProjectDescription] = useState(dictInitProjectData?.projectDescription || '');
+  const [tags, setTags] = useState(dictInitProjectData?.tags || []);
+  const [links, setLinks] = useState(dictInitProjectData?.links || []);
+  const [visibility, setVisibility] = useState(dictInitProjectData?.visibility ?? true);
   const { user } = useUser();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -30,6 +52,23 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
   const [previewProject, setPreviewProject] = useState({});
   const [isRearranging, setIsRearranging] = useState(false);
 
+
+  useEffect(() => {
+    if (Object.keys(dictInitProjectData).length > 0) {
+      console.log('initialProjectData in AddProject (on mount):', dictInitProjectData);
+      setRows(dictInitProjectData.length ? initialRows : []);
+      setProjectName(dictInitProjectData.projectName || '');
+      setProjectDescription(dictInitProjectData.projectDescription || '');
+      setTags(dictInitProjectData.tags || []);
+      setLinks(dictInitProjectData.links || []);
+      setIsLoading(false); // Set loading to false once data is populated
+    }
+  }, [initialRows, initialProjectData]);
+
+  useEffect(() => {
+    console.log('initialProjectData.projectName:', initialProjectData.projectName);
+  }, [initialProjectData]);
+
   useEffect(() => {
     const updatedPreviewProject = {
       projectName: projectName,
@@ -38,9 +77,8 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
       tags: tags,
       links: links,
       comments: [],
-      upvotes: [],
+      upvotes: []
     };
-    setPreviewProject(updatedPreviewProject);
   }, [layers, projectName, projectDescription, tags, links]);
 
   useEffect(() => {
