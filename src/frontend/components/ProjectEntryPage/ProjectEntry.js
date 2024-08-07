@@ -229,7 +229,7 @@ const ProjectEntry = ({ project, passedUser, UpvoteButton, userUpvotes, setUserU
           <h3 className={styles.projectTitle}>{localProject.projectName}</h3>
           <span className={styles.byUsername}>by <span className={styles.username}>{localProject.createdBy}</span></span>
         </div>
-        {user.username === localProject.createdBy && (
+        {String(user._id) === localProject.user_id && (
           <button className={styles.editButton} onClick={toggleEdit}>
             <FaEdit /> Modify Content
           </button>

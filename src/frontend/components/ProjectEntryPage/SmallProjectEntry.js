@@ -10,6 +10,7 @@ import CommentSection from './CommentSection';
 import config from '../../config';
 import ProjectEntry from './ProjectEntry';
 import HandleUpvote from '../wrappers/HandleUpvote';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -23,7 +24,7 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
   const descriptionRef = useRef(null);
   const imageRef = useRef(null);
   const [showPopup, setShowPopup] = useState(false);
-  const VISIBLE_TAGS = 4;
+  const VISIBLE_TAGS = 3;
 
   const [comments, setComments] = useState(() => {
     try {
@@ -185,11 +186,20 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
     );
   };
 
+  const renderVisibilityText = () => {
+    // Check if the user ID matches and the localProject visibility is defined
+    if (String(user._id) === localProject.user_id) {
+      if (localProject.visibility == false) {
+        return <FaEyeSlash />;
+      } else {
+        return "";
+      }
+    }
+    return null; // or return any other fallback text or component
+  };
+
   return (
     <div className={styles.projectContainer}>
-      <div>
-        {localProject.visibility !== undefined ? (localProject.visibility ? "visible" : "hidden") : "words words words"}
-      </div>
       <div className={styles.headerContainer}>
         <UpvoteButton
           project={localProject}
@@ -200,6 +210,7 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
           setUserUpvotes={setUserUpvotes}
         />
         <div className={styles.titleAndUsernameContainer} onClick={togglePopup}>
+          <span className={styles.visIcon}> {renderVisibilityText()} </span>
           <h3 className={styles.projectTitle}>{localProject.projectName}</h3>
           <span className={styles.byUsername}>by <span className={styles.username}>{localProject.createdBy}</span></span>
         </div>
