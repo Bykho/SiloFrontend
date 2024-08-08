@@ -15,6 +15,7 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
   const [dictInitProjectData, setDictInitProjectData] = useState(typeof initialProjectData === 'string' ? JSON.parse(initialProjectData) : initialProjectData);
 
   useEffect(() => {
+    console.log('ADDPROJECT initialProjectData: ', initialProjectData)
     if (typeof initialProjectData === 'string') {
       try {
         const parsedData = JSON.parse(initialProjectData);
@@ -28,14 +29,31 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
       console.log('initialProjectData is of unexpected type:', typeof initialProjectData);
     }
   }, [initialProjectData]);
-  
 
   const [layers, setRows] = useState(initialRows.length ? initialRows : []);
   const [needsReorganization, setNeedsReorganization] = useState(true);
   const [projectName, setProjectName] = useState(dictInitProjectData?.projectName || '');
   const [projectDescription, setProjectDescription] = useState(dictInitProjectData?.projectDescription || '');
-  const [tags, setTags] = useState(dictInitProjectData?.tags || []);
-  const [links, setLinks] = useState(dictInitProjectData?.links || []);
+  const [tags, setTags] = useState(() => {
+    if (Array.isArray(dictInitProjectData?.tags)) {
+      return dictInitProjectData.tags.join(', ');
+    } else if (typeof dictInitProjectData?.tags === 'string') {
+      return dictInitProjectData.tags;
+    } else {
+      return '';
+    }
+  });
+  
+  const [links, setLinks] = useState(() => {
+    if (Array.isArray(dictInitProjectData?.links)) {
+      return dictInitProjectData.links.join(', ');
+    } else if (typeof dictInitProjectData?.links === 'string') {
+      return dictInitProjectData.links;
+    } else {
+      return '';
+    }
+  });
+  
   const [visibility, setVisibility] = useState(dictInitProjectData?.visibility ?? true);
   const { user } = useUser();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -117,8 +135,8 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
       projectName,
       projectDescription,
       layers: layers,
-      tags,
-      links,
+      tags: typeof tags === 'string' ? tags.split(',').map(tag => tag.trim()) : [],  // Ensure tags is split if it is a string
+      links: typeof links === 'string' ? links.split(',').map(link => link.trim()) : [],
       username: user.username,
       visibility
     };
@@ -233,7 +251,7 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
   };
 
   const handleTagsChange = (e) => {
-    setTags(e.target.value.split(',').map(tags => tags.trim()));
+    setTags(e.target.value);
   };
 
   const handleVisibilityChange = () => {
@@ -242,7 +260,7 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
   };
 
   const handleLinksChange = (e) => {
-    setLinks(e.target.value.split(',').map(link => link.trim()));
+    setLinks(e.target.value);
   };
 
   const handleLanguageChange = (layerIndex, cellIndex, language) => {
@@ -351,14 +369,14 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
         <div className={styles.addTagsAndLinks}>
           <input
             type="text"
-            value={tags.join(', ')}
+            value={tags}
             onChange={handleTagsChange}
             placeholder="Add tags (comma separated)"
             className={styles.tagInput}
           />
           <input
             type="text"
-            value={links.join(', ')}
+            value={links}
             onChange={handleLinksChange}
             placeholder="Add links (comma separated)"
             className={styles.linkInput}

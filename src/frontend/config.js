@@ -2,7 +2,7 @@
 
 // config.js
 const config = {
-    apiBaseUrl: "https://silobackendlaunch-874eb8f33c9b.herokuapp.com/"
+    apiBaseUrl: "http://127.0.0.1:5000"
 };
 
 export default config;
