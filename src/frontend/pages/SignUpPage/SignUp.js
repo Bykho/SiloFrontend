@@ -98,10 +98,21 @@ function SignUp() {
       if (response.ok) {
         const data = await response.json();
         console.log('Received summary:', data.summary);
-        //const parsedSummary = JSON.parse(data.summary);
-        //console.log('Parsed summary:', parsedSummary);
-        //setSuggestedSummary(parsedSummary);
-        setSuggestedSummary(data.summary)
+  
+        data.summary.skills = data.summary.skills ? data.summary.skills.join(', ') : '';
+        data.summary.interests = data.summary.interests ? data.summary.interests.join(', ') : '';
+  
+        setSuggestedSummary(data.summary);
+  
+        setFormData(prevState => ({
+          ...prevState,
+          biography: data.summary.bio || '',
+          interests: data.summary.interests,
+          skills: data.summary.skills,
+          university: data.summary.latestUniversity || '',
+          major: data.summary.major || '',
+          grad: data.summary.grad_yr || ''
+        }));
       } else {
         console.error('Failed to send extracted text to backend');
       }
@@ -116,7 +127,7 @@ function SignUp() {
     const { value } = e.target;
     setFormData(prevState => ({
       ...prevState,
-      [field]: value.split(',').map(item => item.trim())
+      [field]: value
     }));
   };
 
@@ -179,6 +190,8 @@ function SignUp() {
     e.preventDefault();
     if (isSubmitDisabled) return;
 
+    const trimTrailingCommaSpaces = str => str.split(',').map(item => item.trimStart().trimEnd()).join(', ');
+
     const userData = {
       username: `${formData.firstName} ${formData.lastName}`,
       email: formData.email,
@@ -189,8 +202,8 @@ function SignUp() {
       user_type: formData.userType,
       personal_website: formData.personalWebsite,
       resume: formData.resume,
-      interests: formData.interests,
-      skills: formData.skills,
+      interests: trimTrailingCommaSpaces(formData.interests).split(', '),
+      skills: trimTrailingCommaSpaces(formData.skills).split(', '),  
       biography: formData.biography,
       groups: formData.groups
     };
@@ -449,7 +462,7 @@ function SignUp() {
                 type="text"
                 id="interests"
                 name="interests"
-                value={formData.interests.join(', ')}
+                value={formData.interests}
                 onChange={(e) => handleArrayChange(e, 'interests')}
                 placeholder="e.g., Machine Learning, Web Development"
                 required
@@ -461,7 +474,7 @@ function SignUp() {
                 type="text"
                 id="skills"
                 name="skills"
-                value={formData.skills.join(', ')}
+                value={formData.skills}
                 onChange={(e) => handleArrayChange(e, 'skills')}
                 placeholder="e.g., Python, JavaScript, React"
                 required
