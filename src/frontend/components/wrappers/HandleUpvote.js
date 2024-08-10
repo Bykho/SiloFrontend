@@ -41,8 +41,6 @@ const HandleUpvote = (WrappedComponent) => {
             upvotes: [...(prevUser.upvotes || []), actualUpvoteId],
           }));
           setUserUpvotes((prevUpvotes) => [...prevUpvotes, actualUpvoteId]);
-          console.log("Updating user context with upvotes:", actualUpvoteId);
-          addUpvoteToUser(actualUpvoteId);
 
           // Create a notification after upvoting the project
           const notificationPayload = {

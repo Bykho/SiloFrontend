@@ -24,7 +24,16 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
   const descriptionRef = useRef(null);
   const imageRef = useRef(null);
   const [showPopup, setShowPopup] = useState(false);
+  const [localUpvotes, setLocalUpvotes] = useState(() => {
+    // Initialize with the upvotes relevant to this project
+    return project.upvotes || [];
+  });
   const VISIBLE_TAGS = 3;
+
+  useEffect(() => {
+    console.log("SMALLPROJECTNETRY project: ", project)
+    console.log("SMALLPROJECTENTRY localUpvotes: ", localUpvotes)
+  })
 
   const [comments, setComments] = useState(() => {
     try {
@@ -206,8 +215,8 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
           setProject={setLocalProject}
           passedUser={localUser}
           setPassedUser={setLocalUser}
-          userUpvotes={userUpvotes}
-          setUserUpvotes={setUserUpvotes}
+          userUpvotes={localUpvotes}
+          setUserUpvotes={setLocalUpvotes}
         />
         <div className={styles.titleAndUsernameContainer} onClick={togglePopup}>
           <span className={styles.visIcon}> {renderVisibilityText()} </span>
