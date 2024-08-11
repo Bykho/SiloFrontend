@@ -427,6 +427,7 @@ function SignUp() {
               >
                 <option value="Student">Student</option>
                 <option value="Faculty">Faculty</option>
+                <option value="Professional"> Professional</option>
               </select>
             </div>
             <div className={styles.formGroup}>

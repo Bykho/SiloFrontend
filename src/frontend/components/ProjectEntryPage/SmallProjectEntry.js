@@ -30,11 +30,6 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
   });
   const VISIBLE_TAGS = 3;
 
-  useEffect(() => {
-    console.log("SMALLPROJECTNETRY project: ", project)
-    console.log("SMALLPROJECTENTRY localUpvotes: ", localUpvotes)
-  })
-
   const [comments, setComments] = useState(() => {
     try {
       return JSON.parse(JSON.stringify(project.comments));
