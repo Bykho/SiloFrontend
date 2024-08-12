@@ -120,7 +120,7 @@ const ProfileHeader = ({ userData, loading, error }) => {
           <ProfileImage username={userData.username} size={'medium'} />
           <div className={styles.nameSection}>
             <h1 className={styles.userName}>{userData.username}</h1>
-            <p className={styles.userInfo}>{userData.user_type} @ {userData.university} | {userData.major} {userData.grad}</p>
+            <p className={styles.userInfo}>{userData.user_type} | {userData.university} | {userData.major} {userData.grad}</p>
           </div>
         </div>
         <div className={styles.tagsContainer}>
