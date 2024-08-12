@@ -18,7 +18,7 @@ const NotificationsComponent = () => {
       });
       if (!response.ok) throw new Error('Failed to fetch notifications');
       const data = await response.json();
-      console.log('notifications:', data);
+      //console.log('notifications:', data);
       setNotifications(data);
     } catch (error) {
       console.error('Error fetching notifications:', error);

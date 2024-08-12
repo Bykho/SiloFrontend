@@ -8,6 +8,7 @@ import config from '../../config';
 import NewAddProjectToGroup from './NewAddProjectToGroup';
 import NewGroupMembers from './NewGroupMembers';
 import NewDiscussionBoard from './NewDiscussionBoard';
+import BountyBoard from './BountyBoard';
 import { FaSearch } from 'react-icons/fa';
 import { MdOutlinePostAdd } from "react-icons/md";
 import { FaUsers } from "react-icons/fa";
@@ -29,6 +30,7 @@ const Feed = () => {
   const [membersShow, setMembersShow] = useState(false);
   const [projectShow, setProjectShow] = useState(true);
   const [discussionShow, setDiscussionShow] = useState(false);
+  const [bountyShow, setBountyShow] = useState(false);
   const { user } = useUser();
   const location = useLocation();
   const searchInputRef = useRef(null);
@@ -257,23 +259,35 @@ const Feed = () => {
         {feedStyle === 'groupView' && activeGroup && (
           <div className={styles.headerButtons}>
             <button 
-              onClick={() => {setProjectShow(true); setMembersShow(false); setDiscussionShow(false)}}
+              onClick={() => {setProjectShow(true); setMembersShow(false); setDiscussionShow(false); setBountyShow(false)}}
               className={`${styles.headerButton} ${projectShow ? styles.active : ''}`}
             >
               <FaRegListAlt /> Posts
             </button>
             <button 
-              onClick={() => {setMembersShow(true); setProjectShow(false); setDiscussionShow(false)}}
+              onClick={() => {setMembersShow(true); setProjectShow(false); setDiscussionShow(false); setBountyShow(false)}}
               className={`${styles.headerButton} ${membersShow ? styles.active : ''}`}
             >
               <FaUsers /> Members
             </button>
             <button 
-              onClick={() => {setDiscussionShow(true); setMembersShow(false); setProjectShow(false)}}
+              onClick={() => {setDiscussionShow(true); setMembersShow(false); setProjectShow(false); setBountyShow(false)}}
+              className={`${styles.headerButton} ${discussionShow ? styles.active : ''}`}
+            >
+              <GoCommentDiscussion /> Discussion
+            </button>
+
+
+            
+            <button 
+              onClick={() => {setBountyShow(true); setMembersShow(false); setProjectShow(false); setDiscussionShow(false)}}
               className={`${styles.headerButton} ${discussionShow ? styles.active : ''}`}
             >
               <GoCommentDiscussion /> Bounties
             </button>
+            
+            
+            
             <button 
               onClick={() => setIsModalOpen(true)}
               className={`${styles.headerButton} ${styles.primary}`}
@@ -333,7 +347,9 @@ const Feed = () => {
               />
             ) : feedStyle === 'groupView' && discussionShow ? (
               <NewDiscussionBoard group={activeGroup}  />
-            ) : null}
+            ) : feedStyle === 'groupView' && bountyShow ? (
+              <BountyBoard group={activeGroup} /> 
+          ) : null}
           </div>
         </div>
       </div>
