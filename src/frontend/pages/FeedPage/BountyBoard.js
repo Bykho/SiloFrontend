@@ -208,13 +208,11 @@ const BountiesBoard = ({ group }) => {
                     {/* Check if project_links is non-empty and display project info */}
                     {bounty.project_links && bounty.project_links.length > 0 && (
                       <div className={styles.projectInfo}>
-                        <p>Project Name: {bounty.project_links[0].projectName}</p>
-                        <p>Project ID: {bounty.project_links[0].project_id}</p>
+                        <button onClick={() => { setSelectedBounty(bounty); setIsModalOpen(true); handleViewProject(bounty)}}>
+                          <p> linked project: {bounty.project_links[0].projectName}</p>
+                        </button>
                       </div> 
                     )}
-                    <button onClick={() => { setSelectedBounty(bounty); setIsModalOpen(true); handleViewProject(bounty)}}>
-                      View Project Details
-                    </button>
                   </div>
                 </div>
               </div>
