@@ -33,6 +33,8 @@ const Feed = () => {
   const location = useLocation();
   const searchInputRef = useRef(null);
   const navigate = useNavigate();
+  const [upvotedProjects, setUpvotedProjectIds] = useState([]);
+
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -91,6 +93,34 @@ const Feed = () => {
     }
   }, [user]);
 
+  useEffect(() => {
+    const fetchUpvotedProjects = async () => {
+      if (user && user.upvotes && user.upvotes.length > 0) {
+        try {
+          const token = localStorage.getItem('token');
+          const response = await fetch(`${config.apiBaseUrl}/returnProjects`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(user.upvotes),
+          });
+          if (!response.ok) {
+            throw new Error('Failed to fetch upvoted projects');
+          }
+          const data = await response.json();
+          console.log("list of projects?: ", data); 
+          setUpvotedProjectIds(data);
+        } catch (error) {
+          console.error('Error fetching upvoted projects:', error);
+        }
+      }
+    };
+
+    fetchUpvotedProjects();
+  }, [user]);
+
 
   useEffect(() => {
     const fetchGroupProjects = async () => {
@@ -140,8 +170,9 @@ const Feed = () => {
 
   useEffect(() => {
     let filtered = projects;
+    console.log('filtrered test: ', filtered); 
   
-    if (feedStyle === 'home' || feedStyle === 'popular') {
+    if (feedStyle === 'home' || feedStyle === 'popular' || feedStyle === 'upvoted') {
       filtered = projects.filter(project => {
         const searchTextLower = searchText.toLowerCase();
         if (project.projectDescription.toLowerCase().includes(searchTextLower)) {
@@ -173,10 +204,16 @@ const Feed = () => {
         return { ...project, score };
       }).sort((a, b) => b.score - a.score);
     }
-  
+
+    if (feedStyle === 'upvoted') {
+      filtered = upvotedProjects;
+    }
+
     if (!activeGroup || feedStyle !== 'groupView') {
       setFilteredProjects(filtered);
     }
+
+
   }, [projects, searchText, feedStyle, activeGroup]);
 
 
@@ -198,6 +235,11 @@ const Feed = () => {
     if (feedStyle === 'groupView' && activeGroup) {
       return activeGroup.name;
     }
+
+    if (feedStyle === 'upvoted') {
+      return 'Upvoted Projects';
+    }
+
       return feedStyle.charAt(0).toUpperCase() + feedStyle.slice(1);
   };
 
@@ -271,7 +313,7 @@ const Feed = () => {
             </div>
           </div>
           <div className={styles.feedContent}>
-            {feedStyle === 'home' || feedStyle === 'popular' ? (
+            {feedStyle === 'home' || feedStyle === 'popular' || feedStyle === 'upvoted' ? (
               <Tagged
                 filteredProjects={filteredProjects}
                 loading={loading}
