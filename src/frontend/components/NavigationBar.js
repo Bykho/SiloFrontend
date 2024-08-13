@@ -9,6 +9,7 @@ import styles from './NavigationBar.module.css';
 import SiloBetaButton from './AnimatedSiloButton';
 import NotificationsComponent from './Notifications';
 import { Bell } from 'lucide-react';
+import { MdOutlineLeaderboard } from "react-icons/md";
 
 
 
@@ -61,7 +62,7 @@ const NavigationBar = () => {
               className={`${styles.button} ${activeLink === 'find' ? styles.clickedButton : ''}`}
               onClick={() => handleLinkClick('find')}
             >
-              <PiAddressBook className={styles.icon} /> Members
+              <MdOutlineLeaderboard className={styles.icon} /> Members
             </a>
             <NotificationsComponent />
             <button
@@ -92,7 +93,7 @@ const NavigationBar = () => {
               href="/GenDirectory"
               className={`${styles.button} ${activeLink === 'find' ? styles.clickedButton : ''}`}
             >
-              <PiAddressBook className={styles.icon} /> Members
+              <MdOutlineLeaderboard className={styles.icon} /> Members
             </a>
             <Bell size={24} color="#ffffff" className={styles.notificationButton}/>
             <button

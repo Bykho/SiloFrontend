@@ -1,10 +1,10 @@
 .leaderboardContainer {
-    background-color: #0a0a0a;
+    background-color: #1a1a1a;
     color: #e0e0e0;
     padding: 1rem 2rem 2rem 2rem;
     border-radius: 10px;
     font-family: 'Exo 2', sans-serif;
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+    box-shadow: 0 0 20px rgba(0, 128, 255, 0.1);
   }
   
   .leaderboardTitle {
@@ -34,7 +34,7 @@
   .leaderboardItem {
     display: flex;
     align-items: center;
-    background-color: #141414;
+    background-color: #222222;
     padding: 1rem;
     border-radius: 8px;
     transition: all 0.3s ease;
@@ -45,20 +45,20 @@
   
   .leaderboardItem:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 20px rgba(0, 255, 255, 0.2);
+    box-shadow: 0 4px 20px rgba(0, 128, 255, 0.2);
   }
   
-  .top1 { background: linear-gradient(45deg, #ed9600, #ff6b6b); }
-  .top2 { background: linear-gradient(45deg, #c0c0c0, #7faacb); }
-  .top3 { background: linear-gradient(45deg, #32a1cd, #1d73a2); }
+  .top1 { background: linear-gradient(45deg, #2a2a2a, #333333); border: 1px solid #ff7700; }
+  .top2 { background: linear-gradient(45deg, #252525, #2d2d2d); border: 1px solid #3cc4fa; }
+  .top3 { background: linear-gradient(45deg, #202020, #282828); border: 1px solid #3cc4fa; }
   
   .rank {
     font-size: 1.5rem;
     font-weight: bold;
     min-width: 40px;
     text-align: center;
-    color: #00ffff;
-    text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+    color: #3cc4fa;
+    text-shadow: 0 0 5px rgba(60, 196, 250, 0.5);
   }
   
   .userInfoWrapper {
@@ -80,7 +80,7 @@
   
   .userType {
     font-size: 0.9rem;
-    color: #7faacb;
+    color: #3cc4fa;
     margin-left: 0.5rem;
     text-transform: uppercase;
   }
@@ -89,7 +89,7 @@
     display: flex;
     align-items: center;
     font-size: 1.4rem;
-    color: #ffd700;
+    color: #ff7700;
     margin-left: auto;
     padding-right: 1rem;
   }
@@ -104,7 +104,7 @@
     left: 0;
     width: 100%;
     height: 2px;
-    background: linear-gradient(90deg, transparent, #00ffff, transparent);
+    background: linear-gradient(90deg, transparent, #3cc4fa, transparent);
     animation: glow 1.5s ease-in-out infinite;
   }
   

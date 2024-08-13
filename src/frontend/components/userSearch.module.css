@@ -107,7 +107,6 @@ input:checked ~ .activeView {
 }
 
 .searchSection {
-  margin-bottom: 2rem;
   width: 100%;
 }
 
