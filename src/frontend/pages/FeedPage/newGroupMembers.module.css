@@ -15,9 +15,7 @@
     padding: 0;
   }
   
-  .memberItem {
-    border-bottom: 1px solid #ddd;
-  }
+
   
   .memberItem:last-child {
     border-bottom: none;

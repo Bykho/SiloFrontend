@@ -99,12 +99,11 @@
   flex-direction: column;
   height: 100%;
   box-sizing: border-box;
-  box-shadow: 0 0 10px rgba(196, 196, 196, 0.25);
+  margin-bottom: 10px;
 }
 
 .userCard:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 10px rgba(196, 196, 196, 0.25);
 }
 
 .userHeader {
