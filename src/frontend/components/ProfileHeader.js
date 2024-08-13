@@ -46,7 +46,7 @@ const ProfileHeader = ({ userData, loading, error }) => {
 
   const renderRatingModal = () => (
     <div className={styles.modalContent}>
-      <button className={styles.closeButton} onClick={toggleRating}>X</button>
+      <button className={styles.closeButton2} onClick={toggleRating}>Close</button>
       <PlayerRatingSpiderweb playerData={userSpiderData.ratings} />
     </div>
   );
@@ -181,7 +181,7 @@ const ProfileHeader = ({ userData, loading, error }) => {
       )}
 
       {showRating && (
-        <div className={styles.modal}>
+        <div className={styles.modalScore}>
           {renderRatingModal()}
         </div>
       )}
