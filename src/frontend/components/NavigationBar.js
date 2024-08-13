@@ -8,6 +8,8 @@ import { FaUserGroup } from 'react-icons/fa6';
 import styles from './NavigationBar.module.css';
 import SiloBetaButton from './AnimatedSiloButton';
 import NotificationsComponent from './Notifications';
+import { Bell } from 'lucide-react';
+
 
 
 const NavigationBar = () => {
@@ -92,6 +94,7 @@ const NavigationBar = () => {
             >
               <PiAddressBook className={styles.icon} /> Members
             </a>
+            <Bell size={24} color="#ffffff" className={styles.notificationButton}/>
             <button
               className={`${styles.logoutButton} ${activeLink === 'logout' ? styles.clickedButton : ''}`}
             >

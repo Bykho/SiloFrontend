@@ -26,6 +26,21 @@
   gap: 20px; 
 }
 
+
+.notificationButton {
+  background: #333;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-content: center;
+  transition: background-color 0.3s;
+  margin-top: 7px; 
+  position: relative;
+  display: inline-block;
+}
+
 .button, .clickedButton {
   color: #f0f0f0;
   padding: 12px 24px;
