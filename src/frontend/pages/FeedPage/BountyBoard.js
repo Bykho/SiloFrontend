@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import styles from './newDiscussionBoard.module.css';
 import config from '../../config'; // Ensure this path is correct for your project
 import { useUser } from '../../contexts/UserContext';
-import SmallestProjectEntry from '../../components/ProjectEntryPage/SmallestProjectEntry';
+import SmallProjectEntry from '../../components/ProjectEntryPage/SmallProjectEntry';
 
 // Utility function to convert ObjectId to string within a JSON object
 const convertObjectIdToString = (obj) => {
@@ -41,6 +41,9 @@ const BountiesBoard = ({ group }) => {
   const [responseVisibility, setResponseVisibility] = useState({});
   const [bountyResponses, setBountyResponses] = useState({});
   const [newResponse, setNewResponse] = useState({});
+  const [openProjectId, setOpenProjectId] = useState(null);
+
+  
 
 
   useEffect(() => {
@@ -212,15 +215,24 @@ const BountiesBoard = ({ group }) => {
   
 
   const handleViewProject = async (bounty) => {
-    setProjectLoading(true);  // Start loading
-    setIsModalOpen(true);      // Open modal immediately
+    if (openProjectId === bounty._id) {
+      // If the project is already open, close it
+      setOpenProjectId(null);
+      setIsModalOpen(false);
+      setSelectedBounty(null);
+    } else {
+      // If the project is closed, open it
+      setProjectLoading(true);
+      setIsModalOpen(true);
+      setSelectedBounty(bounty);
+      setOpenProjectId(bounty._id);
   
-    const projectIds = bounty.project_links.map(link => link.project_id);
-    const projects = await fetchProjectDetails(projectIds);
+      const projectIds = bounty.project_links.map(link => link.project_id);
+      const projects = await fetchProjectDetails(projectIds);
   
-    setProjectDetails(prevDetails => ({ ...prevDetails, [bounty._id]: projects }));
-    setSelectedBounty(bounty);
-    setProjectLoading(false);  // Stop loading
+      setProjectDetails(prevDetails => ({ ...prevDetails, [bounty._id]: projects }));
+      setProjectLoading(false);
+    }
   };
   
   const handleResponseInputChange = (bountyId, value) => {
@@ -297,10 +309,13 @@ const BountiesBoard = ({ group }) => {
                     {/* Check if project_links is non-empty and display project info */}
                     {bounty.project_links && bounty.project_links.length > 0 && (
                       <div className={styles.projectInfo}>
-                        <button onClick={() => { setSelectedBounty(bounty); setIsModalOpen(true); handleViewProject(bounty)}} className={styles.openProjectButton}>
-                          <p> Project: {bounty.project_links[0].projectName}</p>
+                        <button 
+                          onClick={() => handleViewProject(bounty)} 
+                          className={styles.openProjectButton}
+                        >
+                          {openProjectId === bounty._id ? "Close Project" : "View Project: " + bounty.project_links[0].projectName}
                         </button>
-                      </div> 
+                    </div>
                     )}
                   </div>
                   <button 
@@ -324,7 +339,7 @@ const BountiesBoard = ({ group }) => {
                         )
                     ))
                     ) : (
-                    <p>No responses available.</p>
+                    <p>No responses yet...</p>
                     )}
                       {/* Input bar for adding a new response */}
                       <div className={styles.responseInputContainer}>
@@ -351,23 +366,21 @@ const BountiesBoard = ({ group }) => {
       
       {isModalOpen && selectedBounty && (
         <div className={styles.modalOverlay}>
-            <div className={styles.modalContent}>
-            <button className={styles.closeModalButton} onClick={() => setIsModalOpen(false)}>x</button>
-            <h3>Project Details</h3>
+          <div className={styles.modalContent}>
             {projectLoading ? (
-                <p>Loading project details...</p>  // Show loading message while fetching data
+              <p>Loading project details...</p>
             ) : projectDetails[selectedBounty._id] && projectDetails[selectedBounty._id].length > 0 ? (
-                <div>
+              <div>
                 {projectDetails[selectedBounty._id].map(project => (
-                    <SmallestProjectEntry key={project._id} project={project} />
+                  <SmallProjectEntry key={project._id} project={project} />
                 ))}
-                </div>
+              </div>
             ) : (
-                <p>No project linked to this bounty.</p>
+              <p>No project linked to this bounty.</p>
             )}
-            </div>
+          </div>
         </div>
-        )}
+      )}
 
 
 

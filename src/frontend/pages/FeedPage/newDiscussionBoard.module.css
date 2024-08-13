@@ -24,6 +24,17 @@
     margin-bottom: 30px;
   }
 
+  .closeModalButton{
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 0.9em;
+    font-weight: bold;
+  }
+
   .responseAuthor{
     font-style: italic;
     color: #4a90e2;
