@@ -38,6 +38,9 @@ const BountiesBoard = ({ group }) => {
   const [loading, setLoading] = useState(true);
   const [projectDetails, setProjectDetails] = useState({});
   const [projectLoading, setProjectLoading] = useState(false);
+  const [responseVisibility, setResponseVisibility] = useState({});
+  const [bountyResponses, setBountyResponses] = useState({});
+  const [newResponse, setNewResponse] = useState({});
 
 
   useEffect(() => {
@@ -171,6 +174,42 @@ const BountiesBoard = ({ group }) => {
     }
   };
 
+  const handleToggleResponses = async (bountyId) => {
+    console.log('handleToggleResponse bountyID: ', bountyId)
+    setResponseVisibility(prevVisibility => ({
+      ...prevVisibility,
+      [bountyId]: !prevVisibility[bountyId],
+    }));
+  
+    // If the responses are already fetched, just toggle visibility
+    if (bountyResponses[bountyId]) return;
+  
+    // Fetch the responses from the backend
+    const token = localStorage.getItem('token');
+    try {
+      const response = await fetch(`${config.apiBaseUrl}/getBountyResponses`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ bountyId }),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        console.log('HANDLETOGGLERESPONSES getBountyResponses data: ', data)
+        setBountyResponses(prevResponses => ({
+          ...prevResponses,
+          [bountyId]: data,
+        }));
+      } else {
+        console.error('Failed to fetch responses');
+      }
+    } catch (error) {
+      console.error('Error fetching responses:', error);
+    }
+  };
+  
 
   const handleViewProject = async (bounty) => {
     setProjectLoading(true);  // Start loading
@@ -184,8 +223,54 @@ const BountiesBoard = ({ group }) => {
     setProjectLoading(false);  // Stop loading
   };
   
+  const handleResponseInputChange = (bountyId, value) => {
+    setNewResponse(prevState => ({
+      ...prevState,
+      [bountyId]: value,
+    }));
+  };
   
+  const handleAddResponse = async (bountyId) => {
+    if (!newResponse[bountyId]?.trim()) return;
+  
+    const token = localStorage.getItem('token');
+    const responsePayload = {
+      bountyId: bountyId,
+      author_name: user.username,  // Assuming you have access to the user's name
+      author_id: user._id,
+      text: newResponse[bountyId],
+      date: new Date().toISOString(),
+    };
+    
+    console.log('HANDLEADDRESPONSE here is responsePayload: ', responsePayload)
 
+    try {
+      const response = await fetch(`${config.apiBaseUrl}/addBountyResponse`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(responsePayload),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setBountyResponses(prevResponses => ({
+          ...prevResponses,
+          [bountyId]: [...(prevResponses[bountyId] || []), data.newResponse],
+        }));
+        setNewResponse(prevState => ({
+          ...prevState,
+          [bountyId]: '',
+        }));
+      } else {
+        console.error('Failed to add response');
+      }
+    } catch (error) {
+      console.error('Error adding response:', error);
+    }
+  };
+  
 
   if (loading) {
     return <div>Loading Bounties...</div>;
@@ -214,6 +299,37 @@ const BountiesBoard = ({ group }) => {
                       </div> 
                     )}
                   </div>
+                  <button 
+                    onClick={() => handleToggleResponses(bounty._id)}
+                    >
+                    {responseVisibility[bounty._id] ? "Hide Feed" : "Show Feed"}
+                  </button>
+                  {responseVisibility[bounty._id] && (
+                  <div className={styles.responsesContainer}>
+                      {bountyResponses[bounty._id] && bountyResponses[bounty._id].length > 0 ? (
+                      bountyResponses[bounty._id].map((response, index) => (
+                          <div key={index} className={styles.responseItem}>
+                          <p><strong>{response.author_name}</strong> ({new Date(response.date).toLocaleDateString()}):</p>
+                          <p>{response.text}</p>
+                          </div>
+                      ))
+                      ) : (
+                      <p>No responses yet. Be the first to respond!</p>
+                      )}
+                      {/* Input bar for adding a new response */}
+                      <div className={styles.responseInputContainer}>
+                      <input
+                          type="text"
+                          placeholder="Type your response..."
+                          value={newResponse[bounty._id] || ''}
+                          onChange={(e) => handleResponseInputChange(bounty._id, e.target.value)}
+                          className={styles.responseInput}
+                      />
+                      <button onClick={() => handleAddResponse(bounty._id)}>Submit Response</button>
+                      </div>
+                  </div>
+                  )}
+
                 </div>
               </div>
             </div>
