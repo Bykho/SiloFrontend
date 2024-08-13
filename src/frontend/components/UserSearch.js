@@ -9,6 +9,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import config from '../config';
 import { FaAward } from 'react-icons/fa';
 import { Search, User, Briefcase, Mail, Tag } from 'lucide-react';
+import LeaderboardView from './LeaderboardView';
+
 
 const UserSearch = () => {
   const navigate = useNavigate();
@@ -19,6 +21,7 @@ const UserSearch = () => {
   const [error, setError] = useState('');
   const [value, setValue] = useState('student');
   const [searchText, setSearchText] = useState('');
+  const [isLeaderboardView, setIsLeaderboardView] = useState(false);
 
   useEffect(() => {
     if (location.state && location.state.skill) {
@@ -82,13 +85,17 @@ const UserSearch = () => {
     setValue(searchText || 'student'); // Use 'student' if searchText is empty
   };
 
+  const toggleView = () => {
+    setIsLeaderboardView(!isLeaderboardView);
+  };
+
   return (
     <div className={styles.feedContainer}>
       <div className={styles.searchSection}>
         <form onSubmit={handleSearch} className={styles.searchBar}>
           <Search className={styles.searchIcon} />
           <input
-            ref={searchInputRef} // Attach the ref to the search input
+            ref={searchInputRef}
             type="search"
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
@@ -97,21 +104,41 @@ const UserSearch = () => {
           />
           <button type="submit" className={styles.searchButton}>Search</button>
         </form>
+        <div className={styles.viewToggle}>
+          <span className={`${styles.viewLabel} ${!isLeaderboardView ? styles.activeView : ''}`}>Cards</span>
+          <label className={styles.switch}>
+            <input
+              type="checkbox"
+              checked={isLeaderboardView}
+              onChange={toggleView}
+              aria-label="Toggle between card view and leaderboard view"
+            />
+            <span className={styles.slider}></span>
+          </label>
+          <span className={`${styles.viewLabel} ${isLeaderboardView ? styles.activeView : ''}`}>Leaderboard</span>
+        </div>
         <div className={styles.resultsCount}>
           Results: {users.length}
         </div>
       </div>
-      <div className={styles.userList}>
-        {loading ? (
-          <div className={styles.loadingSpinner}></div>
-        ) : error ? (
-          <p className={styles.errorMessage}>{error}</p>
-        ) : (
-          users.map((specificUser, index) => (
-            <UserCard user={specificUser} navigate={navigate} fetchProjectsForUser={fetchProjectsForUser} />
-          ))
-        )}
-      </div>
+      {loading ? (
+        <div className={styles.loadingSpinner}></div>
+      ) : error ? (
+        <p className={styles.errorMessage}>{error}</p>
+      ) : isLeaderboardView ? (
+        <LeaderboardView users={users.map(user => ({...user, score: user.totalUpvotes * 10}))} navigate={navigate} />
+      ) : (
+        <div className={styles.userList}>
+          {users.map((user) => (
+            <UserCard
+              key={user._id}
+              user={user}
+              navigate={navigate}
+              fetchProjectsForUser={fetchProjectsForUser}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
