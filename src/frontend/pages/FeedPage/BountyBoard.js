@@ -47,8 +47,8 @@ const BountiesBoard = ({ group }) => {
     console.log('Group parameter in Bounty Board:', group);
   }, [group]);
   useEffect(() => {
-    console.log('bountiesJson in bounties board: ', bountiesJson)
-  }, [bountiesJson]);
+    console.log('bountyResponses in bounties board: ', bountyResponses)
+  }, [bountyResponses]);
   useEffect(() => {
     console.log('bounties in bountyboard: ', bounties)
   }, [bounties])
@@ -236,7 +236,7 @@ const BountiesBoard = ({ group }) => {
     const token = localStorage.getItem('token');
     const responsePayload = {
       bountyId: bountyId,
-      author_name: user.username,  // Assuming you have access to the user's name
+      author_name: user.username,
       author_id: user._id,
       text: newResponse[bountyId],
       date: new Date().toISOString(),
@@ -255,14 +255,18 @@ const BountiesBoard = ({ group }) => {
       });
       if (response.ok) {
         const data = await response.json();
+        console.log('HANDLEADDRESPONSE here is the daata from the backend: ', data)
+        console.log('HANDLEADDRESPONSE here is the daata from the backend: ', data.new_response)
         setBountyResponses(prevResponses => ({
           ...prevResponses,
-          [bountyId]: [...(prevResponses[bountyId] || []), data.newResponse],
+          [bountyId]: [...(prevResponses[bountyId] || []), data.new_response],
         }));
+        console.log('checking if we get passed setting the local state')
         setNewResponse(prevState => ({
           ...prevState,
           [bountyId]: '',
         }));
+        console.log('checking if we get passed setting the new response')
       } else {
         console.error('Failed to add response');
       }
@@ -306,16 +310,21 @@ const BountiesBoard = ({ group }) => {
                   </button>
                   {responseVisibility[bounty._id] && (
                   <div className={styles.responsesContainer}>
-                      {bountyResponses[bounty._id] && bountyResponses[bounty._id].length > 0 ? (
-                      bountyResponses[bounty._id].map((response, index) => (
-                          <div key={index} className={styles.responseItem}>
-                          <p><strong>{response.author_name}</strong> ({new Date(response.date).toLocaleDateString()}):</p>
-                          <p>{response.text}</p>
-                          </div>
-                      ))
-                      ) : (
-                      <p>No responses yet. Be the first to respond!</p>
-                      )}
+                    {bountyResponses[bounty._id] && bountyResponses[bounty._id].length > 0 ? (
+                    bountyResponses[bounty._id].map((response, index) => (
+                        response && (
+                        <>
+                            {console.log('here is response', response)}
+                            <div key={index} className={styles.responseItem}>
+                            <p><strong>{response.author_name}</strong> ({new Date(response.date).toLocaleDateString()}):</p>
+                            <p>{response.text}</p>
+                            </div>
+                        </>
+                        )
+                    ))
+                    ) : (
+                    <p>No responses available.</p>
+                    )}
                       {/* Input bar for adding a new response */}
                       <div className={styles.responseInputContainer}>
                       <input
