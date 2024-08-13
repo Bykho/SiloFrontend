@@ -14,6 +14,8 @@ import { MdOutlinePostAdd } from "react-icons/md";
 import { FaUsers } from "react-icons/fa";
 import { FaRegListAlt } from "react-icons/fa";
 import { GoCommentDiscussion } from "react-icons/go";
+import { FaCrown } from "react-icons/fa";
+
 
 
 const Feed = () => {
@@ -281,9 +283,9 @@ const Feed = () => {
             
             <button 
               onClick={() => {setBountyShow(true); setMembersShow(false); setProjectShow(false); setDiscussionShow(false)}}
-              className={`${styles.headerButton} ${discussionShow ? styles.active : ''}`}
+              className={`${styles.headerButton} ${bountyShow ? styles.active : ''}`}
             >
-              <GoCommentDiscussion /> Bounties
+              <FaCrown /> Bounties
             </button>
             
             

@@ -113,7 +113,7 @@
     font-size: 0.9em;
   }
   
-  .addCommentButton {
+  .addCommentButton{
     padding: 8px 15px;
     background-color: #4a90e2;
     color: white;
@@ -124,8 +124,9 @@
     font-size: 0.9em;
     font-weight: bold;
   }
+
   
-  .addCommentButton:hover {
+  .addCommentButton:hover{
     background-color: #357ab7;
   }
   

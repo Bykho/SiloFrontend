@@ -297,16 +297,17 @@ const BountiesBoard = ({ group }) => {
                     {/* Check if project_links is non-empty and display project info */}
                     {bounty.project_links && bounty.project_links.length > 0 && (
                       <div className={styles.projectInfo}>
-                        <button onClick={() => { setSelectedBounty(bounty); setIsModalOpen(true); handleViewProject(bounty)}}>
-                          <p> linked project: {bounty.project_links[0].projectName}</p>
+                        <button onClick={() => { setSelectedBounty(bounty); setIsModalOpen(true); handleViewProject(bounty)}} className={styles.openProjectButton}>
+                          <p> Project: {bounty.project_links[0].projectName}</p>
                         </button>
                       </div> 
                     )}
                   </div>
                   <button 
                     onClick={() => handleToggleResponses(bounty._id)}
+                    className={styles.toggleResponsesButton}
                     >
-                    {responseVisibility[bounty._id] ? "Hide Feed" : "Show Feed"}
+                    {responseVisibility[bounty._id] ? "Close Bounty" : "Open Bounty"}
                   </button>
                   {responseVisibility[bounty._id] && (
                   <div className={styles.responsesContainer}>
@@ -316,7 +317,7 @@ const BountiesBoard = ({ group }) => {
                         <>
                             {console.log('here is response', response)}
                             <div key={index} className={styles.responseItem}>
-                            <p><strong>{response.author_name}</strong> ({new Date(response.date).toLocaleDateString()}):</p>
+                            <p><strong className={styles.responseAuthor}>{response.author_name}</strong> ({new Date(response.date).toLocaleDateString()}):</p>
                             <p>{response.text}</p>
                             </div>
                         </>
@@ -334,7 +335,7 @@ const BountiesBoard = ({ group }) => {
                           onChange={(e) => handleResponseInputChange(bounty._id, e.target.value)}
                           className={styles.responseInput}
                       />
-                      <button onClick={() => handleAddResponse(bounty._id)}>Submit Response</button>
+                      <button onClick={() => handleAddResponse(bounty._id)} className={styles.submitButton}>Submit Response</button>
                       </div>
                   </div>
                   )}
@@ -381,7 +382,7 @@ const BountiesBoard = ({ group }) => {
         />
         <input
           type="text"
-          placeholder="Post a bounty..."
+          placeholder="What do you want done?..."
           className={styles.commentInput}
           value={newBounty.text}
           onChange={(e) => setNewBounty(prevState => ({ ...prevState, text: e.target.value }))}
