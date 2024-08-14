@@ -17,14 +17,21 @@ const getIconForSection = (title) => {
   }
 };
 
-const AnimatedSection = forwardRef(({ title, content }, ref) => {
+const AnimatedSection = forwardRef(({ title, content, children }, ref) => {
   return (
     <section ref={ref} className={styles.animatedSection}>
-      <h2 className={styles.sectionTitle}>
-        {getIconForSection(title)}
-        {title}
-      </h2>
-      <p className={styles.sectionContent}>{content}</p>
+      <div className={styles.sectionContent}>
+        <h2 className={styles.sectionTitle}>
+          {getIconForSection(title)}
+          {title}
+        </h2>
+        <p className={styles.sectionText}>{content}</p>
+      </div>
+      {children && (
+        <div className={styles.sectionDemo}>
+          {children}
+        </div>
+      )}
     </section>
   );
 });

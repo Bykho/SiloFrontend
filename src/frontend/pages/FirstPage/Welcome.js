@@ -3,6 +3,7 @@ import styles from './welcome.module.css';
 import { useNavigate } from 'react-router-dom';
 import GameOfLife from './GameOfLife';
 import AnimatedSection from './AnimatedSection';
+import PlayerRatingSpiderweb from '../../components/UserSpiderPlot';
 
 function Welcome() {
     const navigate = useNavigate();
@@ -42,6 +43,22 @@ function Welcome() {
       return () => observer.disconnect();
     }, []);
 
+    // Mock data for the spider plot
+    const mockPlayerData = {
+      theory: 80,
+      practicum: 70,
+      innovation: 85,
+      leadership: 75,
+      technicalDepth: 90,
+    };
+
+    const mockUserData = JSON.stringify({
+      skills: ['React', 'JavaScript', 'Node.js'],
+      interests: ['Web Development', 'Machine Learning'],
+      portfolio: [{ name: 'Project 1', description: 'A web app' }],
+      major: 'Computer Science',
+    });
+
     return (
       <div className={styles.container}>
         <GameOfLife />
@@ -74,9 +91,6 @@ function Welcome() {
                 Auto-generate a portfolio from code, papers, or from scratch and
                 host your portfolio on a personal URL. Building Linkedin for engineers.
                 Launching at Duke and Columbia.
-                {/*Build. Share. Collaborate. 
-                Silo is the first networking platform designed by engineers, for engineers. 
-                Join our community and maximize your potential.*/}
               </p>
             </div>
             <AnimatedSection 
@@ -84,11 +98,15 @@ function Welcome() {
               title="What is Silo"
               content="Silo is a revolutionary platform that connects engineers from all disciplines, fostering collaboration and innovation. It's your go-to space for networking, knowledge sharing, and career growth in the engineering world."
             />
-            <AnimatedSection 
+             <AnimatedSection 
               ref={(el) => (sectionsRef.current.howItWorks = el)}
               title="How it Works"
               content="Join Silo, create your professional profile, and start connecting with fellow engineers. Share your projects, participate in discussions, and explore job opportunities tailored to your expertise. Our AI-powered matching system ensures you connect with the right people and opportunities."
-            />
+            >
+              <div className={styles.spiderPlotWrapper}>
+                <PlayerRatingSpiderweb playerData={mockPlayerData} userData={mockUserData} />
+              </div>
+            </AnimatedSection>
             <AnimatedSection 
               ref={(el) => (sectionsRef.current.faqs = el)}
               title="How Do I Sign Up"

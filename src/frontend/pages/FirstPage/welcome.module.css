@@ -152,47 +152,82 @@
 }
 
 .animatedSection {
-    opacity: 0;
-    transform: translateY(50px);
-    transition: opacity 0.5s ease, transform 0.5s ease;
-    padding: 60px 40px;
-    max-width: 1000px;
-    margin: 0 auto;
-    text-align: left;
-    min-height: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    background-color: rgba(255, 255, 255, 0.05);
-    border-radius: 20px;
-    margin-bottom: 40px;
-  }
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  padding: 60px 40px;
+  max-width: 1200px;
+  margin: 0 auto 60px;
+  text-align: left;
+  min-height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
   
-  .animatedSection.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.animatedSection.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.sectionContent {
+  margin-bottom: 30px;
+}
+
+.sectionTitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 2.5rem;
+  color: #47a9ff;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+}
   
-  .sectionTitle {
-    font-family: 'Inter', sans-serif;
-    font-size: 2.5rem;
-    color: #47a9ff;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-  }
-  
-  .sectionIcon {
-    margin-right: 15px;
-    font-size: 2rem;
-    color: #c4c4c4;
-  }
+.sectionIcon {
+  margin-right: 15px;
+  font-size: 2rem;
+  color: #c4c4c4;
+}
+
+.sectionText {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #ccc;
+}
+.spiderPlotWrapper {
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.spiderPlotWrapper > * {
+  width: 95%;
+}
+
+.spiderPlotTitle {
+  font-size: 1.5rem;
+  color: #47a9ff;
+  margin-bottom: 20px;
+  text-align: center;
+}
   
   .sectionContent {
     font-size: 1.1rem;
     line-height: 1.6;
     color: #ccc;
     margin-left: 45px;
+  }
+
+  .sectionDemo {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   }
 
 /* Customizing the scrollbar */
@@ -253,17 +288,18 @@
     font-size: 2rem;
   }
 
-    .animatedSection {
-        padding: 40px 20px;
-    }
+  .animatedSection {
+    flex-direction: column;
+    padding: 40px 20px;
+  }
 
-    .sectionTitle {
-        font-size: 2rem;
-    }
+  .sectionContent {
+    padding-right: 0;
+    margin-bottom: 30px;
+  }
 
-    .sectionContent {
-        font-size: 1rem;
-        margin-left: 35px;
-    }
+  .sectionDemo {
+    width: 100%;
+  }
   
 }
