@@ -9,6 +9,10 @@ const LeaderboardView = ({ users, navigate, fetchProjectsForUser }) => {
   const [error, setError] = useState('');
 
   useEffect(() => {
+    console.log('LEADERBOARDVIEW.js here is users: ', users)
+  }, [users])
+
+  useEffect(() => {
     const calculateScores = async () => {
       setLoading(true);
       setError('');
@@ -17,28 +21,15 @@ const LeaderboardView = ({ users, navigate, fetchProjectsForUser }) => {
         const usersWithScores = await Promise.all(users.map(async (user) => {
           try {
             console.log('Processing user:', user.username);
-            console.log('User portfolio:', user.portfolio);
-            
-            if (!user.portfolio || user.portfolio.length === 0) {
-              console.log('User has no projects in portfolio');
-              return { ...user, score: 0 };
+
+            let score = 0;
+            if (user.scores && user.scores.length > 0) {
+              const lastScoreDict = user.scores[user.scores.length - 1]; // Get the last element in the scores array
+              score = Object.values(lastScoreDict).reduce((sum, value) => sum + value, 0); // Sum all values in the dictionary
             }
 
-            const projects = await fetchProjectsForUser(user.portfolio);
-            console.log('Projects fetched for user:', user.username, 'Count:', projects.length);
-            console.log('Projects:', projects);
-
-            let totalUpvotes = 0;
-            projects.forEach(project => {
-              console.log('Project:', project._id);
-              console.log('Project upvotes:', project.upvotes);
-              const upvotes = project.upvotes ? project.upvotes.length : 0;
-              console.log('Upvotes for this project:', upvotes);
-              totalUpvotes += upvotes;
-            });
-
-            console.log('Total upvotes for user:', user.username, 'Score:', totalUpvotes * 10);
-            return { ...user, score: totalUpvotes * 10 };
+            console.log('Calculated score for user:', user.username, 'Score:', score);
+            return { ...user, score };
           } catch (userError) {
             console.error('Error processing user:', user.username, userError);
             return { ...user, score: 0 };

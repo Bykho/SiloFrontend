@@ -7,8 +7,8 @@ const PlayerRatingSpiderweb = ({ playerData, userData }) => {
   const [data, setData] = useState([
     { category: 'Theory', value: playerData.theory },
     { category: 'Practicum', value: playerData.practicum },
-    { category: 'Collaboration', value: playerData.collaboration },
-    { category: 'Entrepreneurship', value: playerData.entrepreneurship },
+    { category: 'Innovation', value: playerData.innovation },
+    { category: 'Leadership', value: playerData.leadership },
     { category: 'Technical Depth', value: playerData.technicalDepth },
   ]);
 

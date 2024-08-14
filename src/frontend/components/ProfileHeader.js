@@ -25,8 +25,8 @@ const ProfileHeader = ({ userData, loading, error }) => {
     ratings: {
       theory: 0,
       practicum: 0,
-      collaboration: 0,
-      entrepreneurship: 0,
+      innovation: 0,
+      leadership: 0,
       technicalDepth: 0,
     }
   };
