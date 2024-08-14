@@ -9,8 +9,8 @@ const LeaderboardView = ({ users, navigate, fetchProjectsForUser }) => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    console.log('LEADERBOARDVIEW.js here is users: ', users)
-  }, [users])
+    console.log('LEADERBOARDVIEW.js here is users: ', users);
+  }, [users]);
 
   useEffect(() => {
     const calculateScores = async () => {
@@ -28,7 +28,18 @@ const LeaderboardView = ({ users, navigate, fetchProjectsForUser }) => {
               score = Object.values(lastScoreDict).reduce((sum, value) => sum + value, 0); // Sum all values in the dictionary
             }
 
-            console.log('Calculated score for user:', user.username, 'Score:', score);
+            // Fetch user's portfolio and calculate the total upvotes
+            if (user.portfolio && user.portfolio.length > 0) {
+              const projects = await fetchProjectsForUser(user.portfolio);
+              let totalUpvotes = 0;
+              projects.forEach(project => {
+                const upvotes = project.upvotes ? project.upvotes.length : 0;
+                totalUpvotes += upvotes;
+              });
+              score += totalUpvotes; // Add the total upvotes to the score
+            }
+
+            console.log('Final calculated score for user:', user.username, 'Score:', score);
             return { ...user, score };
           } catch (userError) {
             console.error('Error processing user:', user.username, userError);

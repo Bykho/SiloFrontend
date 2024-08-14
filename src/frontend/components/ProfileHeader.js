@@ -20,19 +20,11 @@ const ProfileHeader = ({ userData, loading, error }) => {
   const VISIBLE_TAGS = 3;
 
   //Build out below.
-  const userSpiderData = {
-    // ... other user data
-    ratings: {
-      theory: 0,
-      practicum: 0,
-      innovation: 0,
-      leadership: 0,
-      technicalDepth: 0,
-    }
-  };
+  const userSpiderData = userData.scores[userData.scores.length - 1]
 
   useEffect(() => {
     console.log('ProfileHeader userData: ', userData)
+    console.log('ProfileHeader userSpiderData: ', userSpiderData)
   }, [userData])
 
   useEffect(() => {
@@ -52,7 +44,7 @@ const ProfileHeader = ({ userData, loading, error }) => {
   const renderRatingModal = () => (
     <div className={styles.modalContent}>
       <button className={styles.closeButton2} onClick={toggleRating}>Close</button>
-      <PlayerRatingSpiderweb playerData={userSpiderData.ratings} userData={userData} />
+      <PlayerRatingSpiderweb playerData={userSpiderData} userData={userData} />
     </div>
   );
 
