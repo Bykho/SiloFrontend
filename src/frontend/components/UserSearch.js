@@ -124,7 +124,7 @@ const UserSearch = () => {
       ) : error ? (
         <p className={styles.errorMessage}>{error}</p>
       ) : isLeaderboardView ? (
-        <LeaderboardView users={users.map(user => ({...user, score: user.totalUpvotes * 10}))} navigate={navigate} />
+        <LeaderboardView users={users.map(user => ({...user, score: user.totalUpvotes * 10}))} navigate={navigate} fetchProjectsForUser={fetchProjectsForUser} />
       ) : (
         <div className={styles.userList}>
           {users.map((user) => (
