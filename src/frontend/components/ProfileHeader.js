@@ -19,16 +19,21 @@ const ProfileHeader = ({ userData, loading, error }) => {
   const BIO_LENGTH_LIMIT = 300;
   const VISIBLE_TAGS = 3;
 
+  //Build out below.
   const userSpiderData = {
     // ... other user data
     ratings: {
-      theory: 80,
-      practicum: 75,
-      collaboration: 90,
-      entrepreneurship: 70,
-      technicalDepth: 85,
+      theory: 0,
+      practicum: 0,
+      collaboration: 0,
+      entrepreneurship: 0,
+      technicalDepth: 0,
     }
   };
+
+  useEffect(() => {
+    console.log('ProfileHeader userData: ', userData)
+  }, [userData])
 
   useEffect(() => {
     if (userData && userData.biography) {
@@ -47,7 +52,7 @@ const ProfileHeader = ({ userData, loading, error }) => {
   const renderRatingModal = () => (
     <div className={styles.modalContent}>
       <button className={styles.closeButton2} onClick={toggleRating}>Close</button>
-      <PlayerRatingSpiderweb playerData={userSpiderData.ratings} />
+      <PlayerRatingSpiderweb playerData={userSpiderData.ratings} userData={userData} />
     </div>
   );
 
