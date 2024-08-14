@@ -52,6 +52,7 @@
 .username {
   font-weight: 600;
   color: #4a90e2;
+  cursor: pointer;
 }
 
 .tagsContainer {

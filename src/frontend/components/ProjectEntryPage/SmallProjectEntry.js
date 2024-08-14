@@ -190,6 +190,10 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
     );
   };
 
+  const navToProfile = () => {
+    navigate(`/profile/${localProject.user_id}`);
+  };
+
   const renderVisibilityText = () => {
     // Check if the user ID matches and the localProject visibility is defined
     if (String(user._id) === localProject.user_id) {
@@ -213,10 +217,10 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
           userUpvotes={localUpvotes}
           setUserUpvotes={setLocalUpvotes}
         />
-        <div className={styles.titleAndUsernameContainer} onClick={togglePopup}>
+        <div className={styles.titleAndUsernameContainer}>
           <span className={styles.visIcon}> {renderVisibilityText()} </span>
-          <h3 className={styles.projectTitle}>{localProject.projectName}</h3>
-          <span className={styles.byUsername}>by <span className={styles.username}>{localProject.createdBy}</span></span>
+          <h3 className={styles.projectTitle} onClick={togglePopup}>{localProject.projectName}</h3>
+          <span className={styles.byUsername} onClick={navToProfile}>by <span className={styles.username}>{localProject.createdBy}</span></span>
         </div>
         <div className={styles.tagsContainer}>
           {renderTagsPreview(localProject.tags)}
