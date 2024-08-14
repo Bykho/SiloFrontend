@@ -23,7 +23,6 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 15px;
-  cursor: pointer; 
   margin-top: 5px; 
 }
 
@@ -95,6 +94,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  cursor: pointer; 
 }
 
 .byUsername {
@@ -106,6 +106,7 @@
 .username {
   font-weight: 600;
   color: #4a90e2;
+  cursor: pointer;
 }
 
 .tagsContainer {

@@ -216,6 +216,10 @@ const ProjectEntry = ({ project, passedUser, UpvoteButton, userUpvotes, setUserU
     );
   };
 
+  const navToProfile = () => {
+    navigate(`/profile/${localProject.user_id}`);
+  };
+
   const renderProjectDescription = () => {
     const description = localProject.projectDescription;
     const isLongDescription = description.length > 200;
@@ -247,7 +251,7 @@ const ProjectEntry = ({ project, passedUser, UpvoteButton, userUpvotes, setUserU
             setUserUpvotes={setUserUpvotes}
           />
           <h3 className={styles.projectTitle}>{localProject.projectName}</h3>
-          <span className={styles.byUsername}>by <span className={styles.username}>{localProject.createdBy}</span></span>
+          <span className={styles.byUsername}>by <span className={styles.username} onClick={navToProfile}>{localProject.createdBy}</span></span>
         </div>
         {String(user._id) === localProject.user_id && (
           <button className={styles.editButton} onClick={toggleEdit}>
