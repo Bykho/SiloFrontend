@@ -4,12 +4,17 @@ import styles from './userSpiderPlot.module.css';
 import config from '../config';
 
 const PlayerRatingSpiderweb = ({ playerData, userData }) => {
+  
+  useEffect(() => {
+    console.log('USERSPIDERPLOT playerData: ', playerData)
+  }, [])
+
   const [data, setData] = useState([
-    { category: 'Theory', value: playerData.theory },
-    { category: 'Practicum', value: playerData.practicum },
-    { category: 'Innovation', value: playerData.innovation },
-    { category: 'Leadership', value: playerData.leadership },
-    { category: 'Technical Depth', value: playerData.technicalDepth },
+    { category: 'Theory', value: playerData.Theory },
+    { category: 'Practicum', value: playerData.Practicum },
+    { category: 'Innovation', value: playerData.Innovation },
+    { category: 'Leadership', value: playerData.Leadership },
+    { category: 'Technical Depth', value: playerData.TechnicalDepth },
   ]);
 
   const totalScore = data.reduce((sum, { value }) => sum + value, 0);
@@ -19,11 +24,7 @@ const PlayerRatingSpiderweb = ({ playerData, userData }) => {
 
   //build out below
   const suggestions = [
-    "Participate in more collaborative projects to boost your collaboration score.",
-    "Deepen your technical knowledge in specific areas to increase your technical depth.",
-    "Engage in practical applications of your skills to improve your practicum score.",
-    "Study more theoretical concepts to enhance your theory score.",
-    "Explore entrepreneurial opportunities to raise your entrepreneurship score.",
+    "Add projects to improve score"
   ];
 
 

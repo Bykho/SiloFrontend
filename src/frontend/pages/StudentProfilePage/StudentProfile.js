@@ -39,7 +39,7 @@ function StudentProfile() {
   const languageLookup = {
     js: 'javascript',
     jsx: 'javascript',
-    ts: 'javascript', // TypeScript files often use JavaScript syntax highlighting
+    ts: 'javascript',
     tsx: 'javascript',
     py: 'python',
     java: 'java',
@@ -53,7 +53,6 @@ function StudentProfile() {
     rb: 'ruby',
     php: 'php',
     rs: 'rust',
-    // Add more mappings as needed
   };
 
 
