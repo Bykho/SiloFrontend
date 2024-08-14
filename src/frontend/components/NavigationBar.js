@@ -64,7 +64,7 @@ const NavigationBar = () => {
             >
               <MdOutlineLeaderboard className={styles.icon} /> Members
             </a>
-            {/* <NotificationsComponent /> */}
+            <NotificationsComponent />
             <button
               onClick={handleLogout}
               className={`${styles.logoutButton} ${activeLink === 'logout' ? styles.clickedButton : ''}`}
