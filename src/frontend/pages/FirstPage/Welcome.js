@@ -45,11 +45,11 @@ function Welcome() {
 
     // Mock data for the spider plot
     const mockPlayerData = {
-      Theory: 40,
-      Practicum: 70,
-      Innovation: 85,
-      Leadership: 75,
-      TechnicalDepth: 90,
+      Theory: 95,
+      Practicum: 15,
+      Innovation: 95,
+      Leadership: 45,
+      TechnicalDepth: 95,
       };
 
     const mockUserData = JSON.stringify({
