@@ -1,0 +1,157 @@
+.container {
+    display: flex;
+    width: 100%;
+    min-height: 600px;
+    background-color: #1a202c;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .leftColumn {
+    width: 50%;
+    height: 500px;
+  }
+  
+  .rightColumn {
+    width: 50%;
+    padding: 0 2rem;
+    color: #a0aec0;
+  }
+  
+  .title {
+    color: #3182ce;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  
+  .subTitle {
+    color: #ffffff;
+    font-size: 1.2rem;
+    font-weight: semibold;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #4a5568;
+    padding-bottom: 0.5rem;
+  }
+  
+  .statSection {
+    margin-bottom: 2rem;
+  }
+  
+  .scoreTable {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .scoreRow {
+    display: flex;
+    align-items: center;
+  }
+  
+  .scoreCategory {
+    width: 30%;
+    font-weight: 500;
+  }
+  
+  .scoreBarContainer {
+    width: 70%;
+    height: 20px;
+    background-color: #2d3748;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .scoreBar {
+    height: 100%;
+    background-color: #3182ce;
+    border-radius: 10px;
+    transition: width 0.5s ease-out;
+  }
+  
+  .scoreValue {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #ffffff;
+    font-weight: bold;
+  }
+  
+  .overallStats {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+  }
+  
+  .statItem {
+    text-align: center;
+    padding: 1rem;
+    background-color: #2d3748;
+    border-radius: 0.5rem;
+    flex: 1;
+    margin: 0 0.5rem;
+  }
+  
+  .statLabel {
+    font-size: 0.9rem;
+    color: #a0aec0;
+    margin-bottom: 0.5rem;
+  }
+  
+  .statValue {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #3182ce;
+  }
+  
+  .suggestionList {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .suggestionItem {
+    padding: 0.75rem 1rem;
+    background-color: #2d3748;
+    border-radius: 0.5rem;
+    margin-bottom: 0.75rem;
+    transition: background-color 0.3s ease;
+  }
+  
+  .suggestionItem:hover {
+    background-color: #3182ce;
+    color: #ffffff;
+  }
+  
+  @media (max-width: 768px) {
+    .container {
+      flex-direction: column;
+      padding: 1rem;
+    }
+  
+    .leftColumn,
+    .rightColumn {
+      width: 100%;
+    }
+  
+    .leftColumn {
+      height: 300px;
+      margin-bottom: 2rem;
+    }
+  
+    .rightColumn {
+      padding: 0;
+    }
+  
+    .overallStats {
+      flex-direction: column;
+      gap: 1rem;
+    }
+  
+    .statItem {
+      margin: 0;
+    }
+  }

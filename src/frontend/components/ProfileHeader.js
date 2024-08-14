@@ -4,7 +4,7 @@ import ProfileImage from '../components/ProfileImage';
 import styles from './profileHeader.module.css';
 import { FaGithub, FaGlobe, FaLink, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { IoMdMail } from "react-icons/io";
-
+import PlayerRatingSpiderweb from './UserSpiderPlot';
 
 const ProfileHeader = ({ userData, loading, error }) => {
   const navigate = useNavigate();
@@ -14,9 +14,26 @@ const ProfileHeader = ({ userData, loading, error }) => {
   const interestsSectionRef = useRef(null);
   const [showResume, setShowResume] = useState(false);
   const [showCopiedConfirmation, setShowCopiedConfirmation] = useState(false);
-
+  const [showRating, setShowRating] = useState(false);
+  
   const BIO_LENGTH_LIMIT = 300;
   const VISIBLE_TAGS = 3;
+
+  //Build out below.
+  const userSpiderData = {
+    // ... other user data
+    ratings: {
+      theory: 0,
+      practicum: 0,
+      collaboration: 0,
+      entrepreneurship: 0,
+      technicalDepth: 0,
+    }
+  };
+
+  useEffect(() => {
+    console.log('ProfileHeader userData: ', userData)
+  }, [userData])
 
   useEffect(() => {
     if (userData && userData.biography) {
@@ -27,6 +44,17 @@ const ProfileHeader = ({ userData, loading, error }) => {
   const toggleResume = () => {
     setShowResume(!showResume);
   }
+
+  const toggleRating = () => {
+    setShowRating(!showRating);
+  }
+
+  const renderRatingModal = () => (
+    <div className={styles.modalContent}>
+      <button className={styles.closeButton2} onClick={toggleRating}>Close</button>
+      <PlayerRatingSpiderweb playerData={userSpiderData.ratings} userData={userData} />
+    </div>
+  );
 
   const toggleBio = () => setShowFullBio(!showFullBio);
 
@@ -137,6 +165,7 @@ const ProfileHeader = ({ userData, loading, error }) => {
           )}
         </div>
         <div className={styles.linksContainer}>
+          <button className={styles.contactMeButton} onClick={toggleRating}>View Ratings</button>
           <button className={styles.contactMeButton} onClick={handleContactButton}> <IoMdMail /> Contact </button>
           <button className={styles.linkButton} onClick={toggleResume}>View Resume</button>
           {userData.github_link && renderLinkButton(userData.github_link, <FaGithub />)}
@@ -153,6 +182,12 @@ const ProfileHeader = ({ userData, loading, error }) => {
         <div className={styles.modal}>
           <button className={styles.closeButton} onClick={toggleResume}>X</button>
           <embed src={userData.resume} type="application/pdf" width="80%" height="80%" />
+        </div>
+      )}
+
+      {showRating && (
+        <div className={styles.modalScore}>
+          {renderRatingModal()}
         </div>
       )}
     </div>
