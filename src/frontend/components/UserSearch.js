@@ -117,9 +117,7 @@ const UserSearch = () => {
           </label>
           <span className={`${styles.viewLabel} ${isLeaderboardView ? styles.activeView : ''}`}>Leaderboard</span>
         </div>
-        <div className={styles.resultsCount}>
-          Results: {users.length}
-        </div>
+
       </div>
       {loading ? (
         <div className={styles.loadingSpinner}></div>
