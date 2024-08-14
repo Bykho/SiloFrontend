@@ -131,7 +131,7 @@ const PlayerRatingSpiderweb = ({ playerData, userData }) => {
             />
           </RadarChart>
         </ResponsiveContainer>
-        <button onClick={handleButtonClick} className={styles.button}>Populate VSscore Data</button>
+        {/* <button onClick={handleButtonClick} className={styles.button}>Populate VSscore Data</button> */}
         <pre>{JSON.stringify(vsscoreData, null, 2)}</pre>
       </div>
       <div className={styles.rightColumn}>
