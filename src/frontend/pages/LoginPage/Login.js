@@ -71,7 +71,7 @@ function Login() {
             {!showLoginForm ? (
               <div className={styles.buttonContainer}>
                 <button className={`${styles.button} ${styles.loginButton}`} onClick={toggleLoginForm}>Login</button>
-                <a className={`${styles.button} ${styles.createButton}`} href="/GoLive">Create</a>
+                <a className={`${styles.button} ${styles.createButton}`} href="/SignUp">Create Account</a>
               </div>
             ) : (
               <>
