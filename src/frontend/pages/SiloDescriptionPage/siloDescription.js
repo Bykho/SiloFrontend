@@ -1,19 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
 import styles from './siloDescription.module.css';
 import GameOfLife from './GameOfLife';
-
+import UserSpiderPlot from '../../components/UserSpiderPlot'; // Import the UserSpiderPlot component
 
 function SiloDescription() {
   const [isLoaded, setIsLoaded] = useState(false);
-  const navigate = useNavigate(); // Initialize useNavigate hook
+  const [isModalOpen, setIsModalOpen] = useState(false); // New state for modal visibility
 
   useEffect(() => {
     setIsLoaded(true);
   }, []);
 
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
   const handleCreateProjectClick = () => {
-    navigate('/studentProfile'); // Navigate to /studentProfile
+    toggleModal(); // Open the modal instead of navigating
   };
 
   return (
@@ -40,15 +43,22 @@ function SiloDescription() {
         </div>
         <button 
           className={`${styles.createButton} ${isLoaded ? styles.buttonLoaded : ''}`}
-          onClick={handleCreateProjectClick} // Add onClick handler
+          onClick={handleCreateProjectClick}
         >
           Build Your Portfolio
         </button>
       </div>
+      
+      {isModalOpen && (
+        <div className={styles.modal}>
+          <div className={styles.modalContent}>
+            <button className={styles.closeButton} onClick={toggleModal}>Close</button>
+            <UserSpiderPlot playerData={{}} userData={{}} />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
 export default SiloDescription;
-
-
