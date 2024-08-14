@@ -1,15 +1,15 @@
 .container {
     display: flex;
-    width: 100%;
     min-height: 600px;
     background-color: #1a202c;
     padding: 2rem;
     border-radius: 1rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 2px solid #676b79;
   }
   
   .leftColumn {
-    width: 50%;
+    width: 80%;
     height: 500px;
   }
   
@@ -17,6 +17,12 @@
     width: 50%;
     padding: 0 2rem;
     color: #a0aec0;
+  }
+
+  .asterix{
+    color: rgb(189, 189, 189);
+    font-style: italic;
+    font-size: 1rem;
   }
   
   .title {
@@ -54,6 +60,17 @@
   .scoreCategory {
     width: 30%;
     font-weight: 500;
+    margin-right: 5px;
+  }
+
+  .radar {
+    transform: scale(0);
+    transform-origin: center;
+    transition: transform 0.5s ease-out;
+  }
+
+  .radar.visible {
+    transform: scale(1);
   }
   
   .scoreBarContainer {

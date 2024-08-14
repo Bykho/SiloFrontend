@@ -175,9 +175,8 @@ body, html {
 
 .modal {
     position: fixed;
-    top: 0;
-    left: 0;
-    background: rgba(0, 0, 0, 0.8);
+    top:0px;
+    left: 5vw;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -185,7 +184,7 @@ body, html {
   }
   
   .modalContent {
-    padding: 20px;
+    padding: 50px;
     border-radius: 10px;
     position: relative;
     max-width: 90vw;
@@ -201,15 +200,16 @@ body, html {
     background: none;
     border: none;
     font-size: 1.5rem;
+    width: 50px; 
     cursor: pointer;
   }
 
   .closeButton{
     position: absolute;
-    top: 20px;
-    left: 20px; 
+    top: 60px;
+    left: 60px; 
     align-content: center;
-    background: rgb(39, 122, 206);
+    background: rgb(252, 72, 7);
     border: none;
     font-size: 1rem;
     cursor: pointer;

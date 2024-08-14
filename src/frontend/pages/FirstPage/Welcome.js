@@ -91,11 +91,11 @@ function Welcome() {
 
     // Mock data for the spider plot
     const mockPlayerData = {
-      Theory: 95,
-      Practicum: 15,
-      Innovation: 95,
-      Leadership: 45,
-      TechnicalDepth: 95,
+      Theory: 90,
+      Practicum: 45,
+      Innovation: 80,
+      Leadership: 30,
+      TechnicalDepth: 89,
       };
 
     const mockUserData = JSON.stringify({
@@ -169,11 +169,6 @@ function Welcome() {
                 <PlayerRatingSpiderweb playerData={mockPlayerData} userData={mockUserData} />
               </div>
             </AnimatedSection>
-            <AnimatedSection 
-              ref={(el) => (sectionsRef.current.faqs = el)}
-              title="How Do I Sign Up"
-              content="Silo is currently open to anyone with a valud email address. Preferrably sign up with a .edu email to gain access to our platform. Add a resume to jumpstart your portfolio!"
-            />
             <AnimatedSection 
               ref={(el) => (sectionsRef.current.contactUs = el)}
               title="Contact Us"

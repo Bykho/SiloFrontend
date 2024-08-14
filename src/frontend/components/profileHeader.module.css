@@ -200,6 +200,26 @@
   transition: background-color 0.3s;
 }
 
+.analyzeButton{
+  display: flex; 
+  align-items: center;
+  gap: 10px; 
+  background-color: #3164b0;
+  color: #f0f0f0;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 18px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 1s ease;
+}
+
+.analyzeButton:hover {
+  background-color: #3596b7;
+  transition: background-color 1s ease;
+}
+
 .loadingError {
   font-size: 14px;
   color: #ff6b6b;
@@ -222,11 +242,12 @@
 
 .closeButton2 {
   position: absolute;
-  top: 20px;
-  left: 20px; 
+  top: 30px;
+  left: 30px; 
   align-content: center;
-  background: rgb(39, 170, 206);
+  background: rgb(255, 85, 0);
   border: none;
+  width: 40px; 
   font-size: 1rem;
   cursor: pointer;
   color: white; 

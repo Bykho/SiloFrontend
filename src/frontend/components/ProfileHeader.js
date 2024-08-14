@@ -5,6 +5,9 @@ import styles from './profileHeader.module.css';
 import { FaGithub, FaGlobe, FaLink, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { IoMdMail } from "react-icons/io";
 import PlayerRatingSpiderweb from './UserSpiderPlot';
+import { FaWindowClose } from 'react-icons/fa';
+import { TbAnalyze } from "react-icons/tb";
+
 
 const ProfileHeader = ({ userData, loading, error }) => {
   const navigate = useNavigate();
@@ -45,7 +48,7 @@ const ProfileHeader = ({ userData, loading, error }) => {
 
   const renderRatingModal = () => (
     <div className={styles.modalContent}>
-      <button className={styles.closeButton2} onClick={toggleRating}>Close</button>
+      <button className={styles.closeButton2} onClick={toggleRating}><FaWindowClose /> </button>
       <PlayerRatingSpiderweb playerData={userSpiderData} userData={userData} />
     </div>
   );
@@ -144,6 +147,9 @@ const ProfileHeader = ({ userData, loading, error }) => {
             <h1 className={styles.userName}>{userData.username}</h1>
             <p className={styles.userInfo}>{userData.user_type} | {userData.university} | {userData.major} {userData.grad}</p>
           </div>
+          {!isProfilePage && (
+            <button className={styles.analyzeButton} onClick={toggleRating}> <TbAnalyze />Analyze Me</button>
+          )}
         </div>
         <div className={styles.tagsContainer}>
           {renderTagsPreview(userData.skills, 'skill')}
@@ -159,9 +165,6 @@ const ProfileHeader = ({ userData, loading, error }) => {
           )}
         </div>
         <div className={styles.linksContainer}>
-          {!isProfilePage && (
-            <button className={styles.contactMeButton} onClick={toggleRating}>View Ratings</button>
-          )}
           <button className={styles.contactMeButton} onClick={handleContactButton}> <IoMdMail /> Contact </button>
           <button className={styles.linkButton} onClick={toggleResume}>View Resume</button>
           {userData.github_link && renderLinkButton(userData.github_link, <FaGithub />)}

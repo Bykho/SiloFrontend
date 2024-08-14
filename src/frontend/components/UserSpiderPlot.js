@@ -4,7 +4,8 @@ import styles from './userSpiderPlot.module.css';
 import config from '../config';
 
 const PlayerRatingSpiderweb = ({ playerData, userData }) => {
-  
+  const [isVisible, setIsVisible] = useState(false);
+
   useEffect(() => {
     console.log('USERSPIDERPLOT playerData: ', playerData)
   }, [])
@@ -24,8 +25,16 @@ const PlayerRatingSpiderweb = ({ playerData, userData }) => {
 
   //build out below
   const suggestions = [
-    "Add more portfolio entries to improve score"
+    "Add more projects to increase your score!",
   ];
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 300);
+  
+    return () => clearTimeout(timer);
+  }, []);
 
 
   useEffect(() => {
@@ -128,8 +137,10 @@ const PlayerRatingSpiderweb = ({ playerData, userData }) => {
               stroke="#3182ce"
               fill="#3182ce"
               fillOpacity={0.6}
+              className={`${styles.radar} ${isVisible ? styles.visible : ''}`}
             />
           </RadarChart>
+          <h1 className={styles.asterix}> Model still under development. Accuracy will improve as more users join the platform.</h1>
         </ResponsiveContainer>
         {/* <button onClick={handleButtonClick} className={styles.button}>Populate VSscore Data</button>
         <pre>{JSON.stringify(vsscoreData, null, 2)}</pre> */}

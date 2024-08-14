@@ -5,7 +5,7 @@ import styles from './siloDescription.module.css';
 import GameOfLife from './GameOfLife';
 import UserSpiderPlot from '../../components/UserSpiderPlot';
 import config from '../../config';
-
+import { FaWindowClose } from 'react-icons/fa';
 
 function SiloDescription() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -77,14 +77,14 @@ function SiloDescription() {
           className={`${styles.createButton} ${isLoaded ? styles.buttonLoaded : ''}`}
           onClick={handleCreateProjectClick}
         >
-          Build Your Portfolio
+          Analyze my Profile
         </button>
       </div>
       
       {isModalOpen && (
         <div className={styles.modal}>
           <div className={styles.modalContent}>
-            <button className={styles.closeButton} onClick={toggleModal}>Close</button>
+            <button className={styles.closeButton} onClick={toggleModal}><FaWindowClose /></button>
             {userData ? (
               <UserSpiderPlot playerData={userData.scores[userData.scores.length - 1]} userData={{}} />
             ) : (
