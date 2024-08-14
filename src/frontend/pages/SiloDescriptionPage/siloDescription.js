@@ -1,14 +1,46 @@
+
+
 import React, { useEffect, useState } from 'react';
 import styles from './siloDescription.module.css';
 import GameOfLife from './GameOfLife';
-import UserSpiderPlot from '../../components/UserSpiderPlot'; // Import the UserSpiderPlot component
+import UserSpiderPlot from '../../components/UserSpiderPlot';
+import config from '../../config';
+
 
 function SiloDescription() {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false); // New state for modal visibility
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [userData, setUserData] = useState(null);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     setIsLoaded(true);
+
+    // Fetch the user data when the component mounts
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${config.apiBaseUrl}/studentProfile`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch user data');
+        }
+
+        const data = await response.json();
+        setUserData(data);  // Set the fetched user data to state
+      } catch (err) {
+        console.error('Error fetching user data:', err);
+        setError('Error fetching user data');
+      }
+    };
+
+    fetchUserData();
   }, []);
 
   const toggleModal = () => {
@@ -53,7 +85,11 @@ function SiloDescription() {
         <div className={styles.modal}>
           <div className={styles.modalContent}>
             <button className={styles.closeButton} onClick={toggleModal}>Close</button>
-            <UserSpiderPlot playerData={{}} userData={{}} />
+            {userData ? (
+              <UserSpiderPlot playerData={userData.scores[userData.scores.length - 1]} userData={{}} />
+            ) : (
+              <p>Loading...</p>
+            )}
           </div>
         </div>
       )}
@@ -62,3 +98,5 @@ function SiloDescription() {
 }
 
 export default SiloDescription;
+
+

@@ -258,23 +258,102 @@ function StudentProfile() {
     setShowSharePreview(false);
   };
 
-  const handleSaveProject = (newProject, deleteInfo) => {
+  const handleSaveProject = async (newProject, deleteInfo) => {
     setShowModal(false);
+
+    // Update the userData state based on the action (add or delete project)
     if (newProject) {
-      setUserData((prevState) => ({
-        ...prevState,
-        portfolio: [newProject, ...prevState.portfolio],
-      }));
+        setUserData((prevState) => ({
+            ...prevState,
+            portfolio: [newProject, ...prevState.portfolio],
+        }));
     } else if (deleteInfo && deleteInfo.projectId) {
-      setUserData((prevState) => ({
-        ...prevState,
-        portfolio: prevState.portfolio.filter(
-          (project) => project._id !== deleteInfo.projectId
-        ),
-      }));
+        setUserData((prevState) => ({
+            ...prevState,
+            portfolio: prevState.portfolio.filter(
+                (project) => project._id !== deleteInfo.projectId
+            ),
+        }));
     }
+
     setSelectedGitFiles([]);
-  };
+
+    // Process the updated userData for backend submission
+    const updatedUserData = {
+        ...userData,
+        portfolio: newProject
+            ? [newProject, ...userData.portfolio]
+            : userData.portfolio.filter(
+                (project) => project._id !== deleteInfo.projectId
+            ),
+    };
+
+    // Recursive function to filter out objects with type 'image' in the portfolio
+    const filterPortfolio = (data) => {
+        if (Array.isArray(data)) {
+            return data
+                .map(item => filterPortfolio(item))  // Recursively process each item in the array
+                .filter(item => item !== null);  // Filter out any null items (excluded dictionaries)
+        } else if (typeof data === 'object' && data !== null) {
+            if (data.type === 'image') {
+                return null;  // Exclude this dictionary
+            } else {
+                // Recursively filter the object
+                const filteredObject = {};
+                for (const key in data) {
+                    const filteredValue = filterPortfolio(data[key]);
+                    if (filteredValue !== null) {
+                        filteredObject[key] = filteredValue;
+                    }
+                }
+                return filteredObject;
+            }
+        } else {
+            return data;  // Return the data as is (primitives)
+        }
+    };
+
+    // Filter the portfolio and prepare the data for the backend
+    const filteredPortfolio = filterPortfolio(updatedUserData.portfolio);
+
+    const newVsScoreData = {
+        skills: updatedUserData.skills,
+        interests: updatedUserData.interests,
+        portfolio: filteredPortfolio,
+        major: updatedUserData.major,
+    };
+
+    try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${config.apiBaseUrl}/VSprofileScore`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify(newVsScoreData),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to get response from VSprofileScore');
+        }
+
+        const result = await response.json();
+        console.log('Here is the result from VSprofileScore:', result);
+
+        // Update the scores array with the new scores
+        setUserData((prevState) => ({
+            ...prevState,
+            scores: [...prevState.scores, result], // Append the new scores to the scores array
+        }));
+
+        console.log('VSscoreData sent to backend successfully.');
+
+    } catch (error) {
+        console.error('Error sending data to backend:', error);
+    }
+};
+
 
   const handleSaveProfile = (newToken = null) => {
     setShowEditor(false);

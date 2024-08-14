@@ -24,7 +24,7 @@ const PlayerRatingSpiderweb = ({ playerData, userData }) => {
 
   //build out below
   const suggestions = [
-    "Add projects to improve score"
+    "Add more portfolio entries to improve score"
   ];
 
 
@@ -131,8 +131,8 @@ const PlayerRatingSpiderweb = ({ playerData, userData }) => {
             />
           </RadarChart>
         </ResponsiveContainer>
-        <button onClick={handleButtonClick} className={styles.button}>Populate VSscore Data</button>
-        <pre>{JSON.stringify(vsscoreData, null, 2)}</pre>
+        {/* <button onClick={handleButtonClick} className={styles.button}>Populate VSscore Data</button>
+        <pre>{JSON.stringify(vsscoreData, null, 2)}</pre> */}
       </div>
       <div className={styles.rightColumn}>
         <h2 className={styles.title}>User Rating Breakdown</h2>

@@ -261,34 +261,96 @@ function SignUp() {
     const token = localStorage.getItem('token');
 
     const userData = {
-      user_id: user._id,
-      selectedPortfolio: selectedPortfolio
+        user_id: user._id,
+        selectedPortfolio: selectedPortfolio
     };
 
     console.log("Here is userData: ", userData);
 
     try {
-      const response = await fetch(`${config.apiBaseUrl}/massProjectPublish`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(userData),
-      });
+        // First, save the portfolio to the backend
+        const response = await fetch(`${config.apiBaseUrl}/massProjectPublish`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userData),
+        });
 
-      if (response.ok) {
-        const data = await response.json();
-        navigate('/siloDescription');  // Otherwise navigate to the description page
-      } else {
-        const errorData = await response.json();
-        setError(errorData.message || 'Publishing Failed');
-      }
+        if (response.ok) {
+            const data = await response.json();
+            console.log('Portfolio saved successfully:', data);
+
+            // Now, prepare and send the data to calculate the scores
+            const filteredPortfolio = filterPortfolio(selectedPortfolio);
+
+            const newVsScoreData = {
+                skills: formData.skills,
+                interests: formData.interests,
+                portfolio: filteredPortfolio,
+                major: formData.major,
+            };
+
+            const scoreResponse = await fetch(`${config.apiBaseUrl}/VSprofileScore`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify(newVsScoreData),
+            });
+
+            if (!scoreResponse.ok) {
+                throw new Error('Failed to get response from VSprofileScore');
+            }
+
+            const result = await scoreResponse.json();
+            console.log('Here is the result from VSprofileScore:', result);
+
+            // Update the user's scores array with the new scores
+            updateUser((prevUser) => ({
+                ...prevUser,
+                scores: [...prevUser.scores, result], // Append the new scores to the scores array
+            }));
+
+            // Navigate to the description page after everything is done
+            navigate('/siloDescription');
+
+        } else {
+            const errorData = await response.json();
+            setError(errorData.message || 'Publishing Failed');
+        }
     } catch (error) {
-      console.error('Error during publishing:', error);
-      setError('An unexpected error occurred. Please try again.');
+        console.error('Error during publishing:', error);
+        setError('An unexpected error occurred. Please try again.');
     }
-  };
+};
+
+// Utility function to filter out 'image' type entries
+const filterPortfolio = (data) => {
+    if (Array.isArray(data)) {
+        return data
+            .map(item => filterPortfolio(item))
+            .filter(item => item !== null);
+    } else if (typeof data === 'object' && data !== null) {
+        if (data.type === 'image') {
+            return null;
+        } else {
+            const filteredObject = {};
+            for (const key in data) {
+                const filteredValue = filterPortfolio(data[key]);
+                if (filteredValue !== null) {
+                    filteredObject[key] = filteredValue;
+                }
+            }
+            return filteredObject;
+        }
+    } else {
+        return data;
+    }
+};
+
 
   const renderLoadingIndicator = () => (
     <div className={styles.loadingIndicator}>

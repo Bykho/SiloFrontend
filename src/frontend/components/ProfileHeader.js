@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import ProfileImage from '../components/ProfileImage';
 import styles from './profileHeader.module.css';
 import { FaGithub, FaGlobe, FaLink, FaChevronDown, FaChevronUp } from 'react-icons/fa';
@@ -15,7 +15,9 @@ const ProfileHeader = ({ userData, loading, error }) => {
   const [showResume, setShowResume] = useState(false);
   const [showCopiedConfirmation, setShowCopiedConfirmation] = useState(false);
   const [showRating, setShowRating] = useState(false);
-  
+  const location = useLocation();
+  const isProfilePage = location.pathname.includes('/profile/');
+
   const BIO_LENGTH_LIMIT = 300;
   const VISIBLE_TAGS = 3;
 
@@ -157,7 +159,9 @@ const ProfileHeader = ({ userData, loading, error }) => {
           )}
         </div>
         <div className={styles.linksContainer}>
-          <button className={styles.contactMeButton} onClick={toggleRating}>View Ratings</button>
+          {!isProfilePage && (
+            <button className={styles.contactMeButton} onClick={toggleRating}>View Ratings</button>
+          )}
           <button className={styles.contactMeButton} onClick={handleContactButton}> <IoMdMail /> Contact </button>
           <button className={styles.linkButton} onClick={toggleResume}>View Resume</button>
           {userData.github_link && renderLinkButton(userData.github_link, <FaGithub />)}

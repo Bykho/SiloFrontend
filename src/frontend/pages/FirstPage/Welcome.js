@@ -91,12 +91,12 @@ function Welcome() {
 
     // Mock data for the spider plot
     const mockPlayerData = {
-      theory: 80,
-      practicum: 70,
-      innovation: 85,
-      leadership: 75,
-      technicalDepth: 90,
-    };
+      Theory: 95,
+      Practicum: 15,
+      Innovation: 95,
+      Leadership: 45,
+      TechnicalDepth: 95,
+      };
 
     const mockUserData = JSON.stringify({
       skills: ['React', 'JavaScript', 'Node.js'],
@@ -169,6 +169,11 @@ function Welcome() {
                 <PlayerRatingSpiderweb playerData={mockPlayerData} userData={mockUserData} />
               </div>
             </AnimatedSection>
+            <AnimatedSection 
+              ref={(el) => (sectionsRef.current.faqs = el)}
+              title="How Do I Sign Up"
+              content="Silo is currently open to anyone with a valud email address. Preferrably sign up with a .edu email to gain access to our platform. Add a resume to jumpstart your portfolio!"
+            />
             <AnimatedSection 
               ref={(el) => (sectionsRef.current.contactUs = el)}
               title="Contact Us"

@@ -146,6 +146,8 @@ const UserCard = ({ user, navigate, fetchProjectsForUser }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [totalUpvotes, setTotalUpvotes] = useState(0);
+  const [score, setScore] = useState(0);
+
   console.log('USERCARD here is user: ', user)
   useEffect(() => {
     const fetchProjects = async () => {
@@ -154,8 +156,23 @@ const UserCard = ({ user, navigate, fetchProjectsForUser }) => {
       try {
         const projectData = await fetchProjectsForUser(user.portfolio);
         setProjects(projectData);
-        const upvotesSum = projectData.reduce((sum, project) => sum + (project.upvotes ? project.upvotes.length : 0), 0);
+
+        const upvotesSum = projectData.reduce(
+          (sum, project) => sum + (project.upvotes ? project.upvotes.length : 0),
+          0
+        );
         setTotalUpvotes(upvotesSum);
+  
+        let tempScore = user.scores.length > 0
+          ? Object.values(user.scores[user.scores.length - 1]).reduce(
+              (sum, value) => sum + value,
+              0
+            )
+          : 0;
+  
+        tempScore += upvotesSum * 10;
+        setScore(tempScore);
+
         setLoading(false);
       } catch (err) {
         setError('Failed to fetch projects');
@@ -179,7 +196,7 @@ const UserCard = ({ user, navigate, fetchProjectsForUser }) => {
       </div>
       <div className={styles.userDetails}>
         <p className={styles.score}>
-          <FaAward className={styles.scoreIcon}/> Score: {totalUpvotes*10}
+          <FaAward className={styles.scoreIcon}/> Score: {score}
         </p>
         <p>
           <Mail size={16} />
