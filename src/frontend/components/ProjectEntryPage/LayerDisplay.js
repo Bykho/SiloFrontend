@@ -3,7 +3,7 @@ import AddBlocPortfolio from '../AddBlocPortfolio';
 import AddProject from '../AddProjectComponent/AddProject';
 import styles from './layerDisplay.module.css';
 import hljs from 'highlight.js';
-import 'highlight.js/styles/vs.css';
+import 'highlight.js/styles/atom-one-dark.css';
 
 const LayerDisplay = ({ layers, isEditing, toggleEdit, updateLayer, updateProjectDetails, initialProjectData }) => {
   const [selectedImage, setSelectedImage] = useState(null);

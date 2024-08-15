@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import AddProject from '../../components/AddProjectComponent/AddProject';
 import styles from './publicLayerDisplay.module.css';
 import hljs from 'highlight.js';
-import 'highlight.js/styles/vs.css';
+import 'highlight.js/styles/atom-one-dark.css';
 
 const PublicLayerDisplay = ({ layers, isEditing, toggleEdit, updateLayer, updateProjectDetails, initialProjectData }) => {
   const [selectedImage, setSelectedImage] = useState(null);

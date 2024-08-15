@@ -70,7 +70,7 @@
 
 .titleAndUsernameContainer {
   display: flex;
-  align-items: baseline; /* Center align items vertically */
+  align-items: baseline;
   flex-grow: 1;
   margin: 0 10px;
   overflow: hidden;
@@ -146,9 +146,10 @@
   max-height: 250px;
 }
 
-.descAndPreviewContainer:hover{
+.descAndPreviewContainer:hover {
   cursor: pointer;
 }
+
 .moreButton {
   padding: 4px 8px;
   border-radius: 4px;
@@ -164,7 +165,6 @@
 }
 
 .description {
-  line-height: 2;
   line-height: 2;
   color: #c0c0c0;
   height: 100%;
@@ -229,7 +229,6 @@
 
 .previewText {
   line-height: 2;
-  line-height: 2;
   color: #c0c0c0;
   height: 100%;
   overflow: hidden;
@@ -257,7 +256,7 @@
   text-align: center;
   margin-top: 10px;
   align-items: center;
-  justify-content: center; /* Added this line */
+  justify-content: center;
   gap: 10px;
   font-weight: bolder;
 }
@@ -354,6 +353,28 @@
 
 .closeButton:hover {
   color: #4a90e2;
+}
+
+/* New styles for code highlighting */
+.codeContainer {
+  background-color: #282c34; /* Match the Atom One Dark theme background */
+  border-radius: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+  min-width: 600px;
+}
+
+.codePreview {
+  margin: 0;
+  padding: 16px;
+}
+
+.codePreview code {
+  font-family: 'Consolas', 'Monaco', 'Andale Mono', 'Ubuntu Mono', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-all;
 }
 
 /* Responsive adjustments */

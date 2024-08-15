@@ -11,6 +11,8 @@ import config from '../../config';
 import ProjectEntry from './ProjectEntry';
 import HandleUpvote from '../wrappers/HandleUpvote';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import hljs from 'highlight.js';
+import 'highlight.js/styles/atom-one-dark.css';
 
 const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -54,6 +56,7 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
       }
     };
 
+
     if (isEditing) {
       document.addEventListener('mousedown', handleClickOutside);
     } else {
@@ -64,6 +67,13 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isEditing]);
+
+  useEffect(() => {
+    // Highlight all code elements when the component mounts or updates
+    document.querySelectorAll('pre code').forEach((block) => {
+      hljs.highlightElement(block);
+    });
+  }, [localProject]);
 
   const toggleEdit = () => setIsEditing(!isEditing);
   const toggleExpand = () => setIsExpanded(!isExpanded);
@@ -143,9 +153,12 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
     );
   };
 
+
   const renderContentPreview = () => {
     let imgSrc = null;
     let textContent = null;
+    let codeContent = null;
+    let codeLanguage = 'plaintext'; // Default language
 
     for (let layer of localProject.layers) {
       for (let cell of layer) {
@@ -153,27 +166,31 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
           imgSrc = cell.value;
           break;
         }
+        if (cell.type === 'code' && !codeContent) {
+          codeContent = cell.value;
+          codeLanguage = cell.language || 'plaintext'; // Use the language if provided
+        }
+        if (cell.type === 'text' && !textContent) {
+          textContent = cell.value;
+        }
       }
       if (imgSrc) break;
-    }
-
-    if (!imgSrc) {
-      for (let layer of localProject.layers) {
-        for (let cell of layer) {
-          if (cell.type === 'text' && !textContent) {
-            textContent = cell.value;
-            break;
-          }
-        }
-        if (textContent) break;
-      }
     }
 
     return (
       <div className={styles.preview}>
         {imgSrc && <img ref={imageRef} src={imgSrc} alt="Project Preview" className={styles.previewImage} />}
-        {!imgSrc && textContent && <p className={styles.previewText}>{textContent}</p>}
-        {!imgSrc && !textContent && <p></p>}
+        {!imgSrc && codeContent && (
+          <div className={styles.codeContainer}>
+            <pre className={styles.codePreview}>
+              <code className={`language-${codeLanguage}`}>
+                {codeContent}
+              </code>
+            </pre>
+          </div>
+        )}
+        {!imgSrc && !codeContent && textContent && <p className={styles.previewText}>{textContent}</p>}
+        {!imgSrc && !codeContent && !textContent && <p></p>}
       </div>
     );
   };
