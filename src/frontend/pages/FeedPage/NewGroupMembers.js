@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useNavigate} from 'react-router-dom';
 import styles from './newGroupMembers.module.css';
 import UserCard from '../../components/UserCard';
 import config from '../../config';
@@ -10,6 +11,7 @@ const GroupMembers = ({ group }) => {
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMembers = async () => {
@@ -49,7 +51,10 @@ const GroupMembers = ({ group }) => {
         <ul className={styles.membersList}>
           {members.map((member) => (
             <li key={member._id} className={styles.memberItem}>
-              <UserCard user={member} />
+              <UserCard               
+              key={member._id}
+              user={member}
+              navigate={navigate} />
             </li>
           ))}
         </ul>

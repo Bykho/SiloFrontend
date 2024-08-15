@@ -178,8 +178,8 @@ const ProfileHeader = ({ userData, loading, error }) => {
         </div>
       </div>
       {showResume && (
-        <div className={styles.modal}>
-          <button className={styles.closeButton} onClick={toggleResume}>X</button>
+        <div className={styles.resumeModal}>
+          <button className={styles.closeButton2} onClick={toggleResume}><FaWindowClose /> </button>
           <embed src={userData.resume} type="application/pdf" width="80%" height="80%" />
         </div>
       )}
