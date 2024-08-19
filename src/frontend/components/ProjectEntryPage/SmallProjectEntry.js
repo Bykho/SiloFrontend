@@ -156,9 +156,8 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
 
   const renderContentPreview = () => {
     let imgSrc = null;
-    let textContent = null;
     let codeContent = null;
-    let codeLanguage = 'plaintext'; // Default language
+    let codeLanguage = 'plaintext';
 
     for (let layer of localProject.layers) {
       for (let cell of layer) {
@@ -168,13 +167,14 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
         }
         if (cell.type === 'code' && !codeContent) {
           codeContent = cell.value;
-          codeLanguage = cell.language || 'plaintext'; // Use the language if provided
-        }
-        if (cell.type === 'text' && !textContent) {
-          textContent = cell.value;
+          codeLanguage = cell.language || 'plaintext';
         }
       }
-      if (imgSrc) break;
+      if (imgSrc || codeContent) break;
+    }
+
+    if (!imgSrc && !codeContent) {
+      return null;
     }
 
     return (
@@ -189,8 +189,6 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
             </pre>
           </div>
         )}
-        {!imgSrc && !codeContent && textContent && <p className={styles.previewText}>{textContent}</p>}
-        {!imgSrc && !codeContent && !textContent && <p></p>}
       </div>
     );
   };
@@ -244,11 +242,15 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
         </div>
       </div>
       <div className={styles.divider} />
-      <div className={styles.descAndPreviewContainer} onClick={togglePopup}>
-        {renderDescription()}
-        <div className={styles.previewContainer}>
-          {renderContentPreview()}
+      <div className={`${styles.descAndPreviewContainer} ${!renderContentPreview() ? styles.fullWidthDesc : ''}`} onClick={togglePopup}>
+        <div className={styles.descContainer}>
+          {renderDescription()}
         </div>
+        {renderContentPreview() && (
+          <div className={styles.previewContainer}>
+            {renderContentPreview()}
+          </div>
+        )}
       </div>
       {showPopup && (
         <div className={styles.popupOverlay}>
