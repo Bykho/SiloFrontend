@@ -19,7 +19,7 @@ const UserSearch = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [value, setValue] = useState('student');
+  const [value, setValue] = useState('all');
   const [searchText, setSearchText] = useState('');
   const [isLeaderboardView, setIsLeaderboardView] = useState(false);
 
@@ -83,7 +83,10 @@ const UserSearch = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    setValue(searchText || ' '); // Use 'student' if searchText is empty
+    if (searchText === ' ') {
+      setValue('all');
+    }
+    setValue(searchText || 'all'); // Use 'student' if searchText is empty
   };
 
   const toggleView = () => {
