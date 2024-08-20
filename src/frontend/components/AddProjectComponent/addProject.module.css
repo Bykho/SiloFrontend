@@ -495,7 +495,7 @@
   }
   
   .modal {
-    background: white;
+    background: rgb(49, 49, 49);
     padding: 20px;
     border-radius: 8px;
     max-width: 400px;
