@@ -51,18 +51,18 @@ const NavigationBar = () => {
               <IoNewspaperOutline className={styles.icon} /> Community
             </a>
             <a
-              href="/studentProfile"
-              className={`${styles.button} ${(activeLink === 'folio' && currentPath !== '/siloDescription') ? styles.clickedButton : ''}`}
-              onClick={() => handleLinkClick('folio')}
-            >
-              <LuUserSquare2 className={styles.icon} /> Profile
-            </a>
-            <a
               href="/GenDirectory"
               className={`${styles.button} ${activeLink === 'find' ? styles.clickedButton : ''}`}
               onClick={() => handleLinkClick('find')}
             >
               <MdOutlineLeaderboard className={styles.icon} /> Members
+            </a>
+            <a
+              href="/studentProfile"
+              className={`${styles.button} ${(activeLink === 'folio' && currentPath !== '/siloDescription') ? styles.clickedButton : ''}`}
+              onClick={() => handleLinkClick('folio')}
+            >
+              <LuUserSquare2 className={styles.icon} /> Profile
             </a>
             <NotificationsComponent />
             <button
@@ -84,16 +84,16 @@ const NavigationBar = () => {
               <IoNewspaperOutline className={styles.icon} /> Community
             </a>
             <a
-              href="/studentProfile"
-              className={`${styles.button} ${(activeLink === 'folio' && currentPath !== '/siloDescription') ? styles.clickedButton : ''}`}
-            >
-              <LuUserSquare2 className={styles.icon} /> Profile
-            </a>
-            <a
               href="/GenDirectory"
               className={`${styles.button} ${activeLink === 'find' ? styles.clickedButton : ''}`}
             >
               <MdOutlineLeaderboard className={styles.icon} /> Members
+            </a>
+            <a
+              href="/studentProfile"
+              className={`${styles.button} ${(activeLink === 'folio' && currentPath !== '/siloDescription') ? styles.clickedButton : ''}`}
+            >
+              <LuUserSquare2 className={styles.icon} /> Profile
             </a>
             <Bell size={24} color="#ffffff" className={styles.notificationButton}/>
             <button

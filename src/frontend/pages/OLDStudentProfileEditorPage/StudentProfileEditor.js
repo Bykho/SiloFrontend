@@ -75,69 +75,13 @@ function StudentProfileEditor({ initLocalData, setUserData, onSave }) {
   return (
     <div className={styles.boxContainer}>
       <div className={styles.profileEditorContainer}>
-        <h1 className={styles.profileEditorTitle}>Student Profile Editor</h1>
+        <h1 className={styles.profileEditorTitle}>Edit My Info</h1>
         <EditInfoTab 
           localState={localState} 
           handleInputChange={handleInputChange} 
           handleSubmit={handleSubmit} 
         />
         {error && <p className={styles.errorMessage}>{error}</p>}
-      </div>
-      <div className={styles.currentInfo}>
-        <h2 className={styles.currentInfoTitle}>Current Info</h2>
-        <div className={styles.infoGrid}>
-          <div className={styles.infoItem}>
-            <span className={styles.infoLabel}>Username:</span>
-            <span className={styles.infoValue}>{localState.username || 'N/A'}</span>
-          </div>
-          <div className={styles.infoItem}>
-            <span className={styles.infoLabel}>Email:</span>
-            <span className={styles.infoValue}>{localState.email || 'N/A'}</span>
-          </div>
-          <div className={styles.infoItem}>
-            <span className={styles.infoLabel}>University:</span>
-            <span className={styles.infoValue}>{localState.university || 'N/A'}</span>
-          </div>
-          <div className={styles.infoItem}>
-            <span className={styles.infoLabel}>Grad Year:</span>
-            <span className={styles.infoValue}>{localState.grad || 'N/A'}</span>
-          </div>
-          <div className={styles.infoItem}>
-            <span className={styles.infoLabel}>Major:</span>
-            <span className={styles.infoValue}>{localState.major || 'N/A'}</span>
-          </div>
-          <div className={styles.infoItem}>
-            <span className={styles.infoLabel}>Interests:</span>
-            <span className={styles.infoValue}>{localState.interests ? localState.interests.join(', ') : 'N/A'}</span>
-          </div>
-          <div className={styles.infoItem}>
-            <span className={styles.infoLabel}>Skills:</span>
-            <span className={styles.infoValue}>{localState.skills ? localState.skills.join(', ') : 'N/A'}</span>
-          </div>
-          <div className={`${styles.infoItem} ${styles.fullWidth}`}>
-            <span className={styles.infoLabel}>Biography:</span>
-            <span className={styles.infoValue}>{localState.biography || 'N/A'}</span>
-          </div>
-          <div className={styles.infoItem}>
-            <span className={styles.infoLabel}>Personal Website:</span>
-            <span className={styles.infoValue}>{localState.personal_website || 'N/A'}</span>
-          </div>
-          <div className={styles.infoItem}>
-            <span className={styles.infoLabel}>Github Link:</span>
-            <span className={styles.infoValue}>{localState.github_link || 'N/A'}</span>
-          </div>
-          <div className={styles.infoItem}>
-            <span className={styles.infoLabel}>Other Links:</span>
-            <span className={styles.infoValue}>{localState.links || 'N/A'}</span>
-          </div>
-
-        </div>
-        {localState.resume && (
-          <div className={`${styles.infoItem} ${styles.fullWidth}`}>
-            <span className={styles.infoLabel}>Resume:</span>
-            <embed src={localState.resume} type="application/pdf" width="100%" height="300px" />
-          </div>
-        )}
       </div>
     </div>
   );
