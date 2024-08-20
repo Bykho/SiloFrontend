@@ -83,7 +83,7 @@ const UserSearch = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    setValue(searchText || 'student'); // Use 'student' if searchText is empty
+    setValue(searchText || ' '); // Use 'student' if searchText is empty
   };
 
   const toggleView = () => {
