@@ -14,7 +14,10 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
   const [error, setError] = useState('');
   const [noRepos, setNoRepos] = useState(false);
   const [apiErrorMessage, setApiErrorMessage] = useState('');
-
+  const [repoBranches, setRepoBranches] = useState({});
+  const [selectedBranches, setSelectedBranches] = useState({});
+  const [branchName, setBranchName] = useState('');
+  const [fileNames, setFileNames] = useState([]);
 
   useEffect(() => {
     if (userData.github_link) {
@@ -64,6 +67,19 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
     }
   };
 
+  const fetchBranches = async (repoName) => {
+    if (!githubUsername || !repoName) return;
+    try {
+      const response = await fetch(`https://api.github.com/repos/${githubUsername}/${repoName}/branches`);
+      if (!response.ok) throw new Error('Failed to fetch branches');
+      const data = await response.json();
+      setRepoBranches(prev => ({ ...prev, [repoName]: data }));
+    } catch (err) {
+      console.error('Failed to fetch branches:', err);
+    }
+  };
+  
+
   const fetchContents = async (repoName, path = '') => {
     if (!githubUsername || !repoName) return;
     setLoading(true);
@@ -84,13 +100,35 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
 
   const handleRepoToggle = async (repoName) => {
     if (expandedRepo === repoName) {
-      setExpandedRepo(null); // Collapse the repo if it's already expanded
+      setExpandedRepo(null);
     } else {
-      setExpandedRepo(repoName); // Expand the repo
+      setExpandedRepo(repoName);
       const contents = await fetchContents(repoName);
+  
+      // Automatically select all files in the repository
+      const selectAllFiles = (items, parentPath = '') => {
+        const selected = {};
+        items.forEach(item => {
+          const fullPath = parentPath ? `${parentPath}/${item.name}` : item.name;
+          if (item.type === 'file') {
+            selected[`${repoName}/${fullPath}`] = true;
+          }
+          if (item.type === 'dir' && item.contents) {
+            Object.assign(selected, selectAllFiles(item.contents, fullPath));
+          }
+        });
+        return selected;
+      };
+  
+      const selectedFilesInRepo = selectAllFiles(contents);
+      setSelectedFiles(prev => ({ ...prev, ...selectedFilesInRepo }));
+  
       setRepos(prev => prev.map(repo => repo.name === repoName ? { ...repo, contents } : repo));
+      fetchBranches(repoName);
     }
   };
+  
+  
 
   const handleItemToggle = async (repoName, path = '') => {
     const itemKey = `${repoName}:${path}`;
@@ -126,27 +164,105 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
     }));
   };
 
+  const filterFiles = (fileList) => {
+    // List of file patterns or names to exclude
+    const excludedPatterns = [
+      /node_modules/,            // Exclude node_modules directory
+      /virtualenvs/,             // Exclude virtual environments directory
+      /dist/,                    // Exclude dist directory (build artifacts)
+      /build/,                   // Exclude build directory (build artifacts)
+      /target/,                  // Exclude target directory (build artifacts)
+      /bin/,                     // Exclude bin directory (build artifacts)
+      /public/,                  // Exclude public directory
+      /static/,                  // Exclude static assets directory
+      /tests?/,                  // Exclude test directories
+      /docs?/,                   // Exclude documentation directories
+      /examples?/,               // Exclude example directories
+      /\.env$/,                  // Exclude environment files
+      /\.prettierrc$/,           // Exclude Prettier config
+      /\.eslintrc$/,             // Exclude ESLint config
+      /tsconfig\.json$/,         // Exclude TypeScript config
+      /package\.json$/,          // Exclude package.json file
+      /yarn\.lock$/,             // Exclude yarn.lock file
+      /\.gitignore$/,            // Exclude .gitignore file
+      /README\.md$/,             // Exclude README.md file
+      /LICENSE$/,                // Exclude LICENSE file
+      /CHANGELOG\.md$/,          // Exclude CHANGELOG.md file
+      /CONTRIBUTING\.md$/,       // Exclude CONTRIBUTING.md file
+      /\.DS_Store$/,             // Exclude .DS_Store file (macOS)
+      /\.log$/,                  // Exclude log files
+      /\.min\.js$/,              // Exclude minified JavaScript files
+      /\.(png|jpg|jpeg|gif|svg)$/, // Exclude image files
+      /\.(ttf|woff|woff2|eot)$/, // Exclude font files
+      /\.(json|yaml|yml|xml)$/,  // Exclude configuration and metadata files
+    ];
+  
+    // Define the file extensions to prioritize (source code files)
+    const prioritizedExtensions = [
+      '.js', '.ts', '.jsx', '.tsx', '.py', '.java', '.c', '.cpp', '.cs', '.rb', '.php', '.go', '.rs'
+    ];
+  
+    // File size threshold (1 MB in bytes)
+    const sizeThreshold = 1024 * 1024;
+  
+    // Filter the file list
+    const filteredList = fileList.filter(file => {
+      // Check if the file is in the list of excluded patterns
+      if (excludedPatterns.some(pattern => pattern.test(file))) {
+        return false;
+      }
+  
+      // Check if the file size exceeds the threshold
+      if (file.size > sizeThreshold) {
+        return false;
+      }
+  
+      // Check if the file extension is prioritized
+      const fileExtension = file.split('.').pop().toLowerCase();
+      if (prioritizedExtensions.includes(`.${fileExtension}`)) {
+        return true;
+      }
+  
+      // If the file is not excluded and has a prioritized extension, include it
+      return false;
+    });
+  
+    return filteredList;
+  };
+  
+
   const handleSubmit = async () => {
-    const selectedProjects = await Promise.all(
-      Object.entries(selectedFiles)
-        .filter(([, isSelected]) => isSelected)
-        .map(async ([path]) => {
-          const [repoName, ...fileParts] = path.split('/');
-          const filePath = fileParts.join('/');
-          const content = await fetchFileContent(repoName, filePath);
-          const language = filePath.split('.').pop(); // Get file extension as language
-          return { repoName, filePath, content, language };
-        })
+
+    // Filter the selected files using the filterFiles function
+    const selectedFilePaths = Object.entries(selectedFiles)
+      .filter(([, isSelected]) => isSelected)
+      .map(([path]) => path);
+
+    const filteredFilePaths = filterFiles(selectedFilePaths);
+
+    // Update the fileNames state with the filtered file paths
+    setFileNames(filteredFilePaths);
+
+    const selectedFilesData = await Promise.all(
+      filteredFilePaths.map(async (path) => {
+        const [repoName, ...fileParts] = path.split('/');
+        const filePath = fileParts.join('/');
+        const content = await fetchFileContent(repoName, filePath);
+        const language = filePath.split('.').pop(); // Get file extension as language
+        return { repoName, filePath, content, language };
+      })
     );
 
     // Prepare data for API request
     const requestData = {
-      user: githubUsername,
-      projects: selectedProjects
+      owner_name: githubUsername,
+      file_names: filteredFilePaths,
+      repo_name: expandedRepo,
+      branch_name: selectedBranches[expandedRepo] || branchName, // Use the selected branch name
     };
-
+    console.log('GITPULL handleSubmit request_data: ', requestData);
     try {
-      const response = await fetch(`${config.apiBaseUrl}/newSplittingMethodForCodeAutofill`, {
+      const response = await fetch(`${config.apiBaseUrl}/VS_code_autofill_bp`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -175,6 +291,9 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
         console.log('summary_content is not an array');
       }
 
+
+      //FIGURE OUT HOW COMBINEDDATA IS USED OUTSIDE OF THE BACKEND.
+      /*
       const combinedData = [
         ...selectedProjects,
         ...result.summary_content.map(item => {
@@ -184,8 +303,15 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
           return { repoName: null, filePath: key, content: value, language: 'text' };
         })
       ];
-      console.log("GITPULL HANDLESUBMIT combinedData: ", combinedData)
+      */
+      const combinedData = result.summary_content.map(item => {
+        // Extract the key and value from the single key-value pair object
+        const [key, value] = item;
+        return { repoName: null, filePath: key, content: value, language: 'text' };
+      });
 
+      console.log("GITPULL HANDLESUBMIT combinedData: ", combinedData)
+      console.log("GITPULL HANDLESUBMIT result.surrounding_summary: ", result.surrounding_summary)
       onPortfolioUpdate(combinedData, result.surrounding_summary);
       setApiErrorMessage('');
     } catch (error) {
@@ -194,13 +320,37 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
     }
   };
 
+  const renderBranchesDropdown = (repoName) => {
+    if (expandedRepo !== repoName) return null;
+    const branches = repoBranches[repoName] || [];
+    return (
+      <select
+        className={styles.branchDropdown}
+        value={selectedBranches[repoName] || ''}
+        onChange={(e) => handleBranchSelect(repoName, e.target.value)}
+      >
+        <option value="" disabled>Select branch</option>
+        {branches.map(branch => (
+          <option key={branch.name} value={branch.name}>{branch.name}</option>
+        ))}
+      </select>
+    );
+  };
+  
+  const handleBranchSelect = (repoName, branchName) => {
+    setSelectedBranches(prev => ({
+      ...prev,
+      [repoName]: branchName
+    }));
+  };
+
   const closeModal = () => {
     setApiErrorMessage('');
   };
 
   const renderTree = (repoName, items, currentPath = '') => {
     if (!items || items.length === 0) return null;
-
+  
     return (
       <ul className={styles.fileTree}>
         {items.map(item => {
@@ -208,7 +358,7 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
           const itemKey = `${repoName}:${fullPath}`;
           const isExpanded = expandedSubItems[itemKey];
           const isSelected = selectedFiles[`${repoName}/${fullPath}`];
-
+  
           if (item.type === 'dir') {
             return (
               <li key={item.sha} className={styles.fileItem}>
@@ -241,6 +391,7 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
       </ul>
     );
   };
+  
 
   return (
     <div className={styles.gitPullContainer}>
@@ -281,7 +432,7 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
       {!noRepos && (
         <>
           <ul className={styles.repoList}>
-            {repos.map((repo) => (
+            {repos.map(repo => (
               <li key={repo.id} className={styles.repoItem}>
                 <button
                   className={styles.repoButton}
@@ -290,7 +441,12 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
                   {expandedRepo === repo.name ? <ChevronDown size={20} /> : <ChevronRight size={20} />}
                   {repo.name}
                 </button>
-                {expandedRepo === repo.name && renderTree(repo.name, repo.contents)}
+                {renderBranchesDropdown(repo.name)} {/* Added branch dropdown */}
+                {expandedRepo === repo.name && (
+                  <>
+                    {renderTree(repo.name, repo.contents)}
+                  </>
+                )}
               </li>
             ))}
           </ul>
@@ -300,13 +456,10 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
         </>
       )}
     </div>
-  );
+  );  
 };
 
-GitPull.propTypes = {
-  userData: PropTypes.object.isRequired,
-  onPortfolioUpdate: PropTypes.func.isRequired,
-};
+
 
 export default GitPull;
 
