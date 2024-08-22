@@ -13,7 +13,7 @@ function Welcome() {
     const playerRef = useRef(null);
 
     const handleGetStarted = () => {
-      navigate('/login');
+      navigate('/launch');
     };
 
     const scrollToSection = (sectionId) => {
@@ -117,8 +117,8 @@ function Welcome() {
 
             <nav className={styles.nav}>
               <div className={styles.navItem}>
+                <button className={styles.navButton} onClick={() => scrollToSection('howItWorks')}>Get Assessed</button>
                 <button className={styles.navButton} onClick={() => scrollToSection('whatIsSilo')}>What is Silo</button>
-                <button className={styles.navButton} onClick={() => scrollToSection('howItWorks')}>How it works</button>
                 <button className={styles.navButton} onClick={() => scrollToSection('contactUs')}>Contact Us</button>
               </div>
             </nav>
@@ -129,15 +129,23 @@ function Welcome() {
           <div className={styles.contentWrapper} ref={contentRef}>
             <div className={styles.content}>
               <h1 className={styles.title}>
-                <span className={styles.yourTrusted}>The Network</span>
+                <span className={styles.yourTrusted}>The Top Network</span>
                 <span className={styles.engineeringPlatform}>For Engineers</span>
               </h1>
               <p className={styles.description}>
-                Auto-generate a portfolio from code, papers, or from scratch and
-                host your portfolio on a personal URL. Building Linkedin for engineers.
-                Launching at Duke and Columbia.
+                Find out how you rank among your peers, auto-generate a portfolio,
+                share your achievements, and host your work on a personal URL.
               </p>
             </div>
+            <AnimatedSection 
+              ref={(el) => (sectionsRef.current.howItWorks = el)}
+              title="In Depth Analysis"
+              content="Easily create your portfolio, and get detailed feedback on your status as an engineer."
+            >
+              <div className={styles.spiderPlotWrapper}>
+                <PlayerRatingSpiderweb playerData={mockPlayerData} userData={mockUserData} />
+              </div>
+            </AnimatedSection>
             <AnimatedSection 
                         ref={(el) => (sectionsRef.current.whatIsSilo = el)}
                         title="What is Silo"
@@ -160,15 +168,6 @@ function Welcome() {
                             </div>
                         </div>
              </AnimatedSection>
-             <AnimatedSection 
-              ref={(el) => (sectionsRef.current.howItWorks = el)}
-              title="In Depth Analysis"
-              content="Easily create your portfolio, and get detailed feedback on your status as an engineer."
-            >
-              <div className={styles.spiderPlotWrapper}>
-                <PlayerRatingSpiderweb playerData={mockPlayerData} userData={mockUserData} />
-              </div>
-            </AnimatedSection>
             <AnimatedSection 
               ref={(el) => (sectionsRef.current.contactUs = el)}
               title="Contact Us"

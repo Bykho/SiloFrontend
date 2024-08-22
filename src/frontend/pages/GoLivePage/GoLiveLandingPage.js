@@ -72,24 +72,8 @@ function GoLiveLanding() {
     <div style={{ position: 'relative', zIndex: 0 }}>
       <GameOfLife />
       <div className={styles.centralContainer}>
-        <div className={styles.container}>
-          <h2 className={styles.subtitle}>Have An Access Key?</h2>
-          {error && <p className={styles.errorText}>{error}</p>}
-          <form onSubmit={handleSubmit} className={styles.form}>
-            <div className={styles.inputContainer}>
-              <input 
-                type="text" 
-                value={accessKey} 
-                onChange={handleAccessKeyChange} 
-                placeholder="Enter Access Key"
-                className={styles.inputText}
-              />
-            </div>
-            <button type="submit" className={styles.button}>Enter Access Key</button>
-          </form>
-        </div>
-        <div className={styles.container}>
-          <h2 className={styles.subtitle}>No Key? Join The waitlist!</h2>
+      <div className={styles.container}>
+          <h2 className={styles.subtitle}>Applications For Our First Batch Open Soon - Get Notified!</h2>
           <form onSubmit={handleWaitlistSubmit} className={styles.form}>
             <div className={styles.inputContainer}>
               <input 
@@ -113,9 +97,28 @@ function GoLiveLanding() {
           </form>
           {success && <p className={styles.successText}>{success}</p>}
         </div>
+        {/*
+        <div className={styles.container}>
+          <h2 className={styles.subtitle}>Have An Access Key?</h2>
+          {error && <p className={styles.errorText}>{error}</p>}
+          <form onSubmit={handleSubmit} className={styles.form}>
+            <div className={styles.inputContainer}>
+              <input 
+                type="text" 
+                value={accessKey} 
+                onChange={handleAccessKeyChange} 
+                placeholder="Enter Access Key"
+                className={styles.inputText}
+              />
+            </div>
+            <button type="submit" className={styles.button}>Enter Access Key</button>
+          </form>
+        </div>
+        */}
         <button onClick={() => window.history.back()} className={styles.backButton}>Back</button>
       </div>
     </div>
+    
   );
 }
 

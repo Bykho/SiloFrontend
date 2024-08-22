@@ -43,7 +43,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<Welcome />} />
             <Route path="/SignUp" element={<SignUp />} />
-            <Route path="/GoLive" element={<GoLive />} />
+            <Route path="/Launch" element={<GoLive />} />
             <Route path="/studentProfile" element={<ProtectedRoute component={Profile} />} />
             <Route path="/studentProfileEditor" element={<StudentProfileEditor />} />
             <Route path="/addBlockProject" element={<AddBlocPortfolio />} />
@@ -60,7 +60,7 @@ function App() {
 
 function NavigationWithConditionalRender() {
   const location = useLocation();
-  const noNavBarPaths = ['/', '/login', '/SignUp', '/public']; // Add /public to the noNavBarPaths
+  const noNavBarPaths = ['/', '/login', '/SignUp', '/public', '/launch']; // Add /public to the noNavBarPaths
 
   // Check if the current pathname includes '/public/'
   const isPublicProfile = location.pathname.includes('/public/');
