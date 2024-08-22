@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import styles from './GoLiveLandingPage.module.css';
 import config from '../../config';
 import GameOfLife from '../LoginPage/GameOfLife';
+import { IoEnter } from "react-icons/io5";
 
 function GoLiveLanding() {
   const [accessKey, setAccessKey] = useState('');
@@ -71,16 +72,17 @@ function GoLiveLanding() {
   return (
     <div style={{ position: 'relative', zIndex: 0 }}>
       <GameOfLife />
-      <div className={styles.centralContainer}>
+      <div className={styles.bigContainer}>
       <div className={styles.container}>
-          <h2 className={styles.subtitle}>Applications For Our First Batch Open Soon - Get Notified!</h2>
+          <h1 className={styles.title}>The Top Engineering Talent Pool</h1>
+          <h2 className={styles.subtitle}>Get Notified to Secure Your Spot in our Fall '24 Cohort!</h2>
           <form onSubmit={handleWaitlistSubmit} className={styles.form}>
             <div className={styles.inputContainer}>
               <input 
                 type="text" 
                 value={email} 
                 onChange={handleEmail} 
-                placeholder="Email"
+                placeholder=".edu Email"
                 className={styles.inputText}
               />
             </div>
@@ -93,7 +95,7 @@ function GoLiveLanding() {
                 className={styles.inputText}
               />
             </div>
-            <button type="submit" className={styles.button}>Submit</button>
+            <button type="submit" className={styles.submitButton}> <IoEnter /> Submit</button>
           </form>
           {success && <p className={styles.successText}>{success}</p>}
         </div>
@@ -115,7 +117,7 @@ function GoLiveLanding() {
           </form>
         </div>
         */}
-        <button onClick={() => window.history.back()} className={styles.backButton}>Back</button>
+        <button onClick={() => navigate('/')} className={styles.backButton}>What is Silo?</button>
       </div>
     </div>
     

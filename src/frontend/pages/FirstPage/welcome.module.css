@@ -291,57 +291,136 @@
 }
 
 @media (max-width: 768px) {
-  .title {
-    font-size: 3rem;
-  }
-
-  .description {
-    font-size: 1rem;
-  }
-
-  .sectionTitle {
-    font-size: 2rem;
-  }
-
-  .sectionContent {
-    font-size: 1rem;
-  }
-
   .header {
     flex-direction: column;
     height: auto;
     padding: 10px;
+    position: static;
+    margin-top: 10px;
+  }
+
+  .logo {
+    margin-bottom: 10px;
+  }
+
+  .logoImage {
+    height: 50px;
+  }
+
+  .siloName {
+    font-size: 1.8rem;
   }
 
   .nav {
     margin: 10px 0;
+    width: 100%;
   }
 
   .navItem {
-    flex-wrap: wrap;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .navButton {
+    width: 100%;
+    margin: 5px 0;
+    text-align: center;
+  }
+
+  .ctaWrapper {
+    width: 100%;
     justify-content: center;
+    margin-top: 10px;
   }
 
-  .logoImage {
-    height: 60px;
+  .ctaButton {
+    width: 100%;
+    padding: 12px 24px;
+    font-size: 16px;
   }
 
-  .siloName {
-    font-size: 2rem;
+  .content {
+    padding: 30px 20px 20px 20px;
+    min-height: auto;
+  }
+
+  .title {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+  }
+
+  .description {
+    font-size: 1rem;
+    margin-top: 10px;
+  }
+
+  .divider{
+    border: 2px solid #38424b;
+    margin-bottom: 20px;
+    border-radius: 40px;
+    width: 100%; 
+    margin-top: 10px;
   }
 
   .animatedSection {
-    flex-direction: column;
-    padding: 40px 20px;
-  }
-
-  .sectionContent {
-    padding-right: 0;
+    padding: 30px 20px;
     margin-bottom: 30px;
   }
 
-  .sectionDemo {
-    width: 100%;
+  .sectionTitle {
+    font-size: 1.8rem;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 0; 
+    padding: 0 5px 0 0 5px; 
   }
-  
+
+  .sectionIcon {
+    margin-bottom: 10px;
+  }
+
+  .sectionContent {
+    margin-left: 0;
+    font-size: 0.9rem;
+    margin: 0px;
+  }
+
+  .videoWrapper {
+    margin: 10px auto;
+  }
+
+  .playButton {
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+  }
+
+  .spiderPlotWrapper > * {
+    width: 95%;
+  }
+
+  .spiderPlotTitle {
+    font-size: 1.2rem;
+  }
+  .nav {
+    display: none; /* Hide the entire nav container */
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 2rem;
+  }
+
+  .description {
+    font-size: 0.9rem;
+  }
+
+  .sectionTitle {
+    font-size: 1.5rem;
+  }
+
+  .sectionContent {
+    font-size: 0.8rem;
+  }
 }

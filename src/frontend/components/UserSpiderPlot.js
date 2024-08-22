@@ -15,7 +15,7 @@ const PlayerRatingSpiderweb = ({ playerData, userData }) => {
     { category: 'Practicum', value: playerData.Practicum },
     { category: 'Innovation', value: playerData.Innovation },
     { category: 'Leadership', value: playerData.Leadership },
-    { category: 'Technical Depth', value: playerData.TechnicalDepth },
+    { category: 'Tech Depth', value: playerData.TechnicalDepth },
   ]);
 
   const totalScore = data.reduce((sum, { value }) => sum + value, 0);
@@ -126,7 +126,7 @@ const PlayerRatingSpiderweb = ({ playerData, userData }) => {
   return (
     <div className={styles.container}>
       <div className={styles.leftColumn}>
-        <h2 className={styles.title}>User Rating</h2>
+        <h2 className={styles.title}>Example User Rating</h2>
         <ResponsiveContainer width="100%" height="100%">
           <RadarChart cx="50%" cy="50%" outerRadius="80%" data={data}>
             <PolarGrid stroke="#4a5568" />

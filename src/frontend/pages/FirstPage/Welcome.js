@@ -133,14 +133,15 @@ function Welcome() {
                 <span className={styles.engineeringPlatform}>For Engineers</span>
               </h1>
               <p className={styles.description}>
-                Find out how you rank among your peers, auto-generate a portfolio,
+                Find out how you rank among your peers, auto-generate a beautiful portfolio,
                 share your achievements, and host your work on a personal URL.
               </p>
+              <div className={styles.divider}></div>
             </div>
             <AnimatedSection 
               ref={(el) => (sectionsRef.current.howItWorks = el)}
               title="In Depth Analysis"
-              content="Easily create your portfolio, and get detailed feedback on your status as an engineer."
+              content="Get detailed feedback on your status as an engineer."
             >
               <div className={styles.spiderPlotWrapper}>
                 <PlayerRatingSpiderweb playerData={mockPlayerData} userData={mockUserData} />

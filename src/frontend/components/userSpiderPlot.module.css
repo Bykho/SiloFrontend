@@ -5,7 +5,7 @@
     padding: 2rem;
     border-radius: 1rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border: 2px solid #676b79;
+    border: 2px solid #2f323f;
   }
   
   .leftColumn {
@@ -147,20 +147,37 @@
     .container {
       flex-direction: column;
       padding: 1rem;
-    }
-  
-    .leftColumn,
-    .rightColumn {
-      width: 100%;
+      min-height: auto;
+      max-width: 750px;
     }
   
     .leftColumn {
+      width: 100%;
       height: 300px;
       margin-bottom: 2rem;
     }
   
     .rightColumn {
+      width: 100%;
       padding: 0;
+    }
+  
+    .title {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+    }
+  
+    .subTitle {
+      font-size: 1.1rem;
+      margin-top: 20px;
+    }
+  
+    .scoreCategory {
+      font-size: 0.9rem;
+    }
+  
+    .scoreValue {
+      font-size: 0.8rem;
     }
   
     .overallStats {
@@ -169,6 +186,68 @@
     }
   
     .statItem {
-      margin: 0;
+      margin: 0 0 1rem 0;
+    }
+  
+    .statLabel {
+      font-size: 0.8rem;
+    }
+  
+    .statValue {
+      font-size: 1.2rem;
+    }
+  
+    .suggestionItem {
+      font-size: 0.9rem;
+      padding: 0.6rem 0.8rem;
+    }
+  
+    .asterix {
+      display: none; 
+    }
+
+  }
+  
+  @media (max-width: 480px) {
+    .container {
+      padding: 0.5rem;
+      max-width: 400px;
+    }
+  
+    .leftColumn {
+      height: 250px;
+    }
+  
+    .title {
+      font-size: 1.2rem;
+    }
+  
+    .subTitle {
+      font-size: 1rem;
+    }
+  
+    .scoreCategory {
+      font-size: 0.8rem;
+    }
+  
+    .scoreValue {
+      font-size: 0.7rem;
+    }
+  
+    .statLabel {
+      font-size: 0.7rem;
+    }
+  
+    .statValue {
+      font-size: 1.1rem;
+    }
+  
+    .suggestionItem {
+      font-size: 0.8rem;
+      padding: 0.5rem 0.7rem;
+    }
+  
+    .asterix {
+      font-size: 0.8rem;
     }
   }
