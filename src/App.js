@@ -22,6 +22,7 @@ import Welcome from './frontend/pages/FirstPage/Welcome';
 import './App.css'; 
 
 import AddBlocPortfolio from './frontend/components/AddBlocPortfolio';
+import PointsPage from './frontend/pages/GoLivePage/PointsPage';
 
 function App() {
   const appStyle = {
@@ -51,6 +52,7 @@ function App() {
             <Route path="/profile/:id" element={<ProtectedRoute component={OtherStudentProfile} />} />
             <Route path="/groups" element={<Groups />} />
             <Route path="/public/:username/:user_id" element={<PublicProfile />} /> 
+            <Route path="/points" element={<PointsPage />} />
           </Routes>
         </div>
       </UserProvider>
