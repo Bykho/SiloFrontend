@@ -365,6 +365,7 @@
   .animatedSection {
     padding: 30px 20px;
     margin-bottom: 30px;
+    max-width: 85%;
   }
 
   .sectionTitle {
