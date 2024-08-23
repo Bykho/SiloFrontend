@@ -1,12 +1,10 @@
-
-
-
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './GoLiveLandingPage.module.css';
 import config from '../../config';
 import GameOfLife from '../LoginPage/GameOfLife';
 import { IoEnter } from "react-icons/io5";
+import { FaCopy } from "react-icons/fa";
 
 function GoLiveLanding() {
   const [accessKey, setAccessKey] = useState('');
@@ -15,10 +13,28 @@ function GoLiveLanding() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
+  const [copied, setCopied] = useState(false);
+  const referralLinkRef = useRef(null);
+  const [referralCode, setReferralCode] = useState('');
+
 
   const handleAccessKeyChange = (e) => setAccessKey(e.target.value);
   const handleEmail = (e) => setEmail(e.target.value);
   const handleFullName = (e) => setFullName(e.target.value);
+
+  const copyReferralLink = () => {
+    referralLinkRef.current.select();
+    document.execCommand('copy');
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  useEffect(() => {
+    const generateReferralCode = () => {
+      return Math.random().toString(36).substring(2, 8).toUpperCase();
+    };
+    setReferralCode(generateReferralCode());
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -74,7 +90,7 @@ function GoLiveLanding() {
       <GameOfLife />
       <div className={styles.bigContainer}>
       <div className={styles.container}>
-          <h1 className={styles.title}>The Top Engineering Talent Pool</h1>
+          <h1 className={styles.title}>Join The Top Engineering Talent Pool</h1>
           <h2 className={styles.subtitle}>Get Notified to Secure Your Spot in our Fall '24 Cohort!</h2>
           <form onSubmit={handleWaitlistSubmit} className={styles.form}>
             <div className={styles.inputContainer}>
@@ -98,6 +114,22 @@ function GoLiveLanding() {
             <button type="submit" className={styles.submitButton}> <IoEnter /> Submit</button>
           </form>
           {success && <p className={styles.successText}>{success}</p>}
+          <div className={styles.referralSection}>
+            <h3 className={styles.referralTitle}>Refer Talent</h3>
+            <p className={styles.referralExplainer}>Share this link to record your referrals. Each applicant who joins will earn you points:</p>
+            <div className={styles.referralLinkContainer}>
+                <input
+                  type="text"
+                  readOnly
+                  value={`${window.location.origin}/launch?ref=${referralCode}`}
+                  ref={referralLinkRef}
+                  className={styles.referralLink}
+                />
+              <button onClick={copyReferralLink} className={styles.copyButton}>
+                <FaCopy /> {copied ? 'Copied!' : 'Copy'}
+              </button>
+            </div>
+          </div>
         </div>
         {/*
         <div className={styles.container}>

@@ -128,7 +128,7 @@ body, html {
 }
 
 .backButton {
-  background-color: #6da6e7;
+  background-color: #5685ba;
   border: 2px solid #2e5a81;
   color: #f2f2f3;
   font-weight: bolder;
@@ -150,6 +150,61 @@ body, html {
 }
 
 .successText {
+  display: flex;
   color: #4CAF50;
   margin-top: 0.5rem;
+  justify-content: center;
+}
+
+.referralSection {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #3C3C3C;
+}
+
+.referralTitle {
+  font-size: 1.2rem;
+  color: #E0E0E0;
+  margin-bottom: 0.5rem;
+  margin-top: 0px;
+}
+
+.referralExplainer {
+  font-size: 0.9rem;
+  color: #A2A2A2;
+  margin-bottom: 1rem;
+}
+
+.referralLinkContainer {
+  display: flex;
+  align-items: center;
+  background-color: #3C3C3C;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.referralLink {
+  flex-grow: 1;
+  padding: 0.75rem;
+  border: none;
+  background-color: transparent;
+  color: #E0E0E0;
+  font-size: 0.9rem;
+}
+
+.copyButton {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background-color: #6da6e7;
+  color: white;
+  border: none;
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.copyButton:hover {
+  background-color: #3A7BCE;
 }

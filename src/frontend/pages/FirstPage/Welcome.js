@@ -129,8 +129,8 @@ function Welcome() {
           <div className={styles.contentWrapper} ref={contentRef}>
             <div className={styles.content}>
               <h1 className={styles.title}>
-                <span className={styles.yourTrusted}>The Top Network</span>
-                <span className={styles.engineeringPlatform}>For Engineers</span>
+                <span className={styles.yourTrusted}>The Network for</span>
+                <span className={styles.engineeringPlatform}>Top Engineers</span>
               </h1>
               <p className={styles.description}>
                 Find out how you rank among your peers, auto-generate a beautiful portfolio,
