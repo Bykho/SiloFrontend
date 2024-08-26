@@ -19,6 +19,7 @@ import GameofLife from './frontend/components/GameOfLife';
 import Groups from './frontend/pages/GroupsPage/Groups';
 import PublicProfile from './frontend/pages/PublicPortfolioPage/PublicProfile';
 import Welcome from './frontend/pages/FirstPage/Welcome';
+import JobsPage from './frontend/pages/JobsPage/JobsPage';
 import './App.css'; 
 
 import AddBlocPortfolio from './frontend/components/AddBlocPortfolio';
@@ -51,6 +52,7 @@ function App() {
             <Route path="/profile/:id" element={<ProtectedRoute component={OtherStudentProfile} />} />
             <Route path="/groups" element={<Groups />} />
             <Route path="/public/:username/:user_id" element={<PublicProfile />} /> 
+            <Route path="/jobs" element={<JobsPage />} />
           </Routes>
         </div>
       </UserProvider>

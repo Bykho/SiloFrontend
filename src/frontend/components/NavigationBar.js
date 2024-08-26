@@ -10,7 +10,7 @@ import SiloBetaButton from './AnimatedSiloButton';
 import NotificationsComponent from './Notifications';
 import { Bell } from 'lucide-react';
 import { MdOutlineLeaderboard } from "react-icons/md";
-
+import {FaBriefcase} from "react-icons/fa6";
 
 
 const NavigationBar = () => {
@@ -50,6 +50,15 @@ const NavigationBar = () => {
             >
               <IoNewspaperOutline className={styles.icon} /> Community
             </a>
+
+            <a
+              href="/jobs"
+              className={`${styles.button} ${activeLink === 'jobs' ? styles.clickedButton : ''}`}
+              onClick={() => handleLinkClick('jobs')}
+            >
+              <FaBriefcase className={styles.icon} /> Jobs
+            </a>
+            
             <a
               href="/GenDirectory"
               className={`${styles.button} ${activeLink === 'find' ? styles.clickedButton : ''}`}
@@ -57,6 +66,7 @@ const NavigationBar = () => {
             >
               <MdOutlineLeaderboard className={styles.icon} /> Members
             </a>
+
             <a
               href="/studentProfile"
               className={`${styles.button} ${(activeLink === 'folio' && currentPath !== '/siloDescription') ? styles.clickedButton : ''}`}
@@ -83,12 +93,23 @@ const NavigationBar = () => {
             >
               <IoNewspaperOutline className={styles.icon} /> Community
             </a>
+
+            <a
+              href="/jobs"
+              className={`${styles.button} ${activeLink === 'jobs' ? styles.clickedButton : ''}`}
+            >
+              <FaBriefcase className={styles.icon} /> Jobs
+            </a>
+
             <a
               href="/GenDirectory"
               className={`${styles.button} ${activeLink === 'find' ? styles.clickedButton : ''}`}
             >
               <MdOutlineLeaderboard className={styles.icon} /> Members
             </a>
+
+
+
             <a
               href="/studentProfile"
               className={`${styles.button} ${(activeLink === 'folio' && currentPath !== '/siloDescription') ? styles.clickedButton : ''}`}
