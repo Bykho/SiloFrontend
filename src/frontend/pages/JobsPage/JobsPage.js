@@ -1,42 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Typography, Grid, TextField, Switch } from '@mui/material';
 import JobCard from './JobCard';
 import styles from  './jobsPage.module.css';
+import config from '../../config';
 
 const JobsPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isListView, setIsListView] = useState(false);
+  const [jobs, setJobs] = useState([]);
 
-  const jobs = [
-    {
-      id: 1,
-      title: 'Software Engineer',
-      company: 'Tech Co',
-      location: 'San Francisco, CA',
-      description: 'We are looking for a talented software engineer to join our team.',
-    },
-    {
-      id: 2,
-      title: 'Product Manager',
-      company: 'Startup Inc',
-      location: 'New York, NY',
-      description: 'Exciting opportunity for a product manager in a fast-paced startup.',
-    },
-    {
-      id: 3,
-      title: 'Data Scientist',
-      company: 'Data Analytics Ltd',
-      location: 'Chicago, IL',
-      description: 'Join our data science team to work on cutting-edge projects.',
-    },
-  ];
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        const response = await fetch(`${config.apiBaseUrl}/get_jobs`);
+        const data = await response.json();
+
+        // Ensure each field is a string
+        const stringifiedJobs = data.map(job => ({
+          _id: String(job._id),
+          company: String(job.company),
+          cities: String(job.cities),
+          job_title: String(job.job_title),
+          description: String(job.description),
+        }));
+
+        setJobs(stringifiedJobs);
+      } catch (error) {
+        console.error('Error fetching jobs:', error);
+      }
+    };
+
+    fetchJobs();
+  }, []);
+
+  useEffect(() => {
+    console.log('heres jobs: ', jobs);
+  }, [jobs]);
 
   const filteredJobs = jobs.filter(job =>
-    job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    job.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    job.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    job.description.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+    (job.job_title || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (job.company || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (job.cities || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (job.description || '').toLowerCase().includes(searchTerm.toLowerCase())
+  );  
 
   return (
     <Container maxWidth="lg" className={styles.container}>
