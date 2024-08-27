@@ -133,7 +133,7 @@ function Welcome() {
                 <span className={styles.engineeringPlatform}>Top Engineers</span>
               </h1>
               <p className={styles.description}>
-                Find out how you rank among your peers, auto-generate a beautiful portfolio,
+                Find the perfect job, discover how you rank among your peers, generate a beautiful portfolio,
                 share your achievements, and host your work on a personal URL.
               </p>
               <div className={styles.divider}></div>
