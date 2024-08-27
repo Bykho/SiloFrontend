@@ -138,6 +138,14 @@
     max-width: 400px;
     margin-top: 1rem;
   }
+
+  .divider{
+    margin-top: 1.5rem;
+    width: 100%;
+    height: 1px;
+    background-color: #3C3C3C;
+    margin-bottom: 1.5rem;
+  }
   
   .resultContainer {
     margin-top: 1rem;
@@ -146,6 +154,10 @@
   
   .resultText {
     font-size: 1.2rem;
+    color: #E0E0E0;
+  }
+  .resultText2 {
+    font-size: 1rem;
     color: #E0E0E0;
   }
   

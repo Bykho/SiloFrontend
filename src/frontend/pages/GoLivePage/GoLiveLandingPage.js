@@ -6,6 +6,7 @@ import GameOfLife from '../LoginPage/GameOfLife';
 import { IoEnter } from "react-icons/io5";
 import { FaCopy } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
+import ReferralProgressBar from './ReferralProgressBar';
 
 function GoLiveLanding() {
   const [email, setEmail] = useState('');
@@ -18,6 +19,7 @@ function GoLiveLanding() {
   const [referralCode, setReferralCode] = useState('');
   const [showReferral, setShowReferral] = useState(false);
   const location = useLocation();
+  const [referralCount, setReferralCount] = useState(0);
 
   const handleEmail = (e) => setEmail(e.target.value);
   const handleFullName = (e) => setFullName(e.target.value);
@@ -71,6 +73,7 @@ function GoLiveLanding() {
       if (response.ok) {
         setSuccess('Successfully Added to Waitlist!');
         setReferralCode(data.referral_code);
+        setReferralCount(data.referral_count || 0);
         setShowReferral(true);
       } else {
         setError(data.error || 'Failed to add to waitlist');
@@ -129,11 +132,11 @@ function GoLiveLanding() {
               <FaCopy /> {copied ? 'Copied!' : 'Copy'}
             </button>
           </div>
-          <button className={styles.refButton} onClick={handleRefClick}> View Referral Points </button>
+          <button className={styles.refButton} onClick={handleRefClick}> View Referral Rewards </button>
         </div>
         <div className={styles.buttonContainer}>
           <button onClick={() => navigate('/')} className={styles.backButton}>What is Silo?</button>
-          <button onClick={() => navigate('/points')} className={styles.backButton}> View Referral Points </button>
+          <button onClick={() => navigate('/points')} className={styles.backButton}> View Referral Rewards </button>
         </div>
       </div>
     </div>

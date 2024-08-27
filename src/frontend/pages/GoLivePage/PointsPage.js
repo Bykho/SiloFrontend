@@ -5,6 +5,7 @@ import config from '../../config';
 import GameOfLife from '../LoginPage/GameOfLife';
 import { IoEnter } from "react-icons/io5";
 import { FaBackward, FaCopy } from 'react-icons/fa';
+import ReferralProgressBar from './ReferralProgressBar';
 
 function PointsPage() {
   const [email, setEmail] = useState('');
@@ -58,7 +59,10 @@ function PointsPage() {
           <h1 className={styles.title}>Check Your Referral Points</h1>
           {referralCount !== null && (
             <div className={styles.resultContainer}>
-              <p className={styles.resultText}>You have earned <span className={styles.pointsHighlight}>{referralCount*100}</span> points from <span className={styles.pointsHighlight}>{referralCount}</span> referrals!</p>
+              <p className={styles.resultText}>You have made <span className={styles.pointsHighlight}>{referralCount}</span> referrals!</p>
+              <p className={styles.resultText2}>When your referrees are admitted, you will earn the following rewards:</p>
+              <ReferralProgressBar referrals={referralCount} />
+              <div className={styles.divider}></div>
             </div>
           )}
           <form onSubmit={handleSubmit} className={styles.form}>

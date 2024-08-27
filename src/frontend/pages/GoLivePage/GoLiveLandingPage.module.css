@@ -179,6 +179,8 @@ body, html {
   z-index: 1000;
   opacity: 0;
   visibility: hidden;
+  padding: 2rem;
+  max-width: 550px;
 }
 
 .referralSection.show {
@@ -276,3 +278,10 @@ body, html {
   width: 300px;
   margin-top: 1rem;
 }
+
+.referralExplainer {
+  font-size: 0.9rem;
+  color: #A2A2A2;
+  margin-bottom: 1.5rem;
+}
+
