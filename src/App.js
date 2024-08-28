@@ -19,6 +19,8 @@ import GameofLife from './frontend/components/GameOfLife';
 import Groups from './frontend/pages/GroupsPage/Groups';
 import PublicProfile from './frontend/pages/PublicPortfolioPage/PublicProfile';
 import Welcome from './frontend/pages/FirstPage/Welcome';
+import UnsubscribeForm from './frontend/pages/UnsubscribePage/Unsubscribe';
+
 import './App.css'; 
 
 import AddBlocPortfolio from './frontend/components/AddBlocPortfolio';
@@ -53,6 +55,7 @@ function App() {
             <Route path="/groups" element={<Groups />} />
             <Route path="/public/:username/:user_id" element={<PublicProfile />} /> 
             <Route path="/points" element={<PointsPage />} />
+            <Route path="/unsubscribe" element={<UnsubscribeForm />} />
           </Routes>
         </div>
       </UserProvider>
@@ -62,7 +65,7 @@ function App() {
 
 function NavigationWithConditionalRender() {
   const location = useLocation();
-  const noNavBarPaths = ['/', '/login', '/SignUp', '/public', '/launch']; // Add /public to the noNavBarPaths
+  const noNavBarPaths = ['/', '/login', '/SignUp', '/public', '/launch', '/unsubscribe']; // Add /public to the noNavBarPaths
 
   // Check if the current pathname includes '/public/'
   const isPublicProfile = location.pathname.includes('/public/');
