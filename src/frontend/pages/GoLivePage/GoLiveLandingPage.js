@@ -97,7 +97,7 @@ function GoLiveLanding() {
                 type="text" 
                 value={email} 
                 onChange={handleEmail} 
-                placeholder="Email (.edu preferred)"
+                placeholder="Personal Email"
                 className={styles.inputText}
               />
             </div>
