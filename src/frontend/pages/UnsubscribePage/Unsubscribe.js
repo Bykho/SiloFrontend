@@ -10,13 +10,16 @@ const UnsubscribeForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Convert the email to lowercase before sending it to the backend
+    const lowerCaseEmail = email.toLowerCase();
+
     try {
       const response = await fetch(`${config.apiBaseUrl}/unsubscribe`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email: lowerCaseEmail }),
       });
 
       if (response.ok) {
