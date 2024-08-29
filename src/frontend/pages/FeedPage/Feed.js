@@ -259,7 +259,14 @@ const Feed = () => {
     <div className={styles.headerBox}>
         <h2>{getHeaderText()}</h2>
         {feedStyle === 'groupView' && activeGroup && (
+          
           <div className={styles.headerButtons}>
+            <button 
+                onClick={() => setIsModalOpen(true)}
+                className={`${styles.headerButton} ${styles.primary}`}
+              >
+                <MdOutlinePostAdd /> Add Project To Group
+            </button>
             <button 
               onClick={() => {setProjectShow(true); setMembersShow(false); setDiscussionShow(false); setBountyShow(false)}}
               className={`${styles.headerButton} ${projectShow ? styles.active : ''}`}
@@ -289,13 +296,6 @@ const Feed = () => {
             </button>
             
             
-            
-            <button 
-              onClick={() => setIsModalOpen(true)}
-              className={`${styles.headerButton} ${styles.primary}`}
-            >
-              <MdOutlinePostAdd /> Post To Group
-            </button>
           </div>
         )}
       </div>

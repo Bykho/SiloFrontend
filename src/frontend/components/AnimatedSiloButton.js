@@ -124,10 +124,10 @@ const SiloBetaButton = ({ onClick }) => {
         <span className={styles.letter}>l</span>
         <span className={styles.letter}>o</span>
         <span className={styles.letter}>_</span>
-        <span className={styles.letter}>B</span>
+        <span className={styles.letter}>R</span>
         <span className={styles.letter}>e</span>
-        <span className={styles.letter}>t</span>
-        <span className={styles.letter}>a</span>
+        <span className={styles.letter}>p</span>
+        <span className={styles.letter}>o</span>
       </span>
     </button>
   );

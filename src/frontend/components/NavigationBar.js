@@ -85,7 +85,7 @@ const NavigationBar = () => {
         </>
       ) : (
         <>
-          <a href="/siloDescription" className={styles.siloButton} onClick={() => handleLinkClick('other')}>Silo_Beta</a>
+          <a href="/siloDescription" className={styles.siloButton} onClick={() => handleLinkClick('other')}>Silo_Repo</a>
           <div>
             <a
               href="/feed"
