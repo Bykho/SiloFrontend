@@ -32,6 +32,7 @@
     text-decoration: none;
   }
   .buttonContainer{
+    margin-left: 5px; 
     display: inline-flex; 
     gap: 10px;
     width: 99%; 
@@ -70,10 +71,10 @@
     margin-right: 20px; /* Adjust margin to make buttons less wide */
     margin-bottom: 10px;
     margin-top: 10px; 
-    background-color: #2d3743;
+    background-color: rgb(30,30,30); 
     color: #D9D9D9;
-    border: none;
-    border-radius: 80px;
+    border: 1px solid rgb(100, 100, 100);
+    border-radius: 10px;
     cursor: pointer;
     height: 60px;
     width: calc(100% / 2 - 30px); /* Adjusted calculation */
@@ -83,11 +84,12 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 10px; 
+    gap: 20px; 
   }
   
   .bigButton:hover {
-    background-color: #537c9b;
+    background: linear-gradient(to bottom, #2c2c2c, #2e2e2e);
+    border: 1px solid rgb(125, 125, 125);
     color: white;
   }
   

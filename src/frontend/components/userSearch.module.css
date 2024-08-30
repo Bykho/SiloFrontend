@@ -173,7 +173,8 @@ input:checked ~ .activeView {
 }
 
 .userCard {
-  background-color: #292828;
+  background-color: #252525;
+  border: 1px solid rgba(195, 195, 195, 0.515); 
   border-radius: 8px;
   padding: 1.5rem;
   transition: transform 0.3s ease, box-shadow 0.3s ease;

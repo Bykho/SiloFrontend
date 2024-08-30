@@ -1,7 +1,8 @@
 .profileContainer {
-  background-color: #252525;
+  /*background-color: #212121;*/
+  background-image:linear-gradient(to bottom, rgba(46, 46, 46, 0.4), rgba(30, 30, 30, 0.0));
   color: #f0f0f0;
-  padding: 20px;
+  padding: 30px;
   border-radius: 25px;
   margin: 20px;
 }
@@ -204,19 +205,20 @@
   display: flex; 
   align-items: center;
   gap: 10px; 
-  background-color: #3164b0;
-  color: #f0f0f0;
+  background-color: rgba(100, 181, 246, 0.1);
+  color: #64b5f6;
   text-decoration: none;
-  padding: 6px 12px;
+  padding: 8px 13px;
   border-radius: 20px;
   font-size: 18px;
-  border: none;
+  border: 1px solid #64b5f6;
   cursor: pointer;
   transition: background-color 1s ease;
 }
 
 .analyzeButton:hover {
-  background-color: #3596b7;
+  background-color: rgba(100, 180, 246, 0.378);
+  border: 1px solid #7ec5ff;
   transition: background-color 1s ease;
 }
 
