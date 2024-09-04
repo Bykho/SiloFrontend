@@ -7,7 +7,6 @@ import GameOfLife from '../GoLivePage/GameOfLife';
 import styles from './SignUp.module.css';
 import config from '../../config';
 import SuggestedPortfolio from '../../components/SuggestedPortfolio';
-import pdfToText from 'react-pdftotext';
 
 
 function SignUp() {
@@ -28,7 +27,6 @@ function SignUp() {
     biography: '',
     groups: []
   });
-  const [extractedText, setExtractedText] = useState('');
   const [suggestedSummary, setSuggestedSummary] = useState({});
   const [suggestedBio, setSuggestedBio] = useState('');
   const [suggestedInterests, setSuggestedInterests] = useState([]);
@@ -70,35 +68,23 @@ function SignUp() {
   const handleResumeUpload = async (file) => {
     console.log('Submitted a file:', file);
     console.log('File size:', file.size, 'bytes');
-
-    setIsLoading(true); // Set loading state to true
-
+  
+    setIsLoading(true);
+  
     try {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64String = reader.result;
-        setFormData(prevState => ({
-          ...prevState,
-          resume: base64String
-        }));
-      };
-      reader.readAsDataURL(file);
-
-      const text = await pdfToText(file);
-      setExtractedText(text);
-
+      const formData = new FormData();
+      formData.append("file", file);
+  
       const response = await fetch(`${config.apiBaseUrl}/groqResumeParser`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ resumeText: text }),
+        body: formData,
       });
-
+  
       if (response.ok) {
         const data = await response.json();
         console.log('Received summary:', data.summary);
   
+        // Handle the data received from the backend (e.g., summary, skills, etc.)
         data.summary.skills = data.summary.skills ? data.summary.skills.join(', ') : '';
         data.summary.interests = data.summary.interests ? data.summary.interests.join(', ') : '';
   
@@ -107,21 +93,23 @@ function SignUp() {
         setFormData(prevState => ({
           ...prevState,
           biography: data.summary.bio || '',
-          interests: data.summary.interests,
-          skills: data.summary.skills,
+          interests: data.summary.interests || [],
+          skills: data.summary.skills || [],
           university: data.summary.latestUniversity || '',
           major: data.summary.major || '',
           grad: data.summary.grad_yr || ''
         }));
       } else {
-        console.error('Failed to send extracted text to backend');
+        console.error('Failed to send the resume file to backend');
       }
     } catch (error) {
-      console.error('Failed to extract text from pdf', error);
+      console.error('Failed to upload the resume file', error);
     } finally {
       setIsLoading(false);
     }
   };
+  
+  
 
   const handleArrayChange = (e, field) => {
     const { value } = e.target;
