@@ -4,10 +4,9 @@ import { Card, CardContent, Typography, Button } from '@mui/material';
 import styles from './jobsPage.module.css';
 
 const JobCard = ({ job }) => {
-  const truncateDescription = (text, wordLimit) => {
-    const words = text.split(' ');
-    if (words.length > wordLimit) {
-      return words.slice(0, wordLimit).join(' ') + '...';
+  const truncateDescription = (text, charLimit) => {
+    if (text.length > charLimit) {
+      return text.slice(0, charLimit) + '...';
     }
     return text;
   };
@@ -26,7 +25,7 @@ const JobCard = ({ job }) => {
         </Typography>
         <Typography variant="body2" className={styles.description}>
 
-          {truncateDescription(job.description, 50)}
+          {truncateDescription(job.description, 200)}
         </Typography>
         <Button variant="contained" className={styles.applyButton}>
           Apply Now

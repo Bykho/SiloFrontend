@@ -4,16 +4,6 @@
   padding-bottom: 40px;
 }
 
-.title {
-  color: #ffffff;
-  font-size: 2.5rem;
-  font-weight: 700;
-  text-align: left;
-  margin-bottom: 40px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-}
-
 .jobGrid {
   margin-top: 20px;
 }
@@ -27,8 +17,9 @@
   transition: all 0.3s ease-in-out;
   margin-top: 20px; 
   margin-bottom: 20px;
-  border-radius: 12px;
+  border-radius: 15px !important;
   width: 100%;
+  padding: 5px; 
   overflow: hidden;
 }
 
@@ -43,11 +34,13 @@
 }
 
 .title {
+  font-family: "Roboto", sans-serif;
   color: #ffffff;
   font-size: 1.4rem;
-  font-weight: 700;
+  font-weight: bolder;
   margin-bottom: 12px;
-  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-align: left;
 }
 
 .company {

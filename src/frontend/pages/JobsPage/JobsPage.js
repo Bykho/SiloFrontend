@@ -14,6 +14,7 @@ const JobsPage = () => {
       try {
         const response = await fetch(`${config.apiBaseUrl}/get_jobs`);
         const data = await response.json();
+        console.log('jobs data: ', data);
 
         // Ensure each field is a string
         const stringifiedJobs = data.map(job => ({
@@ -46,7 +47,7 @@ const JobsPage = () => {
 
   return (
     <Container maxWidth="lg" className={styles.container}>
-      <Typography variant="h4" component="h1" gutterBottom className={styles.title}>
+      <Typography variant="h3" component="h1" gutterBottom className={styles.title}>
         Top Available Jobs
       </Typography>
       <Grid container spacing={2} alignItems="center" className={styles.searchContainer}>
@@ -111,7 +112,7 @@ const JobsPage = () => {
       </Grid>
       <Grid container spacing={3} className={styles.jobGrid}>
         {filteredJobs.map((job) => (
-          <Grid item xs={12} sm={isListView ? 12 : 6} md={isListView ? 12 : 4} key={job.id} className={styles.jobItem}>
+          <Grid item xs={12} sm={isListView ? 12 : 6} md={isListView ? 12 : 4} key={job._id} className={styles.jobItem}>
             <JobCard job={job} isListView={isListView} />
           </Grid>
         ))}
