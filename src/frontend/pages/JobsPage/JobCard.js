@@ -21,13 +21,19 @@ const JobCard = ({ job }) => {
           {job.company}
         </Typography>
         <Typography variant="body2" className={styles.location} gutterBottom>
-          {job.cities}
+          {job.location}
         </Typography>
         <Typography variant="body2" className={styles.description}>
 
           {truncateDescription(job.description, 200)}
         </Typography>
-        <Button variant="contained" className={styles.applyButton}>
+        <Button
+          variant="contained"
+          className={styles.applyButton}
+          href={job.final_url}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           Apply Now
         </Button>
       </CardContent>

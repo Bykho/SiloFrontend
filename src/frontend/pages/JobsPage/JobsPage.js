@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Typography, Grid, TextField, Switch } from '@mui/material';
+import { Container, Typography, Grid, TextField, Switch, CircularProgress } from '@mui/material';
 import JobCard from './JobCard';
 import styles from  './jobsPage.module.css';
 import config from '../../config';
@@ -8,26 +8,39 @@ const JobsPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isListView, setIsListView] = useState(false);
   const [jobs, setJobs] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchJobs = async () => {
+      setIsLoading(true);
+      setError(null);
       try {
-        const response = await fetch(`${config.apiBaseUrl}/get_jobs`);
+        const response = await fetch(`${config.apiBaseUrl}/search_jobs`);
         const data = await response.json();
-        console.log('jobs data: ', data);
+        console.log('Raw data from API:', data); // Log raw data
 
-        // Ensure each field is a string
+        if (!Array.isArray(data)) {
+          throw new Error('Received invalid data format');
+        }
+
         const stringifiedJobs = data.map(job => ({
-          _id: String(job._id),
-          company: String(job.company),
-          cities: String(job.cities),
-          job_title: String(job.job_title),
-          description: String(job.description),
+          _id: String(job._id || ''),
+          company: String(job.company || ''),
+          location: String(job.location || ''),
+          job_title: String(job.job_title || ''),
+          description: String(job.description || ''),
+          final_url: String(job.final_url || ''),
         }));
+
+        console.log('Processed jobs:', stringifiedJobs); // Log processed jobs
 
         setJobs(stringifiedJobs);
       } catch (error) {
         console.error('Error fetching jobs:', error);
+        setError(error.message);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -41,7 +54,7 @@ const JobsPage = () => {
   const filteredJobs = jobs.filter(job =>
     (job.job_title || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
     (job.company || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (job.cities || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (job.location || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
     (job.description || '').toLowerCase().includes(searchTerm.toLowerCase())
   );  
 
