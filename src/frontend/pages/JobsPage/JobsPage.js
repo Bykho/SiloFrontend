@@ -3,6 +3,9 @@ import { Container, Typography, Grid, TextField, Switch, CircularProgress } from
 import JobCard from './JobCard';
 import styles from  './jobsPage.module.css';
 import config from '../../config';
+import FilterToolbar from './FilterToolbar'; // Import the new component
+import {FaSearch} from "react-icons/fa";
+
 
 const JobsPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -10,6 +13,11 @@ const JobsPage = () => {
   const [jobs, setJobs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [filters, setFilters] = useState({ location: '', jobType: '' });
+  const handleFilterChange = (newFilters) => {
+    setFilters(newFilters);
+  };
+
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -56,19 +64,21 @@ const JobsPage = () => {
     (job.company || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
     (job.location || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
     (job.description || '').toLowerCase().includes(searchTerm.toLowerCase())
-  );  
+  ).filter(job => 
+    (!filters.location || job.location.toLowerCase().includes(filters.location.toLowerCase())) &&
+    (!filters.jobType || job.job_type === filters.jobType)
+  );
 
   return (
     <Container maxWidth="lg" className={styles.container}>
-      <Typography variant="h3" component="h1" gutterBottom className={styles.titleTop}>
+      <h1 className={styles.titleTop}>
         Top Available Jobs
-      </Typography>
-      <Grid container spacing={2} alignItems="center" className={styles.searchContainer}>
+      </h1>
         <Grid item xs={12} sm={10}>
           <TextField
             fullWidth
             variant="outlined"
-            placeholder="Search jobs..."
+            placeholder= "Search keywords..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             InputProps={{
@@ -97,32 +107,8 @@ const JobsPage = () => {
               },
             }}
           />
-        </Grid>
-        <Grid item xs={12} sm={2}>
-          <div className={styles.toggleContainer}>
-            <Typography variant="body2" className={styles.toggleLabel}>List View</Typography>
-            <Switch
-              checked={isListView}
-              onChange={() => setIsListView(!isListView)}
-              color="primary"
-              sx={{
-                '& .MuiSwitch-switchBase.Mui-checked': {
-                  color: '#03a9f4',
-                },
-                '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                  backgroundColor: '#4fc3f7',
-                },
-                '& .MuiSwitch-track': {
-                  backgroundColor: '#757575',
-                },
-                '& .MuiSwitch-thumb': {
-                  boxShadow: '0 2px 4px 0 rgba(0, 0, 0, 0.2)',
-                },
-              }}
-            />
-          </div>
-        </Grid>
       </Grid>
+      <FilterToolbar onFilterChange={handleFilterChange} />
       {isLoading ? (
         <div className={styles.loadingContainer}>
           <CircularProgress size={60} thickness={4} />

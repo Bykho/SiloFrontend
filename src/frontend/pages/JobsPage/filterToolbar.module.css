@@ -1,0 +1,81 @@
+/* ... (existing styles) ... */
+
+.filterToolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: #303030;
+    border-radius: 15px;
+  }
+  
+  .filterInputGroup {
+    flex: 1;
+    min-width: 200px;
+  }
+  
+  .filterLabel {
+    display: block;
+    margin-bottom: 5px;
+    color: #9e9e9e;
+    font-size: 0.9rem;
+  }
+  
+  .filterInput,
+  .filterSelect {
+    width: 95%;
+    padding: 10px;
+    background-color: #393939;
+    color: #ffffff;
+    border: 1px solid #4fc3f7;
+    border-radius: 12px;
+    font-size: 1rem;
+  }
+  
+  .filterSelect {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%234fc3f7' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+  }
+  
+  .filterButtons {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+  }
+  
+  .applyButton,
+  .clearButton {
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .applyButton {
+    background-color: #4fc3f7;
+    color: #121212;
+    border: none;
+  }
+  
+  .applyButton:hover {
+    background-color: #03a9f4;
+    transform: scale(1.05);
+  }
+  
+  .clearButton {
+    background-color: transparent;
+    color: #4fc3f7;
+    border: 1px solid #4fc3f7;
+  }
+  
+  .clearButton:hover {
+    background-color: rgba(79, 195, 247, 0.1);
+    transform: scale(1.05);
+  }
