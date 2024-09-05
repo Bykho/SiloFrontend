@@ -2,6 +2,67 @@
   min-height: 100vh;
   padding-top: 40px;
   padding-bottom: 40px;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
+
+.headerPaper {
+  background-color: #292929 !important;
+  padding: 24px;
+  margin-bottom: 0px;
+  border-radius: 15px !important;
+}
+
+.titleTop {
+  font-family: "Roboto", sans-serif;
+  color: #ffffff;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  letter-spacing: 2px;
+  text-align: center;
+}
+
+.viewToggle {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.toggleButton {
+  margin: 0 10px !important;
+  padding: 10px 20px !important;
+  border-radius: 20px !important;
+  text-transform: none !important;
+  font-size: 1rem !important;
+  transition: all 0.3s ease !important;
+  min-width: 150px !important;
+}
+
+.toggleButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.activeToggle {
+  background-color: #4fc3f7 !important;
+  color: #121212 !important;
+}
+
+.searchContainer {
+  margin-bottom: 20px;
+}
+
+.searchInput {
+  background-color: #3f3f3f;
+  border: 1px solid #4fc2f775;
+  color: #ffffff;
+  border-radius: 12px;
+}
+
+.searchIcon {
+  color: #9e9e9e;
+  margin-right: 10px;
 }
 
 .jobGrid {
@@ -18,9 +79,9 @@
   margin-bottom: 0px;
   border-radius: 15px !important;
   width: 100%;
-  padding: 5px; 
+  padding-top: 10px !important;
   overflow: hidden;
-  margin-top: 20px;
+  margin-top: 0px;
 }
 
 .card:hover {
@@ -40,16 +101,6 @@
   font-weight: bolder;
   margin-bottom: 12px;
   letter-spacing: 2px;
-  text-align: left;
-}
-
-.titleTop {
-  font-family: "Roboto", sans-serif;
-  color: #ffffff;
-  font-size: 1.9rem;
-  font-weight: bolder;
-  margin-bottom: 20px;
-  letter-spacing: 5px;
   text-align: left;
 }
 
@@ -112,4 +163,46 @@
 
 .errorContainer {
   color: #f44336;
+}
+
+.sliderContainer {
+  display: flex;
+  position: relative;
+  background-color: #3f3f3f;
+  border-radius: 30px;
+  margin-bottom: 24px;
+  overflow: hidden;
+  border: 1px solid #00a0e9;
+}
+
+.sliderOption {
+  flex: 1;
+  text-align: center;
+  padding: 15px 0;
+  color: #9e9e9e;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  z-index: 1;
+  font-size: 1.5rem !important;
+  font-weight: bold !important;
+}
+
+.activeSlider {
+  color: #e1e1e1;
+}
+
+.slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(135deg, #0074ae, #00486c);
+  border-radius: 30px;
+  box-shadow: 0 0 10px rgba(0, 160, 233, 0.5);
+  transition: transform 0.3s ease;
+}
+
+.sliderRight {
+  transform: translateX(100%);
 }

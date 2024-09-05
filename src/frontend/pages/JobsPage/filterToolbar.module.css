@@ -7,8 +7,10 @@
     margin-top: 20px;
     margin-bottom: 20px;
     padding: 20px;
-    background-color: #303030;
+    background-color: #404040;
     border-radius: 15px;
+    border: 1px solid #4fc2f763;
+
   }
   
   .filterInputGroup {
@@ -29,7 +31,7 @@
     padding: 10px;
     background-color: #393939;
     color: #ffffff;
-    border: 1px solid #4fc3f7;
+    border: 1px solid #4fc2f7a8;
     border-radius: 12px;
     font-size: 1rem;
   }
@@ -59,7 +61,7 @@
   }
   
   .applyButton {
-    background-color: #4fc3f7;
+    background-color: #4fc2f7bb;
     color: #121212;
     border: none;
   }
