@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Container, Typography, Grid, TextField, Button, CircularProgress, Paper, Box } from '@mui/material';
 import JobCard from './JobCard';
 import styles from './jobsPage.module.css';
@@ -6,16 +6,15 @@ import config from '../../config';
 import FilterToolbar from './FilterToolbar';
 import { FaSearch } from "react-icons/fa";
 
-// Simulated user interests (static for now)
-const userInterests = ['software', 'developer', 'react', 'javascript', 'data', 'engineering'];
-
 const JobsPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [jobs, setJobs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filters, setFilters] = useState({ location: '', jobType: '' });
-  const [viewMode, setViewMode] = useState('suggested'); // 'suggested' or 'all'
+  const [viewMode, setViewMode] = useState('suggested');
+  const [userData, setUserData] = useState(null);
+  const [userInterests, setUserInterests] = useState([]);
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -46,6 +45,31 @@ const JobsPage = () => {
 
     fetchJobs();
   }, []);
+  
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${config.apiBaseUrl}/studentProfile`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          }
+        });
+        if (!response.ok) {
+          throw new Error('Failed to fetch user data');
+        }
+        const data = await response.json();
+        setUserData(data);
+        setUserInterests([...data.interests, ...data.skills]);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        setError('Failed to fetch user data');
+      }
+    };
+    fetchUserData();
+  }, []);
 
   const handleFilterChange = (newFilters) => {
     setFilters(newFilters);
@@ -63,14 +87,20 @@ const JobsPage = () => {
     );
   };
 
-  const suggestedJobs = jobs.filter(job =>
-    userInterests.some(interest =>
-      job.job_title.toLowerCase().includes(interest) ||
-      job.description.toLowerCase().includes(interest)
-    )
-  );
+  const suggestedJobs = useMemo(() => {
+    return jobs.filter(job => {
+      const jobText = `${job.job_title} ${job.description}`.toLowerCase();
+      return userInterests.some(interest => 
+        jobText.includes(interest.toLowerCase()) ||
+        interest.toLowerCase().split(' ').some(word => jobText.includes(word))
+      );
+    });
+  }, [jobs, userInterests]);
 
-  const displayedJobs = viewMode === 'suggested' ? filterJobs(suggestedJobs) : filterJobs(jobs);
+  const displayedJobs = useMemo(() => {
+    const jobsToFilter = viewMode === 'suggested' ? suggestedJobs : jobs;
+    return filterJobs(jobsToFilter);
+  }, [viewMode, suggestedJobs, jobs, filterJobs, searchTerm, filters]);
 
   return (
     <Container maxWidth="lg" className={styles.container}>
@@ -127,13 +157,26 @@ const JobsPage = () => {
           </Typography>
         </div>
       ) : (
-        <Grid container spacing={3} className={styles.jobGrid}>
-          {displayedJobs.map((job) => (
-            <Grid item xs={12} sm={6} md={4} key={job._id} className={styles.jobItem}>
-              <JobCard job={job} />
-            </Grid>
-          ))}
-        </Grid>
+        <>
+          <Typography variant="h6" style={{ marginBottom: '20px' }}>
+            Showing {displayedJobs.length} {viewMode === 'suggested' ? 'suggested' : ''} jobs
+          </Typography>
+          <Grid container spacing={3} className={styles.jobGrid}>
+            {displayedJobs.length > 0 ? (
+              displayedJobs.map((job) => (
+                <Grid item xs={12} sm={6} md={4} key={job._id} className={styles.jobItem}>
+                  <JobCard job={job} />
+                </Grid>
+              ))
+            ) : (
+              <Grid item xs={12}>
+                <Typography variant="h6" align="center">
+                  No jobs found. Try adjusting your filters or switching to "All Jobs".
+                </Typography>
+              </Grid>
+            )}
+          </Grid>
+        </>
       )}
     </Container>
   );

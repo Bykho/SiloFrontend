@@ -9,7 +9,7 @@
 .headerPaper {
   background-color: #292929 !important;
   padding: 24px;
-  margin-bottom: 0px;
+  margin-bottom: 20px;
   border-radius: 15px !important;
 }
 
@@ -56,7 +56,7 @@
 .searchInput {
   background-color: #3f3f3f;
   border: 1px solid #4fc2f775;
-  color: #ffffff;
+  color: #ffffff !important;
   border-radius: 12px;
 }
 
@@ -187,6 +187,10 @@
   font-weight: bold !important;
 }
 
+.sliderOption:hover {
+  color: #e1e1e1;
+}
+
 .activeSlider {
   color: #e1e1e1;
 }
@@ -199,7 +203,7 @@
   height: 100%;
   background: linear-gradient(135deg, #0074ae, #00486c);
   border-radius: 30px;
-  box-shadow: 0 0 10px rgba(0, 160, 233, 0.5);
+  box-shadow: 0 0 10px rgba(0, 25, 35, 0.588);
   transition: transform 0.3s ease;
 }
 
