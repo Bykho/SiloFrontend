@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import PortfolioDisplay from '../../components/PortfolioDisplay';
-import styles from './studentProfile.module.css'; // Import the CSS module
+import styles from './studentProfile.module.css';
 import { useUser } from '../../contexts/UserContext';
 import ProfileHeader from '../../components/ProfileHeader';
 import AddBlocPortfolio from '../../components/AddBlocPortfolio';

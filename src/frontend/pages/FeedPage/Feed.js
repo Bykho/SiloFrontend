@@ -70,7 +70,6 @@ const Feed = () => {
         console.error('No token found in local storage');
         return;
       }
-
       try {
         const response = await fetch(`${config.apiBaseUrl}/getUserUpvotes`, {
           method: 'POST',
@@ -125,37 +124,40 @@ const Feed = () => {
     fetchUpvotedProjects();
   }, [user]);
 
-
   useEffect(() => {
-    const fetchGroupProjects = async () => {
-      setLoading(true);
-      setError('');
-      if (activeGroup) {
-        const group_project_ids = activeGroup.projects;
-        try {
-          const token = localStorage.getItem('token');
-          const response = await fetch(`${config.apiBaseUrl}/returnProjectsFromIds`, {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ projectIds: group_project_ids })
-          });
-          if (!response.ok) {
-            throw new Error('Failed to fetch projects');
-          }
-          const returnedProjects = await response.json();
-          setFilteredProjects(returnedProjects);
-          setLoading(false);
-        } catch (err) {
-          setError('Failed to fetch projects');
-          setLoading(false);
+    setFilteredProjects([]);  // Clear filteredProjects whenever feedStyle changes
+    if (feedStyle === 'groupView' && activeGroup) {
+      fetchGroupProjects();
+    }
+  }, [feedStyle, activeGroup]);
+    
+  const fetchGroupProjects = async () => {
+    setLoading(true);
+    setError('');
+    if (activeGroup) {
+      const group_project_ids = activeGroup.projects;
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${config.apiBaseUrl}/returnProjectsFromIds`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ projectIds: group_project_ids })
+        });
+        if (!response.ok) {
+          throw new Error('Failed to fetch projects');
         }
+        const returnedProjects = await response.json();
+        setFilteredProjects(returnedProjects);
+        setLoading(false);
+      } catch (err) {
+        setError('Failed to fetch projects');
+        setLoading(false);
       }
-    };
-    fetchGroupProjects();
-  }, [activeGroup]);
+    }
+  };
 
 
   useEffect(() => {
@@ -285,17 +287,12 @@ const Feed = () => {
             >
               <GoCommentDiscussion /> Discussion
             </button>
-
-
-            
             <button 
               onClick={() => {setBountyShow(true); setMembersShow(false); setProjectShow(false); setDiscussionShow(false)}}
               className={`${styles.headerButton} ${bountyShow ? styles.active : ''}`}
             >
               <FaCrown /> Bounties
             </button>
-            
-            
           </div>
         )}
       </div>

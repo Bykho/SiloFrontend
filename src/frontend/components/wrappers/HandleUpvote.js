@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useUser } from '../../contexts/UserContext';
 import config from '../../config';
 import styles from './handleUpvote.module.css';
@@ -71,24 +71,32 @@ const HandleUpvote = (WrappedComponent) => {
     };
 
     const findUpvoteOverlap = (project, userUpvotes) => {
+      console.log('findUpvoteOverlap: project', project)
+      console.log('findUpvoteOverlap: userUpvotes', userUpvotes)
       if (!user || !Array.isArray(userUpvotes) || !Array.isArray(project.upvotes)) {
         return false;
       }
       return userUpvotes.some(userUpvote => project.upvotes.includes(userUpvote));
     };
 
-    const UpvoteButton = ({ project, setProject, passedUser, setPassedUser, userUpvotes, setUserUpvotes }) => (
-      <div className={styles.upvoteButtonBox}>
-        <p className={styles.upvoteNumber}>{project.upvotes ? project.upvotes.length : 0}</p>
-        <button
-          className={findUpvoteOverlap(project, userUpvotes) ? styles.clickedUpvoteButton : styles.upvoteButton}
-          onClick={() => handleUpvote(project, setProject, passedUser, setPassedUser, userUpvotes, setUserUpvotes)}
-          disabled={findUpvoteOverlap(project, userUpvotes)}
-        >
-          <BiSolidUpvote />
-        </button>
-      </div>
-    );
+    const UpvoteButton = ({ project, setProject, passedUser, setPassedUser, userUpvotes, setUserUpvotes }) => {
+      useEffect(() => {
+        console.log('HandleUpvote b4 findUpvoteOverlap userUpvotes: ', userUpvotes);  // Correct placement of useEffect
+      }, [userUpvotes]);
+
+      return (
+        <div className={styles.upvoteButtonBox}>
+          <p className={styles.upvoteNumber}>{project.upvotes ? project.upvotes.length : 0}</p>
+          <button
+            className={findUpvoteOverlap(project, userUpvotes) ? styles.clickedUpvoteButton : styles.upvoteButton}
+            onClick={() => handleUpvote(project, setProject, passedUser, setPassedUser, userUpvotes, setUserUpvotes)}
+            disabled={findUpvoteOverlap(project, userUpvotes)}
+          >
+            <BiSolidUpvote />
+          </button>
+        </div>
+      );
+    };
 
     return (
       <WrappedComponent

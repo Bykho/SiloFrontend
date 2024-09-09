@@ -26,10 +26,7 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
   const descriptionRef = useRef(null);
   const imageRef = useRef(null);
   const [showPopup, setShowPopup] = useState(false);
-  const [localUpvotes, setLocalUpvotes] = useState(() => {
-    // Initialize with the upvotes relevant to this project
-    return project.upvotes || [];
-  });
+  const [localUpvotes, setLocalUpvotes] = useState(userUpvotes);
   const VISIBLE_TAGS = 3;
 
   const [comments, setComments] = useState(() => {
@@ -46,6 +43,10 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
   useEffect(() => {
     setLocalProject(project);
   }, [project]);
+
+  useEffect(() => {
+    console.log('Here is localProject: ', localProject)
+  }, [])
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -218,7 +219,7 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
         return "";
       }
     }
-    return null; // or return any other fallback text or component
+    return null;
   };
 
   return (
@@ -258,7 +259,7 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
             <button className={styles.closeButton} onClick={togglePopup}>
               &times;
             </button>
-            <ProjectEntry project={project} passedUser={user} userUpvotes={userUpvotes} setUserUpvotes={setUserUpvotes} />
+            <ProjectEntry project={localProject} passedUser={user} userUpvotes={localUpvotes} setUserUpvotes={setLocalUpvotes} />
           </div>
         </div>
       )}
