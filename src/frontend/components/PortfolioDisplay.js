@@ -9,6 +9,7 @@ import config from '../config';
 
 const PortfolioDisplay = ({ user: passedUser }) => {
   const [userUpvotes, setUserUpvotes] = useState([]);
+  const [loading, setLoading] = useState(true);
   const { user } = useUser();
 
   useEffect(() => {
@@ -36,11 +37,23 @@ const PortfolioDisplay = ({ user: passedUser }) => {
         }
       } catch (error) {
         console.error('Error fetching upvotes:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchUpvotes();
   }, [user._id]);
+
+  //useEffect (() => {
+  //  console.log('Portfolio Display userUpvotes: ', userUpvotes)
+  //}, [userUpvotes])
+
+  if (loading) {
+    return <div>Loading...</div>;  // Display a loading indicator while data is being fetched
+  }
+
+
 
   return (
     <div className={styles.container}>

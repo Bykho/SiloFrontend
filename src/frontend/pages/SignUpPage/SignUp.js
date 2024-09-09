@@ -271,7 +271,7 @@ function SignUp() {
             console.log('Portfolio saved successfully:', data);
 
             // Now, prepare and send the data to calculate the scores
-            const filteredPortfolio = filterPortfolio(selectedPortfolio);
+          {/*}    const filteredPortfolio = filterPortfolio(selectedPortfolio);
 
             const newVsScoreData = {
                 skills: formData.skills,
@@ -300,7 +300,7 @@ function SignUp() {
             updateUser((prevUser) => ({
                 ...prevUser,
                 scores: [...prevUser.scores, result], // Append the new scores to the scores array
-            }));
+            })); */}
 
             // Navigate to the description page after everything is done
             navigate('/siloDescription');

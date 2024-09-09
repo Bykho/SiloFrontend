@@ -27,10 +27,10 @@ const ProfileHeader = ({ userData, loading, error }) => {
   //Build out below.
   const userSpiderData = userData.scores[userData.scores.length - 1]
 
-  useEffect(() => {
-    console.log('ProfileHeader userData: ', userData)
-    console.log('ProfileHeader userSpiderData: ', userSpiderData)
-  }, [userData])
+  //useEffect(() => {
+  //  console.log('ProfileHeader userData: ', userData)
+  //  console.log('ProfileHeader userSpiderData: ', userSpiderData)
+  //}, [userData])
 
   useEffect(() => {
     if (userData && userData.biography) {
@@ -45,6 +45,7 @@ const ProfileHeader = ({ userData, loading, error }) => {
   const toggleRating = () => {
     setShowRating(!showRating);
   }
+
 
   const renderRatingModal = () => (
     <div className={styles.modalContent}>
@@ -184,11 +185,13 @@ const ProfileHeader = ({ userData, loading, error }) => {
         </div>
       )}
 
+      {/* 
       {showRating && (
         <div className={styles.modalScore}>
           {renderRatingModal()}
         </div>
       )}
+        */}
     </div>
   );
 };

@@ -85,11 +85,13 @@ function SiloDescription() {
         <div className={styles.modal}>
           <div className={styles.modalContent}>
             <button className={styles.closeButton} onClick={toggleModal}><FaWindowClose /></button>
+            {/* 
             {userData ? (
               <UserSpiderPlot playerData={userData.scores[userData.scores.length - 1]} userData={{}} />
             ) : (
               <p>Loading...</p>
             )}
+            */}
           </div>
         </div>
       )}
