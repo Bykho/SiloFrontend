@@ -19,6 +19,15 @@ body {
   color: var(--text-color);
 }
 
+.loadingContainer{
+  display: flex;
+  justify-content: center;
+  margin-top: 20vh; 
+  height: 100%;
+  width: 100%;
+
+}
+
 .parentContainer {
  background-color: none;
 }

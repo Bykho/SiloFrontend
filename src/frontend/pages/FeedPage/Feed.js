@@ -15,6 +15,8 @@ import { FaUsers } from "react-icons/fa";
 import { FaRegListAlt } from "react-icons/fa";
 import { GoCommentDiscussion } from "react-icons/go";
 import { FaCrown } from "react-icons/fa";
+import LoadingIndicator from '../../components/LoadingIndicator';
+import {CircularProgress}from '@mui/material';
 
 
 
@@ -327,28 +329,40 @@ const Feed = () => {
           </div>
           <div className={styles.feedContent}>
             {feedStyle === 'home' || feedStyle === 'popular' || feedStyle === 'upvoted' ? (
-              <Tagged
-                filteredProjects={filteredProjects}
-                loading={loading}
-                error={error}
-                userUpvotes={userUpvotes}
-                setUserUpvotes={setUserUpvotes}
-              />
+              loading ? (
+                <div className={styles.loadingContainer}>
+                  <CircularProgress size={100} thickness={4} />
+                </div>
+              ) : (
+                <Tagged
+                  filteredProjects={filteredProjects}
+                  loading={loading}
+                  error={error}
+                  userUpvotes={userUpvotes}
+                  setUserUpvotes={setUserUpvotes}
+                />
+              )
             ) : feedStyle === 'groupView' && membersShow ? (
               <NewGroupMembers group={activeGroup} />
             ) : feedStyle === 'groupView' && projectShow ? (
-              <Tagged
-                filteredProjects={filteredProjects}
-                loading={loading}
-                error={error}
-                userUpvotes={userUpvotes}
-                setUserUpvotes={setUserUpvotes}
-              />
+              loading ? (
+                <div className={styles.loadingContainer}>
+                    <CircularProgress size={100} thickness={4} />
+                </div>
+              ) : (
+                <Tagged
+                  filteredProjects={filteredProjects}
+                  loading={loading}
+                  error={error}
+                  userUpvotes={userUpvotes}
+                  setUserUpvotes={setUserUpvotes}
+                />
+              )
             ) : feedStyle === 'groupView' && discussionShow ? (
-              <NewDiscussionBoard group={activeGroup}  />
+              <NewDiscussionBoard group={activeGroup} />
             ) : feedStyle === 'groupView' && bountyShow ? (
-              <BountyBoard group={activeGroup} /> 
-          ) : null}
+              <BountyBoard group={activeGroup} />
+            ) : null}
           </div>
         </div>
       </div>
