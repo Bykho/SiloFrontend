@@ -1,0 +1,43 @@
+.waiting-page {
+  background-color: #212121;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.waiting-container {
+  background-color: #34383f;
+  border-radius: 10px;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(100, 181, 246, 0.1);
+  max-width: 500px;
+  width: 90%;
+}
+
+.waiting-title {
+  color: #64b5f6;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.waiting-message {
+  color: #ffffff;
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.waiting-advice {
+  background-color: rgba(100, 181, 246, 0.1);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 2rem;
+}
+
+.advice-text {
+  color: #90caf9;
+  font-size: 1.2rem;
+  font-weight: bold;
+  font-style: italic;
+}

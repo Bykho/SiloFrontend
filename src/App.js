@@ -19,6 +19,7 @@ import GameofLife from './frontend/components/GameOfLife';
 import Groups from './frontend/pages/GroupsPage/Groups';
 import PublicProfile from './frontend/pages/PublicPortfolioPage/PublicProfile';
 import Welcome from './frontend/pages/FirstPage/Welcome';
+import WaitingPage from './frontend/pages/WaitingPage/WaitingPage';
 import JobsPage from './frontend/pages/JobsPage/JobsPage';
 import './App.css'; 
 
@@ -38,8 +39,7 @@ function App() {
           <NavigationWithConditionalRender />
           <Routes>
             <Route path="/welcome" element={<Welcome />} />
-            <Route path="/homePage" element={<HomePage />} />
-            <Route path="/feed" element={<Feed />} />
+            <Route path="/wait" element={<WaitingPage />} /> 
             <Route path="/siloDescription" element={<SiloDescription />} />
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<Welcome />} />
@@ -50,9 +50,7 @@ function App() {
             <Route path="/addBlockProject" element={<AddBlocPortfolio />} />
             <Route path="/GenDirectory" element={<ProtectedRoute component={GenDirectory} />} />
             <Route path="/profile/:id" element={<ProtectedRoute component={OtherStudentProfile} />} />
-            <Route path="/groups" element={<Groups />} />
             <Route path="/public/:username/:user_id" element={<PublicProfile />} /> 
-            <Route path="/jobs" element={<JobsPage />} />
           </Routes>
         </div>
       </UserProvider>

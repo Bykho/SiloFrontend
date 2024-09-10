@@ -4,13 +4,14 @@ import { useUser } from '../contexts/UserContext';
 import { IoHomeOutline, IoPersonOutline, IoChatboxEllipsesOutline, IoLogOutOutline, IoLogInOutline, IoNewspaperOutline } from 'react-icons/io5'; // Import new icons
 import {PiAddressBookLight, PiAddressBook} from 'react-icons/pi'; // Import new icons
 import { LuUserSquare2 } from 'react-icons/lu';
-import { FaUserGroup } from 'react-icons/fa6';
+import { FaPlaneLock, FaUserGroup } from 'react-icons/fa6';
 import styles from './NavigationBar.module.css';
 import SiloBetaButton from './AnimatedSiloButton';
 import NotificationsComponent from './Notifications';
 import { Bell } from 'lucide-react';
 import { MdOutlineLeaderboard } from "react-icons/md";
 import {FaBriefcase} from "react-icons/fa6";
+import {FaLock} from "react-icons/fa6";
 
 
 const NavigationBar = () => {
@@ -41,30 +42,30 @@ const NavigationBar = () => {
     <div className={styles.nav}>
       {user ? (
         <>
-          <SiloBetaButton onClick={() => handleLinkClick('other')} />
+          <SiloBetaButton onClick={() => handleLinkClick('wait')} />
           <div>
             <a
-              href="/feed"
+              href="/wait"
               className={`${styles.button} ${activeLink === 'feed' ? styles.clickedButton : ''}`}
-              onClick={() => handleLinkClick('feed')}
+              onClick={() => handleLinkClick('wait')}
             >
-              <IoNewspaperOutline className={styles.icon} /> Community
+              <FaLock className={styles.icon} /> Community
             </a>
 
             <a
-              href="/jobs"
+              href="/wait"
               className={`${styles.button} ${activeLink === 'jobs' ? styles.clickedButton : ''}`}
-              onClick={() => handleLinkClick('jobs')}
+              onClick={() => handleLinkClick('wait')}
             >
-              <FaBriefcase className={styles.icon} /> Jobs
+              <FaLock className={styles.icon} /> Jobs
             </a>
             
             <a
-              href="/GenDirectory"
+              href="/wait"
               className={`${styles.button} ${activeLink === 'find' ? styles.clickedButton : ''}`}
-              onClick={() => handleLinkClick('find')}
+              onClick={() => handleLinkClick('wait')}
             >
-              <MdOutlineLeaderboard className={styles.icon} /> Members
+              <FaLock className={styles.icon} /> Members
             </a>
 
             <a
@@ -91,21 +92,21 @@ const NavigationBar = () => {
               href="/feed"
               className={`${styles.button} ${activeLink === 'feed' ? styles.clickedButton : ''}`}
             >
-              <IoNewspaperOutline className={styles.icon} /> Community
+             <FaLock className={styles.icon} /> Community
             </a>
 
             <a
               href="/jobs"
               className={`${styles.button} ${activeLink === 'jobs' ? styles.clickedButton : ''}`}
             >
-              <FaBriefcase className={styles.icon} /> Jobs
+              <FaLock className={styles.icon} /> Jobs
             </a>
 
             <a
               href="/GenDirectory"
               className={`${styles.button} ${activeLink === 'find' ? styles.clickedButton : ''}`}
             >
-              <MdOutlineLeaderboard className={styles.icon} /> Members
+              <FaLock className={styles.icon} /> Members
             </a>
 
 
