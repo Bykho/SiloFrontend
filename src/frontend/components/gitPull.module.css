@@ -203,9 +203,34 @@
   text-align: center;
 }
 
+
 .branchDropdown {
-  margin-left: 10px;
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 8px 28px 8px 10px;
+  background-color: #4a4aff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  appearance: none;
+  outline: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  position: relative;
+  width: auto;
+  min-width: 120px;
+}
+
+.branchDropdown:hover, .branchDropdown:focus {
+  background-color: #3a3aff;
+}
+
+.branchDropdown::after {
+  content: '\25BC';
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  color: white;
+  pointer-events: none;
+  font-size: 12px;
 }

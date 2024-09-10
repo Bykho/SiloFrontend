@@ -106,7 +106,7 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
       const contents = await fetchContents(repoName);
   
       // Automatically select all files in the repository
-      const selectAllFiles = (items, parentPath = '') => {
+      {/* const selectAllFiles = (items, parentPath = '') => {
         const selected = {};
         items.forEach(item => {
           const fullPath = parentPath ? `${parentPath}/${item.name}` : item.name;
@@ -122,7 +122,7 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
   
       const selectedFilesInRepo = selectAllFiles(contents);
       setSelectedFiles(prev => ({ ...prev, ...selectedFilesInRepo }));
-  
+      */}
       setRepos(prev => prev.map(repo => repo.name === repoName ? { ...repo, contents } : repo));
       fetchBranches(repoName);
     }
@@ -262,7 +262,7 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
     };
     console.log('GITPULL handleSubmit request_data: ', requestData);
     try {
-      const response = await fetch(`${config.apiBaseUrl}/VS_code_autofill_bp`, {
+      const response = await fetch(`${config.apiBaseUrl}/groqAutofillCodeProject`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -324,18 +324,24 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
     if (expandedRepo !== repoName) return null;
     const branches = repoBranches[repoName] || [];
     return (
-      <select
-        className={styles.branchDropdown}
-        value={selectedBranches[repoName] || ''}
-        onChange={(e) => handleBranchSelect(repoName, e.target.value)}
-      >
-        <option value="" disabled>Select branch</option>
-        {branches.map(branch => (
-          <option key={branch.name} value={branch.name}>{branch.name}</option>
-        ))}
-      </select>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '8px' }}>
+        <select
+          className={styles.branchDropdown}
+          value={selectedBranches[repoName] || ''}
+          onChange={(e) => handleBranchSelect(repoName, e.target.value)}
+        >
+          <option value="" disabled>Select branch</option>
+          {branches.map(branch => (
+            <option key={branch.name} value={branch.name}>{branch.name}</option>
+          ))}
+        </select>
+        <p style={{ margin: 0 }}>
+          * Select 2-4 of the most relevant files for best results *
+        </p>
+      </div>
     );
   };
+  
   
   const handleBranchSelect = (repoName, branchName) => {
     setSelectedBranches(prev => ({
@@ -351,6 +357,15 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
   const renderTree = (repoName, items, currentPath = '') => {
     if (!items || items.length === 0) return null;
   
+    const prioritizedExtensions = [
+      '.js', '.ts', '.jsx', '.tsx', '.py', '.java', '.c', '.cpp', '.cs', '.rb', '.php', '.go', '.rs'
+    ];
+  
+    const isValidFile = (fileName) => {
+      const extension = '.' + fileName.split('.').pop().toLowerCase();
+      return prioritizedExtensions.includes(extension);
+    };
+  
     return (
       <ul className={styles.fileTree}>
         {items.map(item => {
@@ -360,6 +375,7 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
           const isSelected = selectedFiles[`${repoName}/${fullPath}`];
   
           if (item.type === 'dir') {
+            // Always render directories
             return (
               <li key={item.sha} className={styles.fileItem}>
                 <button
@@ -373,7 +389,8 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
                 {isExpanded && item.contents && renderTree(repoName, item.contents, fullPath)}
               </li>
             );
-          } else {
+          } else if (isValidFile(item.name)) {
+            // Only render files with valid extensions
             return (
               <li key={item.sha} className={styles.fileItem}>
                 <button
@@ -387,6 +404,8 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
               </li>
             );
           }
+          // If it's not a directory and not a valid file, don't render anything
+          return null;
         })}
       </ul>
     );
