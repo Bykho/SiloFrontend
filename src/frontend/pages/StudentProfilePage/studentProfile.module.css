@@ -267,4 +267,42 @@
     display: block;
     margin: 20px 0;
   }
+
+  .bigAddButton {
+    display: inline-block;
+    font-family: 'inconsolata';
+    font-weight: bolder; 
+    margin-right: 20px; /* Adjust margin to make buttons less wide */
+    margin-bottom: 10px;
+    margin-top: 10px; 
+    background: linear-gradient(135deg, rgb(30, 30, 30), rgb(27, 37, 51));
+    color: #D9D9D9;
+    border: 1px solid rgba(0, 89, 190, 0.539);
+    border-radius: 10px;
+    cursor: pointer;
+    height: 60px;
+    width: calc(100% / 2 - 30px); /* Adjusted calculation */
+    font-size: 18px;
+    margin-left: 20px; /* Adjust margin to make buttons less wide */
+    transition: background-color 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px; 
+  }
+  
+  .bigAddButton:hover {
+    background: linear-gradient(to bottom, #2c2c2c, #1655a8);
+    transition: background-color 0.3s ease;
+    border: 1px solid rgb(0, 156, 247);
+    color: white;
+  }
+  
+  .bigAddButton:focus {
+    outline: none;
+  }
+  
+  .bigAddButton:active {
+    transform: translateY(2px);
+  }
   
