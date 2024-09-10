@@ -163,8 +163,8 @@ const ProfileHeader = ({ userData, loading, error }) => {
           )}
         </div>
         <div className={styles.linksContainer}>
-          <button className={styles.contactMeButton} onClick={handleContactButton}> <IoMdMail /> Contact </button>
-          <button className={styles.linkButton} onClick={toggleResume}>View Resume</button>
+          {/* <button className={styles.contactMeButton} onClick={handleContactButton}> <IoMdMail /> Contact </button> */}
+          {/* <button className={styles.linkButton} onClick={toggleResume}>View Resume</button> */}
           {userData.github_link && renderLinkButton(userData.github_link, <FaGithub />)}
           {userData.personal_website && renderLinkButton(userData.personal_website, <FaGlobe />)}
           {userData.links && userData.links.map((link, index) => (
