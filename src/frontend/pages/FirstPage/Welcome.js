@@ -123,7 +123,7 @@ function Welcome() {
               </div>
             </nav>
             <div className={styles.ctaWrapper}>
-              <button className={styles.ctaButton} onClick={handleGetStarted}>Get Started</button>
+              <button className={styles.ctaButton} onClick={handleGetStarted}>Apply Now</button>
             </div>
           </header>
           <div className={styles.contentWrapper} ref={contentRef}>
