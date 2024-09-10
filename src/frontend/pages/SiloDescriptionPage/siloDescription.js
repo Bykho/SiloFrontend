@@ -1,6 +1,7 @@
 
 
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from './siloDescription.module.css';
 import GameOfLife from './GameOfLife';
 import UserSpiderPlot from '../../components/UserSpiderPlot';
@@ -12,6 +13,8 @@ function SiloDescription() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     setIsLoaded(true);
@@ -48,8 +51,8 @@ function SiloDescription() {
   };
 
   const handleCreateProjectClick = () => {
-    toggleModal(); // Open the modal instead of navigating
-  };
+      navigate('/studentProfile');
+    };
 
   return (
     <div className={styles.container}>
@@ -77,7 +80,7 @@ function SiloDescription() {
           className={`${styles.createButton} ${isLoaded ? styles.buttonLoaded : ''}`}
           onClick={handleCreateProjectClick}
         >
-          Analyze my Profile
+          Build my Profile
         </button>
       </div>
       

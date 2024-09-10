@@ -145,7 +145,7 @@ const ProfileHeader = ({ userData, loading, error }) => {
         <div className={styles.topSection}>
           <ProfileImage username={userData.username} size={'medium'} />
           <div className={styles.nameSection}>
-            <h1 className={styles.userName}>{userData.username}</h1>
+            <h1 className={styles.userName}>{userData.username} - Under Review </h1>
             <p className={styles.userInfo}>{userData.user_type} | {userData.university} | {userData.major} {userData.grad}</p>
           </div>
         </div>

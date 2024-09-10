@@ -5,9 +5,9 @@ const WaitingPage = () => {
   return (
     <div className={styles['waiting-page']}>
       <div className={styles['waiting-container']}>
-        <h1 className={styles['waiting-title']}>Locked Feature</h1>
+        <h1 className={styles['waiting-title']}>Profile Under Review.</h1>
         <p className={styles['waiting-message']}>
-          Please await acceptance for access.
+          Please await acceptance for access to this feature.
         </p>
         <div className={styles['waiting-advice']}>
           <p className={styles['advice-text']}>
