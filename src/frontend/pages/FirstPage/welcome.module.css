@@ -291,6 +291,11 @@
 }
 
 @media (max-width: 768px) {
+
+  .content{
+    min-height: calc(50vh - 90px);
+  }
+
   .title {
     font-size: 3rem;
   }
