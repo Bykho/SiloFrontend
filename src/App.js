@@ -21,6 +21,7 @@ import PublicProfile from './frontend/pages/PublicPortfolioPage/PublicProfile';
 import Welcome from './frontend/pages/FirstPage/Welcome';
 import WaitingPage from './frontend/pages/WaitingPage/WaitingPage';
 import JobsPage from './frontend/pages/JobsPage/JobsPage';
+import PointsPage from './frontend/pages/GoLivePage/PointsPage';
 import './App.css'; 
 
 import AddBlocPortfolio from './frontend/components/AddBlocPortfolio';
@@ -40,6 +41,7 @@ function App() {
           <Routes>
             <Route path="/welcome" element={<Welcome />} />
             <Route path="/launch" element={<GoLive />} />
+            <Route path="/points" element={<PointsPage />} />
             <Route path="/wait" element={<WaitingPage />} /> 
             <Route path="/siloDescription" element={<SiloDescription />} />
             <Route path="/login" element={<Login />} />
