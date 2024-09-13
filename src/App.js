@@ -45,15 +45,14 @@ function App() {
             <Route path="/wait" element={<WaitingPage />} /> 
             <Route path="/siloDescription" element={<SiloDescription />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/" element={<Welcome />} />
             <Route path="/SignUp" element={<SignUp />} />
-            <Route path="/GoLive" element={<GoLive />} />
             <Route path="/studentProfile" element={<ProtectedRoute component={Profile} />} />
             <Route path="/studentProfileEditor" element={<StudentProfileEditor />} />
             <Route path="/addBlockProject" element={<AddBlocPortfolio />} />
             <Route path="/GenDirectory" element={<ProtectedRoute component={GenDirectory} />} />
             <Route path="/profile/:id" element={<ProtectedRoute component={OtherStudentProfile} />} />
             <Route path="/public/:username/:user_id" element={<PublicProfile />} /> 
+            <Route path="/" element={<Welcome />} />
           </Routes>
         </div>
       </UserProvider>

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../contexts/UserContext';
-import GameOfLife from '../GoLivePage/GameOfLife';
+import GameOfLife from '../../components/GameOfLife';
 import styles from './SignUp.module.css';
 import config from '../../config';
 import SuggestedPortfolio from '../../components/SuggestedPortfolio';
