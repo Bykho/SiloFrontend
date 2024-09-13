@@ -39,6 +39,7 @@ function App() {
           <NavigationWithConditionalRender />
           <Routes>
             <Route path="/welcome" element={<Welcome />} />
+            <Route path="/launch" element={<GoLive />} />
             <Route path="/wait" element={<WaitingPage />} /> 
             <Route path="/siloDescription" element={<SiloDescription />} />
             <Route path="/login" element={<Login />} />

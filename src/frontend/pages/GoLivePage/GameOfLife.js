@@ -1,91 +1,146 @@
-// GameOfLife.js
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import styles from './GoLiveLandingPage.module.css';
+import config from '../../config';
+import GameOfLife from '../LoginPage/GameOfLife';
+import { IoEnter } from "react-icons/io5";
+import { FaCopy } from "react-icons/fa";
+import { IoClose } from "react-icons/io5";
+import ReferralProgressBar from './ReferralProgressBar';
 
-const GameOfLife = () => {
-  const canvasRef = useRef(null);
+function GoLiveLanding() {
+  const [email, setEmail] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const navigate = useNavigate();
+  const [copied, setCopied] = useState(false);
+  const referralLinkRef = useRef(null);
+  const [referralCode, setReferralCode] = useState('');
+  const [showReferral, setShowReferral] = useState(false);
+  const location = useLocation();
+  const [referralCount, setReferralCount] = useState(0);
+
+  const handleEmail = (e) => setEmail(e.target.value);
+  const handleFullName = (e) => setFullName(e.target.value);
+
+  const copyReferralLink = () => {
+    referralLinkRef.current.select();
+    document.execCommand('copy');
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const closeReferral = () => {
+    setShowReferral(false);
+  };
+
+  const handleRefClick = () => {
+    setShowReferral(false);
+    navigate("/points")  // Close the modal first
+  };
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    const resolution = 10;
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    const COLS = Math.floor(canvas.width / resolution);
-    const ROWS = Math.floor(canvas.height / resolution);
-
-    let grid = buildGrid(COLS, ROWS);
-
-    function buildGrid(cols, rows) {
-      return new Array(cols).fill(null)
-        .map(() => new Array(rows).fill(null)
-          .map(() => Math.floor(Math.random() * 2)));
+    const params = new URLSearchParams(location.search);
+    const refCode = params.get('ref');
+    if (refCode) {
+      console.log("Referred by:", refCode);
     }
+  }, [location]);
 
-    function nextGen(grid) {
-      const nextGen = grid.map(arr => [...arr]);
+  const handleWaitlistSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
 
-      for (let col = 0; col < grid.length; col++) {
-        for (let row = 0; row < grid[col].length; row++) {
-          const cell = grid[col][row];
-          let numNeighbors = 0;
-          for (let i = -1; i < 2; i++) {
-            for (let j = -1; j < 2; j++) {
-              if (i === 0 && j === 0) {
-                continue;
-              }
-              const x_cell = col + i;
-              const y_cell = row + j;
+    const params = new URLSearchParams(location.search);
+    const referredBy = params.get('ref');
 
-              if (x_cell >= 0 && y_cell >= 0 && x_cell < COLS && y_cell < ROWS) {
-                const currentNeighbor = grid[col + i][row + j];
-                numNeighbors += currentNeighbor;
-              }
-            }
-          }
+    try {
+      const response = await fetch(`${config.apiBaseUrl}/joinWaitingList`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ 
+          email, 
+          full_name: fullName,
+          referred_by: referredBy
+        })
+      });
 
-          if (cell === 1 && numNeighbors < 2) {
-            nextGen[col][row] = 0;
-          } else if (cell === 1 && numNeighbors > 3) {
-            nextGen[col][row] = 0;
-          } else if (cell === 0 && numNeighbors === 3) {
-            nextGen[col][row] = 1;
-          }
-        }
+      const data = await response.json();
+      if (response.ok) {
+        setSuccess('Successfully Added to Waitlist!');
+        setReferralCode(data.referral_code);
+        setReferralCount(data.referral_count || 0);
+        setShowReferral(true);
+      } else {
+        setError(data.error || 'Failed to add to waitlist');
       }
-      return nextGen;
+    } catch (error) {
+      setError(error.message || 'Failed to add to waitlist');
     }
+  };
 
-    function render(grid) {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = 'rgb(30, 30, 30)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      for (let col = 0; col < grid.length; col++) {
-        for (let row = 0; row < grid[col].length; row++) {
-          const cell = grid[col][row];
-          ctx.beginPath();
-          ctx.rect(col * resolution, row * resolution, resolution, resolution);
-          if (cell) {
-            ctx.strokeStyle = '#B9D9EB';
-            ctx.lineWidth = 1;
-            ctx.stroke();
-          }
-        }
-      }
-    }
 
-    function update() {
-      grid = nextGen(grid);
-      render(grid);
-    }
+  return (
+    <div style={{ position: 'relative', zIndex: 0 }}>
+      <GameOfLife />
+      <div className={styles.bigContainer}>
+        <div className={styles.container}>
+          <h1 className={styles.title}>Join The Top Engineering Talent Pool</h1>
+          <h2 className={styles.subtitle}>Get Notified to Secure Your Spot in our Fall '24 Cohort!</h2>
+          <form onSubmit={handleWaitlistSubmit} className={styles.form}>
+            <div className={styles.inputContainer}>
+              <input 
+                type="text" 
+                value={email} 
+                onChange={handleEmail} 
+                placeholder="Personal Email"
+                className={styles.inputText}
+              />
+            </div>
+            <div className={styles.inputContainer}>
+              <input 
+                type="text" 
+                value={fullName} 
+                onChange={handleFullName} 
+                placeholder="Full Name"
+                className={styles.inputText}
+              />
+            </div>
+            <button type="submit" className={styles.submitButton}><IoEnter /> Submit</button>
+          </form>
+          {error && <p className={styles.errorText}>{error}</p>}
+        </div>
+        <div className={`${styles.overlay} ${showReferral ? styles.show : ''}`} onClick={closeReferral}></div>
+        <div className={`${styles.referralSection} ${showReferral ? styles.show : ''}`}>
+          <button onClick={closeReferral} className={styles.closeButton}><IoClose /></button>
+          <p className={styles.successText}>{success}</p>
+          <h3 className={styles.referralTitle}>Refer Talent</h3>
+          <p className={styles.referralExplainer}>Share this link! Each applicant who joins will earn you points:</p>
+          <div className={styles.referralLinkContainer}>
+            <input
+              type="text"
+              readOnly
+              value={`${window.location.origin}/launch?ref=${referralCode}`}
+              ref={referralLinkRef}
+              className={styles.referralLink}
+            />
+            <button onClick={copyReferralLink} className={styles.copyButton}>
+              <FaCopy /> {copied ? 'Copied!' : 'Copy'}
+            </button>
+          </div>
+          <button className={styles.refButton} onClick={handleRefClick}> View Referral Rewards </button>
+        </div>
+        <div className={styles.buttonContainer}>
+          <button onClick={() => navigate('/')} className={styles.backButton}>What is Silo?</button>
+          <button onClick={() => navigate('/points')} className={styles.backButton}> View Referral Rewards </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
-    render(grid);
-    const intervalId = setInterval(update, 100);
-
-    return () => clearInterval(intervalId);
-  }, []);
-
-  return <canvas ref={canvasRef} style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: -1 }} />;
-};
-
-export default GameOfLife;
+export default GoLiveLanding;

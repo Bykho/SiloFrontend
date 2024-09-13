@@ -1,0 +1,69 @@
+.container {
+  margin: 2rem 2rem;
+  padding: 1rem 0;
+  position: relative;
+}
+
+.progressBarContainer {
+  height: 0.25rem;
+  background-color: #3C3C3C;
+  border-radius: 9999px;
+  position: relative;
+}
+
+.progressBar {
+  height: 100%;
+  background-color: #6da6e7;
+  border-radius: 9999px;
+  transition: width 0.5s ease-out;
+}
+
+.milestones {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+}
+
+.milestone {
+  position: absolute;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.milestoneIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #3C3C3C;
+  color: #A2A2A2;
+  border: 2px solid #1E1E1E;
+  font-size: 0.75rem;
+  transition: all 0.3s ease;
+  position: relative;
+  top: -0.625rem;
+}
+
+.milestoneIcon.achieved {
+  background-color: #6da6e7;
+  color: #1E1E1E;
+}
+
+.milestoneLabel {
+  font-size: 0.7rem;
+  margin-bottom: .5rem;
+  text-align: center;
+  color: #E0E0E0;
+  white-space: nowrap;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+}
