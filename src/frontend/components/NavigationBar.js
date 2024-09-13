@@ -89,21 +89,21 @@ const NavigationBar = () => {
           <a href="/siloDescription" className={styles.siloButton} onClick={() => handleLinkClick('other')}>Silo_Repo</a>
           <div>
             <a
-              href="/feed"
+              href="/wait"
               className={`${styles.button} ${activeLink === 'feed' ? styles.clickedButton : ''}`}
             >
              <FaLock className={styles.icon} /> Community
             </a>
 
             <a
-              href="/jobs"
+              href="/wait"
               className={`${styles.button} ${activeLink === 'jobs' ? styles.clickedButton : ''}`}
             >
               <FaLock className={styles.icon} /> Jobs
             </a>
 
             <a
-              href="/GenDirectory"
+              href="/wait"
               className={`${styles.button} ${activeLink === 'find' ? styles.clickedButton : ''}`}
             >
               <FaLock className={styles.icon} /> Members
