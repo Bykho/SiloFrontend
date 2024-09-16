@@ -148,9 +148,11 @@ const ProfileHeader = ({ userData, loading, error }) => {
             <h1 className={styles.userName}>{userData.username}</h1>
             <p className={styles.userInfo}>{userData.user_type} | {userData.university} | {userData.major} {userData.grad}</p>
           </div>
+          {/*
           {!isProfilePage && (
             <button className={styles.analyzeButton} onClick={toggleRating}> <TbAnalyze />Analyze Me</button>
           )}
+          */}
         </div>
         <div className={styles.tagsContainer}>
           {renderTagsPreview(userData.skills, 'skill')}
