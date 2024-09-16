@@ -18,6 +18,7 @@ import { FaCrown } from "react-icons/fa";
 import LoadingIndicator from '../../components/LoadingIndicator';
 import {CircularProgress}from '@mui/material';
 
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
 
 const Feed = () => {
@@ -42,29 +43,40 @@ const Feed = () => {
   const [upvotedProjects, setUpvotedProjectIds] = useState([]);
 
 
-  useEffect(() => {
-    const fetchProjects = async () => {
-      setLoading(true);
-      setError('');
-      try {
-        const token = localStorage.getItem('token');
-        const response = await fetch(`${config.apiBaseUrl}/returnFeed`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-        if (!response.ok) {
-          throw new Error('Failed to fetch projects');
-        }
-        const returnedProjects = await response.json();
-        setProjects(returnedProjects);
-        setLoading(false);
-      } catch (err) {
-        setError('Failed to fetch projects');
-        setLoading(false);
+  // Highlight: New state for pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
+  const [totalPages, setTotalPages] = useState(1);
+
+  const fetchProjects = async (page = 1) => {
+    setLoading(true);
+    setError('');
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${config.apiBaseUrl}/returnFeed`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ page, per_page: perPage })
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch projects');
       }
-    };
+      const data = await response.json();
+      setProjects(data.projects);
+      setTotalPages(data.total_pages);
+      setCurrentPage(data.page);
+      setLoading(false);
+    } catch (err) {
+      setError('Failed to fetch projects');
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchProjects(currentPage);
 
     const fetchUpvotes = async () => {
       const token = localStorage.getItem('token');
@@ -91,12 +103,10 @@ const Feed = () => {
         console.error('Error fetching upvotes:', error);
       }
     };
-
-    fetchProjects();
     if (user) {
       fetchUpvotes();
     }
-  }, [user]);
+  }, [user, currentPage, perPage]);
 
   useEffect(() => {
     const fetchUpvotedProjects = async () => {
@@ -229,9 +239,13 @@ const Feed = () => {
   //  console.log('FEED.js, here is filtered: ', filteredProjects)
   //}, [filteredProjects])
 
-  
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
+
   const handleSearch = () => {
     setSearchText(inputText);
+    setCurrentPage(1);  // Reset to first page when searching
   };
 
   const handleInputChange = (e) => {
@@ -329,11 +343,12 @@ const Feed = () => {
           </div>
           <div className={styles.feedContent}>
             {feedStyle === 'home' || feedStyle === 'popular' || feedStyle === 'upvoted' ? (
-              loading ? (
-                <div className={styles.loadingContainer}>
-                  <CircularProgress size={100} thickness={4} />
-                </div>
-              ) : (
+            loading ? (
+              <div className={styles.loadingContainer}>
+                <CircularProgress size={100} thickness={4} />
+              </div>
+            ) : (
+              <>
                 <Tagged
                   filteredProjects={filteredProjects}
                   loading={loading}
@@ -341,7 +356,26 @@ const Feed = () => {
                   userUpvotes={userUpvotes}
                   setUserUpvotes={setUserUpvotes}
                 />
-              )
+                {/* Highlight: New pagination controls */}
+                <div className={styles.paginationControls}>
+                  <button 
+                    onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
+                    disabled={currentPage === 1}
+                    className={styles.paginationButton}
+                  >
+                    <FaChevronLeft />
+                  </button>
+                  <span>{currentPage} / {totalPages}</span>
+                  <button 
+                    onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
+                    disabled={currentPage === totalPages}
+                    className={styles.paginationButton}
+                  >
+                    <FaChevronRight />
+                  </button>
+                </div>
+              </>
+            )
             ) : feedStyle === 'groupView' && membersShow ? (
               <NewGroupMembers group={activeGroup} />
             ) : feedStyle === 'groupView' && projectShow ? (
