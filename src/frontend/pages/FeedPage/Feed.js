@@ -45,7 +45,7 @@ const Feed = () => {
 
   // Highlight: New state for pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const [perPage, setPerPage] = useState(10);
+  const [perPage, setPerPage] = useState(20);
   const [totalPages, setTotalPages] = useState(1);
 
   const fetchProjects = async (page = 1) => {
