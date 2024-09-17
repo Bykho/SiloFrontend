@@ -107,7 +107,7 @@
   margin-bottom: 20px;
 }
 
-.saveButton {
+.saveButton, .autofillButton {
   background-color: #6ca3c0;
   color: #1e1e1e;
   padding: 10px 20px;
@@ -116,9 +116,10 @@
   cursor: pointer;
   font-size: 16px;
   transition: background-color 0.3s ease;
+  margin-top: 10px;
 }
 
-.saveButton:hover {
+.saveButton:hover, .autofillButton:hover {
   background-color: #85bcdb;
 }
 
