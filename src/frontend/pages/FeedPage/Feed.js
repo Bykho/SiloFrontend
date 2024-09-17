@@ -40,6 +40,7 @@ const Feed = () => {
   const searchInputRef = useRef(null);
   const navigate = useNavigate();
   const [upvotedProjects, setUpvotedProjectIds] = useState([]);
+  const [suggestedProjects, setSuggestedProjects] = useState([]);
 
 
   useEffect(() => {
@@ -97,6 +98,35 @@ const Feed = () => {
       fetchUpvotes();
     }
   }, [user]);
+
+  useEffect(() => {
+    const fetchSuggestedProjects = async () => {
+      if (feedStyle === 'suggested') {
+        setLoading(true);
+        setError('');
+        try {
+          const token = localStorage.getItem('token');
+          const response = await fetch(`${config.apiBaseUrl}/getPersonalizedFeed`, {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          });
+          if (!response.ok) {
+            throw new Error('Failed to fetch suggested projects');
+          }
+          const returnedProjects = await response.json();
+          setSuggestedProjects(returnedProjects);
+          setLoading(false);
+        } catch (err) {
+          setError('Failed to fetch suggested projects');
+          setLoading(false);
+        }
+      }
+    };
+  
+    fetchSuggestedProjects();
+  }, [feedStyle]);
 
   useEffect(() => {
     const fetchUpvotedProjects = async () => {
@@ -202,6 +232,9 @@ const Feed = () => {
         return false;
       });
     }
+    else if (feedStyle === 'suggested') {
+      filtered = suggestedProjects;
+    }
   
     if (feedStyle === 'popular') {
       const now = new Date();
@@ -222,7 +255,7 @@ const Feed = () => {
     }
 
 
-  }, [projects, searchText, feedStyle, activeGroup]);
+  }, [projects, searchText, feedStyle, activeGroup, suggestedProjects]);
 
 
   //useEffect(() => {
@@ -246,6 +279,9 @@ const Feed = () => {
 
     if (feedStyle === 'upvoted') {
       return 'Upvoted Projects';
+    }
+    if (feedStyle === 'suggested') {
+      return 'Projects You Might Like';
     }
 
       return feedStyle.charAt(0).toUpperCase() + feedStyle.slice(1);
