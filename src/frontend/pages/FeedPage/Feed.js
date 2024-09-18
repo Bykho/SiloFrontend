@@ -412,6 +412,7 @@ const Feed = () => {
                   <CircularProgress size={100} thickness={4} />
                 </div>
               ) : (
+                <>
                 <Tagged
                   filteredProjects={filteredProjects}
                   loading={loading}
@@ -419,7 +420,6 @@ const Feed = () => {
                   userUpvotes={userUpvotes}
                   setUserUpvotes={setUserUpvotes}
                 />
-                {/* Highlight: New pagination controls */}
                 <div className={styles.paginationControls}>
                   <button 
                     onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
