@@ -21,7 +21,17 @@ const JobsPage = () => {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch(`${config.apiBaseUrl}/search_jobs`);
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${config.apiBaseUrl}/search_jobs`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          }
+        });
+        if (!response.ok) {
+          throw new Error('Failed to fetch jobs');
+        }
         const data = await response.json();
         if (!Array.isArray(data)) {
           throw new Error('Received invalid data format');
@@ -42,7 +52,7 @@ const JobsPage = () => {
         setIsLoading(false);
       }
     };
-
+  
     fetchJobs();
   }, []);
   
