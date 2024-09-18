@@ -364,7 +364,7 @@ const Feed = () => {
             </div>
           </div>
           <div className={styles.feedContent}>
-            {feedStyle === 'home' || feedStyle === 'popular' || feedStyle === 'upvoted' ? (
+            {feedStyle === 'home' || feedStyle === 'popular' || feedStyle === 'upvoted' || feedStyle === 'suggested' ? (
               loading ? (
                 <div className={styles.loadingContainer}>
                   <CircularProgress size={100} thickness={4} />
