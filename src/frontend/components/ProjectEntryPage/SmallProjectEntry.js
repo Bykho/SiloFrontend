@@ -17,10 +17,10 @@ import 'highlight.js/styles/atom-one-dark.css';
 const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes }) => {
   const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
+  const { user } = useUser();
   const [isExpanded, setIsExpanded] = useState(false);
   const [showFullContent, setShowFullContent] = useState(false);
   const [localProject, setLocalProject] = useState(project);
-  const { user } = useUser();
   const [localUser, setLocalUser] = useState(user);
   const modalRef = useRef(null);
   const descriptionRef = useRef(null);
@@ -29,6 +29,8 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
   const [localUpvotes, setLocalUpvotes] = useState(userUpvotes);
   const VISIBLE_TAGS = 3;
 
+
+  
   const [comments, setComments] = useState(() => {
     try {
       return JSON.parse(JSON.stringify(project.comments));

@@ -49,7 +49,13 @@ const Feed = () => {
   const [perPage, setPerPage] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
 
+  const clearProjects = () => {
+    setProjects([]);
+    setFilteredProjects([]);
+  };
+
   const fetchProjects = async (page = 1) => {
+    clearProjects()
     setLoading(true);
     setError('');
     try {
@@ -111,6 +117,7 @@ const Feed = () => {
         });
         const data = await response.json();
         if (response.ok) {
+          clearProjects()
           setUserUpvotes(data.upvotes);
         } else {
           console.error('Failed to fetch upvotes:', data.message);
@@ -142,6 +149,7 @@ const Feed = () => {
           if (!response.ok) {
             throw new Error('Failed to fetch suggested projects');
           }
+          clearProjects()
           const returnedProjects = await response.json();
           setSuggestedProjects(returnedProjects);
           setLoading(false);
@@ -296,6 +304,7 @@ const Feed = () => {
   //}, [filteredProjects])
 
   const handlePageChange = (newPage) => {
+    clearProjects();
     setCurrentPage(newPage);
     fetchProjects(newPage);  // Fetch projects for the new page
   };
@@ -420,23 +429,25 @@ const Feed = () => {
                   userUpvotes={userUpvotes}
                   setUserUpvotes={setUserUpvotes}
                 />
-                <div className={styles.paginationControls}>
-                  <button 
-                    onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
-                    disabled={currentPage === 1}
-                    className={styles.paginationButton}
-                  >
-                    <FaChevronLeft />
-                  </button>
-                  <span>{currentPage} / {totalPages}</span>
-                  <button 
-                    onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
-                    disabled={currentPage === totalPages}
-                    className={styles.paginationButton}
-                  >
-                    <FaChevronRight />
-                  </button>
-                </div>
+                {!loading && (
+                  <div className={styles.paginationControls}>
+                    <button 
+                      onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
+                      disabled={currentPage === 1}
+                      className={styles.paginationButton}
+                    >
+                      <FaChevronLeft />
+                    </button>
+                    <span>{currentPage} / {totalPages}</span>
+                    <button 
+                      onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
+                      disabled={currentPage === totalPages}
+                      className={styles.paginationButton}
+                    >
+                      <FaChevronRight />
+                    </button>
+                  </div>
+                )}
               </>
             )
             ) : feedStyle === 'groupView' && membersShow ? (
