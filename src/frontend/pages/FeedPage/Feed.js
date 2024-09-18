@@ -45,7 +45,7 @@ const Feed = () => {
 
   // Highlight: New state for pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const [perPage, setPerPage] = useState(20);
+  const [perPage, setPerPage] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
 
   const fetchProjects = async (page = 1) => {
@@ -53,21 +53,34 @@ const Feed = () => {
     setError('');
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${config.apiBaseUrl}/returnFeed`, {
+      let endpoint = '/returnFeed';  // Default to home feed
+      let body = { page, per_page: perPage };
+  
+      if (feedStyle === 'popular') {
+        endpoint = '/popularFeed';
+      } else if (feedStyle === 'upvoted') {
+        endpoint = '/returnProjects';
+        body = userUpvotes; // Send the array of upvote IDs instead of pagination data
+      }
+  
+      const response = await fetch(`${config.apiBaseUrl}${endpoint}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ page, per_page: perPage })
+        body: JSON.stringify(body)
       });
+  
       if (!response.ok) {
         throw new Error('Failed to fetch projects');
       }
       const data = await response.json();
-      setProjects(data.projects);
-      setTotalPages(data.total_pages);
-      setCurrentPage(data.page);
+      setProjects(data.projects || data); // Handle both paginated and non-paginated responses
+      if (data.total_pages) {
+        setTotalPages(data.total_pages);
+        setCurrentPage(data.page);
+      }
       setLoading(false);
     } catch (err) {
       setError('Failed to fetch projects');
@@ -76,8 +89,10 @@ const Feed = () => {
   };
 
   useEffect(() => {
-    fetchProjects(currentPage);
-
+    if (feedStyle === 'home' || feedStyle === 'popular' || feedStyle === 'upvoted') {
+      fetchProjects(currentPage);  // Fetch projects when the feed style is 'home', 'popular', or 'upvoted'
+    }
+  
     const fetchUpvotes = async () => {
       const token = localStorage.getItem('token');
       if (!token) {
@@ -103,10 +118,12 @@ const Feed = () => {
         console.error('Error fetching upvotes:', error);
       }
     };
+    
     if (user) {
       fetchUpvotes();
     }
-  }, [user, currentPage, perPage]);
+  }, [user, currentPage, perPage, feedStyle]);  // Add feedStyle as a dependency
+  
 
   useEffect(() => {
     const fetchUpvotedProjects = async () => {
@@ -138,10 +155,15 @@ const Feed = () => {
 
   useEffect(() => {
     setFilteredProjects([]);  // Clear filteredProjects whenever feedStyle changes
+    setCurrentPage(1);  // Reset to first page when changing feed style
+  
     if (feedStyle === 'groupView' && activeGroup) {
       fetchGroupProjects();
+    } else if (feedStyle === 'home' || feedStyle === 'popular' || feedStyle === 'upvoted') {
+      fetchProjects(1);  // Fetch projects for the new feed style, resetting to page 1
     }
   }, [feedStyle, activeGroup]);
+  
     
   const fetchGroupProjects = async () => {
     setLoading(true);
@@ -218,7 +240,8 @@ const Feed = () => {
       filtered = filtered.map(project => {
         const createdAt = new Date(project.created_at);
         const hoursElapsed = (now - createdAt) / (1000 * 60 * 60);
-        const score = (project.upvotes ? project.upvotes.length : 0) / hoursElapsed;
+        //const score = (project.upvotes ? project.upvotes.length : 0) / hoursElapsed;
+        const score = (project.upvotes ? project.upvotes.length : 0)
         return { ...project, score };
       }).sort((a, b) => b.score - a.score);
     }
@@ -241,6 +264,7 @@ const Feed = () => {
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
+    fetchProjects(newPage);  // Fetch projects for the new page
   };
 
   const handleSearch = () => {
@@ -316,7 +340,10 @@ const Feed = () => {
         <div className={styles.feedSidebar}>
           <CombinedFeedSidebar
             feedStyle={feedStyle}
-            setFeedStyle={setFeedStyle}
+            setFeedStyle={(newStyle) => {
+              setFeedStyle(newStyle);
+              setCurrentPage(1);  // Reset to first page when changing feed style
+            }}
             activeGroup={activeGroup}
             setActiveGroup={setActiveGroup}
           />
