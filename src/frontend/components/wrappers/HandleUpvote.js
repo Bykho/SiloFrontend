@@ -71,8 +71,8 @@ const HandleUpvote = (WrappedComponent) => {
     };
 
     const findUpvoteOverlap = (project, userUpvotes) => {
-      console.log('findUpvoteOverlap: project', project)
-      console.log('findUpvoteOverlap: userUpvotes', userUpvotes)
+      //console.log('findUpvoteOverlap: project', project)
+      //console.log('findUpvoteOverlap: userUpvotes', userUpvotes)
       if (!user || !Array.isArray(userUpvotes) || !Array.isArray(project.upvotes)) {
         return false;
       }
@@ -80,9 +80,9 @@ const HandleUpvote = (WrappedComponent) => {
     };
 
     const UpvoteButton = ({ project, setProject, passedUser, setPassedUser, userUpvotes, setUserUpvotes }) => {
-      useEffect(() => {
-        console.log('HandleUpvote b4 findUpvoteOverlap userUpvotes: ', userUpvotes);  // Correct placement of useEffect
-      }, [userUpvotes]);
+      //useEffect(() => {
+        //console.log('HandleUpvote b4 findUpvoteOverlap userUpvotes: ', userUpvotes);  // Correct placement of useEffect
+      //}, [userUpvotes]);
 
       return (
         <div className={styles.upvoteButtonBox}>

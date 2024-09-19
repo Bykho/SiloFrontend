@@ -16,8 +16,7 @@ import { FaRegListAlt } from "react-icons/fa";
 import { GoCommentDiscussion } from "react-icons/go";
 import { FaCrown } from "react-icons/fa";
 import LoadingIndicator from '../../components/LoadingIndicator';
-import {CircularProgress}from '@mui/material';
-
+import { CircularProgress } from '@mui/material';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
 
@@ -43,8 +42,6 @@ const Feed = () => {
   const [upvotedProjects, setUpvotedProjectIds] = useState([]);
   const [suggestedProjects, setSuggestedProjects] = useState([]);
 
-
-  // Highlight: New state for pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
@@ -55,51 +52,97 @@ const Feed = () => {
   };
 
   const fetchProjects = async (page = 1) => {
-    clearProjects()
+    console.log('opened fetch projects')
+    clearProjects();
     setLoading(true);
     setError('');
-    try {
-      const token = localStorage.getItem('token');
-      let endpoint = '/returnFeed';  // Default to home feed
-      let body = { page, per_page: perPage };
-  
-      if (feedStyle === 'popular') {
+    const token = localStorage.getItem('token');
+    
+    let endpoint = '/returnFeed'; // Default to home feed
+    let body = { page, per_page: perPage };
+    let method = 'POST'; // Default method is POST
+    let headers = {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    }; // Default headers
+    
+    switch (feedStyle) {
+      case 'popular':
         endpoint = '/popularFeed';
-      } else if (feedStyle === 'upvoted') {
+        break;
+      case 'upvoted':
         endpoint = '/returnProjects';
-        body = userUpvotes; // Send the array of upvote IDs instead of pagination data
-      }
+        body = userUpvotes; // Send upvotes for 'upvoted' feed style
+        break;
+      case 'suggested':
+        console.log('opened the suggested fetch feed')
+        endpoint = '/getPersonalizedFeed';
+        method = 'GET'; // Use GET for suggested feed
+        body = null; // No body for GET requests
+        // Keep existing headers, just remove Content-Type since GET does not need it
+        headers = { 'Authorization': `Bearer ${token}` };
+        break;
+      default:
+        break; // 'home' defaults to the base endpoint
+    }
+    
+    try {
+      const options = {
+        method,
+        headers,
+        ...(method === 'POST' && { body: JSON.stringify(body) })
+      };
+      
+      const response = await fetch(`${config.apiBaseUrl}${endpoint}`, options);
   
-      const response = await fetch(`${config.apiBaseUrl}${endpoint}`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(body)
-      });
+      if (!response.ok) throw new Error('Failed to fetch projects');
   
-      if (!response.ok) {
-        throw new Error('Failed to fetch projects');
-      }
       const data = await response.json();
-      setProjects(data.projects || data); // Handle both paginated and non-paginated responses
-      if (data.total_pages) {
-        setTotalPages(data.total_pages);
-        setCurrentPage(data.page);
+      setProjects(data.projects || data);
+      if (feedStyle !== 'suggested') {
+        setTotalPages(data.total_pages || 1);
+        setCurrentPage(data.page || page);
       }
-      setLoading(false);
+      setLoading(false);  
     } catch (err) {
       setError('Failed to fetch projects');
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    if (feedStyle === 'home' || feedStyle === 'popular' || feedStyle === 'upvoted') {
-      fetchProjects(currentPage);  // Fetch projects when the feed style is 'home', 'popular', or 'upvoted'
-    }
+  const fetchGroupProjects = async () => {
+    setLoading(true);
+    setError('');
+
+    if (activeGroup) {
+      const group_project_ids = activeGroup.projects;
+      
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${config.apiBaseUrl}/returnProjectsFromIds`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ projectIds: group_project_ids }),
+        });
   
+        if (!response.ok) {
+          throw new Error('Failed to fetch projects');
+        }
+  
+        const returnedProjects = await response.json();
+        setFilteredProjects(returnedProjects);
+        setLoading(false);
+      } catch (err) {
+        setError('Failed to fetch projects');
+        setLoading(false);
+      }
+    }
+  };
+
+  useEffect(() => {
     const fetchUpvotes = async () => {
       const token = localStorage.getItem('token');
       if (!token) {
@@ -117,7 +160,6 @@ const Feed = () => {
         });
         const data = await response.json();
         if (response.ok) {
-          clearProjects()
           setUserUpvotes(data.upvotes);
         } else {
           console.error('Failed to fetch upvotes:', data.message);
@@ -126,111 +168,24 @@ const Feed = () => {
         console.error('Error fetching upvotes:', error);
       }
     };
-    
-    if (user) {
-      fetchUpvotes();
-    }
-  }, [user, currentPage, perPage, feedStyle]);  // Add feedStyle as a dependency
-  
 
-  useEffect(() => {
-    const fetchSuggestedProjects = async () => {
-      if (feedStyle === 'suggested') {
-        setLoading(true);
-        setError('');
-        try {
-          const token = localStorage.getItem('token');
-          const response = await fetch(`${config.apiBaseUrl}/getPersonalizedFeed`, {
-            method: 'GET',
-            headers: {
-              'Authorization': `Bearer ${token}`,
-            },
-          });
-          if (!response.ok) {
-            throw new Error('Failed to fetch suggested projects');
-          }
-          clearProjects()
-          const returnedProjects = await response.json();
-          setSuggestedProjects(returnedProjects);
-          setLoading(false);
-        } catch (err) {
-          setError('Failed to fetch suggested projects');
-          setLoading(false);
-        }
+    const fetchAllData = async () => {
+      if (!user) {
+        console.log('User is null, skipping fetch');
+        return; // Skip the fetch if user is null
       }
-    };
-  
-    fetchSuggestedProjects();
-  }, [feedStyle]);
 
-  useEffect(() => {
-    const fetchUpvotedProjects = async () => {
-      if (user && user.upvotes && user.upvotes.length > 0) {
-        try {
-          const token = localStorage.getItem('token');
-          const response = await fetch(`${config.apiBaseUrl}/returnProjects`, {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(user.upvotes),
-          });
-          if (!response.ok) {
-            throw new Error('Failed to fetch upvoted projects');
-          }
-          const data = await response.json();
-          console.log("list of projects?: ", data); 
-          setUpvotedProjectIds(data);
-        } catch (error) {
-          console.error('Error fetching upvoted projects:', error);
-        }
+      await fetchUpvotes();  // Fetch user upvotes only if the user is authenticated
+
+      if (feedStyle === 'groupView' && activeGroup) {
+        await fetchGroupProjects(); // Fetch group projects if the user is in group view
+      } else {
+        await fetchProjects(currentPage);  // Fetch projects for home, popular, upvoted, or suggested feed styles
       }
     };
 
-    fetchUpvotedProjects();
-  }, [user]);
-
-  useEffect(() => {
-    setFilteredProjects([]);  // Clear filteredProjects whenever feedStyle changes
-    setCurrentPage(1);  // Reset to first page when changing feed style
-  
-    if (feedStyle === 'groupView' && activeGroup) {
-      fetchGroupProjects();
-    } else if (feedStyle === 'home' || feedStyle === 'popular' || feedStyle === 'upvoted') {
-      fetchProjects(1);  // Fetch projects for the new feed style, resetting to page 1
-    }
-  }, [feedStyle, activeGroup]);
-  
-    
-  const fetchGroupProjects = async () => {
-    setLoading(true);
-    setError('');
-    if (activeGroup) {
-      const group_project_ids = activeGroup.projects;
-      try {
-        const token = localStorage.getItem('token');
-        const response = await fetch(`${config.apiBaseUrl}/returnProjectsFromIds`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ projectIds: group_project_ids })
-        });
-        if (!response.ok) {
-          throw new Error('Failed to fetch projects');
-        }
-        const returnedProjects = await response.json();
-        setFilteredProjects(returnedProjects);
-        setLoading(false);
-      } catch (err) {
-        setError('Failed to fetch projects');
-        setLoading(false);
-      }
-    }
-  };
-
+    fetchAllData();
+  }, [user, currentPage, feedStyle, activeGroup]); // Combined dependencies
 
   useEffect(() => {
     if (location.state && location.state.tag) {
@@ -248,9 +203,9 @@ const Feed = () => {
 
   useEffect(() => {
     let filtered = projects;
-    console.log('filtrered test: ', filtered); 
+    console.log('filtered test: ', filtered); 
   
-    if (feedStyle === 'home' || feedStyle === 'popular' || feedStyle === 'upvoted') {
+    if (feedStyle === 'home' || feedStyle === 'popular' || feedStyle === 'upvoted' || feedStyle === 'suggested') {
       filtered = projects.filter(project => {
         const searchTextLower = searchText.toLowerCase();
         if (project.projectDescription.toLowerCase().includes(searchTextLower)) {
@@ -272,36 +227,19 @@ const Feed = () => {
         return false;
       });
     }
-    else if (feedStyle === 'suggested') {
-      filtered = suggestedProjects;
-    }
   
     if (feedStyle === 'popular') {
-      const now = new Date();
       filtered = filtered.map(project => {
-        const createdAt = new Date(project.created_at);
-        const hoursElapsed = (now - createdAt) / (1000 * 60 * 60);
-        //const score = (project.upvotes ? project.upvotes.length : 0) / hoursElapsed;
-        const score = (project.upvotes ? project.upvotes.length : 0)
+        const score = (project.upvotes ? project.upvotes.length : 0);
         return { ...project, score };
       }).sort((a, b) => b.score - a.score);
     }
-
-    if (feedStyle === 'upvoted') {
-      filtered = upvotedProjects;
-    }
-
+    
     if (!activeGroup || feedStyle !== 'groupView') {
       setFilteredProjects(filtered);
     }
-
-
-  }, [projects, searchText, feedStyle, activeGroup, suggestedProjects]);
-
-
-  //useEffect(() => {
-  //  console.log('FEED.js, here is filtered: ', filteredProjects)
-  //}, [filteredProjects])
+  
+  }, [projects, searchText, feedStyle, activeGroup]);
 
   const handlePageChange = (newPage) => {
     clearProjects();
@@ -323,15 +261,13 @@ const Feed = () => {
     if (feedStyle === 'groupView' && activeGroup) {
       return activeGroup.name;
     }
-
     if (feedStyle === 'upvoted') {
       return 'Upvoted Projects';
     }
     if (feedStyle === 'suggested') {
       return 'Projects You Might Like';
     }
-
-      return feedStyle.charAt(0).toUpperCase() + feedStyle.slice(1);
+    return feedStyle.charAt(0).toUpperCase() + feedStyle.slice(1);
   };
 
   const updateGroupProjects = (newProjects) => {
@@ -340,19 +276,18 @@ const Feed = () => {
       projects: [...prevGroup.projects, ...newProjects],
     }));
   };
-  
+
   return (
     <div className={styles.parentContainer}>
-    <div className={styles.headerBox}>
+      <div className={styles.headerBox}>
         <h2>{getHeaderText()}</h2>
         {feedStyle === 'groupView' && activeGroup && (
-          
           <div className={styles.headerButtons}>
             <button 
-                onClick={() => setIsModalOpen(true)}
-                className={`${styles.headerButton} ${styles.primary}`}
-              >
-                <MdOutlinePostAdd /> Add Project To Group
+              onClick={() => setIsModalOpen(true)}
+              className={`${styles.headerButton} ${styles.primary}`}
+            >
+              <MdOutlinePostAdd /> Add Project To Group
             </button>
             <button 
               onClick={() => {setProjectShow(true); setMembersShow(false); setDiscussionShow(false); setBountyShow(false)}}
@@ -414,7 +349,6 @@ const Feed = () => {
             </div>
           </div>
           <div className={styles.feedContent}>
-
             {feedStyle === 'home' || feedStyle === 'popular' || feedStyle === 'upvoted' || feedStyle === 'suggested' ? (
               loading ? (
                 <div className={styles.loadingContainer}>
@@ -422,34 +356,34 @@ const Feed = () => {
                 </div>
               ) : (
                 <>
-                <Tagged
-                  filteredProjects={filteredProjects}
-                  loading={loading}
-                  error={error}
-                  userUpvotes={userUpvotes}
-                  setUserUpvotes={setUserUpvotes}
-                />
-                {!loading && (
-                  <div className={styles.paginationControls}>
-                    <button 
-                      onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
-                      disabled={currentPage === 1}
-                      className={styles.paginationButton}
-                    >
-                      <FaChevronLeft />
-                    </button>
-                    <span>{currentPage} / {totalPages}</span>
-                    <button 
-                      onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
-                      disabled={currentPage === totalPages}
-                      className={styles.paginationButton}
-                    >
-                      <FaChevronRight />
-                    </button>
-                  </div>
-                )}
-              </>
-            )
+                  <Tagged
+                    filteredProjects={filteredProjects}
+                    loading={loading}
+                    error={error}
+                    userUpvotes={userUpvotes}
+                    setUserUpvotes={setUserUpvotes}
+                  />
+                  {!loading && feedStyle !== 'suggested' && (
+                    <div className={styles.paginationControls}>
+                      <button 
+                        onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
+                        disabled={currentPage === 1}
+                        className={styles.paginationButton}
+                      >
+                        <FaChevronLeft />
+                      </button>
+                      <span>{currentPage} / {totalPages}</span>
+                      <button 
+                        onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
+                        disabled={currentPage === totalPages}
+                        className={styles.paginationButton}
+                      >
+                        <FaChevronRight />
+                      </button>
+                    </div>
+                  )}
+                </>
+              )
             ) : feedStyle === 'groupView' && membersShow ? (
               <NewGroupMembers group={activeGroup} />
             ) : feedStyle === 'groupView' && projectShow ? (

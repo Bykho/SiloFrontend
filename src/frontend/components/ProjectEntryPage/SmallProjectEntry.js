@@ -46,9 +46,9 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
     setLocalProject(project);
   }, [project]);
 
-  useEffect(() => {
-    console.log('Here is localProject: ', localProject)
-  }, [])
+  //useEffect(() => {
+  //  console.log('Here is localProject: ', localProject)
+  //}, [])
 
   useEffect(() => {
     const handleClickOutside = (event) => {

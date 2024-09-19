@@ -29,7 +29,7 @@ const TagsFeed = ({ filteredProjects, loading = null, error = null, userUpvotes,
           <p>{error}</p>
         ) : (
           filteredProjects.map((project, index) => {
-            console.log('Project visibility settings:', project.visibility);
+            //console.log('Project visibility settings:', project.visibility);
             if (project.visibility === false) {
               return null; // Skip this project if visibility is false
             }
