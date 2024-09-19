@@ -280,3 +280,6 @@ body {
 .paginationButton:hover {
   background-color: #3a7bc8;
 }
+.pageNum{
+  color: white; 
+}
