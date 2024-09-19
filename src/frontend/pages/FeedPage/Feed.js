@@ -60,11 +60,11 @@ const Feed = () => {
     
     let endpoint = '/returnFeed'; // Default to home feed
     let body = { page, per_page: perPage };
-    let method = 'POST'; // Default method is POST
+    let method = 'POST';
     let headers = {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
-    }; // Default headers
+    };
     
     switch (feedStyle) {
       case 'popular':
@@ -72,18 +72,18 @@ const Feed = () => {
         break;
       case 'upvoted':
         endpoint = '/returnProjects';
-        body = userUpvotes; // Send upvotes for 'upvoted' feed style
+        body = userUpvotes;
         break;
       case 'suggested':
         console.log('opened the suggested fetch feed')
         endpoint = '/getPersonalizedFeed';
-        method = 'GET'; // Use GET for suggested feed
-        body = null; // No body for GET requests
+        method = 'GET';
+        body = null;
         // Keep existing headers, just remove Content-Type since GET does not need it
         headers = { 'Authorization': `Bearer ${token}` };
         break;
       default:
-        break; // 'home' defaults to the base endpoint
+        break;
     }
     
     try {
@@ -172,20 +172,20 @@ const Feed = () => {
     const fetchAllData = async () => {
       if (!user) {
         console.log('User is null, skipping fetch');
-        return; // Skip the fetch if user is null
+        return;
       }
 
-      await fetchUpvotes();  // Fetch user upvotes only if the user is authenticated
+      await fetchUpvotes();
 
       if (feedStyle === 'groupView' && activeGroup) {
-        await fetchGroupProjects(); // Fetch group projects if the user is in group view
+        await fetchGroupProjects();
       } else {
-        await fetchProjects(currentPage);  // Fetch projects for home, popular, upvoted, or suggested feed styles
+        await fetchProjects(currentPage);
       }
     };
 
     fetchAllData();
-  }, [user, currentPage, feedStyle, activeGroup]); // Combined dependencies
+  }, [user, currentPage, feedStyle, activeGroup]);
 
   useEffect(() => {
     if (location.state && location.state.tag) {

@@ -39,6 +39,7 @@ const ProfileHeader = ({ userData, loading, error }) => {
   }, [userData]);
 
   const toggleResume = () => {
+    console.log('here is the resume: ', userData.resume)
     setShowResume(!showResume);
   }
 
