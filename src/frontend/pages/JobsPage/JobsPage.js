@@ -86,15 +86,19 @@ const JobsPage = () => {
   };
 
   const filterJobs = (jobList) => {
-    return jobList.filter(job =>
-      (job.job_title || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (job.company || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (job.location || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (job.description || '').toLowerCase().includes(searchTerm.toLowerCase())
-    ).filter(job => 
-      (!filters.location || job.location.toLowerCase().includes(filters.location.toLowerCase())) &&
-      (!filters.jobType || job.job_type === filters.jobType)
-    );
+    return jobList.filter(job => {
+      const jobText = `${job.job_title} ${job.description}`.toLowerCase();
+      const matchesSearch = jobText.includes(searchTerm.toLowerCase());
+      const matchesLocation = !filters.location || job.location.toLowerCase().includes(filters.location.toLowerCase());
+      
+      let matchesJobType = true;
+      if (filters.jobType === 'full-time') {
+        matchesJobType = !jobText.includes('internship') && !jobText.includes('part time') && !jobText.includes('intern');
+      } else if (filters.jobType === 'internship') {
+        matchesJobType = jobText.includes('internship') || job.job_title.toLowerCase().includes('intern');
+      }
+      return matchesSearch && matchesLocation && matchesJobType;
+    });
   };
 
   const suggestedJobs = useMemo(() => {
@@ -113,83 +117,51 @@ const JobsPage = () => {
   }, [viewMode, suggestedJobs, jobs, filterJobs, searchTerm, filters]);
 
   return (
-    <Container maxWidth="lg" className={styles.container}>
-      <Paper elevation={3} className={styles.headerPaper}>
-        <Box className={styles.sliderContainer}>
-          <Typography
-            variant="h4"
-            className={`${styles.sliderOption} ${viewMode === 'suggested' ? styles.activeSlider : ''}`}
-            onClick={() => setViewMode('suggested')}
-          >
-            Suggested Jobs
-          </Typography>
-          <Typography
-            variant="h4"
-            className={`${styles.sliderOption} ${viewMode === 'all' ? styles.activeSlider : ''}`}
-            onClick={() => setViewMode('all')}
-          >
-            All Jobs
-          </Typography>
-          <Box className={`${styles.slider} ${viewMode === 'all' ? styles.sliderRight : ''}`} />
-        </Box>
-        <Grid container spacing={2} alignItems="center" className={styles.searchContainer}>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              variant="outlined"
+    <div className={styles.container}>
+      <div className={styles.headerPaper}>
+        <div className={styles.searchContainer}>
+          <div className={styles.searchInputWrapper}>
+            <FaSearch className={styles.searchIcon} />
+            <input
+              type="text"
               placeholder="Search keywords..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              InputProps={{
-                startAdornment: <FaSearch className={styles.searchIcon} />,
-                className: styles.searchInput,
-              }}
+              className={styles.searchInput}
             />
-          </Grid>
-        </Grid>
+          </div>
+        </div>
         <FilterToolbar onFilterChange={handleFilterChange} />
-      </Paper>
+      </div>
       
       {isLoading ? (
         <div className={styles.loadingContainer}>
-          <CircularProgress size={60} thickness={4} />
-          <Typography variant="h6" style={{ marginTop: '20px' }}>
-            Loading jobs...
-          </Typography>
+          <div className={styles.spinner}></div>
+          <h2>Loading jobs...</h2>
         </div>
       ) : error ? (
         <div className={styles.errorContainer}>
-          <Typography variant="h6" color="error">
-            Error: {error}
-          </Typography>
-          <Typography variant="body1">
-            Please try refreshing the page or try again later.
-          </Typography>
+          <h2>Error: {error}</h2>
+          <p>Please try refreshing the page or try again later.</p>
         </div>
       ) : (
         <>
-          <Typography variant="h6" style={{ marginBottom: '20px' }}>
-            Showing {displayedJobs.length} {viewMode === 'suggested' ? 'suggested' : ''} jobs
-          </Typography>
-          <Grid container spacing={3} className={styles.jobGrid}>
+          <div className={styles.jobGrid}>
             {displayedJobs.length > 0 ? (
               displayedJobs.map((job) => (
-                <Grid item xs={12} sm={6} md={4} key={job._id} className={styles.jobItem}>
+                <div key={job._id} className={styles.jobItem}>
                   <JobCard job={job} />
-                </Grid>
+                </div>
               ))
             ) : (
-              <Grid item xs={12}>
-                <Typography variant="h6" align="center">
-                  No jobs found. Try adjusting your filters or switching to "All Jobs".
-                </Typography>
-              </Grid>
+              <div className={styles.noJobsFound}>
+                <h2>No jobs found. Try adjusting your filters.</h2>
+              </div>
             )}
-          </Grid>
+          </div>
         </>
       )}
-    </Container>
+    </div>
   );
 };
-
 export default JobsPage;

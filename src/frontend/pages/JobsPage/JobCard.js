@@ -1,7 +1,5 @@
-
 import React from 'react';
-import { Card, CardContent, Typography, Button } from '@mui/material';
-import styles from './jobsPage.module.css';
+import styles from './JobCard.module.css';
 
 const JobCard = ({ job }) => {
   const truncateDescription = (text, charLimit) => {
@@ -12,32 +10,24 @@ const JobCard = ({ job }) => {
   };
 
   return (
-    <Card className={styles.card}>
-      <CardContent className={styles.cardContent}>
-        <Typography variant="h6" component="h2" className={styles.title} gutterBottom>
-          {job.job_title}
-        </Typography>
-        <Typography variant="subtitle1" className={styles.company} gutterBottom>
-          {job.company}
-        </Typography>
-        <Typography variant="body2" className={styles.location} gutterBottom>
-          {job.location}
-        </Typography>
-        <Typography variant="body2" className={styles.description}>
-
+    <div className={styles.card}>
+      <div className={styles.cardContent}>
+        <h2 className={styles.title}>{job.job_title}</h2>
+        <h3 className={styles.company}>{job.company}</h3>
+        <p className={styles.location}>{job.location}</p>
+        <p className={styles.description}>
           {truncateDescription(job.description, 200)}
-        </Typography>
-        <Button
-          variant="contained"
+        </p>
+        <a
           className={styles.applyButton}
           href={job.final_url}
           target="_blank"
           rel="noopener noreferrer"
         >
           Apply Now
-        </Button>
-      </CardContent>
-    </Card>
+        </a>
+      </div>
+    </div>
   );
 };
 

@@ -38,9 +38,7 @@ const FilterToolbar = ({ onFilterChange }) => {
         >
           <option value="">All</option>
           <option value="full-time">Full-time</option>
-          <option value="part-time">Part-time</option>
           <option value="internship">Internship</option>
-          <option value="contract">Contract</option>
         </select>
       </div>
       <div className={styles.filterButtons}>
