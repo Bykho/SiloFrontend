@@ -264,3 +264,19 @@ body {
   font-size: 1.5rem;
   cursor: pointer;
 }
+
+.paginationButton{
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  margin-left: 10px;
+  margin-right: 10px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.paginationButton:hover {
+  background-color: #3a7bc8;
+}

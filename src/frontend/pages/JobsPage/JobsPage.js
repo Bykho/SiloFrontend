@@ -119,6 +119,8 @@ const JobsPage = () => {
   return (
     <div className={styles.container}>
       <div className={styles.headerPaper}>
+      <h1 className={styles.header}>Daily Job Listings</h1>
+      <h2 className={styles.subheader}>Every 24 hours, we pull select top job matches from YC, LinkedIn, Indeed, Handshake and more! Keep your profile and projects updated for smarter suggestions.</h2>
         <div className={styles.searchContainer}>
           <div className={styles.searchInputWrapper}>
             <FaSearch className={styles.searchIcon} />
