@@ -8,7 +8,7 @@ import pdfToText from 'react-pdftotext';
 import config from '../config';
 import styles from './AddBlocPortfolio.module.css';
 
-const AutofillProjectFromPDF = ({ setProjectName, setProjectDescription, setTags, setLinks, setRows, setIsLoading, setFileSize }) => {
+const AutofillProjectFromPDF = ({ setProjectName, setProjectDescription, setTags, setLinks, setRows, setIsLoading, setFileSize, resetProject }) => {
 
   async function handleFileSugUpload(text) {
     try {
@@ -140,43 +140,46 @@ const AutofillProjectFromPDF = ({ setProjectName, setProjectDescription, setTags
   const handleAutofillFileChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFileSize(file.size)
-      setIsLoading(true); // Start loading
-      try {
-        console.log('Starting PDF processing...');
-        console.log('File details:', file.name, file.size, 'bytes');
-        
-        const text = await pdfToText(file);
-        console.log('PDF text extraction complete');
-        
-        const parsedData = await handleFileSugUpload(text);
-        console.log('File upload and parsing complete');
-  
-        console.log('Starting image extraction...');
-        console.time('Image extraction');
-        const images = await extractImagesFromPDF(file);
-        console.timeEnd('Image extraction');
-        console.log(`Image extraction complete. Found ${images.length} valid images.`);
-  
-        // Use default values if parsedData properties are undefined
-        const projectName = parsedData?.summary?.name || 'Untitled Project';
-        const projectDescription = parsedData?.summary?.description || '';
-        const tags = parsedData?.summary?.tags || [];
-        const links = parsedData?.summary?.links || [];
-        const layers = parsedData?.layers || [];
-  
-        setProjectName(projectName);
-        setProjectDescription(projectDescription);
-        setTags(tags);
-        setLinks(links);
-        setRows(structureLayers(layers, images));
-        console.log('Project data set successfully');
-      } catch (error) {
-        console.error('Error processing PDF:', error);
-        console.error('Error stack:', error.stack);
-        alert('There was an error processing the PDF. Some data may be incomplete.');
-      } finally {
-        setIsLoading(false); // End loading regardless of success or failure
+      if (window.confirm("This will reset the current project. Are you sure you want to continue?")) {
+        resetProject(); // Reset the project before processing new PDF
+        setFileSize(file.size);
+        setIsLoading(true);
+        try {
+          console.log('Starting PDF processing...');
+          console.log('File details:', file.name, file.size, 'bytes');
+          
+          const text = await pdfToText(file);
+          console.log('PDF text extraction complete');
+          
+          const parsedData = await handleFileSugUpload(text);
+          console.log('File upload and parsing complete');
+    
+          console.log('Starting image extraction...');
+          console.time('Image extraction');
+          const images = await extractImagesFromPDF(file);
+          console.timeEnd('Image extraction');
+          console.log(`Image extraction complete. Found ${images.length} valid images.`);
+    
+          // Use default values if parsedData properties are undefined
+          const projectName = parsedData?.summary?.name || 'Untitled Project';
+          const projectDescription = parsedData?.summary?.description || '';
+          const tags = parsedData?.summary?.tags || [];
+          const links = parsedData?.summary?.links || [];
+          const layers = parsedData?.layers || [];
+    
+          setProjectName(projectName);
+          setProjectDescription(projectDescription);
+          setTags(tags);
+          setLinks(links);
+          setRows(structureLayers(layers, images));
+          console.log('Project data set successfully');
+        } catch (error) {
+          console.error('Error processing PDF:', error);
+          console.error('Error stack:', error.stack);
+          alert('There was an error processing the PDF. Some data may be incomplete.');
+        } finally {
+          setIsLoading(false); // End loading regardless of success or failure
+        }
       }
     }
   };

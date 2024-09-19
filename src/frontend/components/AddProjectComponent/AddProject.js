@@ -78,9 +78,15 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
     }
   }, [initialRows, initialProjectData]);
 
-//  useEffect(() => {
-//    console.log('initialProjectData.projectName:', initialProjectData.projectName);
-//  }, [initialProjectData]);
+  const resetProject = () => {
+    setProjectName('');
+    setProjectDescription('');
+    setTags('');
+    setLinks('');
+    setRows([]);
+    setVisibility(true);
+    // Reset any other state variables related to project content
+  };
 
   useEffect(() => {
     const updatedPreviewProject = {
@@ -315,6 +321,7 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
             setRows={setRows}
             setIsLoading={setIsLoading}
             setFileSize={setFileSize}
+            resetProject={resetProject}
           />
 
         </div>

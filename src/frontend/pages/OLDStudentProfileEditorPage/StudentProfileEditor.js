@@ -116,8 +116,11 @@ function StudentProfileEditor({ initLocalData, setUserData, onSave }) {
 
       const data = await response.json();
       setError('Profile updated successfully');
-      updateUser(data.user);
-      setUserData(prevState => ({ ...prevState, ...data.user }));
+      // Update the local state and parent components
+      const updatedUserData = { ...localState };
+      updateUser(updatedUserData);
+      setUserData(prevState => ({ ...prevState, ...updatedUserData }));
+      
       if (data.access_token) {
         localStorage.setItem('token', data.access_token);
       }

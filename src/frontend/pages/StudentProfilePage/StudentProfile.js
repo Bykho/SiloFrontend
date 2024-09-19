@@ -109,6 +109,11 @@ function StudentProfile() {
   };
 
   useEffect(() => {
+    console.log('here is the user data: ', userData)
+  }, [userData])
+
+
+  useEffect(() => {
     fetchUserData();
 
     if (location.state && location.state.buildPortfolio) {
