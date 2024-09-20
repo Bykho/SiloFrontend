@@ -41,6 +41,7 @@ const Feed = () => {
   const navigate = useNavigate();
   const [upvotedProjects, setUpvotedProjectIds] = useState([]);
   const [suggestedProjects, setSuggestedProjects] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
@@ -205,29 +206,6 @@ const Feed = () => {
     let filtered = projects;
     console.log('filtered test: ', filtered); 
   
-    if (feedStyle === 'home' || feedStyle === 'popular' || feedStyle === 'upvoted' || feedStyle === 'suggested') {
-      filtered = projects.filter(project => {
-        const searchTextLower = searchText.toLowerCase();
-        if (project.projectDescription.toLowerCase().includes(searchTextLower)) {
-          return true;
-        }
-        for (let layer of project.layers) {
-          for (let cell of layer) {
-            if (cell.type === 'text' && cell.value.toLowerCase().includes(searchTextLower)) {
-              return true;
-            }
-          }
-        }
-        if (project.projectName.toLowerCase().includes(searchTextLower)) {
-          return true;
-        }
-        if (project.tags && project.tags.some(tag => tag.toLowerCase().includes(searchTextLower))) {
-          return true;
-        }
-        return false;
-      });
-    }
-  
     if (feedStyle === 'popular') {
       filtered = filtered.map(project => {
         const score = (project.upvotes ? project.upvotes.length : 0);
@@ -239,7 +217,7 @@ const Feed = () => {
       setFilteredProjects(filtered);
     }
   
-  }, [projects, searchText, feedStyle, activeGroup]);
+  }, [projects, feedStyle, activeGroup]);
 
   const handlePageChange = (newPage) => {
     clearProjects();
@@ -247,10 +225,41 @@ const Feed = () => {
     fetchProjects(newPage);  // Fetch projects for the new page
   };
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     setSearchText(inputText);
-    setCurrentPage(1);  // Reset to first page when searching
+    setLoading(true);
+    setCurrentPage(1);  // Reset to the first page when searching
+    setIsSearching(true);
+    
+    const token = localStorage.getItem('token');
+    
+    try {
+      const response = await fetch(`${config.apiBaseUrl}/searchProjects`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ query: inputText })
+      });
+  
+      if (!response.ok) throw new Error('Failed to perform search');
+      
+      const data = await response.json();
+      setFilteredProjects(data.projects || []);
+      setLoading(false);
+  
+    } catch (err) {
+      console.error('Error performing search:', err);
+      setError('Failed to perform search');
+      setLoading(false);
+    }
   };
+
+  useEffect(() => {
+    setIsSearching(false);
+  }, [feedStyle]);  
+  
 
   const handleInputChange = (e) => {
     setInputText(e.target.value);
@@ -343,6 +352,12 @@ const Feed = () => {
                 placeholder="Search projects..."
                 className={styles.searchInput}
               />
+              <button 
+                className={styles.searchButton} 
+                onClick={handleSearch}
+              >
+                Search
+              </button>
             </div>
             <div className={styles.resultsCount}>
               Results: {filteredProjects.length}
@@ -363,7 +378,7 @@ const Feed = () => {
                     userUpvotes={userUpvotes}
                     setUserUpvotes={setUserUpvotes}
                   />
-                  {!loading && feedStyle !== 'suggested' && (
+                  {!isSearching && !loading && feedStyle !== 'suggested' && (
                     <div className={styles.paginationControls}>
                       <button 
                         onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
