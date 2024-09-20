@@ -387,7 +387,7 @@ const Feed = () => {
                       >
                         <FaChevronLeft />
                       </button>
-                      <span>{currentPage} / {totalPages}</span>
+                      <span className={styles.pageNum}>{currentPage} / {totalPages}</span>
                       <button 
                         onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
                         disabled={currentPage === totalPages}
