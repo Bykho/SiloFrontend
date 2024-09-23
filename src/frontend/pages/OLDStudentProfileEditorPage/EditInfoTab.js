@@ -48,11 +48,23 @@ const EditInfoTab = ({ localState, handleInputChange, handleSubmit }) => {
         </label>
         <label>
           Interests:
-          <input type="text" value={localState.interests || ''} onChange={(e) => handleInputChange(e, 'interests')} className={styles.input} placeholder="Comma-separated" />
+          <input 
+            type="text" 
+            value={localState.interests || ''} 
+            onChange={(e) => handleInputChange(e, 'interests')} 
+            className={styles.input} 
+            placeholder="Comma-Seperated" 
+          />
         </label>
         <label>
           Skills:
-          <input type="text" value={localState.skills || ''} onChange={(e) => handleInputChange(e, 'skills')} className={styles.input} placeholder="Comma-separated" />
+          <input 
+            type="text" 
+            value={localState.skills || ''} 
+            onChange={(e) => handleInputChange(e, 'skills')} 
+            className={styles.input} 
+            placeholder="Comma-Seperated" 
+          />
         </label>
         <label>
           Biography:

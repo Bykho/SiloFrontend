@@ -11,7 +11,15 @@ import config from '../../config';
 function StudentProfileEditor({ initLocalData, setUserData, onSave }) {
   const navigate = useNavigate();
   const { updateUser } = useUser();
-  const [localState, setLocalState] = useState(initLocalData);
+  const [localState, setLocalState] = useState(() => {
+    const processedData = { ...initLocalData };
+    ['interests', 'skills', 'papers', 'links'].forEach(field => {
+      if (Array.isArray(processedData[field])) {
+        processedData[field] = processedData[field].join(', ');
+      }
+    });
+    return processedData;
+  });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [newResumeFile, setNewResumeFile] = useState(null);
@@ -23,13 +31,14 @@ function StudentProfileEditor({ initLocalData, setUserData, onSave }) {
         setNewResumeFile(file);
         setLocalState(prevState => ({
           ...prevState,
-          resume: URL.createObjectURL(file) // Store the file URL for display
+          resume: URL.createObjectURL(file)
         }));
       }
-    } else if (field === 'interests' || field === 'skills' || field === 'papers' || field === 'links') {
-      setLocalState({ ...localState, [field]: e.target.value.split(',').map(item => item.trim()) });
     } else {
-      setLocalState({ ...localState, [field]: e.target.value });
+      setLocalState(prevState => ({
+        ...prevState,
+        [field]: e.target.value
+      }));
     }
   };
 
@@ -61,12 +70,11 @@ function StudentProfileEditor({ initLocalData, setUserData, onSave }) {
         setLocalState(prevState => ({
           ...prevState,
           biography: data.summary.bio || prevState.biography,
-          interests: data.summary.interests || prevState.interests,
-          skills: data.summary.skills || prevState.skills,
+          interests: Array.isArray(data.summary.interests) ? data.summary.interests.join(', ') : data.summary.interests || prevState.interests,
+          skills: Array.isArray(data.summary.skills) ? data.summary.skills.join(', ') : data.summary.skills || prevState.skills,
           university: data.summary.latestUniversity || prevState.university,
           major: data.summary.major || prevState.major,
           grad: data.summary.grad_yr || prevState.grad,
-          // You might want to handle projects separately if needed
         }));
       } else {
         setError('No summary data received from the server');
@@ -87,16 +95,24 @@ function StudentProfileEditor({ initLocalData, setUserData, onSave }) {
     const token = localStorage.getItem('token');
     const formData = new FormData();
 
-    // Append all form fields to formData
-    Object.keys(localState).forEach(key => {
-      if (key === 'interests' || key === 'skills' || key === 'papers' || key === 'links') {
-        formData.append(key, JSON.stringify(localState[key]));
+    // Create a copy of localState with arrays for specific fields
+    const processedState = { ...localState };
+    ['interests', 'skills', 'papers', 'links'].forEach(field => {
+      if (localState[field]) {
+        processedState[field] = localState[field].split(',').map(item => item.trim()).filter(Boolean);
       } else {
-        formData.append(key, localState[key]);
+        processedState[field] = []; // Set to empty array if field is undefined
       }
     });
 
-    // Append the new resume file if it exists
+    Object.keys(processedState).forEach(key => {
+      if (Array.isArray(processedState[key])) {
+        formData.append(key, JSON.stringify(processedState[key]));
+      } else {
+        formData.append(key, processedState[key]);
+      }
+    });
+    
     if (newResumeFile) {
       formData.append('resume', newResumeFile);
     }
@@ -116,10 +132,9 @@ function StudentProfileEditor({ initLocalData, setUserData, onSave }) {
 
       const data = await response.json();
       setError('Profile updated successfully');
-      // Update the local state and parent components
-      const updatedUserData = { ...localState };
-      updateUser(updatedUserData);
-      setUserData(prevState => ({ ...prevState, ...updatedUserData }));
+      // Update the local state and parent components with the processed state
+      updateUser(processedState);
+      setUserData(prevState => ({ ...prevState, ...processedState }));
       
       if (data.access_token) {
         localStorage.setItem('token', data.access_token);
