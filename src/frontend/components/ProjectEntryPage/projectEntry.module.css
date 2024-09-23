@@ -278,7 +278,7 @@
 }
 
 .commentsSection {
-  background-color: #343434;
+  background-color: #2a2a2a;
   padding: 10px;
   border-radius: 5px;
   margin-top: 10px;
@@ -289,8 +289,8 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 0;
-  border-bottom: 1px solid #ccc;
+  padding: 10px 0 10px 0;
+  border-bottom: 1px solid #515151;
 }
 
 .comment:last-child {
@@ -341,13 +341,14 @@
 }
 
 .addCommentSection {
-  display: flex;
-  flex-direction: column;
+  display: inline-flex;
+  flex-direction: row;
   gap: 10px;
   margin-top: 5px;
   width: 100%;
   overflow: hidden;
   box-sizing: border-box;
+  align-items: center;
 }
 
 .commentInput {
@@ -356,11 +357,11 @@
   color: white; 
   border: 1px solid #7c7c7c;
   border-radius: 8px;
-  width: 100%;
+  width: 85%;
   resize: vertical;
   box-sizing: border-box;
   max-width: 100%;
-  margin-top: 5px;
+  margin-top: 10px;
   overflow: hidden;
 }
 
@@ -370,7 +371,7 @@
 }
 
 .addCommentButton {
-  background-color: #70b9e3;
+  background-color: #1985c4;
   color: #fff;
   border: none;
   padding: 10px 20px;

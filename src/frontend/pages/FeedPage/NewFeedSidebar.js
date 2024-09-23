@@ -157,7 +157,9 @@ const CombinedFeedSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGr
   return (
     <div className={styles.sidebar}>
       <ul className={styles.sidebarMenu}>
+        {/*
         <SidebarItem Icon={Home} text="Home" onClick={() => setFeedStyle('home')} isActive={feedStyle === 'home'} />
+        */}
         <SidebarItem Icon={Sparkles} text="Suggested" onClick={() => setFeedStyle('suggested')} isActive={feedStyle === 'suggested'} />
         <SidebarItem Icon={Flame} text="Popular" onClick={() => setFeedStyle('popular')} isActive={feedStyle === 'popular'} />
         <SidebarItem Icon={BiUpvote} text="My Upvotes" onClick={() => setFeedStyle('upvoted')} isActive={feedStyle === 'upvoted'} />

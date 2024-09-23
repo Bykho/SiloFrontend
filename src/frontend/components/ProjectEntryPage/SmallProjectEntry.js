@@ -268,7 +268,7 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
       <div className={styles.commentBox} onClick={toggleExpand}>
         <div className={styles.commentIconContainer}>
           <FaComment className={styles.commentIcon} />
-          <span className={styles.commentText}>Comments...</span>
+          <span className={styles.commentText}>Comments</span>
         </div>
         <button className={styles.expandButton} onClick={toggleExpand}>
           {isExpanded ? <FaChevronUp /> : <FaChevronDown />}

@@ -17,11 +17,11 @@ import { GoCommentDiscussion } from "react-icons/go";
 import { FaCrown } from "react-icons/fa";
 import LoadingIndicator from '../../components/LoadingIndicator';
 import { CircularProgress } from '@mui/material';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaChevronLeft, FaChevronRight, FaPlusCircle } from 'react-icons/fa';
 
 
 const Feed = () => {
-  const [feedStyle, setFeedStyle] = useState('home');
+  const [feedStyle, setFeedStyle] = useState('popular');
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -59,7 +59,7 @@ const Feed = () => {
     setError('');
     const token = localStorage.getItem('token');
     
-    let endpoint = '/returnFeed'; // Default to home feed
+    let endpoint = '/popularFeed'; // Default to home feed
     let body = { page, per_page: perPage };
     let method = 'POST';
     let headers = {
@@ -406,7 +406,14 @@ const Feed = () => {
                 <div className={styles.loadingContainer}>
                     <CircularProgress size={100} thickness={4} />
                 </div>
-              ) : (
+              ) : filteredProjects.length === 0 ? (
+              <div className={styles.emptyState}>
+                <MdOutlinePostAdd size={100} />
+                <p>No projects have been added to this group yet.</p>
+                <button className={styles.emptyButton} onClick={() => setIsModalOpen(true)}> <FaPlusCircle/> Add Project to Group!</button>
+              </div> 
+            
+              ): (
                 <Tagged
                   filteredProjects={filteredProjects}
                   loading={loading}

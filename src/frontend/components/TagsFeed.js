@@ -9,6 +9,8 @@ import { useUser } from '../contexts/UserContext';
 import SmallProjectEntry from './ProjectEntryPage/SmallProjectEntry';
 import config from '../config';
 import LoadingIndicator from './LoadingIndicator';
+import { MdOtherHouses, MdOutlinePostAdd } from "react-icons/md";
+
 
 const TagsFeed = ({ filteredProjects, loading = null, error = null, userUpvotes, setUserUpvotes }) => {
   const { user } = useUser();
@@ -27,6 +29,7 @@ const TagsFeed = ({ filteredProjects, loading = null, error = null, userUpvotes,
           </div>
         ) : error ? (
           <p>{error}</p>
+          
         ) : (
           filteredProjects.map((project, index) => {
             //console.log('Project visibility settings:', project.visibility);
