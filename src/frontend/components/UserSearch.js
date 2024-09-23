@@ -128,7 +128,7 @@ const UserSearch = () => {
       ) : error ? (
         <p className={styles.errorMessage}>{error}</p>
       ) : isLeaderboardView ? (
-        <LeaderboardView users={users.map(user => ({...user, score: user.totalUpvotes * 10}))} navigate={navigate} fetchProjectsForUser={fetchProjectsForUser} />
+        <LeaderboardView users={users} navigate={navigate} fetchProjectsForUser={fetchProjectsForUser} />
       ) : (
         <div className={styles.userList}>
           {users.map((user) => (
@@ -146,45 +146,33 @@ const UserSearch = () => {
 };
 
 const UserCard = ({ user, navigate, fetchProjectsForUser }) => {
-  const [projects, setProjects] = useState([]);
+  const [score, setScore] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [totalUpvotes, setTotalUpvotes] = useState(0);
-  const [score, setScore] = useState(0);
 
-  console.log('USERCARD here is user: ', user)
   useEffect(() => {
-    const fetchProjects = async () => {
+    const calculateScore = async () => {
       setLoading(true);
       setError('');
       try {
         const projectData = await fetchProjectsForUser(user.portfolio);
-        setProjects(projectData);
-
-        const upvotesSum = projectData.reduce(
+        const totalUpvotes = projectData.reduce(
           (sum, project) => sum + (project.upvotes ? project.upvotes.length : 0),
           0
         );
-        setTotalUpvotes(upvotesSum);
-  
-        let tempScore = user.scores.length > 0
-          ? Object.values(user.scores[user.scores.length - 1]).reduce(
-              (sum, value) => sum + value,
-              0
-            )
-          : 0;
-  
-        tempScore += upvotesSum * 10;
-        setScore(tempScore);
-
+        setScore(totalUpvotes * 10);
         setLoading(false);
       } catch (err) {
-        setError('Failed to fetch projects');
+        setError('Failed to calculate score');
         setLoading(false);
       }
     };
-    fetchProjects();
+    calculateScore();
   }, [user.portfolio, fetchProjectsForUser]);
+
+  if (loading) return <div className={styles.loadingSpinner}></div>;
+  if (error) return <div className={styles.errorMessage}>{error}</div>;
+
 
   return (
     <div className={styles.userCard}>

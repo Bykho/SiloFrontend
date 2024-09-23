@@ -17,29 +17,15 @@ const LeaderboardView = ({ users, navigate, fetchProjectsForUser }) => {
       setLoading(true);
       setError('');
       try {
-        console.log('Starting score calculation for', users.length, 'users');
         const usersWithScores = await Promise.all(users.map(async (user) => {
           try {
-            console.log('Processing user:', user.username);
-
             let score = 0;
-            if (user.scores && user.scores.length > 0) {
-              const lastScoreDict = user.scores[user.scores.length - 1]; // Get the last element in the scores array
-              score = Object.values(lastScoreDict).reduce((sum, value) => sum + value, 0); // Sum all values in the dictionary
-            }
-
-            // Fetch user's portfolio and calculate the total upvotes
             if (user.portfolio && user.portfolio.length > 0) {
               const projects = await fetchProjectsForUser(user.portfolio);
-              let totalUpvotes = 0;
-              projects.forEach(project => {
-                const upvotes = project.upvotes ? project.upvotes.length : 0;
-                totalUpvotes += upvotes;
-              });
-              score += totalUpvotes; // Add the total upvotes to the score
+              const totalUpvotes = projects.reduce((sum, project) => 
+                sum + (project.upvotes ? project.upvotes.length : 0), 0);
+              score = totalUpvotes * 10;
             }
-
-            console.log('Final calculated score for user:', user.username, 'Score:', score);
             return { ...user, score };
           } catch (userError) {
             console.error('Error processing user:', user.username, userError);
@@ -47,9 +33,7 @@ const LeaderboardView = ({ users, navigate, fetchProjectsForUser }) => {
           }
         }));
 
-        console.log('Sorting users by score');
         const sortedUsers = usersWithScores.sort((a, b) => b.score - a.score);
-        console.log('Sorted users:', sortedUsers);
         setLeaderboardUsers(sortedUsers);
         setLoading(false);
       } catch (err) {
