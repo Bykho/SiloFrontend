@@ -4,6 +4,8 @@ import styles from './ResearchPage.module.css';
 import config from '../../config';
 import LoadingIndicator from '../../components/LoadingIndicator';
 import { FaRegBookmark, FaBookmark, FaSearch } from "react-icons/fa";
+import { FaBookBookmark } from "react-icons/fa6";
+
 
 const ResearchPage = () => {
   const navigate = useNavigate();
@@ -121,7 +123,7 @@ const ResearchPage = () => {
   const SavedPapersModal = () => (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
-        <h2>Saved Papers</h2>
+        <h2> Saved Papers</h2>
         <ul>
           {savedPapers.map((paper, index) => (
             <li key={index}>
@@ -163,7 +165,7 @@ const ResearchPage = () => {
           </button>
         </form>
         <button className={styles.savedPapersButton} onClick={() => setShowModal(true)}>
-          Saved Papers
+        <FaBookBookmark /> Saved Papers
         </button>
       </div>
       <main className={styles.mainContent}>

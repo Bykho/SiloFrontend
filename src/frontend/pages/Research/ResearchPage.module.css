@@ -122,6 +122,11 @@
     align-self: flex-start;
     align-content: center;
   }
+
+  .saveButton:hover {
+    background-color: #a54200;
+    cursor: pointer; 
+  }
   
   .toolbar {
     background-color: #1a1a1a;
@@ -183,9 +188,12 @@
   }
   
   .savedPapersButton {
+    display: flex;  
+    gap: 10px; 
+    align-items: center; 
     background-color: #3182ce;
     color: #ffffff;
-    padding: 0.75rem 1.25rem;
+    padding: 0.6rem;
     border: none;
     border-radius: 0.5rem;
     font-size: 1rem;
@@ -282,4 +290,11 @@
   
   .modalContent button:active {
     transform: translateY(0);
+  }
+
+
+  .header h1 {
+    border-left: 5px solid #63b3ed;
+    border-radius: 2px;
+    padding: 0 0 0 10px; 
   }
