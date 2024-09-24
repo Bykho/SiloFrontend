@@ -30,6 +30,16 @@
   margin-bottom: 24px;
 }
 
+.waitingContainer {
+  font-weight: bolder; 
+  display: flex;
+  gap: 10px; 
+  justify-content: center;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.518);
+  font-size: 2rem;
+}
+
 .toggleButton {
   margin: 0 10px !important;
   padding: 10px 20px !important;
