@@ -11,6 +11,7 @@ import NotificationsComponent from './Notifications';
 import { Bell } from 'lucide-react';
 import { MdOutlineLeaderboard } from "react-icons/md";
 import {FaBriefcase} from "react-icons/fa6";
+import { SiArxiv } from "react-icons/si";
 
 
 const NavigationBar = () => {
@@ -49,6 +50,14 @@ const NavigationBar = () => {
               onClick={() => handleLinkClick('feed')}
             >
               <IoNewspaperOutline className={styles.icon} /> Community
+            </a>
+
+            <a
+              href="/research"
+              className={`${styles.button} ${activeLink === 'research' ? styles.clickedButton : ''}`}
+              onClick={() => handleLinkClick('research')}
+            >
+              <SiArxiv className={styles.icon} /> Research
             </a>
 
             <a
@@ -94,6 +103,13 @@ const NavigationBar = () => {
               className={`${styles.button} ${activeLink === 'feed' ? styles.clickedButton : ''}`}
             >
               <IoNewspaperOutline className={styles.icon} /> Community
+            </a>
+
+            <a
+              href="/research"
+              className={`${styles.button} ${activeLink === 'research' ? styles.clickedButton : ''}`}
+            >
+              <SiArxiv className={styles.icon} /> Research
             </a>
 
             <a
