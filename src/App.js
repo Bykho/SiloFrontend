@@ -39,7 +39,7 @@ function App() {
           <NavigationWithConditionalRender />
           <Routes>
             <Route path="/welcome" element={<Welcome />} />
-            <Route path="/homePage" element={<HomePage />} />
+            <Route path="/launch" element={<Welcome />} /> 
             <Route path="/feed" element={<Feed />} />
             <Route path="/siloDescription" element={<SiloDescription />} />
             <Route path="/login" element={<Login />} />
