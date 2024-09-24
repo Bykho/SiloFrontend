@@ -5,6 +5,8 @@ import styles from './jobsPage.module.css';
 import config from '../../config';
 import FilterToolbar from './FilterToolbar';
 import { FaSearch } from "react-icons/fa";
+import { MdOutlineConstruction } from "react-icons/md";
+
 
 const JobsPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -119,8 +121,8 @@ const JobsPage = () => {
   return (
     <div className={styles.container}>
       <div className={styles.headerPaper}>
-      <h1 className={styles.header}>Daily Job Listings</h1>
-      <h2 className={styles.subheader}>Every 24 hours, we pull select top job matches from YC, LinkedIn, Indeed, Handshake and more! Keep your profile and projects updated for smarter suggestions.</h2>
+      <h1 className={styles.header}>Job Listings</h1>
+      <h2 className={styles.subheader}>We pull select jobs from YC, LinkedIn, Indeed, Handshake and more! Keep your profile and projects updated for smarter suggestions.</h2>
         <div className={styles.searchContainer}>
           <div className={styles.searchInputWrapper}>
             <FaSearch className={styles.searchIcon} />
@@ -135,7 +137,11 @@ const JobsPage = () => {
         </div>
         <FilterToolbar onFilterChange={handleFilterChange} />
       </div>
-      
+
+      <div className={styles.waitingContainer}>
+        <MdOutlineConstruction /> Coming soon! Build out your portfolio to get better matches in the future!
+      </div> 
+      {/*}
       {isLoading ? (
         <div className={styles.loadingContainer}>
           <div className={styles.spinner}></div>
@@ -163,6 +169,7 @@ const JobsPage = () => {
           </div>
         </>
       )}
+        */}
     </div>
   );
 };
