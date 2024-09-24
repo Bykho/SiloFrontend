@@ -122,6 +122,11 @@
     align-self: flex-start;
     align-content: center;
   }
+
+  .saveButton:hover {
+    background-color: #a54200;
+    cursor: pointer; 
+  }
   
   .toolbar {
     background-color: #1a1a1a;
