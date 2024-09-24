@@ -170,7 +170,7 @@ const UserCard = ({ user, navigate, fetchProjectsForUser }) => {
     calculateScore();
   }, [user.portfolio, fetchProjectsForUser]);
 
-  if (loading) return <div className={styles.loadingSpinner}></div>;
+  //if (loading) return <div className={styles.loadingSpinner}></div>;
   if (error) return <div className={styles.errorMessage}>{error}</div>;
 
 
