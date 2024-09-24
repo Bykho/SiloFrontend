@@ -38,13 +38,14 @@ const JobsPage = () => {
         if (!Array.isArray(data)) {
           throw new Error('Received invalid data format');
         }
+        console.log('here is data: ', data)
         const stringifiedJobs = data.map(job => ({
           _id: String(job._id || ''),
           company: String(job.company || ''),
           location: String(job.location || ''),
-          job_title: String(job.job_title || ''),
+          job_title: String(job.title || ''),
           description: String(job.description || ''),
-          final_url: String(job.final_url || ''),
+          final_url: String(job.url || ''),
         }));
         setJobs(stringifiedJobs);
       } catch (error) {
