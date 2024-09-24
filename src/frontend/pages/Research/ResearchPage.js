@@ -72,9 +72,12 @@ const ResearchPage = () => {
     }
   };
 
-  const savePaper = async (title, url) => {
+  const toggleSavePaper = async (title, url) => {
     try {
-      const response = await fetch(`${config.apiBaseUrl}/save_paper`, {
+      const isPaperSaved = savedPapers.some(paper => paper.url === url);
+      const endpoint = isPaperSaved ? 'unsave_paper' : 'save_paper';
+      
+      const response = await fetch(`${config.apiBaseUrl}/${endpoint}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -82,17 +85,19 @@ const ResearchPage = () => {
         },
         body: JSON.stringify({ title, url })
       });
+      
       if (!response.ok) {
-        throw new Error('Failed to save paper');
+        throw new Error(`Failed to ${isPaperSaved ? 'unsave' : 'save'} paper`);
       }
+      
       const data = await response.json();
       if (data.status === 'success') {
         fetchSavedPapers();  // Refresh the list of saved papers
       } else {
-        throw new Error(data.message || 'Failed to save paper');
+        throw new Error(data.message || `Failed to ${isPaperSaved ? 'unsave' : 'save'} paper`);
       }
     } catch (err) {
-      console.error('Error saving paper:', err);
+      console.error('Error toggling paper save status:', err);
     }
   };
 
@@ -168,14 +173,14 @@ const ResearchPage = () => {
           <ul className={styles.resultsList}>
             {filteredResults.map((result, index) => (
               <li key={index} className={styles.resultItem}>
-              <div className={styles.headerBox}>
-                <h2 className={styles.resultTitle}>{result.title}</h2>
-                <button 
-                  className={styles.saveButton} 
-                  onClick={() => savePaper(result.title, result.link)}
-                >
-                  {savedPapers.some(paper => paper.url === result.link) ? <FaBookmark /> : <FaRegBookmark />}
-                </button> 
+                <div className={styles.headerBox}>
+                  <h2 className={styles.resultTitle}>{result.title}</h2>
+                  <button 
+                    className={styles.saveButton} 
+                    onClick={() => toggleSavePaper(result.title, result.link)}
+                  >
+                    {savedPapers.some(paper => paper.url === result.link) ? <FaBookmark /> : <FaRegBookmark />}
+                  </button> 
                 </div> 
                 <p className={styles.resultMeta}>
                   Authors: {result.authors.join(', ')} | Published: {result.published}
