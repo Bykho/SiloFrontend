@@ -5,7 +5,7 @@ import config from '../../config';
 import LoadingIndicator from '../../components/LoadingIndicator';
 import { FaRegBookmark, FaBookmark, FaSearch } from "react-icons/fa";
 import { FaBookBookmark } from "react-icons/fa6";
-
+import { CircularProgress } from '@mui/material';
 
 const ResearchPage = () => {
   const navigate = useNavigate();
@@ -41,6 +41,7 @@ const ResearchPage = () => {
       const data = await response.json();
       if (data.status === 'success') {
         setResults(data.data);
+        setFilteredResults(data.data);
       } else {
         throw new Error(data.message || 'Failed to fetch research results');
       }
@@ -119,11 +120,10 @@ const ResearchPage = () => {
     filterResults();
   };
 
-
   const SavedPapersModal = () => (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
-        <h2> Saved Papers</h2>
+        <h2>Saved Papers</h2>
         <ul>
           {savedPapers.map((paper, index) => (
             <li key={index}>
@@ -135,15 +135,6 @@ const ResearchPage = () => {
       </div>
     </div>
   );
-
-  if (loading) {
-    return <div className={styles.loadingMessage}><LoadingIndicator /></div>;
-  }
-
-  if (error) {
-    return <div className={styles.errorMessage}>Error: {error}</div>;
-  }
-
 
   return (
     <div className={styles.researchPage}>
@@ -165,11 +156,17 @@ const ResearchPage = () => {
           </button>
         </form>
         <button className={styles.savedPapersButton} onClick={() => setShowModal(true)}>
-        <FaBookBookmark /> Saved Papers
+          <FaBookBookmark /> Saved Papers
         </button>
       </div>
       <main className={styles.mainContent}>
-        {filteredResults.length > 0 ? (
+        {loading ? (
+          <div className={styles.loadingContainer}>
+            <CircularProgress />
+          </div>
+        ) : error ? (
+          <div className={styles.errorMessage}>Error: {error}</div>
+        ) : filteredResults.length > 0 ? (
           <ul className={styles.resultsList}>
             {filteredResults.map((result, index) => (
               <li key={index} className={styles.resultItem}>

@@ -123,6 +123,17 @@
     align-content: center;
   }
 
+  .loadingContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 25%;
+    z-index: 1000;
+  }
+
   .saveButton:hover {
     background-color: #a54200;
     cursor: pointer; 
