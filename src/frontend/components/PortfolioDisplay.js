@@ -62,7 +62,7 @@ const PortfolioDisplay = ({ user: passedUser }) => {
         {passedUser.portfolio.map((project, index) => {
           return (
             <SmallProjectEntry
-              key={index}
+              key={project._id}
               project={project}
               passedUser={passedUser}
               userUpvotes={userUpvotes}
