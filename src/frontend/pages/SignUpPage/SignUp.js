@@ -456,7 +456,7 @@ const filterPortfolio = (data) => {
               />
             </div>
             <div className={styles.formGroup}>
-              <label htmlFor="major">Major *</label>
+              <label htmlFor="major">Discipline *</label>
               <input
                 type="text"
                 id="major"
