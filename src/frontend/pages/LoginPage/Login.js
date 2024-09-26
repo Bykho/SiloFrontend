@@ -49,7 +49,7 @@ function Login() {
     e.preventDefault();
     try {
       await login(email, password);
-      navigate('/siloDescription');
+      navigate('/feed');
     } catch (error) {
       setError(error.message || 'Login failed');
     }
