@@ -286,42 +286,80 @@ const Feed = () => {
     }));
   };
 
+  const renderSearchBar = (styleSwitch = false) => (
+    <div className={styleSwitch ? styles.searchBarAlternate : styles.searchBar}>
+      <div className={styles.searchWords}>
+        <FaSearch />
+      </div>
+      <div className={styles.searchInputWrapper}>
+        <input
+          ref={searchInputRef}
+          type="search"
+          value={inputText}
+          onChange={handleInputChange}
+          onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+          placeholder="Search projects..."
+          className={styles.searchInput}
+        />
+      {/*
+        <button 
+          className={styles.searchButton} 
+          onClick={handleSearch}
+        >
+          Search
+        </button>
+        */}
+      </div>
+      {/*
+      <div className={styles.resultsCount}>
+        Results: {filteredProjects.length}
+      </div>
+      */}
+    </div>
+  );
+
   return (
     <div className={styles.parentContainer}>
       <div className={styles.headerBox}>
-        <h2>{getHeaderText()}</h2>
-        {feedStyle === 'groupView' && activeGroup && (
-          <div className={styles.headerButtons}>
-            <button 
-              onClick={() => setIsModalOpen(true)}
-              className={`${styles.headerButton} ${styles.primary}`}
-            >
-              <MdOutlinePostAdd /> Add Project To Group
-            </button>
-            <button 
-              onClick={() => {setProjectShow(true); setMembersShow(false); setDiscussionShow(false); setBountyShow(false)}}
-              className={`${styles.headerButton} ${projectShow ? styles.active : ''}`}
-            >
-              <FaRegListAlt /> Posts
-            </button>
-            <button 
-              onClick={() => {setMembersShow(true); setProjectShow(false); setDiscussionShow(false); setBountyShow(false)}}
-              className={`${styles.headerButton} ${membersShow ? styles.active : ''}`}
-            >
-              <FaUsers /> Members
-            </button>
-            <button 
-              onClick={() => {setDiscussionShow(true); setMembersShow(false); setProjectShow(false); setBountyShow(false)}}
-              className={`${styles.headerButton} ${discussionShow ? styles.active : ''}`}
-            >
-              <GoCommentDiscussion /> Discussion
-            </button>
-            <button 
-              onClick={() => {setBountyShow(true); setMembersShow(false); setProjectShow(false); setDiscussionShow(false)}}
-              className={`${styles.headerButton} ${bountyShow ? styles.active : ''}`}
-            >
-              <FaCrown /> Bounties
-            </button>
+        {(feedStyle === 'groupView' && activeGroup) ? (
+          <>
+            <h2>{getHeaderText()}</h2>
+            <div className={styles.headerButtons}>
+              <button 
+                onClick={() => setIsModalOpen(true)}
+                className={`${styles.headerButton} ${styles.primary}`}
+              >
+                <MdOutlinePostAdd /> Add Project To Group
+              </button>
+              <button 
+                onClick={() => {setProjectShow(true); setMembersShow(false); setDiscussionShow(false); setBountyShow(false)}}
+                className={`${styles.headerButton} ${projectShow ? styles.active : ''}`}
+              >
+                <FaRegListAlt /> Posts
+              </button>
+              <button 
+                onClick={() => {setMembersShow(true); setProjectShow(false); setDiscussionShow(false); setBountyShow(false)}}
+                className={`${styles.headerButton} ${membersShow ? styles.active : ''}`}
+              >
+                <FaUsers /> Members
+              </button>
+              <button 
+                onClick={() => {setDiscussionShow(true); setMembersShow(false); setProjectShow(false); setBountyShow(false)}}
+                className={`${styles.headerButton} ${discussionShow ? styles.active : ''}`}
+              >
+                <GoCommentDiscussion /> Discussion
+              </button>
+              <button 
+                onClick={() => {setBountyShow(true); setMembersShow(false); setProjectShow(false); setDiscussionShow(false)}}
+                className={`${styles.headerButton} ${bountyShow ? styles.active : ''}`}
+              >
+                <FaCrown /> Bounties
+              </button>
+            </div>
+          </>
+        ) : (
+          <div className={styles.fullWidthSearch}>
+            {renderSearchBar(true)}
           </div>
         )}
       </div>
@@ -338,32 +376,13 @@ const Feed = () => {
           />
         </div>
         <div className={styles.feedMainContent}>
-          <div className={styles.searchBar}>
-            <div className={styles.searchWords}>
-              <FaSearch />
-            </div>
-            <div className={styles.buttonContainer}>
-              <input
-                ref={searchInputRef}
-                type="search"
-                value={inputText}
-                onChange={handleInputChange}
-                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                placeholder="Search projects..."
-                className={styles.searchInput}
-              />
-              <button 
-                className={styles.searchButton} 
-                onClick={handleSearch}
-              >
-                Search
-              </button>
-            </div>
-            <div className={styles.resultsCount}>
-              Results: {filteredProjects.length}
-            </div>
-          </div>
-          <div className={styles.feedContent}>
+              {feedStyle === 'groupView' && activeGroup && (
+                <>
+                  {renderSearchBar()}
+                  <div className={styles.divider}></div>
+                </>
+              )}
+                <div className={styles.feedContent}>
             {feedStyle === 'home' || feedStyle === 'popular' || feedStyle === 'upvoted' || feedStyle === 'suggested' ? (
               loading ? (
                 <div className={styles.loadingContainer}>

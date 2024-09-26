@@ -36,14 +36,14 @@ const ResearchPage = () => {
         }
       });
       if (!response.ok) {
-        throw new Error('Failed to fetch research results');
+        throw new Error('Failed to fetch research results. Try Refresing.');
       }
       const data = await response.json();
       if (data.status === 'success') {
         setResults(data.data);
         setFilteredResults(data.data);
       } else {
-        throw new Error(data.message || 'Failed to fetch research results');
+        throw new Error(data.message || 'Failed to fetch research results. Try Refresing.');
       }
     } catch (err) {
       setError(err.message);
@@ -60,13 +60,13 @@ const ResearchPage = () => {
         }
       });
       if (!response.ok) {
-        throw new Error('Failed to fetch saved papers');
+        throw new Error('Failed to fetch saved papers. Try Refresing.');
       }
       const data = await response.json();
       if (data.status === 'success') {
         setSavedPapers(data.data);
       } else {
-        throw new Error(data.message || 'Failed to fetch saved papers');
+        throw new Error(data.message || 'Failed to fetch saved papers. Try Refresing.');
       }
     } catch (err) {
       console.error('Error fetching saved papers:', err);

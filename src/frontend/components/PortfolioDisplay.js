@@ -58,7 +58,6 @@ const PortfolioDisplay = ({ user: passedUser }) => {
   return (
     <div className={styles.container}>
       <div className={styles.projectDirectory}>
-        <h3 className={styles.projectsTitle}>Projects</h3>
         {passedUser.portfolio.map((project, index) => {
           return (
             <SmallProjectEntry

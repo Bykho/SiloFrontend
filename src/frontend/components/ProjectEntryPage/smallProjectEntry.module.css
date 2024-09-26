@@ -1,10 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
 .projectContainer {
-  margin: 10px 0;
+  margin: 0 0 20px 0;
   padding: 20px;
   border-radius: 12px;
-  background-color: #242424;
+  background-color: #1f1f1f;
   color: #e0e0e0;
-  border: 4px solid rgba(76, 76, 76, 0.206); 
+  border: 4px solid rgba(76, 76, 76, 0.483); 
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.3s ease;
   transition: border 0.3s ease;
@@ -71,7 +74,7 @@
   display: flex;
   align-items: baseline;
   flex-grow: 1;
-  margin: 0 10px;
+  margin: 0 10px 0 0;
   overflow: hidden;
   gap: 5px; 
 }
@@ -85,15 +88,25 @@
 }
 
 .projectTitle {
-  font-size: 1.3rem;
+  font-family: 'Outfit'; 
+  font-weight: 400;
+  font-size: 1.5rem;
   font-weight: 600;
   margin: 0;
   margin-right: 10px;
-  margin-left: 8px;
+  margin-left: 0px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   cursor: pointer; 
+}
+
+.upvoteAndCommentContainer{
+  display: flex; 
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 0px; 
 }
 
 .byUsername {
@@ -118,7 +131,7 @@
 }
 
 .tag {
-  background-color: #4a4a4a;
+  background-color: #00579fb5;
   color: #a0c8ff;
   padding: 4px 10px;
   border-radius: 15px;
@@ -165,6 +178,8 @@
 }
 
 .descContainer {
+  display: flex; 
+  align-content: center;
   flex: 1;
   position: relative;
   overflow: hidden;
@@ -178,7 +193,7 @@
   position: relative;
   text-align: justify;
   text-justify: inter-word;
-  margin-left: 20px;
+  margin-left: 10px;
   margin-right: 20px;
   font-family: 'Lato';
   font-size: 18px;
@@ -187,6 +202,9 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+  border-left: 6px solid #4a90e2;
+  padding-left: 15px;
+  border-radius: 8px;
 }
 
 .description::after {
@@ -196,7 +214,7 @@
   left: 0;
   width: 100%;
   height: 25px;
-  background: linear-gradient(to bottom, rgba(50, 50, 50, 0), rgba(38, 38, 38, 0.608));
+  background: linear-gradient(to bottom, rgba(42, 42, 42, 0), rgba(30, 30, 30, 0.841));
 }
 
 .previewText::after {
@@ -283,9 +301,10 @@
   justify-content: space-between;
   background-color: #2a2a2a;
   padding: 10px 15px;
-  border-radius: 8px;
-  margin: 20px 0 15px 0;
+  border-radius: 15px;
+  margin: 15px 0 15px 0;
   transition: background-color 0.2s ease;
+  width: 89%; 
 }
 
 .commentBox:hover {

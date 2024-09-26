@@ -165,18 +165,7 @@ const ProfileHeader = ({ userData, loading, error }) => {
           */}
         </div>
         <div className={styles.tagsContainer}>
-          {renderTagsPreview(userData.skills, 'skill')}
-          {renderTagsPreview(userData.interests, 'interest')}
-        </div>
-        <div className={styles.divider}> </div>
-        <div className={styles.bioContainer}>
-          <p className={styles.bio} onClick={toggleBio}>{showFullBio ? userData.biography : getTruncatedBio(userData.biography)}</p>
-          {bioTruncated && (
-            <button onClick={toggleBio} className={styles.bioButton}>
-              {showFullBio ? <FaChevronUp /> : <FaChevronDown/>}
-            </button>
-          )}
-        </div>
+
         <div className={styles.linksContainer}>
           <button className={styles.contactMeButton} onClick={handleContactButton}> <IoMdMail /> Contact </button>
           <button className={styles.linkButton} onClick={toggleResume}>View Resume</button>
@@ -188,6 +177,21 @@ const ProfileHeader = ({ userData, loading, error }) => {
           {showCopiedConfirmation && (
           <div className={styles.copyConfirmation}>Email copied to clipboard!</div>
          )}
+        </div>
+
+          {renderTagsPreview(userData.skills, 'skill')}
+          {renderTagsPreview(userData.interests, 'interest')}
+
+        </div>
+
+        <div className={styles.divider}> </div>
+        <div className={styles.bioContainer}>
+          <p className={styles.bio} onClick={toggleBio}>{showFullBio ? userData.biography : getTruncatedBio(userData.biography)}</p>
+          {bioTruncated && (
+            <button onClick={toggleBio} className={styles.bioButton}>
+              {showFullBio ? <FaChevronUp /> : <FaChevronDown/>}
+            </button>
+          )}
         </div>
       </div>
       {showResume && (

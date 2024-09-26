@@ -1,4 +1,5 @@
 /* feed.module.css */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
 
 :root {
   --sidebar-width: 280px;
@@ -32,6 +33,7 @@ body {
  background-color: none;
 }
 .headerBox {
+  display: flex; 
   background-color: #1a1a1a;
   border: 1px solid #3c3c3c;
   border-radius: 12px;
@@ -47,6 +49,7 @@ body {
 }
 
 .headerBox h2 {
+  font-family: 'Outfit';
   margin: 0;
   font-size: 24px;
   font-weight: 600;
@@ -138,16 +141,39 @@ body {
   min-width: 0; /* Allows content to shrink below its default minimum content size */
 }
 
+.divider{
+  padding: 10px; 
+}
 
-.searchBar {
+.searchBar, .searchBarAlternate {
   display: flex;
   align-items: center;
   background-color: #1a1a1a;
   border-radius: 8px;
   padding: 10px 15px;
-  width: 97%; 
-  margin-bottom: 10px; 
+  width: 94%; 
+  margin-bottom: 0px; 
   border: 1px solid #4a4a4a;
+}
+
+.searchbar{
+  justify-content: space-between;
+}
+
+.searchBarAlternate {
+  padding: 0px 10px;
+  width: 100%; 
+  border: none; 
+  margin: 0; 
+  flex-grow: 1;
+  box-sizing: border-box;
+}
+
+.searchInputWrapper {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  margin: 0 10px;
 }
 
 .searchWords {
@@ -169,7 +195,8 @@ body {
   color: var(--text-color);
   font-size: 14px;
   padding: 5px;
-  min-width: 0; /* Allows input to shrink */
+  width: 100%; 
+  min-width: 200px;
 }
 
 .searchInput:focus {
@@ -183,7 +210,6 @@ body {
 .resultsCount {
   font-size: 14px;
   color: var(--secondary-text-color);
-  margin-left: 10px;
   white-space: nowrap;
 }
 
@@ -323,8 +349,8 @@ body {
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.2s ease-in-out;
-  margin-left: 10px;
   white-space: nowrap;
+  margin-left: 10px;
 }
 
 .searchButton:hover {

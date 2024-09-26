@@ -64,7 +64,7 @@ function Login() {
       <div className={styles.background}>
       <div className={styles.container}>
       <img src="/silo_logo.png" alt="Silo Logo" className={styles.logo} />
-      <div className={styles.siloStyle}>S    i   l   o</div>
+      <div className={styles.siloStyle} onClick={() => navigate('/')}>S    i   l   o</div>
         {isMobile ? (
           <MobileMessage message="While we're in beta, please use a laptop or desktop computer for the best experience."/>
         ) : (

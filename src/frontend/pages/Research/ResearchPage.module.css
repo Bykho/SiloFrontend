@@ -1,4 +1,6 @@
 /* ResearchPage.module.css */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
 .researchPage {
     background-color: #1e1e1e;
     color: #e2e8f0;
@@ -19,9 +21,11 @@
   
   .title {
     color: #f7fafc;
+    font-family: 'Outfit';
     font-size: 2.25rem;
     font-weight: bolder;
     margin-bottom: 0.5rem;
+    letter-spacing: 4px;
     margin-top: 20px;
     text-align: left;
   }

@@ -13,6 +13,7 @@ import HandleUpvote from '../wrappers/HandleUpvote';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/atom-one-dark.css';
+import { SiStyleshare } from 'react-icons/si';
 
 const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -227,14 +228,6 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
   return (
     <div className={styles.projectContainer}>
       <div className={styles.headerContainer}>
-        <UpvoteButton
-          project={localProject}
-          setProject={setLocalProject}
-          passedUser={localUser}
-          setPassedUser={setLocalUser}
-          userUpvotes={localUpvotes}
-          setUserUpvotes={setLocalUpvotes}
-        />
         <div className={styles.titleAndUsernameContainer}>
           <span className={styles.visIcon}> {renderVisibilityText()} </span>
           <h3 className={styles.projectTitle} onClick={togglePopup}>{localProject.projectName}</h3>
@@ -265,16 +258,26 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
           </div>
         </div>
       )}
-      <div className={styles.commentBox} onClick={toggleExpand}>
-        <div className={styles.commentIconContainer}>
-          <FaComment className={styles.commentIcon} />
-          <span className={styles.commentText}>Comments</span>
+      <div className={styles.upvoteAndCommentContainer}>
+        <UpvoteButton
+            project={localProject}
+            setProject={setLocalProject}
+            passedUser={localUser}
+            setPassedUser={setLocalUser}
+            userUpvotes={localUpvotes}
+            setUserUpvotes={setLocalUpvotes}
+          />
+        <div className={styles.commentBox} onClick={toggleExpand}>
+          <div className={styles.commentIconContainer}>
+            <FaComment className={styles.commentIcon} />
+            <span className={styles.commentText}>Comments</span>
+          </div>
+          <button className={styles.expandButton} onClick={toggleExpand}>
+            {isExpanded ? <FaChevronUp /> : <FaChevronDown />}
+          </button>
         </div>
-        <button className={styles.expandButton} onClick={toggleExpand}>
-          {isExpanded ? <FaChevronUp /> : <FaChevronDown />}
-        </button>
-      </div>
-      {renderComments()}
+    </div>
+    {renderComments()}
     </div>
   );
 };
