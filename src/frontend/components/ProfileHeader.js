@@ -22,7 +22,7 @@ const ProfileHeader = ({ userData, loading, error }) => {
   const isProfilePage = location.pathname.includes('/profile/');
 
   const BIO_LENGTH_LIMIT = 300;
-  const VISIBLE_TAGS = 3;
+  const VISIBLE_TAGS = 2;
 
   //Build out below.
   const userSpiderData = userData.scores[userData.scores.length - 1]
@@ -166,19 +166,18 @@ const ProfileHeader = ({ userData, loading, error }) => {
         </div>
         <div className={styles.tagsContainer}>
 
-        <div className={styles.linksContainer}>
-          <button className={styles.contactMeButton} onClick={handleContactButton}> <IoMdMail /> Contact </button>
-          <button className={styles.linkButton} onClick={toggleResume}>View Resume</button>
-          {userData.github_link && renderLinkButton(userData.github_link, <FaGithub />)}
-          {userData.personal_website && renderLinkButton(userData.personal_website, <FaGlobe />)}
-          {userData.links && userData.links.map((link, index) => (
-            renderLinkButton(link, <FaLink key={index} />)
-          ))}
-          {showCopiedConfirmation && (
-          <div className={styles.copyConfirmation}>Email copied to clipboard!</div>
-         )}
-        </div>
-
+          <div className={styles.linksContainer}>
+            <button className={styles.contactMeButton} onClick={handleContactButton}> <IoMdMail /> Contact </button>
+            <button className={styles.linkButton} onClick={toggleResume}>View Resume</button>
+            {userData.github_link && renderLinkButton(userData.github_link, <FaGithub />)}
+            {userData.personal_website && renderLinkButton(userData.personal_website, <FaGlobe />)}
+            {userData.links && userData.links.map((link, index) => (
+              renderLinkButton(link, <FaLink key={index} />)
+            ))}
+            {showCopiedConfirmation && (
+            <div className={styles.copyConfirmation}>Email copied to clipboard!</div>
+          )}
+          </div>
           {renderTagsPreview(userData.skills, 'skill')}
           {renderTagsPreview(userData.interests, 'interest')}
 
