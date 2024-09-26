@@ -115,13 +115,22 @@ const ProfileHeader = ({ userData, loading, error }) => {
     console.log('Contact button clicked'); 
   }; 
 
-
-
   const renderLinkButton = (link, icon) => {
-    const label = getLinkLabel(link);
+    let fullLink = link;
+    let label = getLinkLabel(link);
+  
+    // Check if it's a GitHub link
+    if (icon.type === FaGithub) {
+      // If it's just a username, construct the full GitHub URL
+      if (!link.includes('github.com') && !link.includes('http')) {
+        fullLink = `https://github.com/${link}`;
+        label = link; // Use the username as the label
+      }
+    }
+  
     return (
       <a
-        href={link}
+        href={fullLink}
         target="_blank"
         rel="noopener noreferrer"
         className={styles.linkButton}

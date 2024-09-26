@@ -18,6 +18,8 @@ const JobsPage = () => {
   const [userData, setUserData] = useState(null);
   const [userInterests, setUserInterests] = useState([]);
 
+  const [preventFetching, setPreventFetching] = useState(false)
+
   useEffect(() => {
     const fetchJobs = async () => {
       setIsLoading(true);
@@ -56,7 +58,7 @@ const JobsPage = () => {
       }
     };
   
-    fetchJobs();
+    //fetchJobs();
   }, []);
   
   useEffect(() => {
