@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
 .container {
   display: flex;
   flex-direction: column;
@@ -17,8 +19,9 @@
 }
 
 .textHeader{
+  font-family: 'Montserrat'; 
+  font-weight: 500; 
   font-size: 24px;
-  font-weight: bold;
   color: #f4f4f4;
   padding: 1.5rem 1.5rem 0 1.5rem; 
 }
@@ -29,7 +32,7 @@
 
 .column {
   flex: 1 1 300px;
-  background-color: #333333;
+  background-color: #1e1e1e;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -43,13 +46,15 @@
 }
 
 .text, .editableText {
-  font-size: 16px;
+  font-family: 'Outfit'; 
+  font-weight: 300; 
+  font-size: 20px;
   line-height: 1.6;
   color: #e8e8e8;
   padding: 1.5rem;
   white-space: pre-wrap;
   flex-grow: 1;
-  background-color: #333333;
+  background-color: #1e1e1e; 
   text-align: justify;
   margin-left:5px; 
   margin-right:20px;
@@ -68,7 +73,7 @@
   align-items: center;
   padding: 10px;
   box-sizing: border-box;
-  background-color: #343434;
+  background-color: #1e1e1e;
   position: relative;
   cursor: pointer;
   overflow: hidden;
@@ -87,7 +92,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: #1e1e1e;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -176,10 +181,10 @@
   position: absolute;
   top: 10px;
   right: 10px;
-  background-color: #c4c2c2;
-  border-radius: 5px;
+  background-color: #fa2100;
+  border-radius: 50px;
   border: #333;
-  color: #1f99ef;
+  color: #ffffff;
   font-size: 24px;
   cursor: pointer;
   padding: 5px;

@@ -118,11 +118,15 @@
   }
   
   .title {
+    display: flex; 
+    align-items: center;
+    gap: 1rem;
     font-size: 2rem;
-    margin-bottom: 1rem;
-    margin-top: 0; 
-    color: var(--highlight-bg);
+    color: rgb(185, 185, 185);
     text-align: left;
+    border-left: 5px solid #3498db;
+    border-radius: 5px; 
+    padding: 0px 0px 0px 20px; 
   }
   
   .projectInfo {
@@ -283,13 +287,13 @@
   
   .header{
     margin-bottom: 1.2rem;
-    margin-top: 1rem; 
+    margin-top: .5rem; 
     display: flex;
     justify-content: space-between;
+    align-items: center;
     width: 100%;
     border-bottom: 1px solid var(--border-color); 
     padding-bottom: 1.2rem;
-  
   }
   
   .cellTypeSelect {

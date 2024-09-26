@@ -208,7 +208,7 @@ const AutofillProjectFromPDF = ({ setProjectName, setProjectDescription, setTags
   return (
     <div className={styles.headerButtons}>
       <label htmlFor="autofillInput" className={styles.autofillLabel}>
-        <IoSparkles /> Autofill Project from PDF
+        <IoSparkles /> Autofill Project
       </label>
       <input 
         type="file" 

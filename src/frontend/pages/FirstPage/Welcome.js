@@ -133,9 +133,7 @@ function Welcome() {
                 <span className={styles.engineeringPlatform}>For Engineers</span>
               </h1>
               <p className={styles.description}>
-                Auto-generate a portfolio from code, papers, or from scratch and
-                host your portfolio on a personal URL. Building Linkedin for engineers.
-                Launching at Duke and Columbia.
+                Generate your portfolio, share your work, and explore the cutting edge. We're building the best STEM community. 
               </p>
             </div>
             <AnimatedSection 

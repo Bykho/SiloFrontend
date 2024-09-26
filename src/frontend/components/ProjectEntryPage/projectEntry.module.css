@@ -1,7 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
 .projectContainer {
-  padding: 20px 35px 20px 35px;
+  padding: 20px 50px 20px 40px;
   border-radius: 8px;
-  background-color: #252525;
+  background-color: #171717;
   color: #d9d9d9;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
@@ -39,7 +42,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
   margin-top: 15px
 }
 
@@ -85,14 +88,21 @@
 }
 
 .projectTitle {
-  font-size: 1.4rem;
+  font-family: 'Montserrat'; 
+  font-weight: 700; 
+  font-size: 1.7rem;
+  display: flex; 
+  letter-spacing: 2px;
+  justify-content: center;
   font-weight: 600;
   margin: 0;
   margin-right: 25px;
-  margin-left: 15px; 
+  margin-left: 20px; 
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  border-radius: 3px;
+  padding-left: 10px;
 }
 
 .tagsDisplay {
@@ -143,7 +153,7 @@
 
 .titleAndUsernameContainer {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   flex-grow: 1;
   margin: 0px 0px;
   overflow: hidden;
@@ -203,10 +213,10 @@
 }
 
 .linkButton {
-  background-color: #eae6e6;
+  background-color: #272727;
   color: #70b9e3;
   text-decoration: none;
-  padding: 6px 12px;
+  padding: 8px 12px;
   border-radius: 5px;
   transition: background-color 0.3s ease;
   font-weight: bold;
@@ -225,9 +235,10 @@
   gap: 10px; 
   padding: 7px 15px 7px 15px; 
   background: none;
-  border-radius: 5px;
+  border-radius: 15px;
   border: none; 
-  background-color: #4895c5;
+  background-color: #1c1c1c;
+  border: 1px solid rgba(255, 255, 255, 0.495);
   cursor: pointer;
   color: white;
   font-size: 1rem;
@@ -244,9 +255,9 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  background-color: #383838;
+  background-color: #272727;
   padding: 5px 10px;
-  border-radius: 5px;
+  border-radius: 15px;
   height: 40px; 
   margin: 20px 0;
   flex-grow: 1;
@@ -278,11 +289,11 @@
 }
 
 .commentsSection {
-  background-color: #2a2a2a;
+  background-color: #212121;
   padding: 10px;
-  border-radius: 5px;
-  margin-top: 10px;
-  width: 98%;
+  border-radius: 10px;
+  margin-top: 0px;
+  width: 100%;
 }
 
 .comment {
@@ -353,15 +364,15 @@
 
 .commentInput {
   padding: 10px;
-  background-color: #333;
+  background-color: #1d1d1d;
   color: white; 
-  border: 1px solid #7c7c7c;
+  border: 1px solid #7c7c7ca1;
   border-radius: 8px;
   width: 85%;
   resize: vertical;
   box-sizing: border-box;
   max-width: 100%;
-  margin-top: 10px;
+  margin-top: 0px;
   overflow: hidden;
 }
 
@@ -404,8 +415,14 @@
 }
 
 .projDescription {
-  font-size: 1rem;
+  font-family: 'Outfit'; 
+  font-weight: 300; 
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.811); 
   line-height: 1.5;
+  border-left: 5px solid #3498db;
+  border-radius: 5px; 
+  padding-left: 10px; 
 }
 
 .collapsedDescription {
@@ -417,7 +434,7 @@
 }
 
 .seeMoreButton {
-  background-color: #486c81; /* Color of the button */
+  background-color: #33373971; /* Color of the button */
   border: none;
   color: #cfcfcf; /* Dark color for text */
   cursor: pointer;
@@ -429,14 +446,14 @@
   text-align: center; /* Center the text */
 }
 .seeMoreButton:hover {
-  background-color: #70b9e3; /* Optional: hover color */
+  background-color: #70b9e37b; /* Optional: hover color */
   color: #fff; /* Optional: text color on hover */
 }
 
 .divider {
   width: 100%;
   height: 1px;
-  background-color: #ccc;
+  background-color: #cccccc79;
   margin: 20px 0; /* Space around the divider */
 }
 

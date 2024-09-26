@@ -61,6 +61,7 @@ function Login() {
   return (
     <div style={{ position: 'relative', zIndex: 0 }}>
       <GameOfLife />
+      <div className={styles.background}>
       <div className={styles.container}>
       <img src="/silo_logo.png" alt="Silo Logo" className={styles.logo} />
       <div className={styles.siloStyle}>S    i   l   o</div>
@@ -106,6 +107,7 @@ function Login() {
         )}
       </div>
       {showPasswordReset && <PasswordReset onClose={togglePasswordReset} />} {/* Render the PasswordReset component */}
+    </div>
     </div>
   );
 }

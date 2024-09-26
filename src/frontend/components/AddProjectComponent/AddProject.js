@@ -9,6 +9,7 @@ import CleanOrbitingRingLoader from '../FractalLoadingBar';
 import MoveModal from './MoveModal';
 import Canvas from './Canvas';
 import { FaFont, FaImage, FaVideo, FaFilePdf, FaCode, FaTimes, FaCheck, FaExchangeAlt } from 'react-icons/fa';
+import { PiPushPinBold } from "react-icons/pi";
 
 
 const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, onClose = null }) => {
@@ -312,7 +313,7 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
       )}
       <div className={styles.container}>
         <div className={styles.header}>
-          <h1 className={styles.title}>Project Builder</h1>
+          <h1 className={styles.title}> Project Builder  <PiPushPinBold /></h1>
           <AutofillProjectFromPDF
             setProjectName={setProjectName}
             setProjectDescription={setProjectDescription}

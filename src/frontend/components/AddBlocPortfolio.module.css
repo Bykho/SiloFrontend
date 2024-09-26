@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&display=swap');
+
 :root {
   --primary-bg: #1e1e1e;
   --secondary-bg: #2d2d2d;
@@ -485,11 +487,13 @@
 }
 
 .autofillLabel {
+  font-family: 'Lexend'; 
+  font-weight: bold;
   background-color: #3498db;
   display: inline-flex; 
   color: white;
   padding: 15px;
-  border-radius: 5px;
+  border-radius: 30px;
   cursor: pointer;
   font-size: 20px;
   white-space: nowrap;
@@ -497,14 +501,16 @@
   border: 2px solid #96d5ff;
   align-items: center; 
   gap: 20px; 
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .autofillLabel:hover {
-  background-color: #236895;
+  background-color: #0b9dff;
   color: white;
-  border-radius: 5px;
   cursor: pointer;
+  box-shadow: 0 0 15px rgba(11, 157, 255, 0.7);
 }
+
 .moveModal {
   position: fixed;
   top: 50%;
