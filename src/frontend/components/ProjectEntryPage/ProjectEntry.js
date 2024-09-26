@@ -242,14 +242,6 @@ const ProjectEntry = ({ project, passedUser, UpvoteButton, userUpvotes, setUserU
     <div className={styles.projectContainer}>
       <div className={styles.headerContainer}>
         <div className={styles.titleAndUsernameContainer}>
-          <UpvoteButton
-            project={localProject}
-            setProject={setLocalProject}
-            passedUser={localUser}
-            setPassedUser={setLocalUser}
-            userUpvotes={userUpvotes}
-            setUserUpvotes={setUserUpvotes}
-          />
           <h3 className={styles.projectTitle}>{localProject.projectName}</h3>
           <span className={styles.byUsername}>by <span className={styles.username} onClick={navToProfile}>{localProject.createdBy}</span></span>
         </div>
@@ -273,13 +265,22 @@ const ProjectEntry = ({ project, passedUser, UpvoteButton, userUpvotes, setUserU
       <div className={styles.buttonContainer}>
         {localProject.links && localProject.links.map((link, index) => (renderLinkButton(link)))}
       </div>
-
+      <div className={styles.upvoteAndCommentContainer}>
+      <UpvoteButton
+            project={localProject}
+            setProject={setLocalProject}
+            passedUser={localUser}
+            setPassedUser={setLocalUser}
+            userUpvotes={userUpvotes}
+            setUserUpvotes={setUserUpvotes}
+          />
       <div className={styles.commentBox} onClick={toggleExpand}>
         <FaComment className={styles.commentIcon} />
         <span className={styles.commentText}>Comments...</span>
         <button className={styles.expandButton} onClick={toggleExpand}>
           {isExpanded ? <FaChevronUp /> : <FaChevronDown />}
         </button>
+      </div>
       </div>
 
       {renderComments()}

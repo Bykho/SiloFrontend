@@ -2,11 +2,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
 .projectContainer {
-  padding: 20px 50px 20px 40px;
-  border-radius: 8px;
+  padding: 35px 50px 20px 40px;
+  border-radius: 15px;
   background-color: #171717;
   color: #d9d9d9;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(245, 242, 242, 0.1);
   box-sizing: border-box;
 }
 
@@ -96,13 +96,11 @@
   justify-content: center;
   font-weight: 600;
   margin: 0;
-  margin-right: 25px;
-  margin-left: 20px; 
+  margin-right: 20px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   border-radius: 3px;
-  padding-left: 10px;
 }
 
 .tagsDisplay {
@@ -287,13 +285,22 @@
 .expandButton:hover {
   color: #1e1e1e;
 }
+.upvoteAndCommentContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 15px;
+  justify-content: space-between;
+  gap: 20px;  
+  width: 100%; 
+}
 
 .commentsSection {
   background-color: #212121;
   padding: 10px;
   border-radius: 10px;
   margin-top: 0px;
-  width: 100%;
+  width: 98%;
 }
 
 .comment {
@@ -417,12 +424,14 @@
 .projDescription {
   font-family: 'Outfit'; 
   font-weight: 300; 
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   color: rgba(255, 255, 255, 0.811); 
   line-height: 1.5;
   border-left: 5px solid #3498db;
   border-radius: 5px; 
   padding-left: 10px; 
+  text-align: justify;
+
 }
 
 .collapsedDescription {
@@ -441,7 +450,7 @@
   font-size: .75rem; /* Size of the text */
   padding: 5px 10px; /* Padding for the button */
   border-radius: 5px; /* Rounded edges */
-  margin-top: 10px; /* Space above the button */
+  margin-top: 20px; /* Space above the button */
   display: block; /* Ensure the button is displayed as a block */
   text-align: center; /* Center the text */
 }
