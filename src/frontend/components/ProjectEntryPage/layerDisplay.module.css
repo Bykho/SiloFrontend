@@ -106,11 +106,7 @@
 }
 
 .imageContainer:hover .imageOverlay {
-  opacity: 1;
-}
-
-.imageContainer:hover .image {
-  transform: scale(1.05);
+  opacity: .2;
 }
 
 .videoContainer, .pdfContainer {

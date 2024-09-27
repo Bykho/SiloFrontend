@@ -1,6 +1,7 @@
 
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState} from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from './siloDescription.module.css';
 import GameOfLife from './GameOfLife';
 import UserSpiderPlot from '../../components/UserSpiderPlot';
@@ -12,6 +13,8 @@ function SiloDescription() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     setIsLoaded(true);
@@ -47,6 +50,10 @@ function SiloDescription() {
     setIsModalOpen(!isModalOpen);
   };
 
+  const goToStudentProfile = () => {
+    navigate('/studentProfile');
+  };
+
   const handleCreateProjectClick = () => {
     toggleModal(); // Open the modal instead of navigating
   };
@@ -54,33 +61,33 @@ function SiloDescription() {
   return (
     <div className={styles.container}>
       <div className={styles.backgroundAnimation}>
-        <GameOfLife />
-      </div>
-      <div className={styles.leftContent}>
-        <div className={styles.testTitle}>
-          <h1 className={`${styles.aboutHeader} ${isLoaded ? styles.headerLoaded : ''}`}>
-            <div className={styles.helloLine}>
-              <span className={styles.letters}>H</span><span className={styles.letters}>e</span><span className={styles.letters}>l</span><span className={styles.letters}>l</span><span className={styles.letters}>o</span>
+       <spline-viewer url="https://prod.spline.design/2R4lYlPvgoU3Dyzv/scene.splinecode" background="rgba(18,18,18,0.1)"></spline-viewer>      </div>
+            {/*
+            <div className={styles.leftContent}>  
+            <div className={styles.testTitle}>
+              <h1 className={`${styles.aboutHeader} ${isLoaded ? styles.headerLoaded : ''}`}>
+                <div className={styles.helloLine}>
+                  <span className={styles.letters}>H</span><span className={styles.letters}>e</span><span className={styles.letters}>l</span><span className={styles.letters}>l</span><span className={styles.letters}>o</span>
+                </div>
+                <div className={styles.worldLine}>
+                  <span className={styles.letters}>W</span><span className={styles.letters}>o</span><span className={styles.letters}>r</span><span className={styles.letters}>l</span><span className={styles.letters}>d</span>
+                </div>
+              </h1>
             </div>
-            <div className={styles.worldLine}>
-              <span className={styles.letters}>W</span><span className={styles.letters}>o</span><span className={styles.letters}>r</span><span className={styles.letters}>l</span><span className={styles.letters}>d</span>
+          </div>
+          */}
+          <div className={styles.rightContent}>
+            <div className={`${styles.ctaContainer} ${isLoaded ? styles.ctaLoaded : ''}`}>
+              <p className={styles.cta}>LinkedIn wasn't built for engineers.</p>
+              <p className={styles.cta}>Silo is.</p>
             </div>
-          </h1>
-        </div>
-      </div>
-      <div className={styles.rightContent}>
-        <div className={`${styles.ctaContainer} ${isLoaded ? styles.ctaLoaded : ''}`}>
-          <p className={styles.cta}>LinkedIn wasn't built for engineers.</p>
-          <p className={styles.cta}>Silo is.</p>
-        </div>
-        <button 
-          className={`${styles.createButton} ${isLoaded ? styles.buttonLoaded : ''}`}
-          onClick={handleCreateProjectClick}
-        >
-          Analyze my Profile
-        </button>
-      </div>
-      
+            <button 
+              onClick={goToStudentProfile}
+              className={`${styles.createButton} ${isLoaded ? styles.buttonLoaded : ''}`}     
+            >
+              Build My Portfolio
+            </button>
+          </div>
       {isModalOpen && (
         <div className={styles.modal}>
           <div className={styles.modalContent}>

@@ -134,7 +134,7 @@ const LayerDisplay = ({ layers, isEditing, toggleEdit, updateLayer, updateProjec
                     className={styles.image}
                   />
                   <div className={styles.imageOverlay}>
-                    <span className={styles.expandIcon}>🔍</span>
+                    <span className={styles.expandIcon}></span>
                   </div>
                 </div>
               )}
