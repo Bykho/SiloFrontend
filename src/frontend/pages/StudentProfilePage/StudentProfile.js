@@ -259,6 +259,8 @@ function StudentProfile() {
 
   const handleCloseGithubPull = () => {
     setShowGitPull(false);
+    setSelectedGitFiles([]);
+    setSelectedGitSurroundingInfo({});
   };
 
   const handleCloseSharePreview = () => {
@@ -267,38 +269,45 @@ function StudentProfile() {
 
   const handleSaveProject = async (newProject, deleteInfo) => {
     try {
-      // Immediately update local state
       setUserData((prevState) => {
         if (newProject) {
-          return {
-            ...prevState,
-            portfolio: [newProject, ...prevState.portfolio],
-          };
+          const existingIndex = prevState.portfolio.findIndex(
+            (project) => project._id === newProject._id
+          );
+          if (existingIndex !== -1) {
+            const updatedPortfolio = [...prevState.portfolio];
+            updatedPortfolio[existingIndex] = newProject;
+            return {
+              ...prevState,
+              portfolio: updatedPortfolio,
+            };
+          } else {
+            return {
+              ...prevState,
+              portfolio: [newProject, ...prevState.portfolio],
+            };
+          }
         } else if (deleteInfo && deleteInfo.projectId) {
+          const updatedPortfolio = prevState.portfolio.filter(
+            (project) => project._id !== deleteInfo.projectId
+          );
           return {
             ...prevState,
-            portfolio: prevState.portfolio.filter(
-              (project) => project._id !== deleteInfo.projectId
-            ),
+            portfolio: updatedPortfolio,
           };
+        } else {
+          return prevState;
         }
-        return prevState;
       });
       setPortfolioKey(prevKey => prevKey + 1);
 
       setSelectedGitFiles([]);
   
-      // Process the updated userData for backend submission
       const updatedUserData = {
         ...userData,
-        portfolio: newProject
-          ? [newProject, ...userData.portfolio]
-          : userData.portfolio.filter(
-              (project) => project._id !== deleteInfo?.projectId
-            ),
+        portfolio: userData.portfolio,
       };
   
-      // Recursive function to filter out objects with type 'image' in the portfolio
       const filterPortfolio = (data) => {
         if (Array.isArray(data)) {
           return data
@@ -322,7 +331,6 @@ function StudentProfile() {
         }
       };
   
-      // Filter the portfolio and prepare the data for the backend
       const filteredPortfolio = filterPortfolio(updatedUserData.portfolio);
       closeAllModals();
       const newVsScoreData = {
@@ -359,7 +367,6 @@ function StudentProfile() {
   
     } catch (error) {
       console.error('Error in handleSaveProject:', error);
-      // You might want to show an error message to the user here
     } finally {
       closeAllModals();
     }

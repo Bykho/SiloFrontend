@@ -14,6 +14,7 @@ import { PiPushPinBold } from "react-icons/pi";
 
 const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, onClose = null }) => {
   const [dictInitProjectData, setDictInitProjectData] = useState(typeof initialProjectData === 'string' ? JSON.parse(initialProjectData) : initialProjectData);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     console.log('ADDPROJECT initialProjectData: ', initialProjectData)
@@ -138,6 +139,9 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
   };
 
   const handleSave = async () => {
+    if (isSaving) return;
+
+    setIsSaving(true);
     const projectData = {
       projectName,
       projectDescription,
@@ -164,17 +168,17 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
         const savedProject = await response.json();
         alert('Project saved successfully');
         if (onSave) {
-          if (initialProjectData._id) {
-            onSave(savedProject.layers, savedProject);
-          } else {
-            onSave(savedProject);
-          }
+          onSave(savedProject, null); // Pass savedProject and null
         }
       } else {
         console.error('Error saving project:', response.statusText);
+        alert('Error saving project. Please try again.');
       }
     } catch (error) {
       console.error('Error saving project:', error);
+      alert('Error saving project. Please try again.');
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -391,9 +395,14 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
           />
         </div>
         <div className={styles.actionButtons}>
-          <button className={styles.saveButton} onClick={() => handleSave(projectName, projectDescription, layers, tags, links, user, initialProjectData, onSave)}>
-            <FaSave className={styles.iconSpacing}/> Save Project
-          </button>
+          <button 
+            className={styles.saveButton} 
+            onClick={() => handleSave(projectName, projectDescription, layers, tags, links, user, initialProjectData, onSave)}
+            disabled = {isSaving}
+            >
+              <FaSave className={styles.iconSpacing}/> 
+              {isSaving ? 'Saving...' : 'Save Project'}
+            </button>
           <label className={styles.toggleButton}>
             <input
               type="checkbox"

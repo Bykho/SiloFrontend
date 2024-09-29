@@ -27,10 +27,10 @@ const ProfileHeader = ({ userData, loading, error }) => {
   //Build out below.
   const userSpiderData = userData.scores[userData.scores.length - 1]
 
-  //useEffect(() => {
-  //  console.log('ProfileHeader userData: ', userData)
-  //  console.log('ProfileHeader userSpiderData: ', userSpiderData)
-  //}, [userData])
+  const isValidResume = (resumeData) => {
+    if (!resumeData || typeof resumeData !== 'string') return false;
+    return resumeData.startsWith('data:application/pdf;base64,');
+  };
 
   useEffect(() => {
     if (userData && userData.biography) {
@@ -196,7 +196,13 @@ const ProfileHeader = ({ userData, loading, error }) => {
       {showResume && (
         <div className={styles.resumeModal}>
           <button className={styles.closeButton2} onClick={toggleResume}><FaWindowClose /> </button>
-          <embed src={userData.resume} type="application/pdf" width="80%" height="80%" />
+          {isValidResume(userData.resume) ? (
+            <embed src={userData.resume} type="application/pdf" width="80%" height="80%" />
+          ) : (
+            <div className={styles.resumePlaceholder}>
+              User needs to reupload resume
+            </div>
+          )}
         </div>
       )}
 

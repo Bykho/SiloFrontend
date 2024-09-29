@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styles from './gitPull.module.css';
 import { GitHub, Folder, File, CheckSquare, Square, ChevronRight, ChevronDown, AlertCircle } from 'react-feather';
 import config from '../config';
+import CleanOrbitingRingLoader from './FractalLoadingBar';
 
 const GitPull = ({ userData, onPortfolioUpdate }) => {
   const [githubUsername, setGithubUsername] = useState('');
@@ -11,6 +12,7 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
   const [expandedSubItems, setExpandedSubItems] = useState({});
   const [selectedFiles, setSelectedFiles] = useState({});
   const [loading, setLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [noRepos, setNoRepos] = useState(false);
   const [apiErrorMessage, setApiErrorMessage] = useState('');
@@ -74,11 +76,17 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
       if (!response.ok) throw new Error('Failed to fetch branches');
       const data = await response.json();
       setRepoBranches(prev => ({ ...prev, [repoName]: data }));
+  
+      // Automatically select the first branch if available
+      if (data.length > 0) {
+        setSelectedBranches(prev => ({ ...prev, [repoName]: data[0].name }));
+      }
     } catch (err) {
       console.error('Failed to fetch branches:', err);
     }
   };
-  
+
+
 
   const fetchContents = async (repoName, path = '') => {
     if (!githubUsername || !repoName) return;
@@ -232,7 +240,7 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
   
 
   const handleSubmit = async () => {
-
+    setIsSubmitting(true);
     // Filter the selected files using the filterFiles function
     const selectedFilePaths = Object.entries(selectedFiles)
       .filter(([, isSelected]) => isSelected)
@@ -317,6 +325,8 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
     } catch (error) {
       console.error('Error adding projects to portfolio:', error);
       alert('Failed to add projects to portfolio. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -330,9 +340,10 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
           value={selectedBranches[repoName] || ''}
           onChange={(e) => handleBranchSelect(repoName, e.target.value)}
         >
-          <option value="" disabled>Select branch</option>
           {branches.map(branch => (
-            <option key={branch.name} value={branch.name}>{branch.name}</option>
+            <option key={branch.name} value={branch.name}>
+              {`Selected Branch: ${branch.name}`}
+            </option>
           ))}
         </select>
         <p style={{ margin: 0 }}>
@@ -414,6 +425,11 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
 
   return (
     <div className={styles.gitPullContainer}>
+      {isSubmitting && (
+        <div className={styles.loaderOverlay}>
+          <CleanOrbitingRingLoader />
+        </div>
+      )}
       <h2 className={styles.heading}>
         <GitHub className={styles.headingIcon} />
         Generate Projects from GitHub

@@ -10,7 +10,7 @@ const SidebarItem = ({ Icon, text, onClick, isActive }) => (
   </li>
 );
 
-const GroupItem = ({ name, members, onClick, joinable = false, joined = false, onJoin, isActive }) => (
+const GroupItem = ({ name, members, onClick, joinable = false, joined = false, onJoin, onLeave, isActive }) => (
   <li className={`${styles.groupItem} ${isActive ? styles.active : ''}`} onClick={onClick}>
     <div className={styles.groupInfo}>
       <div className={styles.groupIcon}>
@@ -27,11 +27,16 @@ const GroupItem = ({ name, members, onClick, joinable = false, joined = false, o
         </button>
       )}
       {joinable && joined && <span className={styles.joinedStatus}>Joined</span>}
+      {!joinable && (
+        <button className={styles.leaveButton} onClick={(e) => { e.stopPropagation(); onLeave(); }}>
+          Leave
+        </button>
+      )}
     </div>
   </li>
 );
 
-const GroupSection = ({ title, groups, joinable, joinedGroups, onJoin, setActiveGroup, setFeedStyle, activeGroup }) => {
+const GroupSection = ({ title, groups, joinable, joinedGroups, onJoin, onLeave, setActiveGroup, setFeedStyle, activeGroup }) => {
   const [isOpen, setIsOpen] = useState(true);
 
   return (
@@ -43,7 +48,7 @@ const GroupSection = ({ title, groups, joinable, joinedGroups, onJoin, setActive
       {isOpen && (
         <ul className={styles.groupList}>
           {groups.map((group, index) => (
-            <GroupItem
+              <GroupItem
               key={group._id}
               name={group.name}
               members={group.members}
@@ -54,6 +59,7 @@ const GroupSection = ({ title, groups, joinable, joinedGroups, onJoin, setActive
               joinable={joinable}
               joined={joinable ? joinedGroups.includes(group._id) : true}
               onJoin={() => onJoin(group._id)}
+              onLeave={() => onLeave(group._id)}
               isActive={activeGroup && activeGroup._id === group._id}
             />
           ))}
@@ -154,6 +160,46 @@ const CombinedFeedSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGr
     }
   };
 
+  const handleGroupLeave = async (groupId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${config.apiBaseUrl}/leaveGroup`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ groupId }),
+      });
+      if (!response.ok) throw new Error('Failed to leave group');
+      const result = await response.json();
+
+      // Remove the group from myGroups
+      const updatedMyGroups = myGroups.filter(group => group._id !== groupId);
+      setMyGroups(updatedMyGroups);
+
+      // Add the group back to suggestedGroups
+      const leftGroup = myGroups.find(group => group._id === groupId);
+      if (leftGroup) {
+        setSuggestedGroups([...suggestedGroups, leftGroup]);
+      }
+
+      // Update joinedGroups state
+      setJoinedGroups(joinedGroups.filter(id => id !== groupId));
+
+      // Reset activeGroup and feedStyle if necessary
+      if (activeGroup && activeGroup._id === groupId) {
+        setActiveGroup(null);
+        setFeedStyle('home'); // or 'suggested' if you prefer
+      }
+
+      console.log('Successfully left group:', result);
+    } catch (err) {
+      console.error('Error leaving group:', err);
+    }
+  };
+
+
   return (
     <div className={styles.sidebar}>
       <ul className={styles.sidebarMenu}>
@@ -185,6 +231,7 @@ const CombinedFeedSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGr
           title="Your Communities"
           groups={filteredMyGroups}
           joinable={false}
+          onLeave={handleGroupLeave} // Pass the handler here
           setActiveGroup={setActiveGroup}
           setFeedStyle={setFeedStyle}
           activeGroup={activeGroup}
