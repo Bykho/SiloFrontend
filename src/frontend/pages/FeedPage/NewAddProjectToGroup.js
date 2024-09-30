@@ -1,6 +1,5 @@
 
 
-
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styles from './newAddProjectToGroup.module.css';
@@ -8,7 +7,7 @@ import { FaTimes, FaPlus, FaSave } from 'react-icons/fa';
 import { useUser } from '../../contexts/UserContext';
 import config from '../../config';
 
-const NewAddProjectToGroup = ({ group, onClose, updateGroupProjects }) => {
+const NewAddProjectToGroup = ({ group, onClose, updateGroupProjects, removeProjectFromGroup }) => {
   const { user } = useUser();
   const [projects, setProjects] = useState([]);
   const [includedProjects, setIncludedProjects] = useState([]);
@@ -20,8 +19,8 @@ const NewAddProjectToGroup = ({ group, onClose, updateGroupProjects }) => {
         const response = await fetch(`${config.apiBaseUrl}/returnUserProjects`, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({ userId: user._id }),
         });
@@ -41,19 +40,36 @@ const NewAddProjectToGroup = ({ group, onClose, updateGroupProjects }) => {
       }
     };
     fetchProjects();
-  }, [user._id]);
+  }, [user._id, group.projects]);
 
-  const toggleIncludeProject = (projectId) => {
-    setIncludedProjects((prevIncluded) =>
-      prevIncluded.includes(projectId)
-        ? prevIncluded.filter((id) => id !== projectId)
-        : [...prevIncluded, projectId]
-    );
+  const toggleIncludeProject = async (projectId) => {
+    if (includedProjects.includes(projectId)) {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${config.apiBaseUrl}/removeProjectFromGroup`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify({ groupId: group._id, projectId: projectId }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to remove project from group');
+        }
+
+        removeProjectFromGroup(projectId);
+        setIncludedProjects(prevIncluded => prevIncluded.filter(id => id !== projectId));
+      } catch (err) {
+        console.error('Error removing project from group:', err);
+      }
+    } else {
+      setIncludedProjects(prevIncluded => [...prevIncluded, projectId]);
+    }
   };
 
   const handleSaveProjectToGroup = async () => {
-    //console.log('here are the includedProjects: ', includedProjects )
-    console.log('here are the group._id: ', group._id )
     try {
       const token = localStorage.getItem('token');
       const response = await fetch(`${config.apiBaseUrl}/saveProjectToGroup`, {
@@ -73,16 +89,11 @@ const NewAddProjectToGroup = ({ group, onClose, updateGroupProjects }) => {
       console.log('Successfully saved projects to group:', result);
 
       updateGroupProjects(includedProjects);
-      // Optionally, close the modal or show a success message
       onClose();
     } catch (err) {
       console.error('Error saving projects to group:', err);
     }
   };
-
-  //useEffect(() => {
-  //  console.log('ADDPROJECTOGROUP Group parameter:', group);
-  //}, [group]);
 
   return (
     <div className={styles.modal}>
@@ -103,7 +114,7 @@ const NewAddProjectToGroup = ({ group, onClose, updateGroupProjects }) => {
                 }
                 onClick={() => toggleIncludeProject(project._id)}
               >
-                {includedProjects.includes(project._id) ? 'Added' : <FaPlus />} 
+                {includedProjects.includes(project._id) ? 'Remove added project?' : <FaPlus />}
               </button>
             </li>
           ))}
@@ -117,6 +128,3 @@ const NewAddProjectToGroup = ({ group, onClose, updateGroupProjects }) => {
 };
 
 export default NewAddProjectToGroup;
-
-
-

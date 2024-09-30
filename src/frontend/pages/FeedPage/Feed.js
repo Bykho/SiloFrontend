@@ -282,8 +282,19 @@ const Feed = () => {
   const updateGroupProjects = (newProjects) => {
     setActiveGroup((prevGroup) => ({
       ...prevGroup,
-      projects: [...prevGroup.projects, ...newProjects],
+      projects: [...new Set([...prevGroup.projects, ...newProjects])],
     }));
+    fetchGroupProjects();
+  };
+
+  const removeProjectFromGroup = (projectId) => {
+    setActiveGroup((prevGroup) => ({
+      ...prevGroup,
+      projects: prevGroup.projects.filter(id => id !== projectId),
+    }));
+    setFilteredProjects(prevProjects => 
+      prevProjects.filter(project => project._id !== projectId)
+    );
   };
 
   const renderSearchBar = (styleSwitch = false) => (
@@ -455,7 +466,8 @@ const Feed = () => {
             <NewAddProjectToGroup 
               group={activeGroup} 
               onClose={() => setIsModalOpen(false)} 
-              updateGroupProjects={updateGroupProjects} 
+              updateGroupProjects={updateGroupProjects}
+              removeProjectFromGroup={removeProjectFromGroup}
             />
           </div>
         </div>
