@@ -116,7 +116,7 @@ const ProfileHeader = ({ userData, loading, error }) => {
   }; 
 
   const renderLinkButton = (link, icon) => {
-    let fullLink = link;
+    let fullLink = ensureProtocol(link);
     let label = getLinkLabel(link);
   
     // Check if it's a GitHub link
@@ -144,6 +144,13 @@ const ProfileHeader = ({ userData, loading, error }) => {
   const handleSkillClick = (skill) => {
     navigate('/GenDirectory', { state: { skill: skill } });
   }
+
+  const ensureProtocol = (url) => {
+    if (!/^https?:\/\//i.test(url)) {
+      return 'https://' + url;
+    }
+    return url;
+  };
 
   if (loading) return <p className={styles.loadingError}>Loading...</p>;
   if (error) return <p className={styles.loadingError}>Error: {error}</p>;

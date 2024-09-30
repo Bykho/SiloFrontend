@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProfileImage from '../../components/ProfileImage';
 import styles from './publicProfileHeader.module.css';
-import { FaGithub, FaChevronDown, FaChevronUp, FaWindowClose } from 'react-icons/fa';
+import { FaGithub, FaGlobe, FaLink, FaChevronDown, FaChevronUp, FaWindowClose } from 'react-icons/fa';
 
 const PublicProfileHeader = ({ userData, loading, error }) => {
   const navigate = useNavigate();
@@ -31,7 +31,7 @@ const PublicProfileHeader = ({ userData, loading, error }) => {
   };
   
   const renderLinkButton = (link, icon) => {
-    let fullLink = link;
+    let fullLink = ensureProtocol(link);
     let label = getLinkLabel(link);
   
     // Check if it's a GitHub link
@@ -77,6 +77,13 @@ const PublicProfileHeader = ({ userData, loading, error }) => {
     }
   };
 
+  const ensureProtocol = (url) => {
+    if (!/^https?:\/\//i.test(url)) {
+      return 'https://' + url;
+    }
+    return url;
+  };
+
   if (loading) return <div className={styles.loadingError}>Loading...</div>;
   if (error) return <div className={styles.loadingError}>Error: {error}</div>;
   if (!userData) return <div className={styles.loadingError}>No user data available</div>;
@@ -109,6 +116,8 @@ const PublicProfileHeader = ({ userData, loading, error }) => {
         <div className={styles.buttonContainer}>
           <button className={styles.resumeButton} onClick={toggleResume}>View Resume</button>
           {userData.github_link && renderLinkButton(userData.github_link, <FaGithub />)}
+          {userData.personal_website && renderLinkButton(userData.personal_website, <FaGlobe />)}
+
         </div>
       </div>
       
