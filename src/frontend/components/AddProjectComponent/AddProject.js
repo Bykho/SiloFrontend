@@ -12,12 +12,16 @@ import { FaFont, FaImage, FaVideo, FaFilePdf, FaCode, FaTimes, FaCheck, FaExchan
 import { PiPushPinBold } from "react-icons/pi";
 
 
-const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, onClose = null }) => {
+const AddProject = ({ initialRows = [], initialProjectData = {}, repo_url = null, onSave = null, onClose = null }) => {
   const [dictInitProjectData, setDictInitProjectData] = useState(typeof initialProjectData === 'string' ? JSON.parse(initialProjectData) : initialProjectData);
   const [isSaving, setIsSaving] = useState(false);
 
+  useEffect(() =>{
+    console.log("here is repoUrl", repo_url)
+  },[repo_url])
+
   useEffect(() => {
-    console.log('ADDPROJECT initialProjectData: ', initialProjectData)
+    //console.log('ADDPROJECT initialProjectData: ', initialProjectData)
     if (typeof initialProjectData === 'string') {
       try {
         const parsedData = JSON.parse(initialProjectData);
@@ -47,14 +51,37 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
   });
   
   const [links, setLinks] = useState(() => {
-    if (Array.isArray(dictInitProjectData?.links)) {
-      return dictInitProjectData.links.join(', ');
-    } else if (typeof dictInitProjectData?.links === 'string') {
-      return dictInitProjectData.links;
-    } else {
-      return '';
+    let initialLinks = '';
+    if (Array.isArray(initialProjectData?.links)) {
+      initialLinks = initialProjectData.links.join(', ');
+    } else if (typeof initialProjectData?.links === 'string') {
+      initialLinks = initialProjectData.links;
     }
+    
+    if (repo_url && !initialLinks.includes(repo_url)) {
+      initialLinks = initialLinks ? `${initialLinks}, ${repo_url}` : repo_url;
+    }
+    
+    return initialLinks;
   });
+
+  useEffect(() => {
+    if (repo_url) {
+      setLinks(prevLinks => {
+        let linksArray = [];
+        if (typeof prevLinks === 'string') {
+          linksArray = prevLinks.split(',').map(link => link.trim());
+        } else if (Array.isArray(prevLinks)) {
+          linksArray = prevLinks;
+        }
+        if (!linksArray.includes(repo_url)) {
+          return [...linksArray, repo_url].join(', ');
+        }
+        return prevLinks;
+      });
+    }
+  }, [repo_url]);
+
   
   const [visibility, setVisibility] = useState(dictInitProjectData?.visibility ?? true);
   const { user } = useUser();
@@ -68,6 +95,23 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
   const [previewProject, setPreviewProject] = useState({});
   const [isRearranging, setIsRearranging] = useState(false);
 
+
+  useEffect(() => {
+    if (dictInitProjectData.repo_url) {
+      setLinks(prevLinks => {
+        let linksArray = [];
+        if (typeof prevLinks === 'string') {
+          linksArray = prevLinks.split(',').map(link => link.trim());
+        } else if (Array.isArray(prevLinks)) {
+          linksArray = prevLinks.map(link => link.trim());
+        }
+        if (!linksArray.includes(dictInitProjectData.repo_url)) {
+          return [...linksArray, dictInitProjectData.repo_url].join(', ');
+        }
+        return prevLinks;
+      });
+    }
+  }, [dictInitProjectData.repo_url]);
 
   useEffect(() => {
     if (Object.keys(dictInitProjectData).length > 0) {

@@ -63,19 +63,13 @@ const PublicProfileHeader = ({ userData, loading, error }) => {
       <h3 className={styles.tagLabel}>{type}</h3>
       <div className={styles.tagList}>
         {tags.map((tag, index) => (
-          <span key={index} className={styles.tag} onClick={() => handleTagClick(tag, type)}>
+          <span key={index} className={styles.tag}>
             {tag}
           </span>
         ))}
       </div>
     </div>
   );
-
-  const handleTagClick = (tag, type) => {
-    if (type === 'Skills') {
-      navigate('/GenDirectory', { state: { skill: tag } });
-    }
-  };
 
   const ensureProtocol = (url) => {
     if (!/^https?:\/\//i.test(url)) {

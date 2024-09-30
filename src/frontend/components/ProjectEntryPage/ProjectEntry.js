@@ -109,9 +109,9 @@ const ProjectEntry = ({ project, passedUser, UpvoteButton, userUpvotes, setUserU
   const handleAddComment = async (commentText) => {
     if (commentText.trim() !== '') {
       const token = localStorage.getItem('token');
-      const commentData = { author: passedUser.username, text: commentText, projectId: localProject._id };
+      const commentData = { author: user.username, text: commentText, projectId: localProject._id };
       try {
-        const response = await fetch(`${config.apiBaseUrl}/handleComment/${passedUser.username}`, {
+        const response = await fetch(`${config.apiBaseUrl}/handleComment/${user.username}`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -128,32 +128,33 @@ const ProjectEntry = ({ project, passedUser, UpvoteButton, userUpvotes, setUserU
             ...prevProject,
             comments: updatedComments,
           }));
+  
+          // Create notification
+          const notificationPayload = {
+            user_id: localProject.user_id,
+            type: 'comment',
+            message: commentText,
+            project_name: localProject.projectName,
+            from_user: user.username,
+            project_id: localProject._id,
+            recipient_id: localProject.user_id,
+          };
+          const notificationResponse = await fetch(`${config.apiBaseUrl}/create_notification`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(notificationPayload)
+          });
+          if (!notificationResponse.ok) throw new Error('Failed to create notification');
+          console.log('Notification created successfully');
         } else {
           console.error('Failed to add comment:', data.error);
         }
       } catch (error) {
-        console.error('Error during adding comment:', error);
+        console.error('Error during adding comment or creating notification:', error);
       }
-      const notificationPayload = {
-        user_id: project.user_id,
-        type: 'comment',
-        message: commentText,
-        project_name: project.projectName,
-        from_user: user.username,
-        project_id: project._id,
-        recipient_id: project.user_id,
-      };
-      const notificationResponse = await fetch(`${config.apiBaseUrl}/create_notification`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(notificationPayload)
-      });
-      console.log('got here', notificationPayload)
-      if (!notificationResponse.ok) throw new Error('Failed to create notification');
-      console.log('Notification created successfully');
     }
   };
 

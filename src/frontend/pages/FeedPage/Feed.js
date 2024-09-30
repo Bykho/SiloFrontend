@@ -226,6 +226,10 @@ const Feed = () => {
   };
 
   const handleSearch = async () => {
+    if (!inputText.trim()) {
+      // If it's empty, don't perform the search
+      return;
+    }
     setSearchText(inputText);
     setLoading(true);
     setCurrentPage(1);  // Reset to the first page when searching

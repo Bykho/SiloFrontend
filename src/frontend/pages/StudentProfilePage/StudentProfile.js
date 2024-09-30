@@ -34,9 +34,13 @@ function StudentProfile() {
   const location = useLocation();
   const [selectedGitFiles, setSelectedGitFiles] = useState([]);
   const [selectedGitSurroundingInfo, setSelectedGitSurroundingInfo] = useState({});
+  const [repoURL, setRepoURL] = useState('');
   const [showCopiedConfirmation, setShowCopiedConfirmation] = useState(false);
   const [portfolioKey, setPortfolioKey] = useState(0);
 
+  useEffect(() => {
+    console.log('here is repoURL: ', repoURL)
+  }, [repoURL])
 
   const languageLookup = {
     js: 'javascript',
@@ -110,9 +114,9 @@ function StudentProfile() {
     }
   };
 
-  useEffect(() => {
-    console.log('here is the user data: ', userData)
-  }, [userData])
+  //useEffect(() => {
+  //  console.log('here is the user data: ', userData)
+  //}, [userData])
 
 
   useEffect(() => {
@@ -160,9 +164,9 @@ function StudentProfile() {
     return rows;
   };
 
-  const handleGitPullUpdate = (selectedProjects, surroundingInfo) => {
+  const handleGitPullUpdate = (selectedProjects, surroundingInfo, repo_url) => {
     const processedFiles = selectedProjects.map(file => {
-      console.log('STUDENTPROFILE HANDLEGITPULLUPDATE these is file being sent from the backend: ', file);
+      //console.log('STUDENTPROFILE HANDLEGITPULLUPDATE these is file being sent from the backend: ', file);
       const extension = file.filePath.split('.').pop().toLowerCase();
       let cellType = 'code';
       let language = languageLookup[extension] || extension;
@@ -189,14 +193,16 @@ function StudentProfile() {
       };
     });
     
-    console.log('STUDENTPROFILE HANDLEGITPULLUPDATE these is processedFiles: ', processedFiles);
+    console.log('here is repo_url: ', repo_url)
+    //console.log('STUDENTPROFILE HANDLEGITPULLUPDATE these is processedFiles: ', processedFiles);
   
     const updatedFiles = structureLayers(processedFiles);
-    console.log('STUDENTPROFILE HANDLEGITPULLUPDATE these is updatedFiles: ', updatedFiles);
+    //console.log('STUDENTPROFILE HANDLEGITPULLUPDATE these is updatedFiles: ', updatedFiles);
   
     setSelectedGitFiles(updatedFiles);
-    console.log('selectedGitFiles after update:', updatedFiles);
+    //console.log('selectedGitFiles after update:', updatedFiles);
     setSelectedGitSurroundingInfo(surroundingInfo);
+    setRepoURL(repo_url)
     setShowGitPull(false);
     setShowModal(true);
   };
@@ -424,12 +430,13 @@ function StudentProfile() {
         <div className={styles.modal}>
           <div className={styles.modalContent}>
             <button className={styles.closeButton} onClick={handleCloseModal}><FaWindowClose /></button>
-            {console.log('Passing initialRows to AddProject: ', selectedGitFiles)}
-            {console.log('Passing initialProjectData to AddProject: ', selectedGitSurroundingInfo)}
+            {/*console.log('Passing initialRows to AddProject: ', selectedGitFiles)*/}
+            {/*console.log('Passing initialProjectData to AddProject: ', selectedGitSurroundingInfo)*/}
             <AddProject 
               onSave={handleSaveProject} 
               initialRows={selectedGitFiles.length > 0 ? selectedGitFiles : []}
               initialProjectData={selectedGitSurroundingInfo}
+              repo_url={repoURL}
               onClose={handleCloseModal}
             />
           </div>

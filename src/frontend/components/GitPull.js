@@ -268,7 +268,7 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
       repo_name: expandedRepo,
       branch_name: selectedBranches[expandedRepo] || branchName, // Use the selected branch name
     };
-    console.log('GITPULL handleSubmit request_data: ', requestData);
+    //console.log('GITPULL handleSubmit request_data: ', requestData);
     try {
       const response = await fetch(`${config.apiBaseUrl}/groqAutofillCodeProject`, {
         method: 'POST',
@@ -278,8 +278,8 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
         body: JSON.stringify(requestData),
       });
 
-      console.log('API response status:', response.status);
-      console.log('API response object:', response);
+      //console.log('API response status:', response.status);
+      //console.log('API response object:', response);
 
       if (!response.ok) {
         if (response.status === 413) {
@@ -292,9 +292,10 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
       }
 
       const result = await response.json();
-      console.log('API response:', result);
-      console.log('API response.summary_content: ', result.summary_content)
-      console.log('API response.surrounding_summary: ', result.surrounding_summary)
+      //console.log('API response:', result);
+      //console.log('API response.summary_content: ', result.summary_content)
+      //console.log('API response.surrounding_summary: ', result.surrounding_summary)
+      console.log('[GIT-PULL] API response w/ the githubURL: ', result.repo_url)
       if (!Array.isArray(result.summary_content)) {
         console.log('summary_content is not an array');
       }
@@ -318,9 +319,9 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
         return { repoName: null, filePath: key, content: value, language: 'text' };
       });
 
-      console.log("GITPULL HANDLESUBMIT combinedData: ", combinedData)
-      console.log("GITPULL HANDLESUBMIT result.surrounding_summary: ", result.surrounding_summary)
-      onPortfolioUpdate(combinedData, result.surrounding_summary);
+      //console.log("GITPULL HANDLESUBMIT combinedData: ", combinedData)
+      //console.log("GITPULL HANDLESUBMIT result.surrounding_summary: ", result.surrounding_summary)
+      onPortfolioUpdate(combinedData, result.surrounding_summary, result.repo_url);
       setApiErrorMessage('');
     } catch (error) {
       console.error('Error adding projects to portfolio:', error);
