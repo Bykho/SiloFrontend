@@ -155,11 +155,18 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
   };
 
   const renderTagsPreview = (tags) => {
-
+    console.log('Tags:', tags, 'Type:', typeof tags, 'Is array:', Array.isArray(tags));
     if (!tags || tags.length === 0) {
       return null;
     };
 
+    if (typeof tags === 'string') {
+      tags = tags.split(',').map(tag => tag.trim());
+    }
+    if (!Array.isArray(tags) || tags.length === 0) {
+      return null;
+    }
+    
     const previewTags = tags.slice(0, VISIBLE_TAGS);
     const remainingTags = tags.slice(VISIBLE_TAGS);
     return (

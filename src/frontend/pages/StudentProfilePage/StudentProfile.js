@@ -276,7 +276,14 @@ function StudentProfile() {
   const handleSaveProject = async (newProject, deleteInfo) => {
     try {
       setUserData((prevState) => {
-        if (newProject) {
+        if (deleteInfo && deleteInfo.projectId) {
+          // Handle deletion
+          return {
+            ...prevState,
+            portfolio: prevState.portfolio.filter(project => project._id !== deleteInfo.projectId)
+          };
+        } else if (newProject) {
+          // Handle save/update
           const existingIndex = prevState.portfolio.findIndex(
             (project) => project._id === newProject._id
           );
@@ -293,26 +300,20 @@ function StudentProfile() {
               portfolio: [newProject, ...prevState.portfolio],
             };
           }
-        } else if (deleteInfo && deleteInfo.projectId) {
-          const updatedPortfolio = prevState.portfolio.filter(
-            (project) => project._id !== deleteInfo.projectId
-          );
-          return {
-            ...prevState,
-            portfolio: updatedPortfolio,
-          };
-        } else {
-          return prevState;
         }
+        return prevState;
       });
+  
       setPortfolioKey(prevKey => prevKey + 1);
-
       setSelectedGitFiles([]);
   
-      const updatedUserData = {
-        ...userData,
-        portfolio: userData.portfolio,
-      };
+      const updatedUserData = await new Promise(resolve => {
+        setUserData(currentUserData => {
+          const newUserData = { ...currentUserData };
+          resolve(newUserData);
+          return newUserData;
+        });
+      });
   
       const filterPortfolio = (data) => {
         if (Array.isArray(data)) {
@@ -339,6 +340,7 @@ function StudentProfile() {
   
       const filteredPortfolio = filterPortfolio(updatedUserData.portfolio);
       closeAllModals();
+      
       const newVsScoreData = {
         skills: updatedUserData.skills,
         interests: updatedUserData.interests,

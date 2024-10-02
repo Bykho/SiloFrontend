@@ -13,74 +13,47 @@ import { PiPushPinBold } from "react-icons/pi";
 
 
 const AddProject = ({ initialRows = [], initialProjectData = {}, repo_url = null, onSave = null, onClose = null }) => {
-  const [dictInitProjectData, setDictInitProjectData] = useState(typeof initialProjectData === 'string' ? JSON.parse(initialProjectData) : initialProjectData);
-  const [isSaving, setIsSaving] = useState(false);
+  const [dictInitProjectData, setDictInitProjectData] = useState(() => {
+    let processedData = typeof initialProjectData === 'string'
+      ? JSON.parse(initialProjectData)
+      : initialProjectData || {};
 
-  useEffect(() =>{
-    console.log("here is repoUrl", repo_url)
-  },[repo_url])
-
-  useEffect(() => {
-    //console.log('ADDPROJECT initialProjectData: ', initialProjectData)
-    if (typeof initialProjectData === 'string') {
-      try {
-        const parsedData = JSON.parse(initialProjectData);
-        setDictInitProjectData(parsedData);
-      } catch (error) {
-        console.error('Failed to parse initialProjectData:', error);
-      }
-    } else if (typeof initialProjectData === 'object' && initialProjectData !== null) {
-      setDictInitProjectData(initialProjectData);
-    } else {
-      console.log('initialProjectData is of unexpected type:', typeof initialProjectData);
+    // Process tags
+    if (Array.isArray(processedData.tags)) {
+      processedData.tags = processedData.tags.join(', ');
+    } else if (typeof processedData.tags !== 'string') {
+      processedData.tags = '';
     }
-  }, [initialProjectData]);
 
+    // Process links
+    if (Array.isArray(processedData.links)) {
+      processedData.links = processedData.links.join(', ');
+    } else if (typeof processedData.links !== 'string') {
+      processedData.links = '';
+    }
+
+    // Add repo_url to links if it doesn't exist
+    if (repo_url && !processedData.links.includes(repo_url)) {
+      processedData.links = processedData.links
+        ? `${processedData.links}, ${repo_url}`
+        : repo_url;
+    }
+
+    return processedData;
+  });
+  
+  const [isSaving, setIsSaving] = useState(false);
   const [layers, setRows] = useState(initialRows.length ? initialRows : []);
   const [needsReorganization, setNeedsReorganization] = useState(true);
   const [projectName, setProjectName] = useState(dictInitProjectData?.projectName || '');
   const [projectDescription, setProjectDescription] = useState(dictInitProjectData?.projectDescription || '');
-  const [tags, setTags] = useState(() => {
-    if (Array.isArray(dictInitProjectData?.tags)) {
-      return dictInitProjectData.tags.join(', ');
-    } else if (typeof dictInitProjectData?.tags === 'string') {
-      return dictInitProjectData.tags;
-    } else {
-      return '';
-    }
-  });
-  
-  const [links, setLinks] = useState(() => {
-    let initialLinks = '';
-    if (Array.isArray(initialProjectData?.links)) {
-      initialLinks = initialProjectData.links.join(', ');
-    } else if (typeof initialProjectData?.links === 'string') {
-      initialLinks = initialProjectData.links;
-    }
-    
-    if (repo_url && !initialLinks.includes(repo_url)) {
-      initialLinks = initialLinks ? `${initialLinks}, ${repo_url}` : repo_url;
-    }
-    
-    return initialLinks;
-  });
+  const [tags, setTags] = useState(dictInitProjectData.tags || '');
+  const [links, setLinks] = useState(dictInitProjectData.links || '');
 
   useEffect(() => {
-    if (repo_url) {
-      setLinks(prevLinks => {
-        let linksArray = [];
-        if (typeof prevLinks === 'string') {
-          linksArray = prevLinks.split(',').map(link => link.trim());
-        } else if (Array.isArray(prevLinks)) {
-          linksArray = prevLinks;
-        }
-        if (!linksArray.includes(repo_url)) {
-          return [...linksArray, repo_url].join(', ');
-        }
-        return prevLinks;
-      });
-    }
-  }, [repo_url]);
+    console.log("Repository URL: ", repo_url);
+    console.log("Initial Project Data: ", dictInitProjectData);
+  }, [repo_url, dictInitProjectData]);
 
   
   const [visibility, setVisibility] = useState(dictInitProjectData?.visibility ?? true);
@@ -94,24 +67,6 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, repo_url = null
   const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [previewProject, setPreviewProject] = useState({});
   const [isRearranging, setIsRearranging] = useState(false);
-
-
-  useEffect(() => {
-    if (dictInitProjectData.repo_url) {
-      setLinks(prevLinks => {
-        let linksArray = [];
-        if (typeof prevLinks === 'string') {
-          linksArray = prevLinks.split(',').map(link => link.trim());
-        } else if (Array.isArray(prevLinks)) {
-          linksArray = prevLinks.map(link => link.trim());
-        }
-        if (!linksArray.includes(dictInitProjectData.repo_url)) {
-          return [...linksArray, dictInitProjectData.repo_url].join(', ');
-        }
-        return prevLinks;
-      });
-    }
-  }, [dictInitProjectData.repo_url]);
 
   useEffect(() => {
     if (Object.keys(dictInitProjectData).length > 0) {
@@ -212,6 +167,7 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, repo_url = null
         const savedProject = await response.json();
         alert('Project saved successfully');
         if (onSave) {
+          console.log('here is the savedProject: ', savedProject)
           onSave(savedProject, null); // Pass savedProject and null
         }
       } else {
