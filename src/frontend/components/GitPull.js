@@ -319,6 +319,14 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
         return { repoName: null, filePath: key, content: value, language: 'text' };
       });
 
+      result.file_contents.forEach(file => {
+        combinedData.push({
+          repoName: expandedRepo,
+          filePath: file.name,
+          content: file.content,
+        });
+      });
+      
       //console.log("GITPULL HANDLESUBMIT combinedData: ", combinedData)
       //console.log("GITPULL HANDLESUBMIT result.surrounding_summary: ", result.surrounding_summary)
       onPortfolioUpdate(combinedData, result.surrounding_summary, result.repo_url);
