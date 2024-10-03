@@ -3,6 +3,8 @@ import { Flame, Home, Search, Users, ChevronDown, ChevronRight, Sparkles, X } fr
 import { BiUpvote } from "react-icons/bi";
 import styles from './newFeedSidebar.module.css';
 import config from '../../config';
+import { FaPlusCircle } from "react-icons/fa";
+
 
 const SidebarItem = ({ Icon, text, onClick, isActive }) => (
   <li className={`${styles.sidebarItem} ${isActive ? styles.active : ''}`} onClick={onClick}>
@@ -245,6 +247,8 @@ const CombinedFeedSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGr
       <h2 className={styles.groupsHeader}>
         <Users size={20} />
         <span>Communities</span>
+        <button className={styles.createGroupButton} onClick={() => setIsModalOpen(true)}> <FaPlusCircle /> Create</button>
+
       </h2>
       <div className={styles.searchContainer}>
         <Search size={16} />
@@ -255,7 +259,6 @@ const CombinedFeedSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGr
           onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
-      <button className={styles.createGroupButton} onClick={() => setIsModalOpen(true)}>Create Group</button>
       <div className={styles.dividerMid}></div>
       <div className={styles.groupsList}>
         <GroupSection
