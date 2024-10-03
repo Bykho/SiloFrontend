@@ -3,6 +3,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=DotGothic16&display=swap"); 
 @import url("https://fonts.googleapis.com/css2?family=Jacquard+12&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+
 
 .nav {
   background: linear-gradient(to bottom, rgba(18, 18, 18, 1), rgba(18, 18, 18, 0.1));
@@ -20,14 +24,14 @@
   z-index: 1000;
 }
 
-.nav > div {
+.nav > div:not(.logoContainer) {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
   align-items: center;
   gap: 10px;
   flex-grow: 1;
-  padding-right: 40px; 
+  padding-right: 40px;
 }
 
 
@@ -44,12 +48,13 @@
 }
 
 .button, .clickedButton, .logoutButton {
-  color: #f0f0f0;
+  color: #bababa;
+  gap: 5px; 
   padding: 10px 20px;
   border-radius: 8px;
   text-decoration: none;
   font-size: 17px;
-  font-weight: 500;
+  font-weight: bolder;
   font-family: 'Inconsolata', monospace;
   cursor: pointer;
   background: transparent;
@@ -61,6 +66,9 @@
   min-width: 100px;
   max-width: 110px;
 }
+.clickedButton{
+  color: white; 
+}
 
 .logoutButton {
   padding: 10px;
@@ -68,9 +76,50 @@
   max-width: 60px;
 }
 
+
 .clickedButton {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.062);
   border-color: rgba(255, 255, 255, 0.2);
+}
+.logoIcon{
+  height: 45px; 
+  width: auto; 
+}
+
+.logoButton {
+  margin-left: 0px;
+  color: white;
+  font-family: 'Outfit', sans-serif;
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 5px;
+}
+
+.logoButton::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #ffffff, transparent);
+  transform: translateX(-100%);
+  transition: transform 0.5s ease;
+}
+
+.logoButton:hover::after {
+  transform: translateX(100%);
+  cursor: pointer; 
+}
+.logoContainer {
+  margin-right: auto;
+  display: inline-flex; 
+  align-items: center;
+
 }
 
 .siloButton {

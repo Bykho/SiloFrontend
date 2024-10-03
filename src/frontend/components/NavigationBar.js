@@ -42,7 +42,10 @@ const NavigationBar = () => {
     <div className={styles.nav}>
       {user ? (
         <>
-          <SiloBetaButton onClick={() => handleLinkClick('other')} />
+            <div className={styles.logoContainer}>
+              <img src="/silo_logo.png" alt="Silo Logo" className={styles.logoIcon} />
+              <div className={styles.logoButton}>Silo</div>
+            </div>
           <div>
             <a
               href="/feed"
@@ -94,7 +97,10 @@ const NavigationBar = () => {
         </>
       ) : (
         <>
-          <a href="/siloDescription" className={styles.siloButton} onClick={() => handleLinkClick('other')}>Silo_Repo</a>
+          <div className={styles.logoContainer}>
+            <img src="/silo_logo.png" alt="Silo Logo" className={styles.logoIcon} />
+            <div className={styles.logoButton}>Silo</div>
+          </div>
           <div>
             <a
               href="/feed"
