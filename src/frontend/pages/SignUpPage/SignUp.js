@@ -6,7 +6,6 @@ import { useUser } from '../../contexts/UserContext';
 import GameOfLife from '../GoLivePage/GameOfLife';
 import styles from './SignUp.module.css';
 import config from '../../config';
-import SuggestedPortfolio from '../../components/SuggestedPortfolio';
 
 
 function SignUp() {
@@ -25,8 +24,14 @@ function SignUp() {
     interests: [],
     skills: [],
     biography: '',
-    groups: []
+    groups: [],
+    portfolio: []
   });
+  const [error, setError] = useState('');
+  const [isNextDisabled, setIsNextDisabled] = useState(true);
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [showTermsModal, setShowTermsModal] = useState(false);
   const [suggestedSummary, setSuggestedSummary] = useState({});
   const [suggestedBio, setSuggestedBio] = useState('');
   const [suggestedInterests, setSuggestedInterests] = useState([]);
@@ -35,17 +40,10 @@ function SignUp() {
   const [suggestedUniversity, setSuggestedUniversity] = useState('');
   const [suggestedMajor, setSuggestedMajor] = useState('');
   const [suggestedGradYr, setSuggestedGradYr] = useState('');
-  const [error, setError] = useState('');
-  const [isNextDisabled, setIsNextDisabled] = useState(true);
-  const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
-  const [selectedPortfolio, setSelectedPortfolio] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [savedUsersId, setSavedUsersId] = useState('');
-  const [agreedToTerms, setAgreedToTerms] = useState(false);
-  const [showTermsModal, setShowTermsModal] = useState(false);
 
-  const [isLoading, setIsLoading] = useState(false); // Add loading state
-
-  const { user, updateUser } = useUser();
+  const { updateUser } = useUser();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -68,6 +66,20 @@ function SignUp() {
   const handleResumeUpload = async (file) => {
     console.log('Submitted a file:', file);
     console.log('File size:', file.size, 'bytes');
+  
+    const reader = new FileReader();
+    reader.readAsDataURL(file); // This will read the file and convert it to base64 format
+  
+    reader.onloadend = async () => {
+      const base64String = reader.result; // Base64 encoded string with "data:application/pdf;base64,..."
+      console.log('Base64 string of the resume:', base64String);
+  
+      // Step 2: Update formData with the base64 string of the resume
+      setFormData(prevState => ({
+        ...prevState,
+        resume: base64String // Store the base64 encoded resume
+      }));
+  
   
     setIsLoading(true);
   
@@ -108,6 +120,10 @@ function SignUp() {
       setIsLoading(false);
     }
   };
+  reader.onerror = (error) => {
+    console.error('Failed to convert the resume file to base64:', error);
+  };
+};
   
   
 
@@ -211,12 +227,7 @@ function SignUp() {
         const data = await response.json();
         localStorage.setItem('token', data.access_token);
         updateUser(data.new_user);
-        
-        if (suggestedSummary.projects && suggestedSummary.projects.length > 0) {
-          setPage(4);  // Navigate to the fourth page if there are suggested projects
-        } else {
-          navigate('/siloDescription');  // Otherwise navigate to the description page
-        }
+        navigate('/siloDescription'); // Navigate directly to the description page
       } else {
         const errorData = await response.json();
         setError(errorData.message || 'Registration failed');
@@ -241,79 +252,6 @@ function SignUp() {
     setShowTermsModal(false);
   };
 
-
-  const handleSuggestedPortfolioSubmit = async (e) => {
-    e.preventDefault();
-
-    if (selectedPortfolio.length === 0) return;
-    const token = localStorage.getItem('token');
-
-    const userData = {
-        user_id: user._id,
-        selectedPortfolio: selectedPortfolio
-    };
-
-    console.log("Here is userData: ", userData);
-
-    try {
-        // First, save the portfolio to the backend
-        const response = await fetch(`${config.apiBaseUrl}/massProjectPublish`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(userData),
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            console.log('Portfolio saved successfully:', data);
-
-            // Now, prepare and send the data to calculate the scores
-          {/*}    const filteredPortfolio = filterPortfolio(selectedPortfolio);
-
-            const newVsScoreData = {
-                skills: formData.skills,
-                interests: formData.interests,
-                portfolio: filteredPortfolio,
-                major: formData.major,
-            };
-
-            const scoreResponse = await fetch(`${config.apiBaseUrl}/VSprofileScore`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                },
-                body: JSON.stringify(newVsScoreData),
-            });
-
-            if (!scoreResponse.ok) {
-                throw new Error('Failed to get response from VSprofileScore');
-            }
-
-            const result = await scoreResponse.json();
-            console.log('Here is the result from VSprofileScore:', result);
-
-            // Update the user's scores array with the new scores
-            updateUser((prevUser) => ({
-                ...prevUser,
-                scores: [...prevUser.scores, result], // Append the new scores to the scores array
-            })); */}
-
-            // Navigate to the description page after everything is done
-            navigate('/siloDescription');
-
-        } else {
-            const errorData = await response.json();
-            setError(errorData.message || 'Publishing Failed');
-        }
-    } catch (error) {
-        console.error('Error during publishing:', error);
-        setError('An unexpected error occurred. Please try again.');
-    }
-};
 
 // Utility function to filter out 'image' type entries
 const filterPortfolio = (data) => {
@@ -565,23 +503,6 @@ const filterPortfolio = (data) => {
               </button>
             </div>
           </>
-        );
-      case 4:
-        return (
-          <div>
-            <SuggestedPortfolio
-              portfolioSuggestions={suggestedProjects}
-              selectedPortfolio={selectedPortfolio}
-              setSelectedPortfolio={setSelectedPortfolio}
-            />
-            <button type="button" onClick={handleBack} className={styles.btnBack}>Back</button>
-            <button 
-              type="submit" 
-              onClick={handleSuggestedPortfolioSubmit}
-              className={styles.btnSubmit}
-              disabled={isSubmitDisabled}
-            > Finish </button>
-          </div>
         );
       default:
         return null;

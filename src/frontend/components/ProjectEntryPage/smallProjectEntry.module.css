@@ -10,15 +10,13 @@
   color: #e0e0e0;
   border: 4px solid rgba(46, 46, 46, 0.4); 
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.3s ease;
-  transition: border 0.3s ease;
+  transition: box-shadow 0.3s ease, border 0.3s ease;
 }
 
 .projectContainer:hover {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
   border: 4px solid rgba(59, 137, 255, 0.435); 
   border-radius: 10px;
-  transition: border 0.3s ease;
 }
 
 .headerContainer {
@@ -90,9 +88,8 @@
 
 .projectTitle {
   font-family: 'Outfit'; 
-  font-weight: 400;
-  font-size: 1.5rem;
   font-weight: 600;
+  font-size: 1.5rem;
   margin: 0;
   margin-right: 10px;
   margin-left: 0px;
@@ -388,7 +385,7 @@
 
 /* New styles for code highlighting */
 .codeContainer {
-  background-color: #282c34; /* Match the Atom One Dark theme background */
+  background-color: #282c34;
   border-radius: 8px;
   max-height: 300px;
   overflow-y: auto;
@@ -411,6 +408,32 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
+  .headerContainer {
+    flex-wrap: wrap;
+  }
+
+  .titleAndUsernameContainer {
+    flex-basis: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 10px;
+  }
+
+  .projectTitle {
+    white-space: normal;
+    word-wrap: break-word;
+  }
+
+  .byUsername {
+    margin-top: 5px;
+  }
+
+  .tagsContainer {
+    flex-basis: 100%;
+    justify-content: flex-start;
+    margin-top: 10px;
+  }
+
   .descAndPreviewContainer {
     flex-direction: column;
     height: auto;
