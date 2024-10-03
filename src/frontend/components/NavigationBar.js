@@ -86,7 +86,7 @@ const NavigationBar = () => {
             >
               <LuUserSquare2 className={styles.icon} /> Profile
             </a>
-            <NotificationsComponent />
+            {/* <NotificationsComponent /> */}
             <button
               onClick={handleLogout}
               className={`${styles.logoutButton} ${activeLink === 'logout' ? styles.clickedButton : ''}`}

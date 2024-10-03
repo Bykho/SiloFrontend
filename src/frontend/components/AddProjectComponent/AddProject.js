@@ -12,48 +12,49 @@ import { FaFont, FaImage, FaVideo, FaFilePdf, FaCode, FaTimes, FaCheck, FaExchan
 import { PiPushPinBold } from "react-icons/pi";
 
 
-const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, onClose = null }) => {
-  const [dictInitProjectData, setDictInitProjectData] = useState(typeof initialProjectData === 'string' ? JSON.parse(initialProjectData) : initialProjectData);
+const AddProject = ({ initialRows = [], initialProjectData = {}, repo_url = null, onSave = null, onClose = null }) => {
+  const [dictInitProjectData, setDictInitProjectData] = useState(() => {
+    let processedData = typeof initialProjectData === 'string'
+      ? JSON.parse(initialProjectData)
+      : initialProjectData || {};
 
-  useEffect(() => {
-    console.log('ADDPROJECT initialProjectData: ', initialProjectData)
-    if (typeof initialProjectData === 'string') {
-      try {
-        const parsedData = JSON.parse(initialProjectData);
-        setDictInitProjectData(parsedData);
-      } catch (error) {
-        console.error('Failed to parse initialProjectData:', error);
-      }
-    } else if (typeof initialProjectData === 'object' && initialProjectData !== null) {
-      setDictInitProjectData(initialProjectData);
-    } else {
-      console.log('initialProjectData is of unexpected type:', typeof initialProjectData);
+    // Process tags
+    if (Array.isArray(processedData.tags)) {
+      processedData.tags = processedData.tags.join(', ');
+    } else if (typeof processedData.tags !== 'string') {
+      processedData.tags = '';
     }
-  }, [initialProjectData]);
 
+    // Process links
+    if (Array.isArray(processedData.links)) {
+      processedData.links = processedData.links.join(', ');
+    } else if (typeof processedData.links !== 'string') {
+      processedData.links = '';
+    }
+
+    // Add repo_url to links if it doesn't exist
+    if (repo_url && !processedData.links.includes(repo_url)) {
+      processedData.links = processedData.links
+        ? `${processedData.links}, ${repo_url}`
+        : repo_url;
+    }
+
+    return processedData;
+  });
+  
+  const [isSaving, setIsSaving] = useState(false);
   const [layers, setRows] = useState(initialRows.length ? initialRows : []);
   const [needsReorganization, setNeedsReorganization] = useState(true);
   const [projectName, setProjectName] = useState(dictInitProjectData?.projectName || '');
   const [projectDescription, setProjectDescription] = useState(dictInitProjectData?.projectDescription || '');
-  const [tags, setTags] = useState(() => {
-    if (Array.isArray(dictInitProjectData?.tags)) {
-      return dictInitProjectData.tags.join(', ');
-    } else if (typeof dictInitProjectData?.tags === 'string') {
-      return dictInitProjectData.tags;
-    } else {
-      return '';
-    }
-  });
-  
-  const [links, setLinks] = useState(() => {
-    if (Array.isArray(dictInitProjectData?.links)) {
-      return dictInitProjectData.links.join(', ');
-    } else if (typeof dictInitProjectData?.links === 'string') {
-      return dictInitProjectData.links;
-    } else {
-      return '';
-    }
-  });
+  const [tags, setTags] = useState(dictInitProjectData.tags || '');
+  const [links, setLinks] = useState(dictInitProjectData.links || '');
+
+  useEffect(() => {
+    console.log("Repository URL: ", repo_url);
+    console.log("Initial Project Data: ", dictInitProjectData);
+  }, [repo_url, dictInitProjectData]);
+
   
   const [visibility, setVisibility] = useState(dictInitProjectData?.visibility ?? true);
   const { user } = useUser();
@@ -66,7 +67,6 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
   const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [previewProject, setPreviewProject] = useState({});
   const [isRearranging, setIsRearranging] = useState(false);
-
 
   useEffect(() => {
     if (Object.keys(dictInitProjectData).length > 0) {
@@ -138,6 +138,9 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
   };
 
   const handleSave = async () => {
+    if (isSaving) return;
+
+    setIsSaving(true);
     const projectData = {
       projectName,
       projectDescription,
@@ -164,17 +167,18 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
         const savedProject = await response.json();
         alert('Project saved successfully');
         if (onSave) {
-          if (initialProjectData._id) {
-            onSave(savedProject.layers, savedProject);
-          } else {
-            onSave(savedProject);
-          }
+          console.log('here is the savedProject: ', savedProject)
+          onSave(savedProject, null); // Pass savedProject and null
         }
       } else {
         console.error('Error saving project:', response.statusText);
+        alert('Error saving project. Please try again.');
       }
     } catch (error) {
       console.error('Error saving project:', error);
+      alert('Error saving project. Please try again.');
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -391,9 +395,14 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, onSave = null, 
           />
         </div>
         <div className={styles.actionButtons}>
-          <button className={styles.saveButton} onClick={() => handleSave(projectName, projectDescription, layers, tags, links, user, initialProjectData, onSave)}>
-            <FaSave className={styles.iconSpacing}/> Save Project
-          </button>
+          <button 
+            className={styles.saveButton} 
+            onClick={() => handleSave(projectName, projectDescription, layers, tags, links, user, initialProjectData, onSave)}
+            disabled = {isSaving}
+            >
+              <FaSave className={styles.iconSpacing}/> 
+              {isSaving ? 'Saving...' : 'Save Project'}
+            </button>
           <label className={styles.toggleButton}>
             <input
               type="checkbox"

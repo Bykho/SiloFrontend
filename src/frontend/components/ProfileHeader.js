@@ -29,10 +29,10 @@ const ProfileHeader = ({ userData, loading, error }) => {
   //Build out below.
   const userSpiderData = userData.scores[userData.scores.length - 1]
 
-  //useEffect(() => {
-  //  console.log('ProfileHeader userData: ', userData)
-  //  console.log('ProfileHeader userSpiderData: ', userSpiderData)
-  //}, [userData])
+  const isValidResume = (resumeData) => {
+    if (!resumeData || typeof resumeData !== 'string') return false;
+    return resumeData.startsWith('data:application/pdf;base64,');
+  };
 
   useEffect(() => {
     if (userData && userData.biography) {
@@ -118,7 +118,7 @@ const ProfileHeader = ({ userData, loading, error }) => {
   }; 
 
   const renderLinkButton = (link, icon) => {
-    let fullLink = link;
+    let fullLink = ensureProtocol(link);
     let label = getLinkLabel(link);
   
     // Check if it's a GitHub link
@@ -146,6 +146,13 @@ const ProfileHeader = ({ userData, loading, error }) => {
   const handleSkillClick = (skill) => {
     navigate('/GenDirectory', { state: { skill: skill } });
   }
+
+  const ensureProtocol = (url) => {
+    if (!/^https?:\/\//i.test(url)) {
+      return 'https://' + url;
+    }
+    return url;
+  };
 
   if (loading) return <p className={styles.loadingError}>Loading...</p>;
   if (error) return <p className={styles.loadingError}>Error: {error}</p>;
@@ -199,7 +206,13 @@ const ProfileHeader = ({ userData, loading, error }) => {
       {showResume && (
         <div className={styles.resumeModal}>
           <button className={styles.closeButton2} onClick={toggleResume}><FaWindowClose /> </button>
-          <embed src={userData.resume} type="application/pdf" width="80%" height="80%" />
+          {isValidResume(userData.resume) ? (
+            <embed src={userData.resume} type="application/pdf" width="80%" height="80%" />
+          ) : (
+            <div className={styles.resumePlaceholder}>
+              User needs to reupload resume
+            </div>
+          )}
         </div>
       )}
 

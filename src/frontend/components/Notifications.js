@@ -71,7 +71,7 @@ const NotificationsComponent = () => {
                 </div>
                 <div className={styles.notificationMessage}>
                   {notification.type === 'upvote'
-                    ? `${notification.project_name} was commented on!`
+                    ? `${notification.from_user} upvoted your project.`
                     : `${notification.from_user}: "${notification.message}"`}
                 </div>
                 <button

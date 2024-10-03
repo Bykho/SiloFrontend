@@ -18,10 +18,34 @@ import HandleUpvote from '../wrappers/HandleUpvote';
 const isStudentProfilePage = window.location.pathname.includes('/studentProfile'); // Adjust this condition based on your routing
 
 const ProjectEntry = ({ project, passedUser, UpvoteButton, userUpvotes, setUserUpvotes }) => {
+  useEffect(() => {
+    console.log('Initial Project: ', project);
+    console.log('Initial Project Tags: ', project.tags);
+  }, []);
+
   const [isEditing, setIsEditing] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [showDescription, setShowDescription] = useState(false);
-  const [localProject, setLocalProject] = useState(project);
+  const [localProject, setLocalProject] = useState(() => {
+    const processedProject = {
+      ...project,
+      tags: Array.isArray(project.tags) 
+        ? project.tags 
+        : (typeof project.tags === 'string' ? project.tags.split(',').map(tag => tag.trim()) : []),
+      links: Array.isArray(project.links) 
+        ? project.links 
+        : (typeof project.links === 'string' ? project.links.split(',').map(link => link.trim()) : []),
+      layers: Array.isArray(project.layers) 
+        ? project.layers 
+        : (typeof project.layers === 'string' ? project.layers.split(',').map(layer => layer.trim()) : [])
+    };
+  
+    console.log('Processed Local Project: ', processedProject);
+    return processedProject;
+  });
+  
+  
+
   const [localUser, setLocalUser] = useState(passedUser);
   const { user, setUser } = useUser();
   const modalRef = useRef(null);
@@ -36,6 +60,11 @@ const ProjectEntry = ({ project, passedUser, UpvoteButton, userUpvotes, setUserU
       return [];
     }
   });
+
+  useEffect(() => {
+    console.log('LocalProject after state initialization: ', localProject);
+  }, [localProject]);
+
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -59,13 +88,24 @@ const ProjectEntry = ({ project, passedUser, UpvoteButton, userUpvotes, setUserU
   const updateLocalProject = (projectField, newValue) => {
     setLocalProject((prevProject) => ({
       ...prevProject,
-      [projectField]: newValue,
+      [projectField]: projectField === 'tags' || projectField === 'links'
+        ? (Array.isArray(newValue) ? newValue : newValue.split(',').map(item => item.trim()))
+        : newValue,
     }));
   };
 
-  const updateLayer = (updatedLayers) => {
+  const updateLayer = (updatedData) => {
+    if (!updatedData) return; // Early return if updatedData is null
+  
+    console.log('Received updatedData:', updatedData);
+    
+    const updatedLayers = Array.isArray(updatedData.layers) ? updatedData.layers : [];
+    
+    console.log('Extracted updatedLayers:', updatedLayers);
+  
     setLocalProject((prevProject) => ({
       ...prevProject,
+      ...updatedData,
       layers: updatedLayers,
     }));
   };
@@ -109,9 +149,9 @@ const ProjectEntry = ({ project, passedUser, UpvoteButton, userUpvotes, setUserU
   const handleAddComment = async (commentText) => {
     if (commentText.trim() !== '') {
       const token = localStorage.getItem('token');
-      const commentData = { author: passedUser.username, text: commentText, projectId: localProject._id };
+      const commentData = { author: user.username, text: commentText, projectId: localProject._id };
       try {
-        const response = await fetch(`${config.apiBaseUrl}/handleComment/${passedUser.username}`, {
+        const response = await fetch(`${config.apiBaseUrl}/handleComment/${user.username}`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -128,32 +168,33 @@ const ProjectEntry = ({ project, passedUser, UpvoteButton, userUpvotes, setUserU
             ...prevProject,
             comments: updatedComments,
           }));
+  
+          // Create notification
+          const notificationPayload = {
+            user_id: localProject.user_id,
+            type: 'comment',
+            message: commentText,
+            project_name: localProject.projectName,
+            from_user: user.username,
+            project_id: localProject._id,
+            recipient_id: localProject.user_id,
+          };
+          const notificationResponse = await fetch(`${config.apiBaseUrl}/create_notification`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(notificationPayload)
+          });
+          if (!notificationResponse.ok) throw new Error('Failed to create notification');
+          console.log('Notification created successfully');
         } else {
           console.error('Failed to add comment:', data.error);
         }
       } catch (error) {
-        console.error('Error during adding comment:', error);
+        console.error('Error during adding comment or creating notification:', error);
       }
-      const notificationPayload = {
-        user_id: project.user_id,
-        type: 'comment',
-        message: commentText,
-        project_name: project.projectName,
-        from_user: user.username,
-        project_id: project._id,
-        recipient_id: project.user_id,
-      };
-      const notificationResponse = await fetch(`${config.apiBaseUrl}/create_notification`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(notificationPayload)
-      });
-      console.log('got here', notificationPayload)
-      if (!notificationResponse.ok) throw new Error('Failed to create notification');
-      console.log('Notification created successfully');
     }
   };
 
@@ -180,29 +221,28 @@ const ProjectEntry = ({ project, passedUser, UpvoteButton, userUpvotes, setUserU
     }
   };
 
-  const renderLinkButton = (link) => {
-    const label = getLinkLabel(link);
-    let icon;
-
-    if (link.includes('github.com')) {
-      icon = <FaGithub />;
-    } else if (link.includes('linkedin.com')) {
-      icon = <FaGlobe />;
-    } else {
-      icon = <FaLink />;
+  const renderLinkButton = (links) => {
+    if (typeof links === 'string') {
+      links = links.split(',').map(item => item.trim());
     }
-    return (
-      <a
-        href={ensureProtocol(link)}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={styles.linkButton}
-      >
-        {icon}
-        <span>{label}</span>
-      </a>
-    );
+  
+    return links.map((singleLink, index) => {
+      const label = getLinkLabel(singleLink);
+      let icon = singleLink.includes('github.com') ? <FaGithub /> : singleLink.includes('linkedin.com') ? <FaGlobe /> : <FaLink />;
+  
+      return (
+        <a key={index} href={ensureProtocol(singleLink)} target="_blank" rel="noopener noreferrer" className={styles.linkButton}>
+          {icon}
+          <span>{label}</span>
+        </a>
+      );
+    });
   };
+  
+  
+  useEffect(() => {
+    console.log("here is localProject.layers: ", localProject.layers)
+  }, [localProject.layers])
 
   const renderComments = () => {
     if (!isExpanded) return null;
@@ -252,10 +292,15 @@ const ProjectEntry = ({ project, passedUser, UpvoteButton, userUpvotes, setUserU
         )}
       </div>
       <div className={styles.tagsContainer}>
-          {localProject.tags?.map((tag, index) => (
-            <span key={index} className={styles.tag}>{tag}</span>
-          ))}
-        </div>
+        {Array.isArray(localProject.tags) 
+          ? localProject.tags.map((tag, index) => (
+              <span key={index} className={styles.tag} onClick={() => handleTagClick(tag)}>
+                {tag}
+              </span>
+            ))
+          : null
+        }
+      </div>
       {renderProjectDescription()}
 
       <div className={styles.layerDisplayContainer}>
@@ -263,7 +308,7 @@ const ProjectEntry = ({ project, passedUser, UpvoteButton, userUpvotes, setUserU
       </div>
 
       <div className={styles.buttonContainer}>
-        {localProject.links && localProject.links.map((link, index) => (renderLinkButton(link)))}
+        {localProject.links && renderLinkButton(localProject.links)}
       </div>
       <div className={styles.upvoteAndCommentContainer}>
       <UpvoteButton
