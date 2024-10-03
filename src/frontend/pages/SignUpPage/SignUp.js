@@ -42,6 +42,7 @@ function SignUp() {
   const [suggestedGradYr, setSuggestedGradYr] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [savedUsersId, setSavedUsersId] = useState('');
+  const [agreedToAdditionalTerms, setAgreedToAdditionalTerms] = useState(false);
 
   const { updateUser } = useUser();
   const navigate = useNavigate();
@@ -160,8 +161,12 @@ function SignUp() {
 
   useEffect(() => {
     setIsNextDisabled(!validatePage(page));
-    setIsSubmitDisabled(!validatePage(3) || !agreedToTerms);
-  }, [formData, page, agreedToTerms]);
+    setIsSubmitDisabled(!validatePage(3) || !agreedToTerms || !agreedToAdditionalTerms);
+  }, [formData, page, agreedToTerms, agreedToAdditionalTerms]);
+
+  const handleAdditionalTermsChange = (e) => {
+    setAgreedToAdditionalTerms(e.target.checked);
+  };
 
   useEffect(() => {
     if (Object.keys(suggestedSummary).length > 0) {
@@ -492,6 +497,19 @@ const filterPortfolio = (data) => {
                 I agree to the <a href="#" onClick={openTermsModal} className={styles.tos}> Terms of Service</a>
               </label>
             </div>
+
+            <div className={styles.tosForm}>
+              <label className={styles.checkboxLabel}>
+                <input
+                  type="checkbox"
+                  checked={agreedToAdditionalTerms}
+                  onChange={handleAdditionalTermsChange}
+                  required
+                />
+                I consent to email notifications. Unsubscribe any time. 
+              </label>
+            </div>
+
             <div className={styles.buttonGroup}>
               <button type="button" onClick={handleBack} className={styles.btnBack}>Back</button>
               <button 
@@ -517,7 +535,6 @@ const filterPortfolio = (data) => {
       <div className={styles.signupFormWrapper}>
         {isLoading && renderLoadingIndicator()}
         <div className={styles.signupForm}>
-          <h1>{page === 1 ? 'Create your account' : page === 2 ? 'Additional Information' : page === 3 ? 'About You' : 'Review Suggested Projects'}</h1>
           {error && <p className={styles.error}>{error}</p>}
           <form onSubmit={handleSubmit}>
             {renderPage()}
