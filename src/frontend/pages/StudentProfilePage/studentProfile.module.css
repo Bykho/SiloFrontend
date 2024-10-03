@@ -74,7 +74,7 @@
     background-color: rgb(30,30,30); 
     color: #D9D9D9;
     border: 1px solid rgb(100, 100, 100);
-    border-radius: 10px;
+    border-radius: 25px;
     cursor: pointer;
     height: 60px;
     width: calc(100% / 2 - 30px); /* Adjusted calculation */
@@ -111,7 +111,7 @@
     background-color: rgb(30,30,30); 
     color: #D9D9D9;
     border: 2px solid rgb(130, 130, 130);
-    border-radius: 10px;
+    border-radius: 25px;
     cursor: pointer;
     height: 60px;
     width: calc(100% / 2 - 30px); /* Adjusted calculation */
@@ -125,7 +125,7 @@
   }
 
   .bigButtonAdd:hover {
-    background-color: #2a3339;
+    background: linear-gradient(to bottom, #2c2c2c, #2e2e2e);
     color: white;
   }
   

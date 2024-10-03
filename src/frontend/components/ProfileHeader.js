@@ -7,6 +7,8 @@ import { IoMdMail } from "react-icons/io";
 import PlayerRatingSpiderweb from './UserSpiderPlot';
 import { FaWindowClose } from 'react-icons/fa';
 import { TbAnalyze } from "react-icons/tb";
+import { IoDocument } from "react-icons/io5";
+
 
 
 const ProfileHeader = ({ userData, loading, error }) => {
@@ -168,7 +170,7 @@ const ProfileHeader = ({ userData, loading, error }) => {
 
           <div className={styles.linksContainer}>
             <button className={styles.contactMeButton} onClick={handleContactButton}> <IoMdMail /> Contact </button>
-            <button className={styles.linkButton} onClick={toggleResume}>View Resume</button>
+            <button className={styles.linkButton} onClick={toggleResume}> <IoDocument/> Resume</button>
             {userData.github_link && renderLinkButton(userData.github_link, <FaGithub />)}
             {userData.personal_website && renderLinkButton(userData.personal_website, <FaGlobe />)}
             {userData.links && userData.links.map((link, index) => (
@@ -177,9 +179,10 @@ const ProfileHeader = ({ userData, loading, error }) => {
             {showCopiedConfirmation && (
             <div className={styles.copyConfirmation}>Email copied to clipboard!</div>
           )}
-          </div>
+
           {renderTagsPreview(userData.skills, 'skill')}
           {renderTagsPreview(userData.interests, 'interest')}
+          </div>
 
         </div>
 
