@@ -31,7 +31,7 @@
     color: #1e1e1e;
     text-decoration: none;
   }
-  .buttonContainer{
+  .buttonContainer{ 
     margin-left: 5px; 
     display: inline-flex; 
     gap: 10px;
@@ -71,26 +71,29 @@
     margin-right: 20px; /* Adjust margin to make buttons less wide */
     margin-bottom: 10px;
     margin-top: 10px; 
-    background-color: rgb(30,30,30); 
+    background-color: rgb(29, 29, 29); 
     color: #D9D9D9;
-    border: 1px solid rgb(100, 100, 100);
-    border-radius: 25px;
     cursor: pointer;
     height: 60px;
     width: calc(100% / 2 - 30px); /* Adjusted calculation */
     font-size: 18px;
     margin-left: 20px; /* Adjust margin to make buttons less wide */
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: box-shadow 0.3s ease, color 0.3s ease;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    border: none; 
+    border-radius: 10px; 
     gap: 20px; 
+    border-left: 2px solid rgb(125, 125, 125);
+    border-right: 2px solid rgb(125, 125, 125);
   }
   
   .bigButton:hover {
     background: linear-gradient(to bottom, #2c2c2c, #2e2e2e);
-    border: 1px solid rgb(125, 125, 125);
     color: white;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.344);
   }
   
   .bigButton:focus {
@@ -108,25 +111,30 @@
     margin-right: 20px; /* Adjust margin to make buttons less wide */
     margin-bottom: 10px;
     margin-top: 10px; 
-    background-color: rgb(30,30,30); 
+    background-color: rgb(29,29,29); 
     color: #D9D9D9;
-    border: 2px solid rgb(130, 130, 130);
-    border-radius: 25px;
     cursor: pointer;
     height: 60px;
     width: calc(100% / 2 - 30px); /* Adjusted calculation */
     font-size: 18px;
     margin-left: 20px; /* Adjust margin to make buttons less wide */
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: box-shadow 0.3s ease, color 0.3s ease;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 20px; 
+    border: none; 
+    border-radius: 10px; 
+    border-left: 2px solid rgb(125, 125, 125);
+    border-right: 2px solid rgb(125, 125, 125);
   }
 
   .bigButtonAdd:hover {
     background: linear-gradient(to bottom, #2c2c2c, #2e2e2e);
     color: white;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.344);
+
   }
   
   .bigButtonAdd:focus {
