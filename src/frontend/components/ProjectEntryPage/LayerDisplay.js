@@ -38,8 +38,12 @@ const LayerDisplay = ({ layers, isEditing, toggleEdit, updateLayer, updateProjec
     console.log('Here is the updatedProjectDetails in handleSave, ', updatedProjectDetails);
     setShowEditor(false);
     toggleEdit();
-    updateLayer(updatedLayers);
-    updateProjectDetails(updatedProjectDetails);
+    if (updatedLayers) {
+      updateLayer(updatedLayers);
+    }
+    if (updatedProjectDetails) {
+      updateProjectDetails(updatedProjectDetails);
+    }
   };
 
   const handleClose = () => {
@@ -110,6 +114,10 @@ const LayerDisplay = ({ layers, isEditing, toggleEdit, updateLayer, updateProjec
       );
     }
   };
+
+  useEffect(() => {
+    console.log("here is the layer object: ", layers)
+  }, [])
 
   return (
     <div className={styles.container}>

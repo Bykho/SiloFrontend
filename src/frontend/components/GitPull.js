@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styles from './gitPull.module.css';
 import { GitHub, Folder, File, CheckSquare, Square, ChevronRight, ChevronDown, AlertCircle } from 'react-feather';
 import config from '../config';
+import CleanOrbitingRingLoader from './FractalLoadingBar';
 
 const GitPull = ({ userData, onPortfolioUpdate }) => {
   const [githubUsername, setGithubUsername] = useState('');
@@ -11,6 +12,7 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
   const [expandedSubItems, setExpandedSubItems] = useState({});
   const [selectedFiles, setSelectedFiles] = useState({});
   const [loading, setLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [noRepos, setNoRepos] = useState(false);
   const [apiErrorMessage, setApiErrorMessage] = useState('');
@@ -74,11 +76,17 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
       if (!response.ok) throw new Error('Failed to fetch branches');
       const data = await response.json();
       setRepoBranches(prev => ({ ...prev, [repoName]: data }));
+  
+      // Automatically select the first branch if available
+      if (data.length > 0) {
+        setSelectedBranches(prev => ({ ...prev, [repoName]: data[0].name }));
+      }
     } catch (err) {
       console.error('Failed to fetch branches:', err);
     }
   };
-  
+
+
 
   const fetchContents = async (repoName, path = '') => {
     if (!githubUsername || !repoName) return;
@@ -232,7 +240,7 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
   
 
   const handleSubmit = async () => {
-
+    setIsSubmitting(true);
     // Filter the selected files using the filterFiles function
     const selectedFilePaths = Object.entries(selectedFiles)
       .filter(([, isSelected]) => isSelected)
@@ -260,7 +268,7 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
       repo_name: expandedRepo,
       branch_name: selectedBranches[expandedRepo] || branchName, // Use the selected branch name
     };
-    console.log('GITPULL handleSubmit request_data: ', requestData);
+    //console.log('GITPULL handleSubmit request_data: ', requestData);
     try {
       const response = await fetch(`${config.apiBaseUrl}/groqAutofillCodeProject`, {
         method: 'POST',
@@ -270,8 +278,8 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
         body: JSON.stringify(requestData),
       });
 
-      console.log('API response status:', response.status);
-      console.log('API response object:', response);
+      //console.log('API response status:', response.status);
+      //console.log('API response object:', response);
 
       if (!response.ok) {
         if (response.status === 413) {
@@ -284,9 +292,10 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
       }
 
       const result = await response.json();
-      console.log('API response:', result);
-      console.log('API response.summary_content: ', result.summary_content)
-      console.log('API response.surrounding_summary: ', result.surrounding_summary)
+      //console.log('API response:', result);
+      //console.log('API response.summary_content: ', result.summary_content)
+      //console.log('API response.surrounding_summary: ', result.surrounding_summary)
+      console.log('[GIT-PULL] API response w/ the githubURL: ', result.repo_url)
       if (!Array.isArray(result.summary_content)) {
         console.log('summary_content is not an array');
       }
@@ -310,13 +319,23 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
         return { repoName: null, filePath: key, content: value, language: 'text' };
       });
 
-      console.log("GITPULL HANDLESUBMIT combinedData: ", combinedData)
-      console.log("GITPULL HANDLESUBMIT result.surrounding_summary: ", result.surrounding_summary)
-      onPortfolioUpdate(combinedData, result.surrounding_summary);
+      result.file_contents.forEach(file => {
+        combinedData.push({
+          repoName: expandedRepo,
+          filePath: file.name,
+          content: file.content,
+        });
+      });
+      
+      //console.log("GITPULL HANDLESUBMIT combinedData: ", combinedData)
+      //console.log("GITPULL HANDLESUBMIT result.surrounding_summary: ", result.surrounding_summary)
+      onPortfolioUpdate(combinedData, result.surrounding_summary, result.repo_url);
       setApiErrorMessage('');
     } catch (error) {
       console.error('Error adding projects to portfolio:', error);
       alert('Failed to add projects to portfolio. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -330,9 +349,10 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
           value={selectedBranches[repoName] || ''}
           onChange={(e) => handleBranchSelect(repoName, e.target.value)}
         >
-          <option value="" disabled>Select branch</option>
           {branches.map(branch => (
-            <option key={branch.name} value={branch.name}>{branch.name}</option>
+            <option key={branch.name} value={branch.name}>
+              {`Selected Branch: ${branch.name}`}
+            </option>
           ))}
         </select>
         <p style={{ margin: 0 }}>
@@ -414,6 +434,11 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
 
   return (
     <div className={styles.gitPullContainer}>
+      {isSubmitting && (
+        <div className={styles.loaderOverlay}>
+          <CleanOrbitingRingLoader />
+        </div>
+      )}
       <h2 className={styles.heading}>
         <GitHub className={styles.headingIcon} />
         Generate Projects from GitHub

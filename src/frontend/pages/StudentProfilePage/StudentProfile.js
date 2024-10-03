@@ -34,9 +34,13 @@ function StudentProfile() {
   const location = useLocation();
   const [selectedGitFiles, setSelectedGitFiles] = useState([]);
   const [selectedGitSurroundingInfo, setSelectedGitSurroundingInfo] = useState({});
+  const [repoURL, setRepoURL] = useState('');
   const [showCopiedConfirmation, setShowCopiedConfirmation] = useState(false);
   const [portfolioKey, setPortfolioKey] = useState(0);
 
+  useEffect(() => {
+    console.log('here is repoURL: ', repoURL)
+  }, [repoURL])
 
   const languageLookup = {
     js: 'javascript',
@@ -110,9 +114,9 @@ function StudentProfile() {
     }
   };
 
-  useEffect(() => {
-    console.log('here is the user data: ', userData)
-  }, [userData])
+  //useEffect(() => {
+  //  console.log('here is the user data: ', userData)
+  //}, [userData])
 
 
   useEffect(() => {
@@ -160,9 +164,9 @@ function StudentProfile() {
     return rows;
   };
 
-  const handleGitPullUpdate = (selectedProjects, surroundingInfo) => {
+  const handleGitPullUpdate = (selectedProjects, surroundingInfo, repo_url) => {
     const processedFiles = selectedProjects.map(file => {
-      console.log('STUDENTPROFILE HANDLEGITPULLUPDATE these is file being sent from the backend: ', file);
+      //console.log('STUDENTPROFILE HANDLEGITPULLUPDATE these is file being sent from the backend: ', file);
       const extension = file.filePath.split('.').pop().toLowerCase();
       let cellType = 'code';
       let language = languageLookup[extension] || extension;
@@ -189,14 +193,16 @@ function StudentProfile() {
       };
     });
     
-    console.log('STUDENTPROFILE HANDLEGITPULLUPDATE these is processedFiles: ', processedFiles);
+    console.log('here is repo_url: ', repo_url)
+    //console.log('STUDENTPROFILE HANDLEGITPULLUPDATE these is processedFiles: ', processedFiles);
   
     const updatedFiles = structureLayers(processedFiles);
-    console.log('STUDENTPROFILE HANDLEGITPULLUPDATE these is updatedFiles: ', updatedFiles);
+    //console.log('STUDENTPROFILE HANDLEGITPULLUPDATE these is updatedFiles: ', updatedFiles);
   
     setSelectedGitFiles(updatedFiles);
-    console.log('selectedGitFiles after update:', updatedFiles);
+    //console.log('selectedGitFiles after update:', updatedFiles);
     setSelectedGitSurroundingInfo(surroundingInfo);
+    setRepoURL(repo_url)
     setShowGitPull(false);
     setShowModal(true);
   };
@@ -259,6 +265,8 @@ function StudentProfile() {
 
   const handleCloseGithubPull = () => {
     setShowGitPull(false);
+    setSelectedGitFiles([]);
+    setSelectedGitSurroundingInfo({});
   };
 
   const handleCloseSharePreview = () => {
@@ -267,38 +275,46 @@ function StudentProfile() {
 
   const handleSaveProject = async (newProject, deleteInfo) => {
     try {
-      // Immediately update local state
       setUserData((prevState) => {
-        if (newProject) {
+        if (deleteInfo && deleteInfo.projectId) {
+          // Handle deletion
           return {
             ...prevState,
-            portfolio: [newProject, ...prevState.portfolio],
+            portfolio: prevState.portfolio.filter(project => project._id !== deleteInfo.projectId)
           };
-        } else if (deleteInfo && deleteInfo.projectId) {
-          return {
-            ...prevState,
-            portfolio: prevState.portfolio.filter(
-              (project) => project._id !== deleteInfo.projectId
-            ),
-          };
+        } else if (newProject) {
+          // Handle save/update
+          const existingIndex = prevState.portfolio.findIndex(
+            (project) => project._id === newProject._id
+          );
+          if (existingIndex !== -1) {
+            const updatedPortfolio = [...prevState.portfolio];
+            updatedPortfolio[existingIndex] = newProject;
+            return {
+              ...prevState,
+              portfolio: updatedPortfolio,
+            };
+          } else {
+            return {
+              ...prevState,
+              portfolio: [newProject, ...prevState.portfolio],
+            };
+          }
         }
         return prevState;
       });
+  
       setPortfolioKey(prevKey => prevKey + 1);
-
       setSelectedGitFiles([]);
   
-      // Process the updated userData for backend submission
-      const updatedUserData = {
-        ...userData,
-        portfolio: newProject
-          ? [newProject, ...userData.portfolio]
-          : userData.portfolio.filter(
-              (project) => project._id !== deleteInfo?.projectId
-            ),
-      };
+      const updatedUserData = await new Promise(resolve => {
+        setUserData(currentUserData => {
+          const newUserData = { ...currentUserData };
+          resolve(newUserData);
+          return newUserData;
+        });
+      });
   
-      // Recursive function to filter out objects with type 'image' in the portfolio
       const filterPortfolio = (data) => {
         if (Array.isArray(data)) {
           return data
@@ -322,9 +338,9 @@ function StudentProfile() {
         }
       };
   
-      // Filter the portfolio and prepare the data for the backend
       const filteredPortfolio = filterPortfolio(updatedUserData.portfolio);
       closeAllModals();
+      
       const newVsScoreData = {
         skills: updatedUserData.skills,
         interests: updatedUserData.interests,
@@ -359,7 +375,6 @@ function StudentProfile() {
   
     } catch (error) {
       console.error('Error in handleSaveProject:', error);
-      // You might want to show an error message to the user here
     } finally {
       closeAllModals();
     }
@@ -417,12 +432,13 @@ function StudentProfile() {
         <div className={styles.modal}>
           <div className={styles.modalContent}>
             <button className={styles.closeButton} onClick={handleCloseModal}><FaWindowClose /></button>
-            {console.log('Passing initialRows to AddProject: ', selectedGitFiles)}
-            {console.log('Passing initialProjectData to AddProject: ', selectedGitSurroundingInfo)}
+            {/*console.log('Passing initialRows to AddProject: ', selectedGitFiles)*/}
+            {/*console.log('Passing initialProjectData to AddProject: ', selectedGitSurroundingInfo)*/}
             <AddProject 
               onSave={handleSaveProject} 
               initialRows={selectedGitFiles.length > 0 ? selectedGitFiles : []}
               initialProjectData={selectedGitSurroundingInfo}
+              repo_url={repoURL}
               onClose={handleCloseModal}
             />
           </div>

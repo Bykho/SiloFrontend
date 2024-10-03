@@ -40,16 +40,39 @@
 
 .headerContainer {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 5px;
-  margin-top: 15px
+  margin-bottom: 15px;
+  margin-top: 15px;
+}
+
+.titleAndUsernameContainer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  flex-grow: 1;
+  margin: 0;
+  overflow: hidden;
+  width: 100%;
+}
+
+.projectTitle {
+  font-family: 'Montserrat'; 
+  font-weight: 700; 
+  font-size: 1.7rem;
+  letter-spacing: 2px;
+  font-weight: 600;
+  margin: 0 20px 10px 0;
+  width: 100%;
+  word-wrap: break-word;
+  hyphens: auto;
 }
 
 .byUsername {
   font-size: 1.1rem;
   color: #666;
-  white-space: nowrap;
+  margin-bottom: 10px;
 }
 
 .username {
@@ -87,28 +110,12 @@
   margin: 15px 0;
 }
 
-.projectTitle {
-  font-family: 'Montserrat'; 
-  font-weight: 700; 
-  font-size: 1.7rem;
-  display: flex; 
-  letter-spacing: 2px;
-  justify-content: center;
-  font-weight: 600;
-  margin: 0;
-  margin-right: 20px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  border-radius: 3px;
-}
-
 .tagsDisplay {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-top: 0; /* Adjusted from 20px */
-  margin-left: 10px; /* Adjust as needed for spacing */
+  margin-top: 0;
+  margin-left: 10px;
   justify-content: flex-start;
 }
 
@@ -148,15 +155,6 @@
 .comments {
   margin-bottom: 15px;
 }
-
-.titleAndUsernameContainer {
-  display: flex;
-  align-items: center;
-  flex-grow: 1;
-  margin: 0px 0px;
-  overflow: hidden;
-}
-
 
 .mediaImage {
   max-width: 100%;
@@ -207,7 +205,6 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transform: translateY(1px);
   margin-right: 20px;
-
 }
 
 .linkButton {
@@ -231,17 +228,16 @@
   display: inline-flex;
   align-items: center;
   gap: 10px; 
-  padding: 7px 15px 7px 15px; 
-  background: none;
-  border-radius: 15px;
-  border: none; 
+  padding: 7px 15px;
   background-color: #1c1c1c;
   border: 1px solid rgba(255, 255, 255, 0.495);
+  border-radius: 15px;
   cursor: pointer;
   color: white;
   font-size: 1rem;
-  margin-left: 25px;
-  transition: color 0.3s ease;
+  transition: color 0.3s ease, background-color 0.3s ease;
+  margin-left: 0;
+  margin-top: 10px;
 }
 
 .editButton:hover {
@@ -260,7 +256,7 @@
   margin: 20px 0;
   flex-grow: 1;
   width: 100%;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add this line for drop shadow */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .commentIcon {
@@ -286,6 +282,7 @@
 .expandButton:hover {
   color: #1e1e1e;
 }
+
 .upvoteAndCommentContainer {
   display: flex;
   flex-direction: row;
@@ -418,7 +415,7 @@
 
 .projectDescriptionContainer {
   margin-bottom: 20px;
-  position: relative; /* Add this line */
+  position: relative;
   cursor: pointer;
 }
 
@@ -432,38 +429,60 @@
   border-radius: 5px; 
   padding-left: 10px; 
   text-align: justify;
-
 }
 
 .collapsedDescription {
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 2; /* Number of lines to show */
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 }
 
 .seeMoreButton {
-  background-color: #33373971; /* Color of the button */
+  background-color: #33373971;
   border: none;
-  color: #cfcfcf; /* Dark color for text */
+  color: #cfcfcf;
   cursor: pointer;
-  font-size: .75rem; /* Size of the text */
-  padding: 5px 10px; /* Padding for the button */
-  border-radius: 5px; /* Rounded edges */
-  margin-top: 20px; /* Space above the button */
-  display: block; /* Ensure the button is displayed as a block */
-  text-align: center; /* Center the text */
+  font-size: .75rem;
+  padding: 5px 10px;
+  border-radius: 5px;
+  margin-top: 20px;
+  display: block;
+  text-align: center;
 }
+
 .seeMoreButton:hover {
-  background-color: #70b9e37b; /* Optional: hover color */
-  color: #fff; /* Optional: text color on hover */
+  background-color: #70b9e37b;
+  color: #fff;
 }
 
 .divider {
   width: 100%;
   height: 1px;
   background-color: #cccccc79;
-  margin: 20px 0; /* Space around the divider */
+  margin: 20px 0;
+}
+
+@media (min-width: 768px) {
+  .titleAndUsernameContainer {
+    flex-wrap: nowrap;
+    width: auto;
+  }
+
+  .projectTitle {
+    width: auto;
+    margin-bottom: 0;
+  }
+
+  .byUsername {
+    margin-bottom: 0;
+    white-space: nowrap;
+  }
+
+  .editButton {
+    margin-left: 25px;
+    margin-top: 0;
+  }
 }
 

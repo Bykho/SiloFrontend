@@ -329,3 +329,11 @@
     flex-direction: column;
   }
 }
+
+
+.resumePlaceholder {
+  color: #f0f0f0;
+  font-size: 1.2em;
+  text-align: center;
+  padding: 20px;
+}

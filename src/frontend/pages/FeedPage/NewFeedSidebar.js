@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Flame, Home, Search, Users, ChevronDown, ChevronRight, Sparkles } from 'lucide-react';import { BiUpvote } from "react-icons/bi";
+import { Flame, Home, Search, Users, ChevronDown, ChevronRight, Sparkles, X } from 'lucide-react';
+import { BiUpvote } from "react-icons/bi";
 import styles from './newFeedSidebar.module.css';
 import config from '../../config';
 
@@ -10,7 +11,7 @@ const SidebarItem = ({ Icon, text, onClick, isActive }) => (
   </li>
 );
 
-const GroupItem = ({ name, members, onClick, joinable = false, joined = false, onJoin, isActive }) => (
+const GroupItem = ({ name, members, onClick, joinable = false, joined = false, onJoin, onLeave, isActive }) => (
   <li className={`${styles.groupItem} ${isActive ? styles.active : ''}`} onClick={onClick}>
     <div className={styles.groupInfo}>
       <div className={styles.groupIcon}>
@@ -27,11 +28,16 @@ const GroupItem = ({ name, members, onClick, joinable = false, joined = false, o
         </button>
       )}
       {joinable && joined && <span className={styles.joinedStatus}>Joined</span>}
+      {!joinable && (
+        <button className={styles.leaveButton} onClick={(e) => { e.stopPropagation(); onLeave(); }}>
+          Leave
+        </button>
+      )}
     </div>
   </li>
 );
 
-const GroupSection = ({ title, groups, joinable, joinedGroups, onJoin, setActiveGroup, setFeedStyle, activeGroup }) => {
+const GroupSection = ({ title, groups, joinable, joinedGroups, onJoin, onLeave, setActiveGroup, setFeedStyle, activeGroup }) => {
   const [isOpen, setIsOpen] = useState(true);
 
   return (
@@ -43,7 +49,7 @@ const GroupSection = ({ title, groups, joinable, joinedGroups, onJoin, setActive
       {isOpen && (
         <ul className={styles.groupList}>
           {groups.map((group, index) => (
-            <GroupItem
+              <GroupItem
               key={group._id}
               name={group.name}
               members={group.members}
@@ -54,6 +60,7 @@ const GroupSection = ({ title, groups, joinable, joinedGroups, onJoin, setActive
               joinable={joinable}
               joined={joinable ? joinedGroups.includes(group._id) : true}
               onJoin={() => onJoin(group._id)}
+              onLeave={() => onLeave(group._id)}
               isActive={activeGroup && activeGroup._id === group._id}
             />
           ))}
@@ -70,6 +77,9 @@ const CombinedFeedSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGr
   const [joinedGroups, setJoinedGroups] = useState([]);
   const [filteredMyGroups, setFilteredMyGroups] = useState([]);
   const [filteredSuggestedGroups, setFilteredSuggestedGroups] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newGroupName, setNewGroupName] = useState('');
+  const [newGroupDescription, setNewGroupDescription] = useState('');
 
   useEffect(() => {
     console.log("UseEffect for activeGroup: ", activeGroup)
@@ -154,16 +164,82 @@ const CombinedFeedSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGr
     }
   };
 
+  const handleGroupLeave = async (groupId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${config.apiBaseUrl}/leaveGroup`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ groupId }),
+      });
+      if (!response.ok) throw new Error('Failed to leave group');
+      const result = await response.json();
+
+      // Remove the group from myGroups
+      const updatedMyGroups = myGroups.filter(group => group._id !== groupId);
+      setMyGroups(updatedMyGroups);
+
+      // Add the group back to suggestedGroups
+      const leftGroup = myGroups.find(group => group._id === groupId);
+      if (leftGroup) {
+        setSuggestedGroups([...suggestedGroups, leftGroup]);
+      }
+
+      // Update joinedGroups state
+      setJoinedGroups(joinedGroups.filter(id => id !== groupId));
+
+      // Reset activeGroup and feedStyle if necessary
+      if (activeGroup && activeGroup._id === groupId) {
+        setActiveGroup(null);
+        setFeedStyle('home'); // or 'suggested' if you prefer
+      }
+
+      console.log('Successfully left group:', result);
+    } catch (err) {
+      console.error('Error leaving group:', err);
+    }
+  };
+  
+  const handleCreateGroup = async (e) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${config.apiBaseUrl}/groupCreate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ groupName: newGroupName, groupDescription: newGroupDescription, groupProject_Content: [] }),
+      });
+      const result = await response.json();
+      const newGroup = {
+        _id: result.group.id, // Use the ID returned from the backend
+        name: result.group.name,
+        description: result.group.description,
+        users: result.group.users,
+        projects: result.group.projects
+      };
+      setMyGroups([...myGroups, newGroup]);
+      setJoinedGroups([...joinedGroups, result.group_id]);
+      setIsModalOpen(false);
+      setNewGroupName('');
+      setNewGroupDescription('');
+    } catch (err) {
+      console.error('Error creating group:', err);
+    }
+  };
+
+
   return (
     <div className={styles.sidebar}>
       <ul className={styles.sidebarMenu}>
-        {/*
-        <SidebarItem Icon={Home} text="Home" onClick={() => setFeedStyle('home')} isActive={feedStyle === 'home'} />
-        */}
         <SidebarItem Icon={Sparkles} text="Suggested" onClick={() => setFeedStyle('suggested')} isActive={feedStyle === 'suggested'} />
         <SidebarItem Icon={Flame} text="Popular" onClick={() => setFeedStyle('popular')} isActive={feedStyle === 'popular'} />
         <SidebarItem Icon={BiUpvote} text="My Upvotes" onClick={() => setFeedStyle('upvoted')} isActive={feedStyle === 'upvoted'} />
-
       </ul>
       <div className={styles.divider}></div>
       <h2 className={styles.groupsHeader}>
@@ -179,12 +255,14 @@ const CombinedFeedSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGr
           onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
+      <button className={styles.createGroupButton} onClick={() => setIsModalOpen(true)}>Create Group</button>
       <div className={styles.dividerMid}></div>
       <div className={styles.groupsList}>
         <GroupSection
           title="Your Communities"
           groups={filteredMyGroups}
           joinable={false}
+          onLeave={handleGroupLeave}
           setActiveGroup={setActiveGroup}
           setFeedStyle={setFeedStyle}
           activeGroup={activeGroup}
@@ -200,6 +278,44 @@ const CombinedFeedSidebar = ({ feedStyle, setFeedStyle, activeGroup, setActiveGr
           activeGroup={activeGroup}
         />
       </div>
+
+      {isModalOpen && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent}>
+            <button className={styles.closeButton} onClick={() => setIsModalOpen(false)}>
+              <X size={24} />
+            </button>
+            <h2>Create New Group</h2>
+            <form onSubmit={handleCreateGroup}>
+              <div className={styles.inputContainer}>
+                <input
+                  type="text"
+                  placeholder="Enter group name"
+                  value={newGroupName}
+                  onChange={(e) => setNewGroupName(e.target.value)}
+                  className={`${styles.input} ${!newGroupName.trim() && styles.inputError}`}
+                  required
+                />
+                {!newGroupName.trim() && <span className={styles.errorMessage}>Group name is required</span>}
+              </div>
+              <textarea
+                placeholder="Enter group description"
+                value={newGroupDescription}
+                onChange={(e) => setNewGroupDescription(e.target.value)}
+                className={styles.input}
+                required
+              />
+              <button 
+                type="submit" 
+                className={`${styles.submitButton} ${!newGroupName.trim() && styles.submitButtonDisabled}`}
+                disabled={!newGroupName.trim()}
+              >
+                Create Group
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
