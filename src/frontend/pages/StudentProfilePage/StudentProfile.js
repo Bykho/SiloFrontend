@@ -405,10 +405,10 @@ function StudentProfile() {
       />
       <div className={styles.buttonContainer}>
           <>
-            <button className={styles.bigButtonAdd} onClick={handleBuildFromScratchClick}> <Plus /> Add New Project</button>
-            <button className={styles.bigButton} onClick={handleCheckGithubClick}> <LuGithub /> Import from GitHub</button>
-            <button className={styles.bigButton} onClick={handleEditProfileClick}> <Edit2 /> Edit My Profile</button>
-            <button className={styles.bigButton} onClick={handleShareProfile}> <Share /> Share My Profile</button>
+            <button className={styles.bigButtonAdd} onClick={handleBuildFromScratchClick}> <Plus /> Add Project</button>
+            <button className={styles.bigButton} onClick={handleCheckGithubClick}> <LuGithub /> Import GitHub</button>
+            <button className={styles.bigButton} onClick={handleEditProfileClick}> <Edit2 /> Edit Profile</button>
+            <button className={styles.bigButton} onClick={handleShareProfile}> <Share /> Share Portfolio</button>
           </>
       </div>
       <div className={styles.contentContainer}>
