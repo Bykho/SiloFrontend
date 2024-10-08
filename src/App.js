@@ -21,6 +21,7 @@ import PublicProfile from './frontend/pages/PublicPortfolioPage/PublicProfile';
 import Welcome from './frontend/pages/FirstPage/Welcome';
 import JobsPage from './frontend/pages/JobsPage/JobsPage';
 import  ResearchPage from './frontend/pages/Research/ResearchPage';
+import GraphPage from './frontend/pages/GraphPage/GraphPage';
 import './App.css'; 
 
 import AddBlocPortfolio from './frontend/components/AddBlocPortfolio';
@@ -55,6 +56,7 @@ function App() {
             <Route path="/public/:username/:user_id" element={<PublicProfile />} /> 
             <Route path="/jobs" element={<JobsPage />} />
             <Route path="/research" element={<ResearchPage />} />
+            <Route path='/graph' element={<GraphPage />} />
           </Routes>
         </div>
       </UserProvider>

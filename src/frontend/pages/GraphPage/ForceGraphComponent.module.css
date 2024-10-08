@@ -1,0 +1,50 @@
+.graphContainer {
+    width: 100%;
+    height: 100vh;
+    background-color: #1a202c;
+    position: relative;
+  }
+  
+  .alert {
+    position: absolute;
+    bottom: 1rem;
+    left: 1rem;
+    width: 16rem;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    background-color: rgba(45, 55, 72, 0.9);
+    color: #E2E8F0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: flex-start;
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+  }
+  
+  .alert:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+  }
+  
+  .alertIcon {
+    flex-shrink: 0;
+    margin-right: 0.75rem;
+    font-size: 1.25rem;
+  }
+  
+  .alertContent {
+    flex-grow: 1;
+  }
+  
+  .alertTitle {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem;
+    color: #A0AEC0;
+  }
+  
+  .alertDescription {
+    font-size: 0.875rem;
+    margin: 0;
+    color: #E2E8F0;
+  }
