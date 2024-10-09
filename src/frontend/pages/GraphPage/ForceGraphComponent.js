@@ -18,6 +18,8 @@ const ForceGraphComponent = () => {
   const mySkills = user ? user.skills : [];
   const myInterests = user ? user.interests : [];
   const myUserId = user ? user._id : '';
+  const myUserType = user ? user.user_type : '';
+  const myEmail = user ? user.email : '';
 
   const applyForces = useCallback(() => {
     const fg = fgRef.current;
@@ -35,247 +37,213 @@ const ForceGraphComponent = () => {
       setError('');
       try {
         const token = localStorage.getItem('token');
-        const [usersResponse, projectsResponse] = await Promise.all([
-          fetch(`${config.apiBaseUrl}/userFilteredSearch/all`, {
-            method: 'GET',
-            headers: {
-              'Authorization': `Bearer ${token}`,
-            },
-          }),
-          fetch(`${config.apiBaseUrl}/projectFilteredSearch/all`, {
-            method: 'GET',
-            headers: {
-              'Authorization': `Bearer ${token}`,
-            },
-          }),
-        ]);
 
-        if (!usersResponse.ok || !projectsResponse.ok) {
-          throw new Error('Failed to fetch users or projects');
+        // Fetch the current user's projects
+        const userProjectsResponse = await fetch(`${config.apiBaseUrl}/returnUserProjects`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ userId: myUserId }),
+        });
+
+        if (!userProjectsResponse.ok) {
+          throw new Error('Failed to fetch user projects');
         }
 
-        const usersData = await usersResponse.json();
-        const projectsData = await projectsResponse.json();
+        const userProjectsData = await userProjectsResponse.json();
+        // userProjectsData is an array of projects with _id and projectName
 
-        // Initialize graph data
+        // Extract project IDs
+        const userProjectIds = userProjectsData.map(project => project._id);
+
+        // Fetch full project details
+        const projectsResponse = await fetch(`${config.apiBaseUrl}/returnProjectsFromIds`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ projectIds: userProjectIds }),
+        });
+
+        if (!projectsResponse.ok) {
+          throw new Error('Failed to fetch project details');
+        }
+
+        const userProjects = await projectsResponse.json();
+
+        // Get similar projects for user's projects
+        // Note: This endpoint needs to be implemented in your backend
+        const similarProjectsBatchResponse = await fetch(`${config.apiBaseUrl}/getSimilarProjectsBatch`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ projectIds: userProjectIds }),
+        });
+
+        if (!similarProjectsBatchResponse.ok) {
+          throw new Error('Failed to fetch similar projects');
+        }
+
+        const similarProjectsMap = await similarProjectsBatchResponse.json();
+        // similarProjectsMap is an object mapping each user project ID to an array of similar project IDs
+
+        // Collect all similar project IDs
+        const similarProjectIdsSet = new Set();
+        for (const projectId in similarProjectsMap) {
+          similarProjectsMap[projectId].forEach(similarProjectId => {
+            if (!userProjectIds.includes(similarProjectId)) {
+              similarProjectIdsSet.add(similarProjectId);
+            }
+          });
+        }
+        const similarProjectIds = Array.from(similarProjectIdsSet);
+
+        // Fetch details of similar projects
+        const similarProjectsResponse = await fetch(`${config.apiBaseUrl}/returnProjectsFromIds`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ projectIds: similarProjectIds }),
+        });
+
+        if (!similarProjectsResponse.ok) {
+          throw new Error('Failed to fetch similar project details');
+        }
+
+        const similarProjects = await similarProjectsResponse.json();
+
+        // Collect author IDs
+        const authorIdsSet = new Set();
+        similarProjects.forEach(project => {
+          if (project.user_id && project.user_id !== myUserId) {
+            authorIdsSet.add(project.user_id);
+          }
+        });
+        const authorIds = Array.from(authorIdsSet);
+
+        // Fetch author details
+        const authorsResponse = await fetch(`${config.apiBaseUrl}/getUsersByIds`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ userIds: authorIds }),
+        });
+
+        if (!authorsResponse.ok) {
+          throw new Error('Failed to fetch author details');
+        }
+
+        const authors = await authorsResponse.json();
+
+        // Build the graph nodes and links
         const nodes = [];
         const links = [];
         const nodeMap = new Map();
 
-        // Helper function to add a node if it doesn't exist
-        const addNode = (node) => {
-          if (!nodeMap.has(node.id)) {
-            nodeMap.set(node.id, node);
-            nodes.push(node);
-          }
-        };
-
-        // Helper function to add a link if it doesn't exist
-        const linkSet = new Set();
-        const addLink = (link) => {
-          const linkKey = `${link.source}-${link.target}-${link.type}`;
-          if (!linkSet.has(linkKey)) {
-            linkSet.add(linkKey);
-            links.push(link);
-          }
-        };
-
-        // Build inverted indices for skills/interests and tags
-        const keywordToUsers = new Map();
-        usersData.forEach((u) => {
-          const keywords = [...(u.skills || []), ...(u.interests || [])];
-          keywords.forEach((keyword) => {
-            if (!keywordToUsers.has(keyword)) {
-              keywordToUsers.set(keyword, new Set());
-            }
-            keywordToUsers.get(keyword).add(u);
-          });
-        });
-
-        const keywordToProjects = new Map();
-        projectsData.forEach((p) => {
-          const tags = p.tags || [];
-          tags.forEach((tag) => {
-            if (!keywordToProjects.has(tag)) {
-              keywordToProjects.set(tag, new Set());
-            }
-            keywordToProjects.get(tag).add(p);
-          });
-        });
-
-        // Start building the graph from the current user
-        const currentUser = usersData.find((u) => u._id === myUserId);
-        if (!currentUser) {
-          throw new Error('Current user not found in users data');
-        }
-
-        // Add the current user node
+        // Add current user node
         const currentUserNode = {
-          id: currentUser._id,
-          name: currentUser.username,
-          type: 'user',
-          group: 'currentUser',
-          skills: currentUser.skills || [],
-          interests: currentUser.interests || [],
-          user_type: currentUser.user_type,
-          email: currentUser.email,
-        };
-        addNode(currentUserNode);
+            id: myUserId,
+            name: myUsername,
+            type: 'user',
+            group: 'currentUser',
+            skills: mySkills,
+            interests: myInterests,
+            user_type: myUserType,
+            email: myEmail,
+          };
 
-        // BFS setup
-        const maxDepth = 2; // Limit the depth to control graph size
-        const queue = [{ node: currentUserNode, depth: 0 }];
-        const visitedNodes = new Set([currentUserNode.id]);
+        nodes.push(currentUserNode);
+        nodeMap.set(myUserId, currentUserNode);
 
-        while (queue.length > 0) {
-          const { node, depth } = queue.shift();
+        // Add user's projects
+        userProjects.forEach(project => {
+          const projectNode = {
+            id: project._id,
+            name: project.projectName,
+            type: 'project',
+            createdBy: project.createdBy,
+            createdById: project.user_id,
+            tags: project.tags || [],
+          };
+          nodes.push(projectNode);
+          nodeMap.set(project._id, projectNode);
 
-          if (depth >= maxDepth) continue;
+          // Link from user to project
+          links.push({
+            source: myUserId,
+            target: project._id,
+            type: 'user-project',
+          });
+        });
 
-          if (node.type === 'user') {
-            // Add user's projects
-            const userProjects = projectsData.filter(
-              (p) => p.user_id === node.id
-            );
+        // Add similar projects
+        similarProjects.forEach(project => {
+          if (!nodeMap.has(project._id)) {
+            const projectNode = {
+              id: project._id,
+              name: project.projectName,
+              type: 'project',
+              createdBy: project.createdBy,
+              createdById: project.user_id,
+              tags: project.tags || [],
+            };
+            nodes.push(projectNode);
+            nodeMap.set(project._id, projectNode);
+          }
+        });
 
-            userProjects.forEach((project) => {
-              const projectNode = {
-                id: project._id,
-                name: project.projectName,
-                type: 'project',
-                tags: project.tags || [],
-                createdBy: project.createdBy,
-                createdById: project.user_id,
-              };
-              addNode(projectNode);
-              addLink({
-                source: node.id,
-                target: projectNode.id,
-                type: 'user-project',
-              });
+        // Add authors
+        authors.forEach(author => {
+          if (!nodeMap.has(author._id)) {
+            const authorNode = {
+              id: author._id,
+              name: author.username,
+              type: 'user',
+              group: 'otherUser',
+              skills: author.skills || [],
+              interests: author.interests || [],
+              user_type: author.user_type,
+              email: author.email,
+            };
+            nodes.push(authorNode);
+            nodeMap.set(author._id, authorNode);
+          }
+        });
 
-              if (!visitedNodes.has(projectNode.id)) {
-                visitedNodes.add(projectNode.id);
-                queue.push({ node: projectNode, depth: depth + 1 });
-              }
+        // Build links between user's projects and similar projects
+        for (const userProjectId in similarProjectsMap) {
+          const similarProjectIdsForUserProject = similarProjectsMap[userProjectId] || [];
+          similarProjectIdsForUserProject.forEach(similarProjectId => {
+            links.push({
+              source: userProjectId,
+              target: similarProjectId,
+              type: 'project-project',
             });
+          });
+        }
 
-            // Add connections to other users via shared skills/interests
-            const keywords = [...(node.skills || []), ...(node.interests || [])];
-            keywords.forEach((keyword) => {
-              const relatedUsers = keywordToUsers.get(keyword) || [];
-              relatedUsers.forEach((relatedUser) => {
-                if (relatedUser._id !== node.id) {
-                  const relatedUserNode = {
-                    id: relatedUser._id,
-                    name: relatedUser.username,
-                    type: 'user',
-                    group: 'otherUser',
-                    skills: relatedUser.skills || [],
-                    interests: relatedUser.interests || [],
-                    user_type: relatedUser.user_type,
-                    email: relatedUser.email,
-                  };
-                  addNode(relatedUserNode);
-                  addLink({
-                    source: node.id,
-                    target: relatedUserNode.id,
-                    type: 'user-user',
-                    keyword,
-                  });
-
-                  if (!visitedNodes.has(relatedUserNode.id)) {
-                    visitedNodes.add(relatedUserNode.id);
-                    queue.push({ node: relatedUserNode, depth: depth + 1 });
-                  }
-                }
-              });
-
-              // Connect to projects with matching tags
-              const relatedProjects = keywordToProjects.get(keyword) || [];
-              relatedProjects.forEach((relatedProject) => {
-                if (relatedProject.user_id !== node.id) {
-                  const relatedProjectNode = {
-                    id: relatedProject._id,
-                    name: relatedProject.projectName,
-                    type: 'project',
-                    tags: relatedProject.tags || [],
-                    createdBy: relatedProject.createdBy,
-                    createdById: relatedProject.user_id,
-                  };
-                  addNode(relatedProjectNode);
-                  addLink({
-                    source: node.id,
-                    target: relatedProjectNode.id,
-                    type: 'user-project',
-                    keyword,
-                  });
-
-                  if (!visitedNodes.has(relatedProjectNode.id)) {
-                    visitedNodes.add(relatedProjectNode.id);
-                    queue.push({ node: relatedProjectNode, depth: depth + 1 });
-                  }
-                }
-              });
-            });
-          } else if (node.type === 'project') {
-            // Add project's creator
-            const creator = usersData.find((u) => u._id === node.createdById);
-            if (creator && creator._id !== currentUserNode.id) {
-              const creatorNode = {
-                id: creator._id,
-                name: creator.username,
-                type: 'user',
-                group: 'otherUser',
-                skills: creator.skills || [],
-                interests: creator.interests || [],
-                user_type: creator.user_type,
-                email: creator.email,
-              };
-              addNode(creatorNode);
-              addLink({
-                source: node.id,
-                target: creatorNode.id,
-                type: 'project-owner',
-              });
-
-              if (!visitedNodes.has(creatorNode.id)) {
-                visitedNodes.add(creatorNode.id);
-                queue.push({ node: creatorNode, depth: depth + 1 });
-              }
-            }
-
-            // Connect to other projects via shared tags
-            const tags = node.tags || [];
-            tags.forEach((tag) => {
-              const relatedProjects = keywordToProjects.get(tag) || [];
-              relatedProjects.forEach((relatedProject) => {
-                if (relatedProject._id !== node.id) {
-                  const relatedProjectNode = {
-                    id: relatedProject._id,
-                    name: relatedProject.projectName,
-                    type: 'project',
-                    tags: relatedProject.tags || [],
-                    createdBy: relatedProject.createdBy,
-                    createdById: relatedProject.user_id,
-                  };
-                  addNode(relatedProjectNode);
-                  addLink({
-                    source: node.id,
-                    target: relatedProjectNode.id,
-                    type: 'project-project',
-                    keyword: tag,
-                  });
-
-                  if (!visitedNodes.has(relatedProjectNode.id)) {
-                    visitedNodes.add(relatedProjectNode.id);
-                    queue.push({ node: relatedProjectNode, depth: depth + 1 });
-                  }
-                }
-              });
+        // Link similar projects to their authors
+        similarProjects.forEach(project => {
+          if (project.user_id) {
+            links.push({
+              source: project._id,
+              target: project.user_id,
+              type: 'project-owner',
             });
           }
-        }
+        });
+
+        // Optionally, you can continue this pattern to include authors' other projects
+        // For brevity, this example stops here
 
         setGraphData({ nodes, links });
         setLoading(false);
@@ -286,7 +254,7 @@ const ForceGraphComponent = () => {
       }
     };
     fetchGraphData();
-  }, [myUsername, mySkills, myInterests, myUserId]);
+  }, [myUserId]);
 
   useEffect(() => {
     if (!loading && fgRef.current) {
@@ -330,7 +298,7 @@ const ForceGraphComponent = () => {
       const label = node.name;
       const fontSize = 14 / globalScale;
       ctx.font = `${fontSize}px Sans-Serif`;
-      const nodeDiameter = 50; // Fixed size
+      const nodeDiameter = 50;
       const nodeRadius = nodeDiameter / 2;
       node.r = nodeRadius;
 
