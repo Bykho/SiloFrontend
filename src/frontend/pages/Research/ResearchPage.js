@@ -6,6 +6,7 @@ import LoadingIndicator from '../../components/LoadingIndicator';
 import { FaRegBookmark, FaBookmark, FaSearch } from "react-icons/fa";
 import { FaBookBookmark } from "react-icons/fa6";
 import { CircularProgress } from '@mui/material';
+import { IoSparkles } from 'react-icons/io5';
 
 const ResearchPage = () => {
   const navigate = useNavigate();
@@ -139,8 +140,8 @@ const ResearchPage = () => {
   return (
     <div className={styles.researchPage}>
       <header className={styles.header}>
-        <h1 className={styles.title}>Research For You</h1>
-        <p className={styles.subtitle}>Discover the latest research papers tailored to your skills, interests and portfolio</p>
+        <h1 className={styles.title}> <IoSparkles /> Research For You</h1>
+        <p className={styles.subtitle}>Discover research specifically tailored to your profile</p>
       </header>
       <div className={styles.toolbar}>
         <form onSubmit={handleSearch} className={styles.searchBar}>
