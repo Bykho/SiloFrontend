@@ -1,7 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
 .graphContainer {
     width: 100%;
     height: 100vh;
-    background-color: #1a202c;
+    background-color: #121212;
     position: relative;
   }
   
@@ -9,10 +11,11 @@
     position: absolute;
     bottom: 1rem;
     left: 1rem;
+    z-index: 2;
     width: 16rem;
-    padding: 1rem;
+    padding: 1rem 1rem 5rem 1rem;
     border-radius: 0.75rem;
-    background-color: rgba(45, 55, 72, 0.9);
+    background-color: rgba(30, 30, 30, 0.9);
     color: #E2E8F0;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
     display: flex;
@@ -30,6 +33,7 @@
     flex-shrink: 0;
     margin-right: 0.75rem;
     font-size: 1.25rem;
+    color: #00A3FF;
   }
   
   .alertContent {
@@ -37,14 +41,54 @@
   }
   
   .alertTitle {
+    font-family: "Outfit";
     font-size: 1rem;
     font-weight: 600;
     margin: 0 0 0.25rem;
-    color: #A0AEC0;
+    color: #00A3FF;
   }
   
   .alertDescription {
+    font-family: "Outfit";
     font-size: 0.875rem;
     margin: 0;
     color: #E2E8F0;
   }
+  
+  .loadingContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #121212;
+  }
+  
+  .header {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 2;
+    padding: 1rem;
+    background-color: rgba(30, 30, 30, 0.8);
+    border-radius: 0.75rem;
+    color: #E2E8F0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(5px);
+  }
+  
+  .headerTitle {
+    font-family: "Outfit";
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem;
+    color: #00A3FF;
+    text-align: left;
+  }
+  
+  .headerDescription {
+    font-family: "Outfit";
+    font-size: 1rem;
+    margin: 0;
+    color: #E2E8F0;
+  }
+  

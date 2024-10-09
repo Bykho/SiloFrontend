@@ -4,6 +4,7 @@ import * as d3 from 'd3-force';
 import styles from './ForceGraphComponent.module.css';
 import config from '../../config';
 import { useUser } from '../../contexts/UserContext';
+import CleanOrbitingRingLoader from '../../components/FractalLoadingBar';
 
 const ForceGraphComponent = () => {
   const [graphData, setGraphData] = useState({ nodes: [], links: [] });
@@ -14,10 +15,10 @@ const ForceGraphComponent = () => {
   const [error, setError] = useState('');
   const fgRef = useRef();
   const { user } = useUser();
+  const myUserId = user ? user._id : null;
   const myUsername = user ? user.username : '';
-  const mySkills = user ? user.skills : [];
-  const myInterests = user ? user.interests : [];
-  const myUserId = user ? user._id : '';
+  const mySkills = user && user.skills ? user.skills : [];
+  const myInterests = user && user.interests ? user.interests : [];
   const myUserType = user ? user.user_type : '';
   const myEmail = user ? user.email : '';
 
@@ -26,12 +27,12 @@ const ForceGraphComponent = () => {
     if (fg) {
       fg.d3Force('charge').strength(-200);
       fg.d3Force('link').distance(150);
-      fg.d3Force('collide', d3.forceCollide(50).strength(1));
-      fg.d3Force('center', d3.forceCenter(0, 0).strength(0.1));
+      fg.d3Force('collide', d3.forceCollide(30).strength(0.7));
     }
   }, []);
 
   useEffect(() => {
+    if (!myUserId) return; // Ensure user ID is available
     const fetchGraphData = async () => {
       setLoading(true);
       setError('');
@@ -53,9 +54,6 @@ const ForceGraphComponent = () => {
         }
 
         const userProjectsData = await userProjectsResponse.json();
-        // userProjectsData is an array of projects with _id and projectName
-
-        // Extract project IDs
         const userProjectIds = userProjectsData.map(project => project._id);
 
         // Fetch full project details
@@ -75,7 +73,6 @@ const ForceGraphComponent = () => {
         const userProjects = await projectsResponse.json();
 
         // Get similar projects for user's projects
-        // Note: This endpoint needs to be implemented in your backend
         const similarProjectsBatchResponse = await fetch(`${config.apiBaseUrl}/getSimilarProjectsBatch`, {
           method: 'POST',
           headers: {
@@ -90,7 +87,6 @@ const ForceGraphComponent = () => {
         }
 
         const similarProjectsMap = await similarProjectsBatchResponse.json();
-        // similarProjectsMap is an object mapping each user project ID to an array of similar project IDs
 
         // Collect all similar project IDs
         const similarProjectIdsSet = new Set();
@@ -151,15 +147,15 @@ const ForceGraphComponent = () => {
 
         // Add current user node
         const currentUserNode = {
-            id: myUserId,
-            name: myUsername,
-            type: 'user',
-            group: 'currentUser',
-            skills: mySkills,
-            interests: myInterests,
-            user_type: myUserType,
-            email: myEmail,
-          };
+          id: myUserId,
+          name: myUsername,
+          type: 'user',
+          group: 'currentUser',
+          skills: mySkills,
+          interests: myInterests,
+          user_type: myUserType,
+          email: myEmail,
+        };
 
         nodes.push(currentUserNode);
         nodeMap.set(myUserId, currentUserNode);
@@ -242,9 +238,6 @@ const ForceGraphComponent = () => {
           }
         });
 
-        // Optionally, you can continue this pattern to include authors' other projects
-        // For brevity, this example stops here
-
         setGraphData({ nodes, links });
         setLoading(false);
       } catch (err) {
@@ -262,31 +255,28 @@ const ForceGraphComponent = () => {
     }
   }, [loading, applyForces]);
 
-  const updateHighlight = () => {
-    setHighlightNodes(new Set(highlightNodes));
-    setHighlightLinks(new Set(highlightLinks));
-  };
-
   const handleNodeHover = (node) => {
-    highlightNodes.clear();
-    highlightLinks.clear();
+    const newHighlightNodes = new Set();
+    const newHighlightLinks = new Set();
     if (node) {
-      highlightNodes.add(node);
-      node.neighbors?.forEach((neighbor) => highlightNodes.add(neighbor));
-      node.links?.forEach((link) => highlightLinks.add(link));
+      newHighlightNodes.add(node);
+      node.neighbors?.forEach((neighbor) => newHighlightNodes.add(neighbor));
+      node.links?.forEach((link) => newHighlightLinks.add(link));
     }
-    updateHighlight();
+    setHighlightNodes(newHighlightNodes);
+    setHighlightLinks(newHighlightLinks);
   };
 
   const handleLinkHover = (link) => {
-    highlightNodes.clear();
-    highlightLinks.clear();
+    const newHighlightNodes = new Set();
+    const newHighlightLinks = new Set();
     if (link) {
-      highlightLinks.add(link);
-      highlightNodes.add(link.source);
-      highlightNodes.add(link.target);
+      newHighlightLinks.add(link);
+      newHighlightNodes.add(link.source);
+      newHighlightNodes.add(link.target);
     }
-    updateHighlight();
+    setHighlightNodes(newHighlightNodes);
+    setHighlightLinks(newHighlightLinks);
   };
 
   const handleNodeClick = (node) => {
@@ -297,26 +287,27 @@ const ForceGraphComponent = () => {
     (node, ctx, globalScale) => {
       const label = node.name;
       const fontSize = 14 / globalScale;
-      ctx.font = `${fontSize}px Sans-Serif`;
+      const fontFamily = 'Outfit'; // Use the Google Font here
+      ctx.font = `${fontSize}px ${fontFamily}`;
       const nodeDiameter = 50;
       const nodeRadius = nodeDiameter / 2;
       node.r = nodeRadius;
 
       // Determine color based on node type and group
-      let fillColor = '#2D3748'; // Node background
-      let borderColor = '#4169E1'; // Default border color
+      let fillColor = '#1A1A1A'; // Node background
+      let borderColor = '#00A3FF'; // Default border color
 
       if (node.type === 'user') {
         if (node.group === 'currentUser') {
-          borderColor = '#FF0000'; // Current user - Red
+          borderColor = '#00A3FF'; // Bright blue
         } else {
-          borderColor = '#1e7de9'; // Other users - Blue
+          borderColor = '#007ACC'; // Medium blue
         }
       } else if (node.type === 'project') {
         if (node.createdById === myUserId) {
-          borderColor = '#00FF00'; // Current user's projects - Green
+          borderColor = '#00FFC8'; // Bright teal
         } else {
-          borderColor = '#FFA500'; // Other users' projects - Orange
+          borderColor = '#009688'; // Darker teal
         }
       }
 
@@ -354,7 +345,11 @@ const ForceGraphComponent = () => {
   }, []);
 
   if (loading) {
-    return <div className={styles.loadingSpinner}></div>;
+    return (
+      <div className={styles.loadingContainer}>
+        <CleanOrbitingRingLoader size={150} />
+      </div>
+    );
   }
 
   if (error) {
@@ -366,22 +361,28 @@ const ForceGraphComponent = () => {
       <ForceGraph2D
         ref={fgRef}
         graphData={graphData}
+        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1 }}
         nodeRelSize={20}
         nodeCanvasObject={nodeCanvasObject}
         nodePointerAreaPaint={nodePointerAreaPaint}
         linkWidth={(link) => (highlightLinks.has(link) ? 2 : 1)}
-        linkColor={() => 'rgba(255, 255, 255, 0.2)'}
+        linkColor={() => 'rgba(0, 163, 255, 0.2)'}
         linkDirectionalParticles={1}
         linkDirectionalParticleWidth={2}
         linkDirectionalParticleSpeed={0.005}
-        linkDirectionalParticleColor={() => '#4169E1'}
+        linkDirectionalParticleColor={() => '#00A3FF'}
         onNodeHover={handleNodeHover}
         onLinkHover={handleLinkHover}
         onNodeClick={handleNodeClick}
-        backgroundColor="#1a202c"
-        cooldownTicks={100}
-        onEngineStop={() => fgRef.current.zoomToFit(400)}
+        backgroundColor="#121212"
+        cooldownTicks={50}
       />
+      <div className={styles.header}>
+        <h1 className={styles.headerTitle}>Knowledge Graph</h1>
+        <p className={styles.headerDescription}>
+          Connections between your work, and others.
+        </p>
+      </div>
       {selectedNode && (
         <div className={styles.alert}>
           <div className={styles.alertIcon}>ℹ️</div>
@@ -396,9 +397,15 @@ const ForceGraphComponent = () => {
                   <br />
                   Email: {selectedNode.email}
                   <br />
-                  Skills: {selectedNode.skills.join(', ')}
+                  Skills:{' '}
+                  {selectedNode.skills && selectedNode.skills.length > 0
+                    ? selectedNode.skills.join(', ')
+                    : 'N/A'}
                   <br />
-                  Interests: {selectedNode.interests.join(', ')}
+                  Interests:{' '}
+                  {selectedNode.interests && selectedNode.interests.length > 0
+                    ? selectedNode.interests.join(', ')
+                    : 'N/A'}
                 </>
               ) : (
                 <>
@@ -406,7 +413,10 @@ const ForceGraphComponent = () => {
                   <br />
                   Created By: {selectedNode.createdBy}
                   <br />
-                  Tags: {selectedNode.tags.join(', ')}
+                  Tags:{' '}
+                  {selectedNode.tags && selectedNode.tags.length > 0
+                    ? selectedNode.tags.join(', ')
+                    : 'N/A'}
                 </>
               )}
             </p>

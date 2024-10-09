@@ -12,6 +12,9 @@ import { Bell } from 'lucide-react';
 import { MdOutlineLeaderboard } from "react-icons/md";
 import {FaBriefcase} from "react-icons/fa6";
 import { SiArxiv } from "react-icons/si";
+import { FaCircleNodes } from "react-icons/fa6";
+import { MdScience } from "react-icons/md";
+
 
 
 const NavigationBar = () => {
@@ -60,9 +63,9 @@ const NavigationBar = () => {
               className={`${styles.button} ${activeLink === 'research' ? styles.clickedButton : ''}`}
               onClick={() => handleLinkClick('research')}
             >
-              <SiArxiv className={styles.icon} /> Research
+              <MdScience className={styles.icon} /> Research
             </a>
-
+            {/*
             <a
               href="/jobs"
               className={`${styles.button} ${activeLink === 'jobs' ? styles.clickedButton : ''}`}
@@ -70,7 +73,16 @@ const NavigationBar = () => {
             >
               <FaBriefcase className={styles.icon} /> Jobs
             </a>
-            
+            */}
+            <a
+              href="/graph"
+              className={`${styles.button} ${activeLink === 'jobs' ? styles.clickedButton : ''}`}
+              onClick={() => handleLinkClick('jobs')}
+            >
+              < FaCircleNodes className={styles.icon} /> Knowledge
+              
+            </a>
+
             <a
               href="/GenDirectory"
               className={`${styles.button} ${activeLink === 'find' ? styles.clickedButton : ''}`}
@@ -113,14 +125,24 @@ const NavigationBar = () => {
               href="/research"
               className={`${styles.button} ${activeLink === 'research' ? styles.clickedButton : ''}`}
             >
-              <SiArxiv className={styles.icon} /> Research
+              <MdScience className={styles.icon} /> Research
             </a>
 
+            {/*
             <a
               href="/jobs"
               className={`${styles.button} ${activeLink === 'jobs' ? styles.clickedButton : ''}`}
             >
               <FaBriefcase className={styles.icon} /> Jobs
+            </a>
+            */}
+
+            <a
+              href="/graph"
+              className={`${styles.button} ${activeLink === 'jobs' ? styles.clickedButton : ''}`}
+            >
+              < FaCircleNodes className={styles.icon} /> Knowledge
+              
             </a>
 
             <a
