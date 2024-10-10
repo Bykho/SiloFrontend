@@ -32,7 +32,7 @@ const ProfileHeader = ({ userData, loading, error }) => {
   const isValidResume = (resumeData) => {
     //if (!resumeData || typeof resumeData !== 'string') return false;
     //return resumeData.startsWith('data:application/pdf;base64,');
-    return True;
+    return true;
   };
 
   useEffect(() => {
