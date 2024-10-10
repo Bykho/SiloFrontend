@@ -30,8 +30,9 @@ const ProfileHeader = ({ userData, loading, error }) => {
   const userSpiderData = userData.scores[userData.scores.length - 1]
 
   const isValidResume = (resumeData) => {
-    if (!resumeData || typeof resumeData !== 'string') return false;
-    return resumeData.startsWith('data:application/pdf;base64,');
+    //if (!resumeData || typeof resumeData !== 'string') return false;
+    //return resumeData.startsWith('data:application/pdf;base64,');
+    return True;
   };
 
   useEffect(() => {
@@ -206,6 +207,7 @@ const ProfileHeader = ({ userData, loading, error }) => {
       {showResume && (
         <div className={styles.resumeModal}>
           <button className={styles.closeButton2} onClick={toggleResume}><FaWindowClose /> </button>
+          
           {isValidResume(userData.resume) ? (
             <embed src={userData.resume} type="application/pdf" width="80%" height="80%" />
           ) : (
