@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { useUser } from '../../contexts/UserContext';
 import config from '../../config';
 import styles from './handleUpvote.module.css';
@@ -8,14 +8,26 @@ const HandleUpvote = (WrappedComponent) => {
   const HandleUpvoteComponent = (props) => {
     const { user, addUpvoteToUser } = useUser();
 
-    const handleUpvote = async (project, setProject, passedUser, setPassedUser, userUpvotes, setUserUpvotes, tempUpvoteId) => {
+    const handleUpvote = async (project, setProject, passedUser, setPassedUser, userUpvotes, setUserUpvotes, setIsProcessing) => {
       const token = localStorage.getItem('token');
       if (!token) {
         console.error('No token found in local storage');
-        return false;
+        return;
       }
 
       const payload = { user_id: user._id, project_id: project._id };
+      const tempUpvoteId = `temp-${Date.now()}`;
+
+      // Optimistic update
+      setProject(prevProject => ({
+        ...prevProject,
+        upvotes: [...(prevProject.upvotes || []), tempUpvoteId],
+      }));
+      setPassedUser(prevUser => ({
+        ...prevUser,
+        upvotes: [...(prevUser.upvotes || []), tempUpvoteId],
+      }));
+      setUserUpvotes(prevUpvotes => [...prevUpvotes, tempUpvoteId]);
 
       try {
         const response = await fetch(`${config.apiBaseUrl}/upvoteProject`, {
@@ -59,25 +71,55 @@ const HandleUpvote = (WrappedComponent) => {
             },
             body: JSON.stringify(notificationPayload)
           });
-          return true;
         } else {
+          // Revert optimistic update if upvote failed
+          setProject(prevProject => ({
+            ...prevProject,
+            upvotes: prevProject.upvotes.filter(id => id !== tempUpvoteId),
+          }));
+          setPassedUser(prevUser => ({
+            ...prevUser,
+            upvotes: prevUser.upvotes.filter(id => id !== tempUpvoteId),
+          }));
+          setUserUpvotes(prevUpvotes => prevUpvotes.filter(id => id !== tempUpvoteId));
           console.error('Upvote failed:', data.message);
-          return false;
         }
       } catch (error) {
+        // Revert optimistic update if there was an error
+        setProject(prevProject => ({
+          ...prevProject,
+          upvotes: prevProject.upvotes.filter(id => id !== tempUpvoteId),
+        }));
+        setPassedUser(prevUser => ({
+          ...prevUser,
+          upvotes: prevUser.upvotes.filter(id => id !== tempUpvoteId),
+        }));
+        setUserUpvotes(prevUpvotes => prevUpvotes.filter(id => id !== tempUpvoteId));
         console.error('Error during upvote:', error);
-        return false;
+      } finally {
+        setIsProcessing(false);
       }
     };
 
-    const handleRemoveUpvote = async (project, setProject, passedUser, setPassedUser, userUpvotes, setUserUpvotes, upvoteId) => {
+    const handleRemoveUpvote = async (project, setProject, passedUser, setPassedUser, userUpvotes, setUserUpvotes, upvoteId, setIsProcessing) => {
       const token = localStorage.getItem('token');
       if (!token) {
         console.error('No token found in local storage');
-        return false;
+        return;
       }
 
       const payload = { user_id: user._id, project_id: project._id, upvote_id: upvoteId };
+
+      // Optimistic update
+      setProject(prevProject => ({
+        ...prevProject,
+        upvotes: prevProject.upvotes.filter(id => id !== upvoteId),
+      }));
+      setPassedUser(prevUser => ({
+        ...prevUser,
+        upvotes: prevUser.upvotes.filter(id => id !== upvoteId),
+      }));
+      setUserUpvotes(prevUpvotes => prevUpvotes.filter(id => id !== upvoteId));
 
       try {
         const response = await fetch(`${config.apiBaseUrl}/removeUpvote`, {
@@ -89,15 +131,33 @@ const HandleUpvote = (WrappedComponent) => {
           body: JSON.stringify(payload),
         });
         const data = await response.json();
-        if (response.ok) {
-          return true;
-        } else {
+        if (!response.ok) {
+          // Revert optimistic update if remove upvote failed
+          setProject(prevProject => ({
+            ...prevProject,
+            upvotes: [...prevProject.upvotes, upvoteId],
+          }));
+          setPassedUser(prevUser => ({
+            ...prevUser,
+            upvotes: [...prevUser.upvotes, upvoteId],
+          }));
+          setUserUpvotes(prevUpvotes => [...prevUpvotes, upvoteId]);
           console.error('Remove upvote failed:', data.message);
-          return false;
         }
       } catch (error) {
+        // Revert optimistic update if there was an error
+        setProject(prevProject => ({
+          ...prevProject,
+          upvotes: [...prevProject.upvotes, upvoteId],
+        }));
+        setPassedUser(prevUser => ({
+          ...prevUser,
+          upvotes: [...prevUser.upvotes, upvoteId],
+        }));
+        setUserUpvotes(prevUpvotes => [...prevUpvotes, upvoteId]);
         console.error('Error during remove upvote:', error);
-        return false;
+      } finally {
+        setIsProcessing(false);
       }
     };
 
@@ -111,62 +171,24 @@ const HandleUpvote = (WrappedComponent) => {
 
     const UpvoteButton = ({ project, setProject, passedUser, setPassedUser, userUpvotes, setUserUpvotes }) => {
       const [isProcessing, setIsProcessing] = useState(false);
-      const [localUpvoteOverlap, setLocalUpvoteOverlap] = useState(() => findUpvoteOverlap(project, userUpvotes));
+      const upvoteOverlap = findUpvoteOverlap(project, userUpvotes);
     
-      const handleClick = useCallback(async () => {
+      const handleClick = async () => {
         if (isProcessing) return;
     
         setIsProcessing(true);
-        const tempUpvoteId = `temp-${Date.now()}`;
-        const prevUpvotes = project.upvotes;
-        const prevUserUpvotes = userUpvotes;
-
-        // Optimistic update
-        if (localUpvoteOverlap) {
-          setProject(prevProject => ({
-            ...prevProject,
-            upvotes: prevProject.upvotes.filter(id => id !== localUpvoteOverlap),
-          }));
-          setPassedUser(prevUser => ({
-            ...prevUser,
-            upvotes: prevUser.upvotes.filter(id => id !== localUpvoteOverlap),
-          }));
-          setUserUpvotes(prevUpvotes => prevUpvotes.filter(id => id !== localUpvoteOverlap));
-          setLocalUpvoteOverlap(false);
+        if (upvoteOverlap) {
+          await handleRemoveUpvote(project, setProject, passedUser, setPassedUser, userUpvotes, setUserUpvotes, upvoteOverlap, setIsProcessing);
         } else {
-          setProject(prevProject => ({
-            ...prevProject,
-            upvotes: [...prevProject.upvotes, tempUpvoteId],
-          }));
-          setPassedUser(prevUser => ({
-            ...prevUser,
-            upvotes: [...prevUser.upvotes, tempUpvoteId],
-          }));
-          setUserUpvotes(prevUpvotes => [...prevUpvotes, tempUpvoteId]);
-          setLocalUpvoteOverlap(tempUpvoteId);
+          await handleUpvote(project, setProject, passedUser, setPassedUser, userUpvotes, setUserUpvotes, setIsProcessing);
         }
-
-        // Perform the actual API call
-        const success = localUpvoteOverlap
-          ? await handleRemoveUpvote(project, setProject, passedUser, setPassedUser, userUpvotes, setUserUpvotes, localUpvoteOverlap)
-          : await handleUpvote(project, setProject, passedUser, setPassedUser, userUpvotes, setUserUpvotes, tempUpvoteId);
-
-        if (!success) {
-          // Revert changes if the API call failed
-          setProject(prevProject => ({ ...prevProject, upvotes: prevUpvotes }));
-          setPassedUser(prevUser => ({ ...prevUser, upvotes: prevUserUpvotes }));
-          setUserUpvotes(prevUserUpvotes);
-          setLocalUpvoteOverlap(localUpvoteOverlap);
-        }
-
-        setIsProcessing(false);
-      }, [isProcessing, project, setProject, passedUser, setPassedUser, userUpvotes, setUserUpvotes, localUpvoteOverlap]);
+      };
     
       return (
         <div className={styles.upvoteButtonBox}>
           <p className={styles.upvoteNumber}>{project.upvotes ? project.upvotes.length : 0}</p>
           <button
-            className={localUpvoteOverlap ? styles.clickedUpvoteButton : styles.upvoteButton}
+            className={upvoteOverlap ? styles.clickedUpvoteButton : styles.upvoteButton}
             onClick={handleClick}
             disabled={isProcessing}
           >
