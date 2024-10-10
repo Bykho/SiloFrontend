@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useUser } from '../../contexts/UserContext';
 import config from '../../config';
 import styles from './handleUpvote.module.css';
@@ -8,11 +8,11 @@ const HandleUpvote = (WrappedComponent) => {
   const HandleUpvoteComponent = (props) => {
     const { user, addUpvoteToUser } = useUser();
 
-    const handleUpvote = async (project, setProject, passedUser, setPassedUser, userUpvotes, setUserUpvotes) => {
+    const handleUpvote = async (project, setProject, passedUser, setPassedUser, userUpvotes, setUserUpvotes, tempUpvoteId) => {
       const token = localStorage.getItem('token');
       if (!token) {
         console.error('No token found in local storage');
-        return;
+        return false;
       }
 
       const payload = { user_id: user._id, project_id: project._id };
@@ -29,20 +29,19 @@ const HandleUpvote = (WrappedComponent) => {
         const data = await response.json();
         if (response.ok) {
           const actualUpvoteId = data._id;
-          console.log('actualUpvoteID: ', actualUpvoteId);
           
           // Update state with actual upvote ID
-          setProject((prevProject) => ({
+          setProject(prevProject => ({
             ...prevProject,
-            upvotes: [...(prevProject.upvotes || []), actualUpvoteId],
+            upvotes: prevProject.upvotes.map(id => id === tempUpvoteId ? actualUpvoteId : id),
           }));
-          setPassedUser((prevUser) => ({
+          setPassedUser(prevUser => ({
             ...prevUser,
-            upvotes: [...(prevUser.upvotes || []), actualUpvoteId],
+            upvotes: prevUser.upvotes.map(id => id === tempUpvoteId ? actualUpvoteId : id),
           }));
-          setUserUpvotes((prevUpvotes) => [...prevUpvotes, actualUpvoteId]);
+          setUserUpvotes(prevUpvotes => prevUpvotes.map(id => id === tempUpvoteId ? actualUpvoteId : id));
 
-          // Create a notification after upvoting the project
+          // Create notification
           const notificationPayload = {
             user_id: project.user_id,
             type: 'upvote',
@@ -52,7 +51,7 @@ const HandleUpvote = (WrappedComponent) => {
             project_id: project._id,
             recipient_id: project.user_id,
           };
-          const notificationResponse = await fetch(`${config.apiBaseUrl}/create_notification`, {
+          await fetch(`${config.apiBaseUrl}/create_notification`, {
             method: 'POST',
             headers: {
               'Authorization': `Bearer ${token}`,
@@ -60,37 +59,116 @@ const HandleUpvote = (WrappedComponent) => {
             },
             body: JSON.stringify(notificationPayload)
           });
-          if (!notificationResponse.ok) throw new Error('Failed to create notification');
-          console.log('Notification created successfully');
+          return true;
         } else {
           console.error('Upvote failed:', data.message);
+          return false;
         }
       } catch (error) {
         console.error('Error during upvote:', error);
+        return false;
+      }
+    };
+
+    const handleRemoveUpvote = async (project, setProject, passedUser, setPassedUser, userUpvotes, setUserUpvotes, upvoteId) => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found in local storage');
+        return false;
+      }
+
+      const payload = { user_id: user._id, project_id: project._id, upvote_id: upvoteId };
+
+      try {
+        const response = await fetch(`${config.apiBaseUrl}/removeUpvote`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+        const data = await response.json();
+        if (response.ok) {
+          return true;
+        } else {
+          console.error('Remove upvote failed:', data.message);
+          return false;
+        }
+      } catch (error) {
+        console.error('Error during remove upvote:', error);
+        return false;
       }
     };
 
     const findUpvoteOverlap = (project, userUpvotes) => {
-      //console.log('findUpvoteOverlap: project', project)
-      //console.log('findUpvoteOverlap: userUpvotes', userUpvotes)
       if (!user || !Array.isArray(userUpvotes) || !Array.isArray(project.upvotes)) {
         return false;
       }
-      return userUpvotes.some(userUpvote => project.upvotes.includes(userUpvote));
+      const overlap = userUpvotes.find(userUpvote => project.upvotes.includes(userUpvote));
+      return overlap || false;
     };
 
     const UpvoteButton = ({ project, setProject, passedUser, setPassedUser, userUpvotes, setUserUpvotes }) => {
-      //useEffect(() => {
-        //console.log('HandleUpvote b4 findUpvoteOverlap userUpvotes: ', userUpvotes);  // Correct placement of useEffect
-      //}, [userUpvotes]);
+      const [isProcessing, setIsProcessing] = useState(false);
+      const [localUpvoteOverlap, setLocalUpvoteOverlap] = useState(() => findUpvoteOverlap(project, userUpvotes));
+    
+      const handleClick = useCallback(async () => {
+        if (isProcessing) return;
+    
+        setIsProcessing(true);
+        const tempUpvoteId = `temp-${Date.now()}`;
+        const prevUpvotes = project.upvotes;
+        const prevUserUpvotes = userUpvotes;
 
+        // Optimistic update
+        if (localUpvoteOverlap) {
+          setProject(prevProject => ({
+            ...prevProject,
+            upvotes: prevProject.upvotes.filter(id => id !== localUpvoteOverlap),
+          }));
+          setPassedUser(prevUser => ({
+            ...prevUser,
+            upvotes: prevUser.upvotes.filter(id => id !== localUpvoteOverlap),
+          }));
+          setUserUpvotes(prevUpvotes => prevUpvotes.filter(id => id !== localUpvoteOverlap));
+          setLocalUpvoteOverlap(false);
+        } else {
+          setProject(prevProject => ({
+            ...prevProject,
+            upvotes: [...prevProject.upvotes, tempUpvoteId],
+          }));
+          setPassedUser(prevUser => ({
+            ...prevUser,
+            upvotes: [...prevUser.upvotes, tempUpvoteId],
+          }));
+          setUserUpvotes(prevUpvotes => [...prevUpvotes, tempUpvoteId]);
+          setLocalUpvoteOverlap(tempUpvoteId);
+        }
+
+        // Perform the actual API call
+        const success = localUpvoteOverlap
+          ? await handleRemoveUpvote(project, setProject, passedUser, setPassedUser, userUpvotes, setUserUpvotes, localUpvoteOverlap)
+          : await handleUpvote(project, setProject, passedUser, setPassedUser, userUpvotes, setUserUpvotes, tempUpvoteId);
+
+        if (!success) {
+          // Revert changes if the API call failed
+          setProject(prevProject => ({ ...prevProject, upvotes: prevUpvotes }));
+          setPassedUser(prevUser => ({ ...prevUser, upvotes: prevUserUpvotes }));
+          setUserUpvotes(prevUserUpvotes);
+          setLocalUpvoteOverlap(localUpvoteOverlap);
+        }
+
+        setIsProcessing(false);
+      }, [isProcessing, project, setProject, passedUser, setPassedUser, userUpvotes, setUserUpvotes, localUpvoteOverlap]);
+    
       return (
         <div className={styles.upvoteButtonBox}>
           <p className={styles.upvoteNumber}>{project.upvotes ? project.upvotes.length : 0}</p>
           <button
-            className={findUpvoteOverlap(project, userUpvotes) ? styles.clickedUpvoteButton : styles.upvoteButton}
-            onClick={() => handleUpvote(project, setProject, passedUser, setPassedUser, userUpvotes, setUserUpvotes)}
-            disabled={findUpvoteOverlap(project, userUpvotes)}
+            className={localUpvoteOverlap ? styles.clickedUpvoteButton : styles.upvoteButton}
+            onClick={handleClick}
+            disabled={isProcessing}
           >
             <BiSolidUpvote />
           </button>
