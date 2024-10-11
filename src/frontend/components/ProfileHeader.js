@@ -30,9 +30,8 @@ const ProfileHeader = ({ userData, loading, error }) => {
   const userSpiderData = userData.scores[userData.scores.length - 1]
 
   const isValidResume = (resumeData) => {
-    //if (!resumeData || typeof resumeData !== 'string') return false;
-    //return resumeData.startsWith('data:application/pdf;base64,');
-    return true;
+    if (!resumeData || typeof resumeData !== 'string') return false;
+    return resumeData.startsWith('data:application/pdf;base64,');
   };
 
   useEffect(() => {

@@ -22,6 +22,7 @@ import Welcome from './frontend/pages/FirstPage/Welcome';
 import JobsPage from './frontend/pages/JobsPage/JobsPage';
 import  ResearchPage from './frontend/pages/Research/ResearchPage';
 import GraphPage from './frontend/pages/GraphPage/GraphPage';
+import CandidateSearch from './frontend/pages/CandidateSearchPage/CandidateSearch'
 import './App.css'; 
 
 import AddBlocPortfolio from './frontend/components/AddBlocPortfolio';
@@ -57,6 +58,7 @@ function App() {
             <Route path="/jobs" element={<JobsPage />} />
             <Route path="/research" element={<ResearchPage />} />
             <Route path='/graph' element={<GraphPage />} />
+            <Route path='/candidateSearch' element={<CandidateSearch />} />
           </Routes>
         </div>
       </UserProvider>

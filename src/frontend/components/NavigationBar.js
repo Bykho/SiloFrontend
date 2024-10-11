@@ -14,6 +14,7 @@ import {FaBriefcase} from "react-icons/fa6";
 import { SiArxiv } from "react-icons/si";
 import { FaCircleNodes } from "react-icons/fa6";
 import { MdScience } from "react-icons/md";
+import { FaSearch } from "react-icons/fa"; // Import search icon for the new button
 
 
 
@@ -92,6 +93,16 @@ const NavigationBar = () => {
             </a>
 
             <a
+
+              href="/candidateSearch"
+              className={`${styles.button} ${activeLink === 'candidateSearch' ? styles.clickedButton : ''}`}
+              onClick={() => handleLinkClick('candidateSearch')}
+            >
+              <FaSearch className={styles.icon} /> Recruiter
+            </a>
+
+
+            <a
               href="/studentProfile"
               className={`${styles.button} ${(activeLink === 'folio' && currentPath !== '/siloDescription') ? styles.clickedButton : ''}`}
               onClick={() => handleLinkClick('folio')}
@@ -152,7 +163,12 @@ const NavigationBar = () => {
               <MdOutlineLeaderboard className={styles.icon} /> Members
             </a>
 
-
+            <a
+              href="/candidateSearch"
+              className={`${styles.button} ${activeLink === 'candidateSearch' ? styles.clickedButton : ''}`}
+            >
+              <FaSearch className={styles.icon} /> Candidate Search
+            </a>
 
             <a
               href="/studentProfile"
