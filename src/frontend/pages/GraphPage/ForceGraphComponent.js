@@ -88,6 +88,22 @@ const ForceGraphComponent = () => {
 
         const similarProjectsMap = await similarProjectsBatchResponse.json();
 
+        // Get similar research papers for user's projects
+        const similarResearchPapersBatchResponse = await fetch(`${config.apiBaseUrl}/getSimilarResearchPapersBatch`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ projectIds: userProjectIds }),
+        });
+
+        if (!similarResearchPapersBatchResponse.ok) {
+          throw new Error('Failed to fetch similar research papers');
+        }
+
+        const similarResearchPapersMap = await similarResearchPapersBatchResponse.json();
+        console.log('Similar Research Papers Map:', similarResearchPapersMap);
         // Collect all similar project IDs
         const similarProjectIdsSet = new Set();
         for (const projectId in similarProjectsMap) {
@@ -98,6 +114,15 @@ const ForceGraphComponent = () => {
           });
         }
         const similarProjectIds = Array.from(similarProjectIdsSet);
+
+        // Collect all similar research paper IDs
+        const similarResearchPaperIdsSet = new Set();
+        for (const projectId in similarResearchPapersMap) {
+          similarResearchPapersMap[projectId].forEach(similarResearchPaperId => {
+            similarResearchPaperIdsSet.add(similarResearchPaperId);
+          });
+        }
+        const similarResearchPaperIds = Array.from(similarResearchPaperIdsSet);
 
         // Fetch details of similar projects
         const similarProjectsResponse = await fetch(`${config.apiBaseUrl}/returnProjectsFromIds`, {
@@ -115,6 +140,22 @@ const ForceGraphComponent = () => {
 
         const similarProjects = await similarProjectsResponse.json();
 
+        // Fetch details of similar research papers
+        const similarResearchPapersResponse = await fetch(`${config.apiBaseUrl}/returnResearchPapersFromIds`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ researchPaperIds: similarResearchPaperIds }),
+        });
+
+        if (!similarResearchPapersResponse.ok) {
+          throw new Error('Failed to fetch similar research paper details');
+        }
+
+        const similarResearchPapers = await similarResearchPapersResponse.json();
+        console.log('Similar Research Papers:', similarResearchPapers);
         // Collect author IDs
         const authorIdsSet = new Set();
         similarProjects.forEach(project => {
@@ -197,6 +238,22 @@ const ForceGraphComponent = () => {
           }
         });
 
+      // Add similar research papers
+      similarResearchPapers.forEach(paper => {
+        if (!nodeMap.has(paper.arxiv_id)) {
+          const paperNode = {
+            id: paper.arxiv_id, // Use arXiv ID as the node ID
+            name: paper.title,
+            type: 'research',
+            arxiv_id: paper.arxiv_id,
+            mongo_id: paper.mongo_id,
+          };
+          console.log('Paper:', paperNode);
+          nodes.push(paperNode);
+          nodeMap.set(paper.arxiv_id, paperNode); // Update nodeMap with arXiv ID
+        }
+      });
+
         // Add authors
         authors.forEach(author => {
           if (!nodeMap.has(author._id)) {
@@ -215,14 +272,22 @@ const ForceGraphComponent = () => {
           }
         });
 
-        // Build links between user's projects and similar projects
-        for (const userProjectId in similarProjectsMap) {
+        // Build links between user's projects and similar projects/research papers
+        for (const userProjectId of userProjectIds) {
           const similarProjectIdsForUserProject = similarProjectsMap[userProjectId] || [];
-          similarProjectIdsForUserProject.forEach(similarProjectId => {
+          const similarResearchPaperIdsForUserProject = similarResearchPapersMap[userProjectId] || [];
+
+          // Limit to top 4 combined similar items
+          const combinedSimilarIds = [
+            ...similarProjectIdsForUserProject.map(id => ({ id, type: 'project' })),
+            ...similarResearchPaperIdsForUserProject.map(id => ({ id, type: 'research' })),
+          ].slice(0, 4);
+
+          combinedSimilarIds.forEach(item => {
             links.push({
               source: userProjectId,
-              target: similarProjectId,
-              type: 'project-project',
+              target: item.id, // Use item.id directly
+              type: item.type === 'project' ? 'project-project' : 'project-research',
             });
           });
         }
@@ -309,6 +374,8 @@ const ForceGraphComponent = () => {
         } else {
           borderColor = '#009688'; // Darker teal
         }
+      } else if (node.type === 'research') {
+        borderColor = '#FF5733'; // Distinct color for research papers
       }
 
       // Draw outer circle (border)
@@ -380,7 +447,7 @@ const ForceGraphComponent = () => {
       <div className={styles.header}>
         <h1 className={styles.headerTitle}>Knowledge Graph</h1>
         <p className={styles.headerDescription}>
-          Connections between your work, and others.
+          Connections between your work and others.
         </p>
       </div>
       {selectedNode && (
@@ -388,7 +455,11 @@ const ForceGraphComponent = () => {
           <div className={styles.alertIcon}>ℹ️</div>
           <div className={styles.alertContent}>
             <h4 className={styles.alertTitle}>
-              {selectedNode.type === 'user' ? 'Selected User' : 'Selected Project'}
+              {selectedNode.type === 'user'
+                ? 'Selected User'
+                : selectedNode.type === 'project'
+                ? 'Selected Project'
+                : 'Selected Research Paper'}
             </h4>
             <p className={styles.alertDescription}>
               {selectedNode.type === 'user' ? (
@@ -407,7 +478,7 @@ const ForceGraphComponent = () => {
                     ? selectedNode.interests.join(', ')
                     : 'N/A'}
                 </>
-              ) : (
+              ) : selectedNode.type === 'project' ? (
                 <>
                   Project: {selectedNode.name}
                   <br />
@@ -417,6 +488,14 @@ const ForceGraphComponent = () => {
                   {selectedNode.tags && selectedNode.tags.length > 0
                     ? selectedNode.tags.join(', ')
                     : 'N/A'}
+                </>
+              ) : (
+                <>
+                  Title: {selectedNode.name}
+                  <br />
+                  arXiv ID: {selectedNode.arxiv_id}
+                  <br />
+                  Mongo ID: {selectedNode.mongo_id}
                 </>
               )}
             </p>
