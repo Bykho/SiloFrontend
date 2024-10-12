@@ -240,17 +240,16 @@ const ForceGraphComponent = () => {
 
       // Add similar research papers
       similarResearchPapers.forEach(paper => {
-        if (!nodeMap.has(paper.arxiv_id)) {
+        if (!nodeMap.has(paper._id)) {
           const paperNode = {
-            id: paper.arxiv_id, // Use arXiv ID as the node ID
+            id: paper._id, // Use arXiv ID as the node ID
             name: paper.title,
             type: 'research',
             arxiv_id: paper.arxiv_id,
-            mongo_id: paper.mongo_id,
+            mongo_id: paper._id,
           };
-          console.log('Paper:', paperNode);
           nodes.push(paperNode);
-          nodeMap.set(paper.arxiv_id, paperNode); // Update nodeMap with arXiv ID
+          nodeMap.set(paper._id, paperNode); // Update nodeMap with arXiv ID
         }
       });
 
@@ -281,7 +280,7 @@ const ForceGraphComponent = () => {
           const combinedSimilarIds = [
             ...similarProjectIdsForUserProject.map(id => ({ id, type: 'project' })),
             ...similarResearchPaperIdsForUserProject.map(id => ({ id, type: 'research' })),
-          ].slice(0, 4);
+          ].slice(0, 8);
 
           combinedSimilarIds.forEach(item => {
             links.push({
