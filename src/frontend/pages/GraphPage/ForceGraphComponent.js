@@ -25,9 +25,9 @@ const ForceGraphComponent = () => {
   const applyForces = useCallback(() => {
     const fg = fgRef.current;
     if (fg) {
-      fg.d3Force('charge').strength(-200);
-      fg.d3Force('link').distance(150);
-      fg.d3Force('collide', d3.forceCollide(30).strength(0.7));
+      fg.d3Force('charge').strength(-500);
+      fg.d3Force('link').distance(170);
+      fg.d3Force('collide', d3.forceCollide(80).strength(0.9));
     }
   }, []);
 
@@ -353,7 +353,7 @@ const ForceGraphComponent = () => {
       const fontSize = 14 / globalScale;
       const fontFamily = 'Outfit'; // Use the Google Font here
       ctx.font = `${fontSize}px ${fontFamily}`;
-      const nodeDiameter = 50;
+      const nodeDiameter = 70;
       const nodeRadius = nodeDiameter / 2;
       node.r = nodeRadius;
 
@@ -392,7 +392,7 @@ const ForceGraphComponent = () => {
       // Draw text
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillStyle = '#E2E8F0';
+      ctx.fillStyle = '#cdd0d4';
       ctx.fillText(label, node.x, node.y);
 
       node.__bckgDimensions = [nodeDiameter, nodeDiameter];
@@ -455,10 +455,10 @@ const ForceGraphComponent = () => {
           <div className={styles.alertContent}>
             <h4 className={styles.alertTitle}>
               {selectedNode.type === 'user'
-                ? 'Selected User'
+                ? 'Silo User'
                 : selectedNode.type === 'project'
-                ? 'Selected Project'
-                : 'Selected Research Paper'}
+                ? 'Silo Project'
+                : 'Arxiv Research Paper'}
             </h4>
             <p className={styles.alertDescription}>
               {selectedNode.type === 'user' ? (
