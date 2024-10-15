@@ -61,7 +61,7 @@ function SiloDescription() {
   return (
     <div className={styles.container}>
       <div className={styles.backgroundAnimation}>
-       <spline-viewer url="https://prod.spline.design/2R4lYlPvgoU3Dyzv/scene.splinecode" background="rgba(18,18,18,0.1)"></spline-viewer>      </div>
+       <spline-viewer url="https://prod.spline.design/2R4lYlPvgoU3Dyzv/scene.splinecode" background="rgba(0,0,0,0.3)"></spline-viewer>      </div>
             {/*
             <div className={styles.leftContent}>  
             <div className={styles.testTitle}>
@@ -79,7 +79,7 @@ function SiloDescription() {
           <div className={styles.rightContent}>
             <div className={`${styles.ctaContainer} ${isLoaded ? styles.ctaLoaded : ''}`}>
               <p className={styles.cta}>LinkedIn wasn't built for engineers.</p>
-              <p className={styles.cta}>Silo is.</p>
+              <p className={styles.cta}>Silo was.</p>
             </div>
             <button 
               onClick={goToStudentProfile}

@@ -12,7 +12,6 @@
 .projectDirectory {
   flex: 1;
   border-radius: 8px;
-  background-color: #1e1e1e;
   overflow-y: auto; /* Enable vertical scrolling if needed */
   padding: 0px 20px 20px 20px;
 }

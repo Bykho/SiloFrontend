@@ -28,7 +28,7 @@ import AddBlocPortfolio from './frontend/components/AddBlocPortfolio';
 
 function App() {
   const appStyle = {
-    backgroundColor: '#1e1e1e',
+    backgroundColor: '#141414',
     minHeight: '100vh', // Minimum height to 100% of the viewport height
     minWidth: '100%',
   };
