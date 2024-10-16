@@ -646,7 +646,7 @@ const ForceGraphComponent = () => {
 
       if (node.type === 'user') {
         if (node.group === 'currentUser') {
-          borderColor = '#00FFFF'; // Bright cyan (brighter)
+          borderColor = '#00A3FF'; // Bright cyan (brighter)
         } else {
           borderColor = '#3366FF'; // Darker blue
         }
@@ -657,7 +657,7 @@ const ForceGraphComponent = () => {
           borderColor = '#0066CC'; // Darker medium blue
         }
       } else if (node.type === 'research') {
-        borderColor = '#FF6A00'; // Neon orange with a touch of red
+        borderColor = '#8A2BE2'; // Masculine purple
       }
 
       // Draw outer circle (border)
