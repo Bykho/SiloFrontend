@@ -632,7 +632,7 @@ const ForceGraphComponent = () => {
 
   const nodeCanvasObject = useCallback(
     (node, ctx, globalScale) => {
-      const label = node.name;
+      const label = node.type === 'user' ? node.name : (node.name.length > 40 ? node.name.substring(0, 37) + '...' : node.name);
       const fontSize = 14 / globalScale;
       const fontFamily = 'Outfit'; // Use the Google Font here
       ctx.font = `${fontSize}px ${fontFamily}`;
@@ -646,18 +646,18 @@ const ForceGraphComponent = () => {
 
       if (node.type === 'user') {
         if (node.group === 'currentUser') {
-          borderColor = '#00A3FF'; // Bright blue
+          borderColor = '#00FFFF'; // Bright cyan (brighter)
         } else {
-          borderColor = '#007ACC'; // Medium blue
+          borderColor = '#3366FF'; // Darker blue
         }
       } else if (node.type === 'project') {
         if (node.createdById === myUserId) {
-          borderColor = '#00FFC8'; // Bright teal
+          borderColor = '#00FFFF'; // Cyan
         } else {
-          borderColor = '#009688'; // Darker teal
+          borderColor = '#0066CC'; // Darker medium blue
         }
       } else if (node.type === 'research') {
-        borderColor = '#FF5733'; // Distinct color for research papers
+        borderColor = '#FF6A00'; // Neon orange with a touch of red
       }
 
       // Draw outer circle (border)
