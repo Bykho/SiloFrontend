@@ -632,7 +632,7 @@ const ForceGraphComponent = () => {
 
   const nodeCanvasObject = useCallback(
     (node, ctx, globalScale) => {
-      const label = node.type === 'user' ? node.name : (node.name.length > 40 ? node.name.substring(0, 37) + '...' : node.name);
+      const label = node.type === 'user' ? node.name : (node.name.length > 35 ? node.name.substring(0, 32) + '...' : node.name);
       const fontSize = 14 / globalScale;
       const fontFamily = 'Outfit'; // Use the Google Font here
       ctx.font = `${fontSize}px ${fontFamily}`;
