@@ -206,7 +206,7 @@ const ProfileHeader = ({ userData, loading, error, onShareProfile }) => {
             <h1 className={styles.userName}>{userData.username}</h1>
             <p className={styles.userInfo}>{userData.user_type} | {userData.university} | {userData.major} {userData.grad}</p>
           </div>
-          <button className={`${styles.linkButton} ${styles.sharePortfolioButton}`} onClick={handleShareProfile}> <Share /> Get Shareable Link </button>
+          <button className={`${styles.linkButton} ${styles.sharePortfolioButton}`} onClick={handleShareProfile}> <Share /> </button>
         </div>
         <div className={styles.tagsContainer}>
           <div className={styles.linksContainer}>
