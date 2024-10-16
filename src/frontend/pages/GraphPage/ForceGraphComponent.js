@@ -103,7 +103,7 @@ const ForceGraphComponent = () => {
         }
 
         const similarResearchPapersMap = await similarResearchPapersBatchResponse.json();
-        console.log('Similar Research Papers Map:', similarResearchPapersMap);
+
         // Collect all similar project IDs
         const similarProjectIdsSet = new Set();
         for (const projectId in similarProjectsMap) {
@@ -155,7 +155,7 @@ const ForceGraphComponent = () => {
         }
 
         const similarResearchPapers = await similarResearchPapersResponse.json();
-        console.log('Similar Research Papers:', similarResearchPapers);
+
         // Collect author IDs
         const authorIdsSet = new Set();
         similarProjects.forEach(project => {
@@ -196,6 +196,8 @@ const ForceGraphComponent = () => {
           interests: myInterests,
           user_type: myUserType,
           email: myEmail,
+          depth: 0,
+          childrenFetched: false,
         };
 
         nodes.push(currentUserNode);
@@ -210,6 +212,8 @@ const ForceGraphComponent = () => {
             createdBy: project.createdBy,
             createdById: project.user_id,
             tags: project.tags || [],
+            depth: 1,
+            childrenFetched: false,
           };
           nodes.push(projectNode);
           nodeMap.set(project._id, projectNode);
@@ -232,26 +236,30 @@ const ForceGraphComponent = () => {
               createdBy: project.createdBy,
               createdById: project.user_id,
               tags: project.tags || [],
+              depth: 2,
+              childrenFetched: false,
             };
             nodes.push(projectNode);
             nodeMap.set(project._id, projectNode);
           }
         });
 
-      // Add similar research papers
-      similarResearchPapers.forEach(paper => {
-        if (!nodeMap.has(paper._id)) {
-          const paperNode = {
-            id: paper._id, // Use arXiv ID as the node ID
-            name: paper.title,
-            type: 'research',
-            arxiv_id: paper.arxiv_id,
-            mongo_id: paper._id,
-          };
-          nodes.push(paperNode);
-          nodeMap.set(paper._id, paperNode); // Update nodeMap with arXiv ID
-        }
-      });
+        // Add similar research papers
+        similarResearchPapers.forEach(paper => {
+          if (!nodeMap.has(paper._id)) {
+            const paperNode = {
+              id: paper._id,
+              name: paper.title,
+              type: 'research',
+              arxiv_id: paper.arxiv_id,
+              mongo_id: paper._id,
+              depth: 2,
+              childrenFetched: false,
+            };
+            nodes.push(paperNode);
+            nodeMap.set(paper._id, paperNode);
+          }
+        });
 
         // Add authors
         authors.forEach(author => {
@@ -265,6 +273,8 @@ const ForceGraphComponent = () => {
               interests: author.interests || [],
               user_type: author.user_type,
               email: author.email,
+              depth: 3,
+              childrenFetched: false,
             };
             nodes.push(authorNode);
             nodeMap.set(author._id, authorNode);
@@ -276,7 +286,7 @@ const ForceGraphComponent = () => {
           const similarProjectIdsForUserProject = similarProjectsMap[userProjectId] || [];
           const similarResearchPaperIdsForUserProject = similarResearchPapersMap[userProjectId] || [];
 
-          // Limit to top 4 combined similar items
+          // Limit to top 8 combined similar items
           const combinedSimilarIds = [
             ...similarProjectIdsForUserProject.map(id => ({ id, type: 'project' })),
             ...similarResearchPaperIdsForUserProject.map(id => ({ id, type: 'research' })),
@@ -285,7 +295,7 @@ const ForceGraphComponent = () => {
           combinedSimilarIds.forEach(item => {
             links.push({
               source: userProjectId,
-              target: item.id, // Use item.id directly
+              target: item.id,
               type: item.type === 'project' ? 'project-project' : 'project-research',
             });
           });
@@ -299,6 +309,27 @@ const ForceGraphComponent = () => {
               target: project.user_id,
               type: 'project-owner',
             });
+          }
+        });
+
+        // Assign neighbors and links to nodes
+        nodes.forEach(node => {
+          node.neighbors = [];
+          node.links = [];
+        });
+
+        links.forEach(link => {
+          const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
+          const targetId = typeof link.target === 'object' ? link.target.id : link.target;
+
+          const sourceNode = nodeMap.get(sourceId);
+          const targetNode = nodeMap.get(targetId);
+
+          if (sourceNode && targetNode) {
+            sourceNode.neighbors.push(targetNode);
+            sourceNode.links.push(link);
+            targetNode.neighbors.push(sourceNode);
+            targetNode.links.push(link);
           }
         });
 
@@ -343,9 +374,261 @@ const ForceGraphComponent = () => {
     setHighlightLinks(newHighlightLinks);
   };
 
-  const handleNodeClick = (node) => {
-    setSelectedNode(node);
-  };
+  const handleNodeClick = useCallback(
+    async (node) => {
+      setSelectedNode(node);
+      console.log('Selected node:', node);
+      // Only proceed if node is an edge node and hasn't reached depth limit
+      if (node.childrenFetched || node.depth >= 25) {
+        return;
+      }
+
+      // Check if node is an edge node (has only one link)
+      if (node.links.length > 1) {
+        return;
+      }
+
+      if (node.type === 'project' || node.type === 'research') {
+        const token = localStorage.getItem('token');
+        
+        try {
+          const projectId = node.id;
+
+          // Fetch similar projects
+          const similarProjectsResponse = await fetch(
+            `${config.apiBaseUrl}/getSimilarProjectsBatch`,
+            {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ projectIds: [projectId] }),
+            }
+          );
+
+          if (!similarProjectsResponse.ok) {
+            throw new Error('Failed to fetch similar projects');
+          }
+
+          const similarProjectsMap = await similarProjectsResponse.json();
+          const similarProjectIds = similarProjectsMap[projectId] || [];
+
+          // Fetch similar research papers
+          const similarResearchPapersResponse = await fetch(
+            `${config.apiBaseUrl}/getSimilarResearchPapersBatch`,
+            {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ projectIds: [projectId] }),
+            }
+          );
+
+          if (!similarResearchPapersResponse.ok) {
+            throw new Error('Failed to fetch similar research papers');
+          }
+
+          const similarResearchPapersMap = await similarResearchPapersResponse.json();
+          const similarResearchPaperIds = similarResearchPapersMap[projectId] || [];
+
+          // Fetch details of similar projects
+          const similarProjectsDetailsResponse = await fetch(
+            `${config.apiBaseUrl}/returnProjectsFromIds`,
+            {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ projectIds: similarProjectIds }),
+            }
+          );
+
+          if (!similarProjectsDetailsResponse.ok) {
+            throw new Error('Failed to fetch similar project details');
+          }
+
+          const similarProjects = await similarProjectsDetailsResponse.json();
+          console.log('Similar projects:', similarProjects);
+          // Fetch details of similar research papers
+          const similarResearchPapersDetailsResponse = await fetch(
+            `${config.apiBaseUrl}/returnResearchPapersFromIds`,
+            {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ researchPaperIds: similarResearchPaperIds }),
+            }
+          );
+
+          if (!similarResearchPapersDetailsResponse.ok) {
+            throw new Error('Failed to fetch similar research paper details');
+          }
+
+          const similarResearchPapers = await similarResearchPapersDetailsResponse.json();
+          console.log('Similar research papers:', similarResearchPapers);
+          // Build nodes and links for the new data
+          const newNodes = [];
+          const newLinks = [];
+          const nodeMap = new Map();
+          graphData.nodes.forEach((n) => nodeMap.set(n.id, n));
+
+          // For similar projects
+          similarProjects.forEach((project) => {
+            if (!nodeMap.has(project._id)) {
+              const projectNode = {
+                id: project._id,
+                name: project.projectName,
+                type: 'project',
+                createdBy: project.createdBy,
+                createdById: project.user_id,
+                tags: project.tags || [],
+                depth: node.depth + 1,
+                childrenFetched: false,
+              };
+              newNodes.push(projectNode);
+              nodeMap.set(project._id, projectNode);
+            }
+            // Add link from the clicked node to similar project
+            newLinks.push({
+              source: node.id,
+              target: project._id,
+              type: 'project-project',
+            });
+          });
+
+          // For similar research papers
+          similarResearchPapers.forEach((paper) => {
+            if (!nodeMap.has(paper._id)) {
+              const paperNode = {
+                id: paper._id,
+                name: paper.title,
+                type: 'research',
+                arxiv_id: paper.arxiv_id,
+                mongo_id: paper._id,
+                depth: node.depth + 1,
+                childrenFetched: false,
+              };
+              newNodes.push(paperNode);
+              nodeMap.set(paper._id, paperNode);
+            }
+            // Add link from the clicked node to similar research paper
+            newLinks.push({
+              source: node.id,
+              target: paper._id,
+              type: 'project-research',
+            });
+          });
+
+          // Fetch authors of similar projects
+          const authorIdsSet = new Set();
+          similarProjects.forEach((project) => {
+            if (project.user_id) {
+              authorIdsSet.add(project.user_id);
+            }
+          });
+          const authorIds = Array.from(authorIdsSet);
+
+          // Fetch author details
+          const authorsResponse = await fetch(`${config.apiBaseUrl}/getUsersByIds`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userIds: authorIds }),
+          });
+
+          if (!authorsResponse.ok) {
+            throw new Error('Failed to fetch author details');
+          }
+
+          const authors = await authorsResponse.json();
+
+          // Add authors to nodes
+          authors.forEach((author) => {
+            if (!nodeMap.has(author._id)) {
+              const authorNode = {
+                id: author._id,
+                name: author.username,
+                type: 'user',
+                group: 'otherUser',
+                skills: author.skills || [],
+                interests: author.interests || [],
+                user_type: author.user_type,
+                email: author.email,
+                depth: node.depth + 2,
+                childrenFetched: false,
+              };
+              newNodes.push(authorNode);
+              nodeMap.set(author._id, authorNode);
+            }
+          });
+
+          // Link similar projects to their authors
+          similarProjects.forEach((project) => {
+            if (project.user_id) {
+              newLinks.push({
+                source: project._id,
+                target: project.user_id,
+                type: 'project-owner',
+              });
+            }
+          });
+
+          // Assign neighbors and links to new nodes
+          newNodes.forEach((newNode) => {
+            newNode.neighbors = [];
+            newNode.links = [];
+          });
+
+          // Update graphData nodes and links
+          const updatedNodes = [...graphData.nodes, ...newNodes];
+          const updatedLinks = [...graphData.links, ...newLinks];
+
+          // Update nodeMap with new nodes
+          updatedNodes.forEach((n) => nodeMap.set(n.id, n));
+
+          // Reassign neighbors and links
+          updatedLinks.forEach((link) => {
+            const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
+            const targetId = typeof link.target === 'object' ? link.target.id : link.target;
+
+            const sourceNode = nodeMap.get(sourceId);
+            const targetNode = nodeMap.get(targetId);
+
+            if (sourceNode && targetNode) {
+              if (!sourceNode.neighbors.includes(targetNode)) {
+                sourceNode.neighbors.push(targetNode);
+              }
+              if (!sourceNode.links.includes(link)) {
+                sourceNode.links.push(link);
+              }
+              if (!targetNode.neighbors.includes(sourceNode)) {
+                targetNode.neighbors.push(sourceNode);
+              }
+              if (!targetNode.links.includes(link)) {
+                targetNode.links.push(link);
+              }
+            }
+          });
+
+          setGraphData({ nodes: updatedNodes, links: updatedLinks });
+
+          // Mark node as expanded
+          node.childrenFetched = true;
+        } catch (error) {
+          console.error('Error expanding node:', error);
+        }
+      }
+    },
+    [graphData, myUserId]
+  );
 
   const nodeCanvasObject = useCallback(
     (node, ctx, globalScale) => {
