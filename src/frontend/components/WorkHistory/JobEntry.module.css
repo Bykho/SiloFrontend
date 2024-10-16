@@ -1,0 +1,229 @@
+.projectContainer {
+    position: relative;  /* Add this to make it a positioning context for the save button */
+    margin: 0 0 20px 0;
+    padding: 20px;
+    border-radius: 12px;
+    background-image: linear-gradient(to bottom, rgba(46, 46, 46, 0.4), rgba(0, 0, 0, 0));
+    color: #e0e0e0;
+    border: 4px solid rgba(46, 46, 46, 0.4);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease, border 0.3s ease;
+}
+
+.projectContainer:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    border: 4px solid rgba(59, 137, 255, 0.435);
+    border-radius: 10px;
+}
+
+.headerContainer {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+    margin-top: 5px;
+  }
+
+.companyAndDateContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+.titleAndCompanyContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex-grow: 1;
+    margin: 0 10px 0 0;
+    overflow: hidden;
+}
+
+.largeCompany {
+    font-size: 25px;
+    margin: 0;
+    padding: 0;
+    line-height: 1.2;
+    margin-bottom: 5px;
+}
+
+
+.role {
+    font-family: 'Lato', sans-serif;
+    font-weight: 500;
+    font-size: 1.2rem;
+    margin: 0;
+    margin-bottom: 5px;
+    color: #e0e0e0;
+}
+
+.dates {
+    font-family: 'Lato', sans-serif;
+    font-weight: 400;
+    font-size: 1rem;
+    margin: 0;
+    color: #888;
+}
+
+.divider {
+    height: 1px;
+    background-color: #9b9b9b;
+    margin: 20px 0;
+}
+
+.descContainer {
+    margin-bottom: 20px;
+    min-height: 80px;
+    max-height: 250px;
+}
+
+.description {
+    line-height: 1.6;
+    color: #c0c0c0;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    text-align: justify;
+    text-justify: inter-word;
+    margin-left: 10px;
+    margin-right: 20px;
+    font-family: 'Lato', sans-serif;
+    font-size: 16px;
+    display: -webkit-box;
+    -webkit-line-clamp: 7;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-left: 6px solid #4a90e2;
+    padding-left: 15px;
+    border-radius: 8px;
+}
+
+.description::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 25px;
+    background: linear-gradient(to bottom, rgba(42, 42, 42, 0), rgba(30, 30, 30, 0.182));
+}
+
+.editIcon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: rgba(74, 144, 226, 0.2);
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.editIcon:hover {
+    background-color: rgba(74, 144, 226, 0.4);
+    transform: scale(1.1);
+}
+
+.editIcon:active {
+    transform: scale(0.95);
+}
+
+.editInput {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    color: #e0e0e0;
+    font-size: 16px;
+}
+
+.editTextarea {
+    width: 100%;
+    height: 150px;
+    padding: 8px;
+    margin-bottom: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    color: #e0e0e0;
+    font-size: 16px;
+    resize: vertical;
+}
+
+.submitContainer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+.submitButton {
+    padding: 8px 16px;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submitButton:hover {
+    background-color: #357abd;
+}
+
+.saveIconContainer {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: rgba(74, 144, 226, 0.2);
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.saveIconContainer:hover {
+    background-color: rgba(74, 144, 226, 0.4);
+    transform: scale(1.1);
+}
+
+.saveIconContainer:active {
+    transform: scale(0.95);
+}
+
+
+
+@media (max-width: 768px) {
+    .headerContainer {
+        flex-wrap: wrap;
+    }
+
+    .titleAndCompanyContainer {
+        flex-basis: 100%;
+        margin-bottom: 10px;
+    }
+
+    .companyName {
+        white-space: normal;
+        word-wrap: break-word;
+        font-size: 20px;
+    }
+
+    .descContainer {
+        height: auto;
+        max-height: none;
+    }
+
+    .editIcon {
+        margin-left: auto;
+    }
+}

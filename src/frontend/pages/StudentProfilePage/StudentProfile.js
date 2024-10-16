@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import PortfolioDisplay from '../../components/PortfolioDisplay';
+import WorkHistoryDisplay from '../../components/WorkHistory/WorkHistoryDisplay';
 import styles from './studentProfile.module.css';
 import { useUser } from '../../contexts/UserContext';
 import ProfileHeader from '../../components/ProfileHeader';
@@ -14,7 +15,7 @@ import FileAutoFill from '../../components/FileAutofill';
 import config from '../../config';
 import { FaWindowClose, FaPlusSquare, FaRegEdit, FaRegShareSquare, FaGithub } from 'react-icons/fa';
 import { IoSparkles } from "react-icons/io5";
-import { Plus, Edit2, Share } from 'lucide-react';
+import { Plus, Edit2, Share, X, Eye, Briefcase } from 'lucide-react';
 import { LuGithub } from "react-icons/lu";
 import PublicProfileHeader from "../PublicPortfolioPage/PublicProfileHeader";
 
@@ -25,10 +26,11 @@ function StudentProfile() {
   const [showModal, setShowModal] = useState(false);
   const [showEditor, setShowEditor] = useState(false);
   const [showGitPull, setShowGitPull] = useState(false);
-  const [showSharePreview, setShowSharePreview] = useState(false); // State for ShareablePreview modal
-  const [showProjectButtons, setShowProjectButtons] = useState(false); // State to toggle project buttons
-  const [showAutofillModal, setShowAutofillModal] = useState(false); // State for Autofill modal
-  const [fileToUpload, setFileToUpload] = useState(null); // State for the file to upload
+  const [showSharePreview, setShowSharePreview] = useState(false);
+  const [showProjectButtons, setShowProjectButtons] = useState(false);
+  const [showAutofillModal, setShowAutofillModal] = useState(false);
+  const [fileToUpload, setFileToUpload] = useState(null);
+  const [viewMode, setViewMode] = useState("Portfolio");  // New state for view mode
   const { user } = useUser();
   const navigate = useNavigate();
   const location = useLocation();
@@ -37,6 +39,9 @@ function StudentProfile() {
   const [repoURL, setRepoURL] = useState('');
   const [showCopiedConfirmation, setShowCopiedConfirmation] = useState(false);
   const [portfolioKey, setPortfolioKey] = useState(0);
+  const [showBuildPortfolioOptions, setShowBuildPortfolioOptions] = useState(false);
+  const [showWorkHistory, setShowWorkHistory] = useState(false);
+  const [showSeePortfolio, setShowSeePortfolio] = useState(false);
 
   useEffect(() => {
     console.log('here is repoURL: ', repoURL)
@@ -61,7 +66,6 @@ function StudentProfile() {
     rs: 'rust',
   };
 
-
   const handleShareProfile = async () => {
     try {
       const response = await fetch(`${config.apiBaseUrl}/toggleShareProfile`, {
@@ -81,7 +85,7 @@ function StudentProfile() {
         setShowCopiedConfirmation(true);
         setTimeout(() => {
           setShowCopiedConfirmation(false);
-        }, 2000); // Hide the confirmation after 2 seconds
+        }, 2000);
       }).catch((err) => {
         console.error('Failed to copy URL: ', err);
       });
@@ -89,7 +93,6 @@ function StudentProfile() {
       console.error('Error sharing profile: ', err);
     }
   };
-  
 
   const fetchUserData = async () => {
     try {
@@ -114,17 +117,11 @@ function StudentProfile() {
     }
   };
 
-  //useEffect(() => {
-  //  console.log('here is the user data: ', userData)
-  //}, [userData])
-
-
   useEffect(() => {
     fetchUserData();
 
     if (location.state && location.state.buildPortfolio) {
       setShowModal(true);
-      // Clear the location state after setting the modal to show
       navigate(location.pathname, { replace: true, state: {} });
     }
   }, [location.state, navigate]);
@@ -166,7 +163,6 @@ function StudentProfile() {
 
   const handleGitPullUpdate = (selectedProjects, surroundingInfo, repo_url) => {
     const processedFiles = selectedProjects.map(file => {
-      //console.log('STUDENTPROFILE HANDLEGITPULLUPDATE these is file being sent from the backend: ', file);
       const extension = file.filePath.split('.').pop().toLowerCase();
       let cellType = 'code';
       let language = languageLookup[extension] || extension;
@@ -181,7 +177,6 @@ function StudentProfile() {
         cellType = 'pdf';
         language = '';
       } else if (!languageLookup[extension]) {
-        // If the extension is not in our lookup table, default to 'text'
         cellType = 'text';
         language = '';
       }
@@ -194,13 +189,10 @@ function StudentProfile() {
     });
     
     console.log('here is repo_url: ', repo_url)
-    //console.log('STUDENTPROFILE HANDLEGITPULLUPDATE these is processedFiles: ', processedFiles);
   
     const updatedFiles = structureLayers(processedFiles);
-    //console.log('STUDENTPROFILE HANDLEGITPULLUPDATE these is updatedFiles: ', updatedFiles);
   
     setSelectedGitFiles(updatedFiles);
-    //console.log('selectedGitFiles after update:', updatedFiles);
     setSelectedGitSurroundingInfo(surroundingInfo);
     setRepoURL(repo_url)
     setShowGitPull(false);
@@ -216,22 +208,18 @@ function StudentProfile() {
   };
 
   const handleAddProjectClick = () => {
-    // Toggle the display of project buttons and hide the "Add New Project" button and other buttons
     setShowProjectButtons(true);
   };
 
   const handleBackButtonClick = () => {
-    // Toggle back to the original state
     setShowProjectButtons(false);
   };
 
   const handleBuildFromScratchClick = () => {
-    // Open the AddBlocPortfolio modal
     setShowModal(true);
   };
 
   const handleAutofillClick = () => {
-    // Open the Autofill modal
     setShowAutofillModal(true);
   };
 
@@ -277,13 +265,11 @@ function StudentProfile() {
     try {
       setUserData((prevState) => {
         if (deleteInfo && deleteInfo.projectId) {
-          // Handle deletion
           return {
             ...prevState,
             portfolio: prevState.portfolio.filter(project => project._id !== deleteInfo.projectId)
           };
         } else if (newProject) {
-          // Handle save/update
           const existingIndex = prevState.portfolio.findIndex(
             (project) => project._id === newProject._id
           );
@@ -365,7 +351,6 @@ function StudentProfile() {
       const result = await response.json();
       console.log('Here is the result from VSprofileScore:', result);
   
-      // Update the scores array with the new scores
       setUserData((prevState) => ({
         ...prevState,
         scores: [...prevState.scores, result],
@@ -396,20 +381,44 @@ function StudentProfile() {
     }
   };
 
+  const handleWorkHistoryClick = () => {
+    setViewMode("Work");
+    console.log("Switched to Work History view");
+  };
+
+  const handleSeePortfolioClick = () => {
+    setViewMode("Portfolio");
+    console.log("Switched to Portfolio view");
+  };
+
+  const handleBuildPortfolioClick = () => {
+    setShowBuildPortfolioOptions(true);
+    setViewMode("Portfolio");
+  };
+
   return (
-    <div>
+    <div className={styles.studentProfileContainer} style={{ maxWidth: '1000px', margin: '0 auto' }}>
       <ProfileHeader
         userData={userData}
         loading={loading}
         error={error}
+        onShareProfile={fetchUserData} 
       />
       <div className={styles.buttonContainer}>
+        {!showBuildPortfolioOptions ? (
           <>
-            <button className={styles.bigButtonAdd} onClick={handleBuildFromScratchClick}> <Plus /> Add Project</button>
-            <button className={styles.bigButton} onClick={handleCheckGithubClick}> <LuGithub /> Import GitHub</button>
-            <button className={styles.bigButton} onClick={handleEditProfileClick}> <Edit2 /> Edit Profile</button>
-            <button className={styles.bigButton} onClick={handleShareProfile}> <Share /> Share Portfolio</button>
+            <button className={styles.bigButton} onClick={handleBuildPortfolioClick}><Plus /> Build Portfolio</button>
+            <button className={styles.bigButton} onClick={handleSeePortfolioClick}><Eye /> See Portfolio</button>
+            <button className={styles.bigButton} onClick={handleWorkHistoryClick}><Briefcase /> Work History</button>
+            <button className={styles.bigButton} onClick={handleEditProfileClick}><Edit2 /> Edit Profile</button>
           </>
+        ) : (
+          <>
+            <button className={styles.bigButton} onClick={() => setShowBuildPortfolioOptions(false)}><X /> Cancel</button>
+            <button className={styles.bigButtonAdd} onClick={handleBuildFromScratchClick}><Plus /> Add Project</button>
+            <button className={styles.bigButton} onClick={handleCheckGithubClick}><LuGithub /> Import GitHub</button>
+          </>
+        )}
       </div>
       <div className={styles.contentContainer}>
         {loading ? (
@@ -417,7 +426,11 @@ function StudentProfile() {
         ) : error ? (
           <p> Error: {error}</p>
         ) : userData && (
-          <PortfolioDisplay user={userData} key={`portfolio-${portfolioKey}-${userData.portfolio.length}`} />
+          viewMode === "Portfolio" ? (
+            <PortfolioDisplay user={userData} key={`portfolio-${portfolioKey}-${userData.portfolio.length}`} />
+          ) : (
+            <WorkHistoryDisplay user={userData} />  // You'll need to create this component
+          )
         )}
       </div>
       {showEditor && (
@@ -432,8 +445,6 @@ function StudentProfile() {
         <div className={styles.modal}>
           <div className={styles.modalContent}>
             <button className={styles.closeButton} onClick={handleCloseModal}><FaWindowClose /></button>
-            {/*console.log('Passing initialRows to AddProject: ', selectedGitFiles)*/}
-            {/*console.log('Passing initialProjectData to AddProject: ', selectedGitSurroundingInfo)*/}
             <AddProject 
               onSave={handleSaveProject} 
               initialRows={selectedGitFiles.length > 0 ? selectedGitFiles : []}
@@ -448,7 +459,7 @@ function StudentProfile() {
         <div className={styles.modal}>
           <div className={styles.modalContent}>
             <button className={styles.closeButton} onClick={handleCloseSharePreview}><FaWindowClose /></button>
-            <ShareablePreview userData={userData} /> {/* Pass user data to ShareablePreview */}
+            <ShareablePreview userData={userData} />
           </div>
         </div>
       )}
@@ -470,7 +481,7 @@ function StudentProfile() {
               id="fileInput"
               onChange={handleFileUploadChange}
               className={styles.fileInput}
-              style={{ display: 'none' }} // Hide the input field
+              style={{ display: 'none' }}
             />
             <button className={styles.bigButton} >Autofill from GitHub</button>
           </div>
@@ -492,6 +503,3 @@ function StudentProfile() {
 }
 
 export default StudentProfile;
-
-
-

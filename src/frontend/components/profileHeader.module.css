@@ -44,11 +44,12 @@
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 1);
   color: white;
   padding: 10px 20px;
   border-radius: 5px;
   font-size: 14px;
+  z-index: 1500;
   transition: opacity 0.3s ease-in-out;
 }
 
@@ -337,3 +338,25 @@
   text-align: center;
   padding: 20px;
 }
+
+.shareProfileButton {
+
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background-color: #282b30;
+  color: #f0f0f0d9;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  z-index: 10;
+}
+
+.shareProfileButton:hover {
+  background-color: #4a4a4a;
+}
+
