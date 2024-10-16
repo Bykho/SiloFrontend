@@ -397,7 +397,7 @@ function StudentProfile() {
   };
 
   return (
-    <div className={styles.studentProfileContainer} style={{ maxWidth: '1000px', margin: '0 auto' }}>
+    <div className={styles.studentProfileContainer} style={{ maxWidth: '1200px', margin: '0 auto' }}>
       <ProfileHeader
         userData={userData}
         loading={loading}

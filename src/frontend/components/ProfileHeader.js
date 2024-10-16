@@ -204,14 +204,16 @@ const ProfileHeader = ({ userData, loading, error, onShareProfile }) => {
           <ProfileImage username={userData.username} size={'medium'} />
           <div className={styles.nameSection}>
             <h1 className={styles.userName}>{userData.username}</h1>
+            <div className={styles.userInfoContainer}>
             <p className={styles.userInfo}>{userData.user_type} | {userData.university} | {userData.major} {userData.grad}</p>
+            <button className={styles.contactMeButton} onClick={handleContactButton}> <IoMdMail /> Contact </button>
+            <button className={styles.linkButton} onClick={toggleResume}> <IoDocument/> Resume</button>
+            </div>
           </div>
           <button className={`${styles.linkButton} ${styles.sharePortfolioButton}`} onClick={handleShareProfile}> <Share /> </button>
         </div>
         <div className={styles.tagsContainer}>
           <div className={styles.linksContainer}>
-            <button className={styles.contactMeButton} onClick={handleContactButton}> <IoMdMail /> Contact </button>
-            <button className={styles.linkButton} onClick={toggleResume}> <IoDocument/> Resume</button>
             {userData.github_link && renderLinkButton(userData.github_link, <FaGithub />)}
             {userData.personal_website && renderLinkButton(userData.personal_website, <FaGlobe />)}
             {userData.links && userData.links.map((link, index) => (
