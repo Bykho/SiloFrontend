@@ -1,3 +1,5 @@
+
+
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ProfileImage from '../components/ProfileImage';
@@ -8,10 +10,13 @@ import PlayerRatingSpiderweb from './UserSpiderPlot';
 import { FaWindowClose } from 'react-icons/fa';
 import { TbAnalyze } from "react-icons/tb";
 import { IoDocument } from "react-icons/io5";
+import { Share } from 'lucide-react';
+import config from '.././config'; // Make sure to import the config
+import { useUser } from '../contexts/UserContext'; // Add this import
 
 
 
-const ProfileHeader = ({ userData, loading, error }) => {
+const ProfileHeader = ({ userData, loading, error, onShareProfile }) => {
   const navigate = useNavigate();
   const [showFullBio, setShowFullBio] = useState(false);
   const [bioTruncated, setBioTruncated] = useState(false);
@@ -22,7 +27,10 @@ const ProfileHeader = ({ userData, loading, error }) => {
   const [showRating, setShowRating] = useState(false);
   const location = useLocation();
   const isProfilePage = location.pathname.includes('/profile/');
+  const [showPortfolioOptions, setShowPortfolioOptions] = useState(false);
+  const { user } = useUser(); // Import useUser from your UserContext
 
+  
   const BIO_LENGTH_LIMIT = 300;
   const VISIBLE_TAGS = 2;
 
@@ -155,6 +163,36 @@ const ProfileHeader = ({ userData, loading, error }) => {
     return url;
   };
 
+  const handleShareProfile = async () => {
+    try {
+      const response = await fetch(`${config.apiBaseUrl}/toggleShareProfile`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + localStorage.getItem('token'),
+        },
+        body: JSON.stringify({ user_id: user._id }),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to share profile');
+      }
+      const modifiedUsername = user.username.replace(/ /g, "_");
+      const currentUrl = `${window.location.origin}/public/${modifiedUsername}/${user._id}`;
+      navigator.clipboard.writeText(currentUrl).then(() => {
+        setShowCopiedConfirmation(true);
+        setTimeout(() => {
+          setShowCopiedConfirmation(false);
+        }, 2000);
+      }).catch((err) => {
+        console.error('Failed to copy URL: ', err);
+      });
+      onShareProfile(); // Call the callback function to update the parent component
+    } catch (err) {
+      console.error('Error sharing profile: ', err);
+    }
+  };
+
+
   if (loading) return <p className={styles.loadingError}>Loading...</p>;
   if (error) return <p className={styles.loadingError}>Error: {error}</p>;
   if (!userData) return <p className={styles.loadingError}>No user data available</p>;
@@ -168,14 +206,9 @@ const ProfileHeader = ({ userData, loading, error }) => {
             <h1 className={styles.userName}>{userData.username}</h1>
             <p className={styles.userInfo}>{userData.user_type} | {userData.university} | {userData.major} {userData.grad}</p>
           </div>
-          {/*
-          {!isProfilePage && (
-            <button className={styles.analyzeButton} onClick={toggleRating}> <TbAnalyze />Analyze Me</button>
-          )}
-          */}
+          <button className={`${styles.linkButton} ${styles.sharePortfolioButton}`} onClick={handleShareProfile}> <Share /> Get Shareable Link </button>
         </div>
         <div className={styles.tagsContainer}>
-
           <div className={styles.linksContainer}>
             <button className={styles.contactMeButton} onClick={handleContactButton}> <IoMdMail /> Contact </button>
             <button className={styles.linkButton} onClick={toggleResume}> <IoDocument/> Resume</button>
@@ -185,18 +218,19 @@ const ProfileHeader = ({ userData, loading, error }) => {
               renderLinkButton(link, <FaLink key={index} />)
             ))}
             {showCopiedConfirmation && (
-            <div className={styles.copyConfirmation}>Email copied to clipboard!</div>
-          )}
-
+              <div className={styles.copyConfirmation}>
+                {showCopiedConfirmation === 'email' ? 'Email copied to clipboard!' : 'URL copied to clipboard!'}
+              </div>
+            )}
+          </div>
           {renderTagsPreview(userData.skills, 'skill')}
           {renderTagsPreview(userData.interests, 'interest')}
-          </div>
-
         </div>
-
-        <div className={styles.divider}> </div>
+        <div className={styles.divider}></div>
         <div className={styles.bioContainer}>
-          <p className={styles.bio} onClick={toggleBio}>{showFullBio ? userData.biography : getTruncatedBio(userData.biography)}</p>
+          <p className={styles.bio} onClick={toggleBio}>
+            {showFullBio ? userData.biography : getTruncatedBio(userData.biography)}
+          </p>
           {bioTruncated && (
             <button onClick={toggleBio} className={styles.bioButton}>
               {showFullBio ? <FaChevronUp /> : <FaChevronDown/>}
@@ -206,8 +240,7 @@ const ProfileHeader = ({ userData, loading, error }) => {
       </div>
       {showResume && (
         <div className={styles.resumeModal}>
-          <button className={styles.closeButton2} onClick={toggleResume}><FaWindowClose /> </button>
-          
+          <button className={styles.closeButton2} onClick={toggleResume}><FaWindowClose /></button>
           {isValidResume(userData.resume) ? (
             <embed src={userData.resume} type="application/pdf" width="80%" height="80%" />
           ) : (
@@ -217,16 +250,12 @@ const ProfileHeader = ({ userData, loading, error }) => {
           )}
         </div>
       )}
-
-      {/* 
       {showRating && (
         <div className={styles.modalScore}>
           {renderRatingModal()}
         </div>
       )}
-        */}
     </div>
   );
 };
-
 export default ProfileHeader;

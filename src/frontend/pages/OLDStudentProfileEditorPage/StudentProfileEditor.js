@@ -65,7 +65,7 @@ function StudentProfileEditor({ initLocalData, setUserData, onSave }) {
       }
 
       const data = await response.json();
-      
+      console.log('data after groq: ', data);
       if (data.summary) {
         setLocalState(prevState => ({
           ...prevState,
@@ -75,6 +75,7 @@ function StudentProfileEditor({ initLocalData, setUserData, onSave }) {
           university: data.summary.latestUniversity || prevState.university,
           major: data.summary.major || prevState.major,
           grad: data.summary.grad_yr || prevState.grad,
+          workhistory: data.summary.workhistory || prevState.workhistory,
         }));
       } else {
         setError('No summary data received from the server');
@@ -85,6 +86,7 @@ function StudentProfileEditor({ initLocalData, setUserData, onSave }) {
     } finally {
       setIsLoading(false);
     }
+    console.log("localState after groq: ", localState);
   };
 
   const handleSubmit = async (e) => {
@@ -105,8 +107,15 @@ function StudentProfileEditor({ initLocalData, setUserData, onSave }) {
       }
     });
 
+    // Handle workhistory separately
+    if (localState.workhistory) {
+      processedState.workhistory = JSON.stringify(localState.workhistory);  // Stringify here
+    }
+      
     Object.keys(processedState).forEach(key => {
-      if (Array.isArray(processedState[key])) {
+      if (key === 'workhistory') {
+        formData.append(key, processedState[key]);  // Already stringified
+      } else if (Array.isArray(processedState[key])) {
         formData.append(key, JSON.stringify(processedState[key]));
       } else {
         formData.append(key, processedState[key]);
