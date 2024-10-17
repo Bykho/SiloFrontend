@@ -5,6 +5,11 @@ import styles from './ForceGraphComponent.module.css';
 import config from '../../config';
 import { useUser } from '../../contexts/UserContext';
 import CleanOrbitingRingLoader from '../../components/FractalLoadingBar';
+import {
+  FaBars,
+  FaTimes,
+  FaChevronLeft,
+} from 'react-icons/fa';
 
 const ForceGraphComponent = () => {
   const [graphData, setGraphData] = useState({ nodes: [], links: [] });
@@ -13,6 +18,7 @@ const ForceGraphComponent = () => {
   const [selectedNode, setSelectedNode] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [showSidebar, setShowSidebar] = useState(true); // State to control sidebar visibility
   const fgRef = useRef();
   const { user } = useUser();
   const myUserId = user ? user._id : null;
@@ -707,83 +713,158 @@ const ForceGraphComponent = () => {
 
   return (
     <div className={styles.graphContainer}>
-      <ForceGraph2D
-        ref={fgRef}
-        graphData={graphData}
-        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1 }}
-        nodeRelSize={20}
-        nodeCanvasObject={nodeCanvasObject}
-        nodePointerAreaPaint={nodePointerAreaPaint}
-        linkWidth={(link) => (highlightLinks.has(link) ? 2 : 1)}
-        linkColor={() => 'rgba(0, 163, 255, 0.2)'}
-        linkDirectionalParticles={1}
-        linkDirectionalParticleWidth={2}
-        linkDirectionalParticleSpeed={0.005}
-        linkDirectionalParticleColor={() => '#00A3FF'}
-        onNodeHover={handleNodeHover}
-        onLinkHover={handleLinkHover}
-        onNodeClick={handleNodeClick}
-        backgroundColor="#121212"
-        cooldownTicks={50}
-      />
-      <div className={styles.header}>
-        <h1 className={styles.headerTitle}>Knowledge Graph</h1>
-        <p className={styles.headerDescription}>
-          Connections between your work and others.
-        </p>
+      {/* Graph Area */}
+      <div
+        className={styles.graphArea}
+        style={{ width: showSidebar ? '70%' : '100%' }}
+      >
+        <ForceGraph2D
+          ref={fgRef}
+          graphData={graphData}
+          style={{ width: '100%', height: '100%', zIndex: 1 }}
+          nodeRelSize={20}
+          nodeCanvasObject={nodeCanvasObject}
+          nodePointerAreaPaint={nodePointerAreaPaint}
+          linkWidth={(link) => (highlightLinks.has(link) ? 2 : 1)}
+          linkColor={() => 'rgba(0, 163, 255, 0.2)'}
+          linkDirectionalParticles={1}
+          linkDirectionalParticleWidth={2}
+          linkDirectionalParticleSpeed={0.005}
+          linkDirectionalParticleColor={() => '#00A3FF'}
+          onNodeHover={handleNodeHover}
+          onLinkHover={handleLinkHover}
+          onNodeClick={handleNodeClick}
+          backgroundColor="#121212"
+          cooldownTicks={50}
+        />
+        {/* Toggle Sidebar Button */}
+        {!showSidebar && (
+          <button
+            className={styles.sidebarToggleButton}
+            onClick={() => setShowSidebar(true)}
+          >
+            <FaChevronLeft />
+          </button>
+        )}
+        <div className={styles.header}>
+          <h1 className={styles.headerTitle}>Knowledge Graph</h1>
+          <p className={styles.headerDescription}>
+            Connections between your work and others.
+          </p>
+        </div>
       </div>
-      {selectedNode && (
-        <div className={styles.alert}>
-          <div className={styles.alertIcon}>ℹ️</div>
-          <div className={styles.alertContent}>
-            <h4 className={styles.alertTitle}>
-              {selectedNode.type === 'user'
-                ? 'Silo User'
-                : selectedNode.type === 'project'
-                ? 'Silo Project'
-                : 'Arxiv Research Paper'}
-            </h4>
-            <p className={styles.alertDescription}>
-              {selectedNode.type === 'user' ? (
+      {/* Sidebar */}
+      <div
+        className={`${styles.sidebar} ${
+          showSidebar ? styles.sidebarVisible : styles.sidebarHidden
+        }`}
+      >
+        {/* Search Bar */}
+        <div className={styles.searchBar}>
+          <input type="text" placeholder="Search..." />
+        </div>
+        {/* Toolbar */}
+        <div className={styles.toolbar}>
+          <label className={styles.toggleLabel}>
+            <input type="checkbox" defaultChecked />
+            <span className={styles.toggleSwitch}></span>
+            Papers
+          </label>
+          <label className={styles.toggleLabel}>
+            <input type="checkbox" defaultChecked />
+            <span className={styles.toggleSwitch}></span>
+            Projects
+          </label>
+          <label className={styles.toggleLabel}>
+            <input type="checkbox" defaultChecked />
+            <span className={styles.toggleSwitch}></span>
+            People
+          </label>
+          <button
+            onClick={() => setShowSidebar(false)}
+            className={styles.closeSidebarButton}
+          >
+            <FaTimes />
+          </button>
+        </div>
+        {/* Node Information Section */}
+        <div className={styles.nodeInfo}>
+          {selectedNode ? (
+            <div>
+              <h2>{selectedNode.name}</h2>
+              <p>Type: {selectedNode.type}</p>
+              {/* Display other details based on type */}
+              {selectedNode.type === 'user' && (
                 <>
-                  {selectedNode.name} ({selectedNode.user_type})
-                  <br />
-                  Email: {selectedNode.email}
-                  <br />
-                  Skills:{' '}
-                  {selectedNode.skills && selectedNode.skills.length > 0
-                    ? selectedNode.skills.join(', ')
-                    : 'N/A'}
-                  <br />
-                  Interests:{' '}
-                  {selectedNode.interests && selectedNode.interests.length > 0
-                    ? selectedNode.interests.join(', ')
-                    : 'N/A'}
-                </>
-              ) : selectedNode.type === 'project' ? (
-                <>
-                  Project: {selectedNode.name}
-                  <br />
-                  Created By: {selectedNode.createdBy}
-                  <br />
-                  Tags:{' '}
-                  {selectedNode.tags && selectedNode.tags.length > 0
-                    ? selectedNode.tags.join(', ')
-                    : 'N/A'}
-                </>
-              ) : (
-                <>
-                  Title: {selectedNode.name}
-                  <br />
-                  arXiv ID: {selectedNode.arxiv_id}
-                  <br />
-                  Mongo ID: {selectedNode.mongo_id}
+                  <p>Email: {selectedNode.email}</p>
+                  <p>User Type: {selectedNode.user_type}</p>
+                  <p>
+                    Skills:{' '}
+                    {selectedNode.skills && selectedNode.skills.length > 0
+                      ? selectedNode.skills.join(', ')
+                      : 'N/A'}
+                  </p>
+                  <p>
+                    Interests:{' '}
+                    {selectedNode.interests && selectedNode.interests.length > 0
+                      ? selectedNode.interests.join(', ')
+                      : 'N/A'}
+                  </p>
                 </>
               )}
-            </p>
-          </div>
+              {selectedNode.type === 'project' && (
+                <>
+                  <p>Created By: {selectedNode.createdBy}</p>
+                  <p>
+                    Tags:{' '}
+                    {selectedNode.tags && selectedNode.tags.length > 0
+                      ? selectedNode.tags.join(', ')
+                      : 'N/A'}
+                  </p>
+                </>
+              )}
+              {selectedNode.type === 'research' && (
+                <>
+                  <p>arXiv ID: {selectedNode.arxiv_id}</p>
+                  <p>Mongo ID: {selectedNode.mongo_id}</p>
+                </>
+              )}
+              {/* Child nodes as nested, clickable list */}
+              {selectedNode.neighbors && selectedNode.neighbors.length > 0 && (
+                <div>
+                  <h3>Connected Nodes:</h3>
+                  <ul className={styles.nodeList}>
+                    {selectedNode.neighbors.map((neighbor) => (
+                      <li
+                        key={neighbor.id}
+                        onClick={() => {
+                          setSelectedNode(neighbor);
+                          fgRef.current.centerAt(neighbor.x, neighbor.y, 1000);
+                        }}
+                      >
+                        {neighbor.name} ({neighbor.type})
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div>
+              <h2>{myUsername}</h2>
+              <p>Email: {myEmail}</p>
+              <p>User Type: {myUserType}</p>
+              <p>
+                Skills: {mySkills && mySkills.length > 0 ? mySkills.join(', ') : 'N/A'}
+              </p>
+              <p>
+                Interests:{' '}
+                {myInterests && myInterests.length > 0 ? myInterests.join(', ') : 'N/A'}
+              </p>
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 };
