@@ -62,6 +62,44 @@ const ForceGraphComponent = () => {
         const userProjectsData = await userProjectsResponse.json();
         const userProjectIds = userProjectsData.map(project => project._id);
 
+        // Fetch similar users
+        const similarUsersResponse = await fetch(`${config.apiBaseUrl}/getSimilarUsers`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ user_id: myUserId }),
+        });
+        
+        if (!similarUsersResponse.ok) {
+          const errorMessage = await similarUsersResponse.text();
+          console.log('Fetch error:', errorMessage);
+          throw new Error('Failed to fetch similar users');
+        }
+        
+        const similarUserIds = await similarUsersResponse.json();
+        if (similarUserIds.length === 0) {
+          console.log('No similar users found.');
+        }
+
+        // Fetch details of similar users
+        const similarUsersDetailsResponse = await fetch(`${config.apiBaseUrl}/getUsersByIds`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ userIds: similarUserIds }),
+        });
+
+        if (!similarUsersDetailsResponse.ok) {
+          throw new Error('Failed to fetch similar users details');
+        }
+
+        const similarUsersDetails = await similarUsersDetailsResponse.json();
+
+
         // Fetch full project details
         const projectsResponse = await fetch(`${config.apiBaseUrl}/returnProjectsFromIds`, {
           method: 'POST',
@@ -77,6 +115,55 @@ const ForceGraphComponent = () => {
         }
 
         const userProjects = await projectsResponse.json();
+
+        const similarUserProjects = [];
+
+        for (const similarUserId of similarUserIds) {
+          const userProjectsResponse = await fetch(`${config.apiBaseUrl}/returnUserProjects`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userId: similarUserId }),
+          });
+
+          if (!userProjectsResponse.ok) {
+            throw new Error(`Failed to fetch projects for user ${similarUserId}`);
+          }
+
+          const userProjectsData = await userProjectsResponse.json();
+          similarUserProjects.push({
+            userId: similarUserId,
+            projects: userProjectsData,
+          });
+        }
+
+        const similarUserProjectIds = [];
+
+        similarUserProjects.forEach(userProjectData => {
+          userProjectData.projects.forEach(project => {
+            similarUserProjectIds.push(project._id);
+          });
+        });
+
+        // Fetch details of similar users' projects
+        const similarUsersProjectsResponse = await fetch(`${config.apiBaseUrl}/returnProjectsFromIds`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ projectIds: similarUserProjectIds }),
+        });
+
+        if (!similarUsersProjectsResponse.ok) {
+          throw new Error('Failed to fetch projects for similar users');
+        }
+
+        const similarUsersProjectsDetails = await similarUsersProjectsResponse.json();
+
+
 
         // Get similar projects for user's projects
         const similarProjectsBatchResponse = await fetch(`${config.apiBaseUrl}/getSimilarProjectsBatch`, {
@@ -286,6 +373,53 @@ const ForceGraphComponent = () => {
             nodeMap.set(author._id, authorNode);
           }
         });
+
+        // Add similar user nodes
+        similarUsersDetails.forEach(similarUser => {
+          if (!nodeMap.has(similarUser._id)) {
+            const userNode = {
+              id: similarUser._id,
+              name: similarUser.username,
+              type: 'user',
+              group: 'similarUser',
+              skills: similarUser.skills || [],
+              interests: similarUser.interests || [],
+              user_type: similarUser.user_type,
+              email: similarUser.email,
+              depth: 0,
+              childrenFetched: false,
+            };
+            nodes.push(userNode);
+            nodeMap.set(similarUser._id, userNode);
+          }
+        });
+
+        // Add projects of similar users
+        similarUsersProjectsDetails.forEach(project => {
+          if (!nodeMap.has(project._id)) {
+            const projectNode = {
+              id: project._id,
+              name: project.projectName,
+              type: 'project',
+              createdBy: project.createdBy,
+              createdById: project.user_id,
+              tags: project.tags || [],
+              depth: 1,
+              childrenFetched: false,
+            };
+            nodes.push(projectNode);
+            nodeMap.set(project._id, projectNode);
+
+            // Add link from similar user to their project
+            links.push({
+              source: project.user_id,
+              target: project._id,
+              type: 'user-project',
+            });
+          }
+        });
+
+
 
         // Build links between user's projects and similar projects/research papers
         for (const userProjectId of userProjectIds) {
