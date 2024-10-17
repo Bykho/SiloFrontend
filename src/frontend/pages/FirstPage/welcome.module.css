@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
 
-
 .container {
   position: relative;
   width: 100%;
@@ -33,8 +32,7 @@
   padding: 20px 40px;
   z-index: 100;
   height: 90px;
-  z-index: 100;
-  background-color: transparent !important; 
+  background-color: transparent !important;
 }
 
 .logo {
@@ -146,7 +144,7 @@
 }
 
 .description {
-  font-family: 'Lexend'; 
+  font-family: 'Lexend';
   font-weight: light;
   font-size: 1.5rem;
   line-height: 1.5;
@@ -172,7 +170,7 @@
   border-radius: 20px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
-  
+
 .animatedSection.visible {
   opacity: 1;
   transform: translateY(0);
@@ -193,7 +191,7 @@
 
 .videoWrapper {
   width: 100%;
-  max-width: 1000px; /* Adjust this value as needed */
+  max-width: 1000px;
   margin: 20px auto;
 }
 
@@ -233,6 +231,7 @@
 .playButton:hover {
   background-color: rgba(0, 0, 0, 0.9);
 }
+
 .sectionIcon {
   margin-right: 15px;
   font-size: 2rem;
@@ -244,6 +243,7 @@
   line-height: 1.6;
   color: #ccc;
 }
+
 .spiderPlotWrapper {
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
@@ -259,22 +259,22 @@
   margin-bottom: 20px;
   text-align: center;
 }
-  
-  .sectionContent {
-    font-size: 1.1rem;
-    line-height: 1.6;
-    color: #ccc;
-    margin-left: 45px;
-  }
 
-  .sectionDemo {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  }
+.sectionContent {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #ccc;
+  margin-left: 45px;
+}
+
+.sectionDemo {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
 
 /* Customizing the scrollbar */
 .contentWrapper::-webkit-scrollbar {
@@ -294,7 +294,66 @@
   background-color: rgba(255, 255, 255, 0.5);
 }
 
+/* Responsive Styles */
 @media (max-width: 768px) {
+  .header {
+    flex-direction: row;
+    height: auto;
+    padding: 10px 20px;
+  }
+
+  .logo {
+    justify-content: baseline;
+  }
+
+  .logoImage {
+    height: 60px;
+  }
+
+  .siloName {
+    font-size: 2rem;
+  }
+
+  .content {
+    padding: 20px 30px;
+  }
+
+  .nav {
+    width: 100%;
+    margin: 10px 0;
+  }
+
+  .navItem {
+    flex-wrap: wrap;
+    justify-content: center;
+    display: none;
+  }
+
+  .navButton {
+    font-size: 14px;
+    padding: 10px 15px;
+    margin: 5px;
+    flex: 1 1 auto;
+  }
+
+  .sectionContent{
+    margin-left: 10px; 
+  }
+
+  .spiderPlotWrapper{
+    width: 95%; 
+  }
+
+  .ctaWrapper {
+    margin-top: 10px;
+  }
+
+  .ctaButton {
+    font-size: 16px;
+    padding: 12px 24px;
+    margin-bottom: 10px;
+  }
+
   .title {
     font-size: 3rem;
   }
@@ -311,32 +370,9 @@
     font-size: 1rem;
   }
 
-  .header {
-    flex-direction: column;
-    height: auto;
-    padding: 10px;
-  }
-
-  .nav {
-    margin: 10px 0;
-  }
-
-  .navItem {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .logoImage {
-    height: 60px;
-  }
-
-  .siloName {
-    font-size: 2rem;
-  }
-
   .animatedSection {
     flex-direction: column;
-    padding: 40px 20px;
+    padding: 40px 30px;
   }
 
   .sectionContent {
@@ -347,5 +383,4 @@
   .sectionDemo {
     width: 100%;
   }
-  
 }

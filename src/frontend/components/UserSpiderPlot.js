@@ -140,7 +140,6 @@ const PlayerRatingSpiderweb = ({ playerData, userData }) => {
               className={`${styles.radar} ${isVisible ? styles.visible : ''}`}
             />
           </RadarChart>
-          <h1 className={styles.asterix}> Model still under development. Accuracy will improve as more users join the platform.</h1>
         </ResponsiveContainer>
         {/* <button onClick={handleButtonClick} className={styles.button}>Populate VSscore Data</button>
         <pre>{JSON.stringify(vsscoreData, null, 2)}</pre> */}
