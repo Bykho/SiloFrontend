@@ -65,7 +65,7 @@ const NavigationBar = () => {
             >
               <MdScience className={styles.icon} /> Research
             </a>
-            {/*
+            
             <a
               href="/jobs"
               className={`${styles.button} ${activeLink === 'jobs' ? styles.clickedButton : ''}`}
@@ -73,11 +73,11 @@ const NavigationBar = () => {
             >
               <FaBriefcase className={styles.icon} /> Jobs
             </a>
-            */}
+            
             <a
               href="/graph"
-              className={`${styles.button} ${activeLink === 'jobs' ? styles.clickedButton : ''}`}
-              onClick={() => handleLinkClick('jobs')}
+              className={`${styles.button} ${activeLink === 'graph' ? styles.clickedButton : ''}`}
+              onClick={() => handleLinkClick('graph')}
             >
               < FaCircleNodes className={styles.icon} /> Knowledge
               
@@ -128,14 +128,14 @@ const NavigationBar = () => {
               <MdScience className={styles.icon} /> Research
             </a>
 
-            {/*
+            
             <a
               href="/jobs"
               className={`${styles.button} ${activeLink === 'jobs' ? styles.clickedButton : ''}`}
             >
               <FaBriefcase className={styles.icon} /> Jobs
             </a>
-            */}
+            
 
             <a
               href="/graph"
