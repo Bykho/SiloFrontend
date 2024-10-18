@@ -6,7 +6,6 @@ import WorkHistoryDisplay from '../../components/WorkHistory/WorkHistoryDisplay'
 import styles from './studentProfile.module.css';
 import { useUser } from '../../contexts/UserContext';
 import ProfileHeader from '../../components/ProfileHeader';
-import AddBlocPortfolio from '../../components/AddBlocPortfolio';
 import AddProject from '../../components/AddProjectComponent/AddProject';
 import InfoEditor from '../OLDStudentProfileEditorPage/StudentProfileEditor';
 import ShareablePreview from '../../components/ShareablePreview';
@@ -14,11 +13,9 @@ import GitPull from '../../components/GitPull';
 import FileAutoFill from '../../components/FileAutofill';
 import config from '../../config';
 import { FaWindowClose, FaPlusSquare, FaRegEdit, FaRegShareSquare, FaGithub } from 'react-icons/fa';
-import { IoSparkles } from "react-icons/io5";
 import { Plus, Edit2, Share, X, Eye, Briefcase } from 'lucide-react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { LuGithub } from "react-icons/lu";
-import PublicProfileHeader from "../PublicPortfolioPage/PublicProfileHeader";
 
 function StudentProfile() {
   const [userData, setUserData] = useState(null);
@@ -28,10 +25,8 @@ function StudentProfile() {
   const [showEditor, setShowEditor] = useState(false);
   const [showGitPull, setShowGitPull] = useState(false);
   const [showSharePreview, setShowSharePreview] = useState(false);
-  const [showProjectButtons, setShowProjectButtons] = useState(false);
   const [showAutofillModal, setShowAutofillModal] = useState(false);
   const [fileToUpload, setFileToUpload] = useState(null);
-  const [viewMode, setViewMode] = useState("Portfolio");  // New state for view mode
   const { user } = useUser();
   const navigate = useNavigate();
   const location = useLocation();
@@ -40,7 +35,6 @@ function StudentProfile() {
   const [repoURL, setRepoURL] = useState('');
   const [showCopiedConfirmation, setShowCopiedConfirmation] = useState(false);
   const [portfolioKey, setPortfolioKey] = useState(0);
-  const [showBuildPortfolioOptions, setShowBuildPortfolioOptions] = useState(false);
   const [showPortfolio, setShowPortfolio] = useState(true);
   const [showWorkHistory, setShowWorkHistory] = useState(true);
 
@@ -200,28 +194,12 @@ function StudentProfile() {
     setShowModal(true);
   };
 
-  const handleEditProfileClick = () => {
-    setShowEditor(true);
-  };
-
   const handleCloseEditor = () => {
     setShowEditor(false);
   };
 
-  const handleAddProjectClick = () => {
-    setShowProjectButtons(true);
-  };
-
-  const handleBackButtonClick = () => {
-    setShowProjectButtons(false);
-  };
-
   const handleBuildFromScratchClick = () => {
     setShowModal(true);
-  };
-
-  const handleAutofillClick = () => {
-    setShowAutofillModal(true);
   };
 
   const handleCloseAutofillModal = () => {
@@ -242,10 +220,6 @@ function StudentProfile() {
   const handleCloseModal = () => {
     setShowModal(false);
     setSelectedGitFiles([]);
-  };
-
-  const handleShareProfileClick = () => {
-    setShowSharePreview(true);
   };
 
   const handleCheckGithubClick = () => {
@@ -380,21 +354,6 @@ function StudentProfile() {
       localStorage.setItem('token', newToken);
       fetchUserData(); 
     }
-  };
-
-  const handleWorkHistoryClick = () => {
-    setViewMode("Work");
-    console.log("Switched to Work History view");
-  };
-
-  const handleSeePortfolioClick = () => {
-    setViewMode("Portfolio");
-    console.log("Switched to Portfolio view");
-  };
-
-  const handleBuildPortfolioClick = () => {
-    setShowBuildPortfolioOptions(true);
-    setViewMode("Portfolio");
   };
 
   const togglePortfolio = () => {

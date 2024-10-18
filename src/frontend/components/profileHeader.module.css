@@ -263,7 +263,7 @@
   align-content: center;
   background: rgb(255, 85, 0);
   border: none;
-  width: 40px; 
+  width: 35px; 
   font-size: 1rem;
   cursor: pointer;
   color: white; 
@@ -284,12 +284,15 @@
   position: fixed;
   top: 0;
   left: 0;
+  width: 100%;
+  height: 100%;
   background: rgba(0, 0, 0, 0.8);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
 }
+
 
 .resumeModal{
   position: fixed;
@@ -319,14 +322,16 @@
 
 
 .modalContent {
+  background-color: #2e2e2e;
   padding: 20px;
   border-radius: 10px;
   position: relative;
-  max-width: 90vw;
+  width: 80%;
+  max-width: 1100px;
   max-height: 90vh;
-  margin: auto;
   overflow-y: auto;
 }
+
 
 @media (max-width: 768px) {
   .topSection {
