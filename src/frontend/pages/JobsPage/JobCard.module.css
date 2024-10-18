@@ -1,3 +1,11 @@
+@font-face {
+  font-family: 'minionpro-medium';
+  src: url('../../../fonts/minionpro-medium-webfont.woff2') format('woff2'),
+       url('../../../fonts/minionpro-medium-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
 .card {
     background-color: #222222;
     transition: all 0.3s ease-in-out;
@@ -15,13 +23,14 @@
   }
   
   .cardContent {
-    padding: 24px;
+    padding: 30px 30px 30px 30px;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
   }
   
   .title {
+    font-family: 'minionpro-medium';
     color: #ffffff;
     font-size: 1.2rem;
     font-weight: bolder;
@@ -54,17 +63,20 @@
   }
   
   .description {
+    font-family: 'minionpro-medium';
     color: #e0e0e0;
-    font-size: 1rem;
-    line-height: 1.6;
-    margin-bottom: 20px;
+    font-size: 1.1rem;
+    line-height: 2;
+    margin-bottom: 10px;
     flex-grow: 1;
   }
   
   .applyButton {
+    font-family: 'Outfit';
     display: inline-block;
-    background-color: #4fc3f7;
+    background-color: #10a0e2;
     color: #ffffff;
+    font-size: 14px; 
     padding: 10px 20px;
     border-radius: 30px;
     font-weight: 600;
@@ -77,6 +89,6 @@
   }
   
   .applyButton:hover {
-    background-color: #03a9f4;
+    background-color: #0081bc;
     transform: scale(1.05);
   }

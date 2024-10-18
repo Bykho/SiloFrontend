@@ -1,6 +1,14 @@
 /* ResearchPage.module.css */
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
 
+@font-face {
+  font-family: 'minionpro-medium';
+  src: url('../../../fonts/minionpro-medium-webfont.woff2') format('woff2'),
+       url('../../../fonts/minionpro-medium-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
 .researchPage {
     color: #e2e8f0;
     font-family: 'Arial', sans-serif;

@@ -1,3 +1,11 @@
+@font-face {
+  font-family: 'minionpro-medium';
+  src: url('../../fonts/minionpro-medium-webfont.woff2') format('woff2'),
+       url('../../fonts/minionpro-medium-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
 .leaderboardContainer {
     background-color: #1a1a1a;
     color: #e0e0e0;
@@ -8,16 +16,16 @@
   }
   
   .leaderboardTitle {
+    font-family: 'minionpro-medium';
     font-size: 2.5rem;
-    color: #3cc4fa;
+    color: #e2e2e2;
     text-align: left;
     margin-bottom: 2rem;
     display: flex;
     align-items: center;
     justify-content: left;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    text-shadow: 0 0 10px rgba(14, 235, 255, 0.5);
+    letter-spacing: 5px;
+    text-shadow: 0 0 10px rgba(14, 235, 255, 0.377);
   }
   
   .trophyIcon {

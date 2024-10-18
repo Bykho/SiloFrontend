@@ -16,7 +16,7 @@ const JobCard = ({ job }) => {
         <h3 className={styles.company}>{job.company}</h3>
         <p className={styles.location}>{job.location}</p>
         <p className={styles.description}>
-          {truncateDescription(job.description, 200)}
+          {truncateDescription(job.description, 150)}
         </p>
         <a
           className={styles.applyButton}
@@ -24,7 +24,7 @@ const JobCard = ({ job }) => {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Apply Now
+          Read More
         </a>
       </div>
     </div>

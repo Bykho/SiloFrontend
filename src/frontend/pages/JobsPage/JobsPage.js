@@ -124,8 +124,8 @@ const JobsPage = () => {
   return (
     <div className={styles.container}>
       <div className={styles.headerPaper}>
-      <h1 className={styles.header}>Job Suggestions</h1>
-      <h2 className={styles.subheader}>We pull select jobs from US startups. Build out your portfolio projects for smarter suggestions.</h2>
+      <h1 className={styles.header}>Startup Postings</h1>
+      <h2 className={styles.subheader}>We pull jobs from select US startups. Build out your portfolio projects for smarter suggestions.</h2>
         <div className={styles.searchContainer}>
           <div className={styles.searchInputWrapper}>
             <FaSearch className={styles.searchIcon} />

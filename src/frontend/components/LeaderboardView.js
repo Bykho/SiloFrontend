@@ -52,7 +52,7 @@ const LeaderboardView = ({ users, navigate, fetchProjectsForUser }) => {
   return (
     <div className={styles.leaderboardContainer}>
       <h2 className={styles.leaderboardTitle}>
-        <FaTrophy className={styles.trophyIcon} /> Leaderboard
+        <FaTrophy className={styles.trophyIcon} /> Upvote Leaderboard
       </h2>
       <div className={styles.leaderboardList}>
         {leaderboardUsers.map((user, index) => (

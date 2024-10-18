@@ -201,13 +201,17 @@ const ProfileHeader = ({ userData, loading, error, onShareProfile, setUserData, 
     <div className={styles.profileContainer}>
       <div className={styles.profileHeader}>
         <div className={styles.topSection}>
+          {/*}
           <ProfileImage username={userData.username} size={'medium'} />
+          */}
           <div className={styles.nameSection}>
             <h1 className={styles.userName}>{userData.username}</h1>
             <div className={styles.userInfoContainer}>
               <p className={styles.userInfo}>{userData.user_type} | {userData.university} | {userData.major} {userData.grad}</p>
+              {/*
               <button className={styles.contactMeButton} onClick={handleContactButton}> <IoMdMail /> Contact </button>
               <button className={styles.linkButton} onClick={toggleResume}> <IoDocument /> Resume</button>
+              */}
             </div>
           </div>
           {isOwnProfile && (

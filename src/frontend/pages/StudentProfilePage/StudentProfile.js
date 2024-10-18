@@ -389,7 +389,7 @@ function StudentProfile() {
                 <div className={styles.buttonContainer}>
                   <>
                     <button className={styles.bigButtonAdd} onClick={handleBuildFromScratchClick}><Plus size={20} /> Add Project</button>
-                    <button className={styles.bigButton} onClick={handleCheckGithubClick}><LuGithub size={20}/> Import GitHub</button>
+                    <button className={styles.bigButtonAdd} onClick={handleCheckGithubClick}><LuGithub size={20}/> Add from GitHub</button>
                   </>
                 </div>
                 <PortfolioDisplay user={userData} key={`portfolio-${portfolioKey}-${userData.portfolio.length}`} />

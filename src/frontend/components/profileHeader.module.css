@@ -2,11 +2,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
+
+@font-face {
+  font-family: 'minionpro-medium';
+  src: url('../../fonts/minionpro-medium-webfont.woff2') format('woff2'),
+       url('../../fonts/minionpro-medium-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
 .profileContainer {
   /*background-color: #212121;*/
   background-image:linear-gradient(to bottom, rgba(46, 46, 46, 0.4), rgba(30, 30, 30, 0.0));
   color: #f0f0f0;
-  padding: 30px 30px 15px 30px;
+  padding: 30px 40px 5px 50px;
   border-radius: 25px;
   margin: 20px 20px 0px 20px;
 }
@@ -24,6 +33,7 @@
   margin-top: 10px;
 }
 .userInfoContainer{
+  margin-top: 5px;
   display: inline-flex; 
   align-items: center;
   gap: 10px; 
@@ -38,8 +48,8 @@
 }
 
 .userName {
-  font-weight: 600;
-  font-size: 33px;
+  font-family: 'minionpro-medium';
+  font-size: 37px;
   margin: 0 0 5px 0;
   text-align: left;
   letter-spacing: 5px;
@@ -59,13 +69,13 @@
 }
 
 .userInfo {
-  font-size: 18px;
+  font-size: 1.2rem;
   margin: 0;
   color: #bbb;
 }
 
 .tagsContainer {
-  margin-top: 15px; 
+  margin-top: 10px; 
   display: flex;
   flex-wrap: wrap;
   margin-right: 10px;
@@ -82,7 +92,7 @@
 .tagLabel {
   font-weight: bold;
   color: #64b5f6;
-  padding: 4px 8px;
+  padding: 4px 8px 4px 0px;
   border-radius: 12px;
   font-size: 16px;
   transition: background-color 0.3s ease;
@@ -102,7 +112,7 @@
   color: #64b5f6;
   padding: 4px 8px;
   border-radius: 12px;
-  font-size: 0.85rem;
+  font-size: 1rem;
   transition: background-color 0.3s ease;
   cursor: pointer;
 }
@@ -116,6 +126,7 @@
   transition: background-color 0.3s ease;
   cursor: pointer;
   position: relative;
+  margin-right: 10px; 
 }
 
 .moreButton {
@@ -153,14 +164,20 @@
 }
 
 .bio {
+  font-family: 'Outfit'; 
+  font-weight: 200;
   font-size: 17px;
-  line-height: 1.5;
+  line-height: 2;
   margin: 0 0 10px 0;
   text-align: justify;
   cursor: pointer; 
 }
 
 .bioButton {
+  position: relative; 
+  top: 1%;
+  left: 98%;
+  background-color: #282b30;
   background-color: rgba(100, 181, 246, 0.1);
   border-radius: 40px;
   padding: 7px; 

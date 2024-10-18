@@ -37,7 +37,7 @@
     justify-content: center;
     align-items: center;
     gap: 10px;
-    width: calc(99% - 80px);
+    width: calc(99% - 50px);
     margin-right: auto;
     margin-left: auto;
   }
@@ -108,7 +108,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: linear-gradient(to left, #e4e4e4, #d6d6d6);
+    background: linear-gradient(to left, #232323, #303030);
     padding: 10px 20px;
     margin-top: 10px;
     margin-bottom: 10px;
@@ -121,20 +121,20 @@
     font-family: 'inconsolata';
     font-weight: bolder;
     font-size: 18px;
-    color: #1e1e1e;
-    border: none;
+    color: #e0e0e0;
+    border: none; 
     transition: background 0.3s ease, box-shadow 0.3s ease;
   }
 
   .bigButtonAdd:hover {
-    background: linear-gradient(to left, #e8e8e8, #dedede);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(to left, #3a3a3a, #4a4a4a);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
   }
-  
+
   .bigButtonAdd:focus {
     outline: none;
   }
-  
+
   .bigButtonAdd:active {
     transform: translateY(1px);
   }
