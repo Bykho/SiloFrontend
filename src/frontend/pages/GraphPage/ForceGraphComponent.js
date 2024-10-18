@@ -5,6 +5,7 @@ import styles from './ForceGraphComponent.module.css';
 import config from '../../config';
 import { useUser } from '../../contexts/UserContext';
 import CleanOrbitingRingLoader from '../../components/FractalLoadingBar';
+import ProjectEntry from '../../components/ProjectEntryPage/ProjectEntry';
 import {
   FaBars,
   FaTimes,
@@ -18,27 +19,81 @@ const ForceGraphComponent = () => {
   const [selectedNode, setSelectedNode] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [showSidebar, setShowSidebar] = useState(true); // State to control sidebar visibility
+  const [showSidebar, setShowSidebar] = useState(false); // State to control sidebar visibility
   const fgRef = useRef();
   const { user } = useUser();
+  console.log('usertest', user); 
   const myUserId = user ? user._id : null;
   const myUsername = user ? user.username : '';
   const mySkills = user && user.skills ? user.skills : [];
   const myInterests = user && user.interests ? user.interests : [];
   const myUserType = user ? user.user_type : '';
   const myEmail = user ? user.email : '';
+  const [showPopup, setShowPopup] = useState(false);
+  const [localProject, setLocalProject] = useState(null);
+  const [localUpvotes, setLocalUpvotes] = useState([]);
+
+
 
   const applyForces = useCallback(() => {
     const fg = fgRef.current;
     if (fg) {
       fg.d3Force('charge').strength(-500);
       fg.d3Force('link').distance(170);
-      fg.d3Force('collide', d3.forceCollide(80).strength(0.9));
+      fg.d3Force('collide', d3.forceCollide(100).strength(0.9));
     }
   }, []);
 
+// NEW CODE ______________________________________________________________________
+
+  const handleProjectClick = (projectId) => {
+    // Fetch or prepare the project data here if needed
+    setLocalProject(fetchProjectById(projectId));
+    if(localProject &&  localProject.upvotes) {
+      setLocalUpvotes(localProject.upvotes);
+      setShowPopup(true);
+    }
+  };
+
+  const fetchProjectById = async (projectId) => {
+    setLoading(true);
+    setError('');
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${config.apiBaseUrl}/returnProjectsFromIds`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ projectIds: [String(projectId)] }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch projects');
+      }
+
+      const returnedProjects = await response.json();
+      setLoading(false);
+      console.log("Returned Projects:", returnedProjects[0]);
+      return returnedProjects[0]; // Assuming we want to return a single project
+    } catch (err) {
+      setError('Failed to fetch projects');
+      setLoading(false);
+      return null;
+    }
+  };
+
+  const togglePopup = () => {
+    setShowPopup(!showPopup);
+  };
+
+
+  // NEW CODE END _____________________________________________________________________
+
   useEffect(() => {
     if (!myUserId) return; // Ensure user ID is available
+
     const fetchGraphData = async () => {
       setLoading(true);
       setError('');
@@ -98,7 +153,7 @@ const ForceGraphComponent = () => {
         }
 
         const similarUsersDetails = await similarUsersDetailsResponse.json();
-
+        console.log(similarUsersDetails); 
 
         // Fetch full project details
         const projectsResponse = await fetch(`${config.apiBaseUrl}/returnProjectsFromIds`, {
@@ -301,9 +356,10 @@ const ForceGraphComponent = () => {
           const projectNode = {
             id: project._id,
             name: project.projectName,
+            description: project.projectDescription,
             type: 'project',
             createdBy: project.createdBy,
-            createdById: project.user_id,
+            createdById: project.createdById,
             tags: project.tags || [],
             depth: 1,
             childrenFetched: false,
@@ -325,6 +381,7 @@ const ForceGraphComponent = () => {
             const projectNode = {
               id: project._id,
               name: project.projectName,
+              description: project.projectDescription,
               type: 'project',
               createdBy: project.createdBy,
               createdById: project.user_id,
@@ -343,6 +400,8 @@ const ForceGraphComponent = () => {
             const paperNode = {
               id: paper._id,
               name: paper.title,
+              abstract:  paper.abstract,
+              authors: paper.authors,
               type: 'research',
               arxiv_id: paper.arxiv_id,
               mongo_id: paper._id,
@@ -361,6 +420,7 @@ const ForceGraphComponent = () => {
               id: author._id,
               name: author.username,
               type: 'user',
+              biography: author.biography, 
               group: 'otherUser',
               skills: author.skills || [],
               interests: author.interests || [],
@@ -400,6 +460,7 @@ const ForceGraphComponent = () => {
             const projectNode = {
               id: project._id,
               name: project.projectName,
+              description: project.projectDescription,
               type: 'project',
               createdBy: project.createdBy,
               createdById: project.user_id,
@@ -517,6 +578,7 @@ const ForceGraphComponent = () => {
   const handleNodeClick = useCallback(
     async (node) => {
       setSelectedNode(node);
+      setShowSidebar(true); 
       console.log('Selected node:', node);
       // Only proceed if node is an edge node and hasn't reached depth limit
       if (node.childrenFetched || node.depth >= 25) {
@@ -624,6 +686,7 @@ const ForceGraphComponent = () => {
               const projectNode = {
                 id: project._id,
                 name: project.projectName,
+                description: project.projectDescription,
                 type: 'project',
                 createdBy: project.createdBy,
                 createdById: project.user_id,
@@ -648,6 +711,8 @@ const ForceGraphComponent = () => {
               const paperNode = {
                 id: paper._id,
                 name: paper.title,
+                abstract: paper.abstract,
+                authors: paper.authors,
                 type: 'research',
                 arxiv_id: paper.arxiv_id,
                 mongo_id: paper._id,
@@ -871,134 +936,118 @@ const ForceGraphComponent = () => {
           backgroundColor="#121212"
           cooldownTicks={50}
         />
-        {/* Toggle Sidebar Button */}
-        {!showSidebar && (
-          <button
-            className={styles.sidebarToggleButton}
-            onClick={() => setShowSidebar(true)}
-          >
-            <FaChevronLeft />
-          </button>
-        )}
-        <div className={styles.header}>
-          <h1 className={styles.headerTitle}>Knowledge Graph</h1>
-          <p className={styles.headerDescription}>
-            Connections between your work and others.
-          </p>
-        </div>
       </div>
-      {/* Sidebar */}
-      <div
-        className={`${styles.sidebar} ${
-          showSidebar ? styles.sidebarVisible : styles.sidebarHidden
-        }`}
-      >
-        {/* Search Bar */}
-        <div className={styles.searchBar}>
-          <input type="text" placeholder="Search..." />
-        </div>
-        {/* Toolbar */}
-        <div className={styles.toolbar}>
-          <label className={styles.toggleLabel}>
-            <input type="checkbox" defaultChecked />
-            <span className={styles.toggleSwitch}></span>
-            Papers
-          </label>
-          <label className={styles.toggleLabel}>
-            <input type="checkbox" defaultChecked />
-            <span className={styles.toggleSwitch}></span>
-            Projects
-          </label>
-          <label className={styles.toggleLabel}>
-            <input type="checkbox" defaultChecked />
-            <span className={styles.toggleSwitch}></span>
-            People
-          </label>
-          <button
-            onClick={() => setShowSidebar(false)}
-            className={styles.closeSidebarButton}
-          >
+{/* Toggle Sidebar Button */}
+{!showSidebar && (
+  <button
+    className={styles.sidebarToggleButton}
+    onClick={() => setShowSidebar(true)}
+  >
+    <FaChevronLeft />
+  </button>
+)}
+<div className={styles.header}>
+  <h1 className={styles.headerTitle}>Knowledge Graph</h1>
+  <p className={styles.headerDescription}>
+    Connections between your work and others.
+  </p>
+  <p className={styles.headerDescription}>
+    Click, drag, and zoom to explore.
+  </p>
+</div>
+  {/* Sidebar */}
+  <div className={`${styles.sidebar} ${showSidebar ? styles.sidebarVisible : styles.sidebarHidden}`}>
+    {/* Node Information Section */}
+    <div className={styles.nodeInfo}>
+      {selectedNode ? (
+        <div>
+          <div className={styles.sidebarHeader}>
+            <h2>{selectedNode.name}</h2>
+            <button onClick={() => setShowSidebar(false)} className={styles.closeSidebarButton}>
             <FaTimes />
-          </button>
-        </div>
-        {/* Node Information Section */}
-        <div className={styles.nodeInfo}>
-          {selectedNode ? (
-            <div>
-              <h2>{selectedNode.name}</h2>
-              <p>Type: {selectedNode.type}</p>
-              {/* Display other details based on type */}
-              {selectedNode.type === 'user' && (
-                <>
-                  <p>Email: {selectedNode.email}</p>
-                  <p>User Type: {selectedNode.user_type}</p>
-                  <p>
-                    Skills:{' '}
-                    {selectedNode.skills && selectedNode.skills.length > 0
-                      ? selectedNode.skills.join(', ')
-                      : 'N/A'}
-                  </p>
-                  <p>
-                    Interests:{' '}
-                    {selectedNode.interests && selectedNode.interests.length > 0
-                      ? selectedNode.interests.join(', ')
-                      : 'N/A'}
-                  </p>
-                </>
-              )}
-              {selectedNode.type === 'project' && (
-                <>
-                  <p>Created By: {selectedNode.createdBy}</p>
-                  <p>
-                    Tags:{' '}
-                    {selectedNode.tags && selectedNode.tags.length > 0
-                      ? selectedNode.tags.join(', ')
-                      : 'N/A'}
-                  </p>
-                </>
-              )}
-              {selectedNode.type === 'research' && (
-                <>
-                  <p>arXiv ID: {selectedNode.arxiv_id}</p>
-                  <p>Mongo ID: {selectedNode.mongo_id}</p>
-                </>
-              )}
-              {/* Child nodes as nested, clickable list */}
-              {selectedNode.neighbors && selectedNode.neighbors.length > 0 && (
-                <div>
-                  <h3>Connected Nodes:</h3>
-                  <ul className={styles.nodeList}>
-                    {selectedNode.neighbors.map((neighbor) => (
-                      <li
-                        key={neighbor.id}
-                        onClick={() => {
-                          setSelectedNode(neighbor);
-                          fgRef.current.centerAt(neighbor.x, neighbor.y, 1000);
-                        }}
-                      >
-                        {neighbor.name} ({neighbor.type})
-                      </li>
-                    ))}
-                  </ul>
+            </button>
+          </div>
+          <div className={styles.nodeDetails}>
+            {selectedNode.type === 'user' && (
+              <>
+                <button className={styles.pdfButton} onClick={() => window.location.href = `/profile/${selectedNode.id}`}>View Profile</button>
+                <div className={styles.infoLabel}>
+                  <span className={styles.labelTitle}>User Type:</span>
+                  <p>Silo Member and {selectedNode.user_type}</p>
                 </div>
-              )}
-            </div>
-          ) : (
-            <div>
-              <h2>{myUsername}</h2>
-              <p>Email: {myEmail}</p>
-              <p>User Type: {myUserType}</p>
-              <p>
-                Skills: {mySkills && mySkills.length > 0 ? mySkills.join(', ') : 'N/A'}
-              </p>
-              <p>
-                Interests:{' '}
-                {myInterests && myInterests.length > 0 ? myInterests.join(', ') : 'N/A'}
-              </p>
-            </div>
-          )}
+                <div className={styles.infoLabel}>
+                  <span className={styles.labelTitle}>Skills:</span>
+                  <p>{selectedNode.skills?.length > 0 ? selectedNode.skills.join(', ') : 'N/A'}</p>
+                </div>
+                <div className={styles.infoLabel}>
+                  <span className={styles.labelTitle}>Interests:</span>
+                  <p>{selectedNode.interests?.length > 0 ? selectedNode.interests.join(', ') : 'N/A'}</p>
+                </div>
+              </>
+            )}
+            {selectedNode.type === 'project' && (
+              <>
+                <button className={styles.pdfButton} onClick={() => window.location.href = `/profile/${selectedNode.createdById}`}>View Project</button>
+                <div className={styles.infoLabel}>
+                  <span className={styles.labelTitle}>Created By:</span>
+                  <p>{selectedNode.createdBy}</p>
+                </div>
+                <div className={styles.infoLabel}>
+                  <span className={styles.labelTitle}>Description:</span>
+                  <p>{selectedNode.description}</p>
+                </div>
+                <div className={styles.infoLabel}>
+                  <span className={styles.labelTitle}>Tags:</span>
+                  <p>{selectedNode.tags?.length > 0 ? selectedNode.tags.join(', ') : 'N/A'}</p>
+                </div>
+              </>
+            )}
+            {selectedNode.type === 'research' && (
+              <>
+                <button className={styles.pdfButton} onClick={() => window.location.href = `/profile/${selectedNode.createdById}`}>View Research</button> 
+                <div className={styles.infoLabel}>
+                  <span className={styles.labelTitle}>Paper:</span>
+                  <p>Arxiv Research Paper</p>
+                </div>
+                <div className={styles.infoLabel}>
+                  <span className={styles.labelTitle}>Authors:</span>
+                  <p>{selectedNode.authors}</p>
+                </div>
+                <div className={styles.infoLabel}>
+                  <span className={styles.labelTitle}>Abstract:</span>
+                  <p>{selectedNode.abstract}</p>
+                </div>
+              </>
+            )}
+            {selectedNode.neighbors && selectedNode.neighbors.length > 0 && (
+              <div className={styles.connectedNodes}>
+                <h3>Connected Nodes:</h3>
+                <ul className={styles.nodeList}>
+                  {selectedNode.neighbors.map((neighbor) => (
+                    <li key={neighbor.id} onClick={() => {
+                      setSelectedNode(neighbor);
+                      fgRef.current.centerAt(neighbor.x, neighbor.y, 1000);
+                    }}>
+                      {neighbor.name} ({neighbor.type})
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      ) : (
+        <div>
+          <h2>{myUsername}</h2>
+          <div className={styles.infoLabel}><span className={styles.labelTitle}>Email:</span> <p>{myEmail}</p></div>
+          <div className={styles.infoLabel}><span className={styles.labelTitle}>User Type:</span> <p>{myUserType}</p></div>
+          <div className={styles.infoLabel}><span className={styles.labelTitle}>Skills:</span> <p>{mySkills?.length > 0 ? mySkills.join(', ') : 'N/A'}</p></div>
+          <div className={styles.infoLabel}><span className={styles.labelTitle}>Interests:</span> <p>{myInterests?.length > 0 ? myInterests.join(', ') : 'N/A'}</p></div>
+        </div>
+      )}
+    </div>
+  </div>
+
     </div>
   );
 };
