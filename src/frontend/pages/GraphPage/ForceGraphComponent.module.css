@@ -242,7 +242,7 @@
 
 .sidebarToggleButton {
   position: absolute;
-  top: 1rem;
+  top: 6rem;
   right: 1rem;
   z-index: 3;
   background: rgba(30, 30, 30, 0.8);
