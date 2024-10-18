@@ -45,7 +45,7 @@ const JobsPage = () => {
           _id: String(job._id || ''),
           company: String(job.company || ''),
           location: String(job.location || ''),
-          job_title: String(job.title || ''),
+          job_title: String(job.job_title || ''),
           description: String(job.description || ''),
           final_url: String(job.url || ''),
         }));
@@ -93,7 +93,6 @@ const JobsPage = () => {
   const filterJobs = (jobList) => {
     return jobList.filter(job => {
       const jobText = `${job.job_title} ${job.description}`.toLowerCase();
-      console.log('jobText:', job.job_title);
       const matchesSearch = jobText.includes(searchTerm.toLowerCase());
       const matchesLocation = !filters.location || job.location.toLowerCase().includes(filters.location.toLowerCase());
       

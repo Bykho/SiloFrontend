@@ -949,10 +949,10 @@ const ForceGraphComponent = () => {
 <div className={styles.header}>
   <h1 className={styles.headerTitle}>Knowledge Graph</h1>
   <p className={styles.headerDescription}>
-    Connections between your work and others.
+    Click a node to explore deeper.
   </p>
   <p className={styles.headerDescription}>
-    Click, drag, and zoom to explore.
+    Interact by dragging,  zooming, and clicking.
   </p>
 </div>
   {/* Sidebar */}
