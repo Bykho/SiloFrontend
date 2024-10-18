@@ -25,7 +25,9 @@ const PlayerRatingSpiderweb = ({ playerData, userData }) => {
 
   //build out below
   const suggestions = [
-    "Add more projects to increase your score!",
+    "Add more projects to your portfolio increase your score!",
+    "Add more details and media to your projects.",
+    "Add more quantitative impacts to your projects.",
   ];
 
   useEffect(() => {
@@ -126,7 +128,7 @@ const PlayerRatingSpiderweb = ({ playerData, userData }) => {
   return (
     <div className={styles.container}>
       <div className={styles.leftColumn}>
-        <h2 className={styles.title}>User Rating</h2>
+        <h2 className={styles.title}>Engineering Skill Breakdown</h2>
         <ResponsiveContainer width="100%" height="100%">
           <RadarChart cx="50%" cy="50%" outerRadius="80%" data={data}>
             <PolarGrid stroke="#4a5568" />
@@ -145,7 +147,7 @@ const PlayerRatingSpiderweb = ({ playerData, userData }) => {
         <pre>{JSON.stringify(vsscoreData, null, 2)}</pre> */}
       </div>
       <div className={styles.rightColumn}>
-        <h2 className={styles.title}>User Rating Breakdown</h2>
+        <h2 className={styles.title}>Rating Criteria</h2>
         <div className={styles.statSection}>
           <h3 className={styles.subTitle}>Score Breakdown</h3>
           <div className={styles.scoreTable}>
