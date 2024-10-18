@@ -384,7 +384,7 @@ const ForceGraphComponent = () => {
               description: project.projectDescription,
               type: 'project',
               createdBy: project.createdBy,
-              createdById: project.user_id,
+              createdById: project.createdById,
               tags: project.tags || [],
               depth: 2,
               childrenFetched: false,
