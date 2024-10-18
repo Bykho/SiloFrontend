@@ -93,6 +93,7 @@ const JobsPage = () => {
   const filterJobs = (jobList) => {
     return jobList.filter(job => {
       const jobText = `${job.job_title} ${job.description}`.toLowerCase();
+      console.log('jobText:', job.job_title);
       const matchesSearch = jobText.includes(searchTerm.toLowerCase());
       const matchesLocation = !filters.location || job.location.toLowerCase().includes(filters.location.toLowerCase());
       
@@ -125,7 +126,7 @@ const JobsPage = () => {
     <div className={styles.container}>
       <div className={styles.headerPaper}>
       <h1 className={styles.header}>Job Suggestions</h1>
-      <h2 className={styles.subheader}>We pull select jobs from YC, LinkedIn, Indeed, Handshake and more! Keep your profile and projects updated for smarter suggestions.</h2>
+      <h2 className={styles.subheader}>We pull select jobs from US startups. Build out your portfolio projects for smarter suggestions.</h2>
         <div className={styles.searchContainer}>
           <div className={styles.searchInputWrapper}>
             <FaSearch className={styles.searchIcon} />

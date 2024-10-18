@@ -8,7 +8,7 @@
 }
 
 .headerPaper {
-  background-color: #292929 !important;
+  background-color: #202020 !important;
   padding: 24px;
   margin-bottom: 30px;
   border-radius: 15px !important;
@@ -67,7 +67,7 @@
 .searchInputWrapper {
   display: flex;
   align-items: center;
-  background-color: #3f3f3f;
+  background-color: #1e1e1e;
   border: 1px solid #4fc2f775;
   border-radius: 12px;
   padding: 8px 16px;
@@ -186,7 +186,7 @@
   align-items: center;
   margin-bottom: 5px;
   margin-top: 5px;
-  color:#2fb5f4;
+  color:#1988dd;
   text-shadow: 0 0 10px rgba(122, 182, 207, 0.516);
   position: relative;
   overflow: hidden;
