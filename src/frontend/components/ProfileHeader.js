@@ -1,22 +1,18 @@
-
-
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ProfileImage from '../components/ProfileImage';
 import styles from './profileHeader.module.css';
-import { FaGithub, FaGlobe, FaLink, FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { FaGithub, FaGlobe, FaLink, FaChevronDown, FaChevronUp, FaWindowClose } from 'react-icons/fa';
 import { IoMdMail } from "react-icons/io";
 import PlayerRatingSpiderweb from './UserSpiderPlot';
-import { FaWindowClose } from 'react-icons/fa';
 import { TbAnalyze } from "react-icons/tb";
 import { IoDocument } from "react-icons/io5";
-import { Share } from 'lucide-react';
-import config from '.././config'; // Make sure to import the config
-import { useUser } from '../contexts/UserContext'; // Add this import
+import { Share, Edit2 } from 'lucide-react';
+import config from '../config';
+import { useUser } from '../contexts/UserContext';
+import InfoEditor from '../pages/OLDStudentProfileEditorPage/StudentProfileEditor'; // Adjust the import path
 
-
-
-const ProfileHeader = ({ userData, loading, error, onShareProfile }) => {
+const ProfileHeader = ({ userData, loading, error, onShareProfile, setUserData, isOwnProfile = true }) => {
   const navigate = useNavigate();
   const [showFullBio, setShowFullBio] = useState(false);
   const [bioTruncated, setBioTruncated] = useState(false);
@@ -28,18 +24,15 @@ const ProfileHeader = ({ userData, loading, error, onShareProfile }) => {
   const location = useLocation();
   const isProfilePage = location.pathname.includes('/profile/');
   const [showPortfolioOptions, setShowPortfolioOptions] = useState(false);
-  const { user } = useUser(); // Import useUser from your UserContext
+  const { user } = useUser();
+  const [showEditor, setShowEditor] = useState(false); // Add this line
 
-  
   const BIO_LENGTH_LIMIT = 300;
   const VISIBLE_TAGS = 2;
 
-  //Build out below.
-  const userSpiderData = userData.scores[userData.scores.length - 1]
+  const userSpiderData = userData.scores[userData.scores.length - 1];
 
   const isValidResume = (resumeData) => {
-    //if (!resumeData || typeof resumeData !== 'string') return false;
-    //return resumeData.startsWith('data:application/pdf;base64,');
     return true;
   };
 
@@ -50,18 +43,19 @@ const ProfileHeader = ({ userData, loading, error, onShareProfile }) => {
   }, [userData]);
 
   const toggleResume = () => {
-    console.log('here is the resume: ', userData.resume)
+    console.log('here is the resume: ', userData.resume);
     setShowResume(!showResume);
-  }
+  };
 
   const toggleRating = () => {
     setShowRating(!showRating);
-  }
-
+  };
 
   const renderRatingModal = () => (
     <div className={styles.modalContent}>
-      <button className={styles.closeButton2} onClick={toggleRating}><FaWindowClose /> </button>
+      <button className={styles.closeButton2} onClick={toggleRating}>
+        <FaWindowClose />
+      </button>
       <PlayerRatingSpiderweb playerData={userSpiderData} userData={userData} />
     </div>
   );
@@ -119,26 +113,24 @@ const ProfileHeader = ({ userData, loading, error, onShareProfile }) => {
       setShowCopiedConfirmation(true);
       setTimeout(() => {
         setShowCopiedConfirmation(false);
-      }, 2000); // Hide the confirmation after 2 seconds
+      }, 2000);
     }).catch((err) => {
       console.error('Failed to copy URL: ', err);
     });
-    console.log('Contact button clicked'); 
-  }; 
+    console.log('Contact button clicked');
+  };
 
   const renderLinkButton = (link, icon) => {
     let fullLink = ensureProtocol(link);
     let label = getLinkLabel(link);
-  
-    // Check if it's a GitHub link
+
     if (icon.type === FaGithub) {
-      // If it's just a username, construct the full GitHub URL
       if (!link.includes('github.com') && !link.includes('http')) {
         fullLink = `https://github.com/${link}`;
-        label = link; // Use the username as the label
+        label = link;
       }
     }
-  
+
     return (
       <a
         href={fullLink}
@@ -154,7 +146,7 @@ const ProfileHeader = ({ userData, loading, error, onShareProfile }) => {
 
   const handleSkillClick = (skill) => {
     navigate('/GenDirectory', { state: { skill: skill } });
-  }
+  };
 
   const ensureProtocol = (url) => {
     if (!/^https?:\/\//i.test(url)) {
@@ -192,6 +184,14 @@ const ProfileHeader = ({ userData, loading, error, onShareProfile }) => {
     }
   };
 
+  const handleEditProfileClick = () => {
+    setShowEditor(true);
+  };
+
+  const handleSaveProfile = () => {
+    setShowEditor(false);
+    onShareProfile(); // Refresh the user data in StudentProfile.js
+  };
 
   if (loading) return <p className={styles.loadingError}>Loading...</p>;
   if (error) return <p className={styles.loadingError}>Error: {error}</p>;
@@ -205,12 +205,21 @@ const ProfileHeader = ({ userData, loading, error, onShareProfile }) => {
           <div className={styles.nameSection}>
             <h1 className={styles.userName}>{userData.username}</h1>
             <div className={styles.userInfoContainer}>
-            <p className={styles.userInfo}>{userData.user_type} | {userData.university} | {userData.major} {userData.grad}</p>
-            <button className={styles.contactMeButton} onClick={handleContactButton}> <IoMdMail /> Contact </button>
-            <button className={styles.linkButton} onClick={toggleResume}> <IoDocument/> Resume</button>
+              <p className={styles.userInfo}>{userData.user_type} | {userData.university} | {userData.major} {userData.grad}</p>
+              <button className={styles.contactMeButton} onClick={handleContactButton}> <IoMdMail /> Contact </button>
+              <button className={styles.linkButton} onClick={toggleResume}> <IoDocument /> Resume</button>
             </div>
           </div>
-          <button className={`${styles.linkButton} ${styles.sharePortfolioButton}`} onClick={handleShareProfile}> <Share /> </button>
+          {isOwnProfile && (
+            <>
+              <button className={`${styles.linkButton} ${styles.editProfileButton}`} onClick={handleEditProfileClick}>
+                <Edit2 />
+              </button>
+              <button className={`${styles.linkButton} ${styles.sharePortfolioButton}`} onClick={handleShareProfile}>
+                <Share />
+              </button>
+            </>
+          )}
         </div>
         <div className={styles.tagsContainer}>
           <div className={styles.linksContainer}>
@@ -235,14 +244,16 @@ const ProfileHeader = ({ userData, loading, error, onShareProfile }) => {
           </p>
           {bioTruncated && (
             <button onClick={toggleBio} className={styles.bioButton}>
-              {showFullBio ? <FaChevronUp /> : <FaChevronDown/>}
+              {showFullBio ? <FaChevronUp /> : <FaChevronDown />}
             </button>
           )}
         </div>
       </div>
       {showResume && (
         <div className={styles.resumeModal}>
-          <button className={styles.closeButton2} onClick={toggleResume}><FaWindowClose /></button>
+          <button className={styles.closeButton2} onClick={toggleResume}>
+            <FaWindowClose />
+          </button>
           {isValidResume(userData.resume) ? (
             <embed src={userData.resume} type="application/pdf" width="80%" height="80%" />
           ) : (
@@ -257,7 +268,18 @@ const ProfileHeader = ({ userData, loading, error, onShareProfile }) => {
           {renderRatingModal()}
         </div>
       )}
+      {showEditor && (
+        <div className={styles.modal}>
+          <div className={styles.modalContent}>
+            <button className={styles.closeButton2} onClick={() => setShowEditor(false)}>
+              <FaWindowClose />
+            </button>
+            <InfoEditor initLocalData={userData} setUserData={setUserData} onSave={handleSaveProfile} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
+
 export default ProfileHeader;

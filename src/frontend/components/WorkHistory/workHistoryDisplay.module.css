@@ -42,3 +42,8 @@
 .saveButton:active {
   background-color: #2c6eb3;
 }
+
+.container {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}

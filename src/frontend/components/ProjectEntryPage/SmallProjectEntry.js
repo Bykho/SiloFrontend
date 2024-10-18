@@ -14,6 +14,7 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/atom-one-dark.css';
 import { SiStyleshare } from 'react-icons/si';
+import VideoPreview from '../VideoPreview';
 
 const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -28,6 +29,7 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
   const imageRef = useRef(null);
   const [showPopup, setShowPopup] = useState(false);
   const [localUpvotes, setLocalUpvotes] = useState(userUpvotes);
+  const hasDescription = localProject.projectDescription && localProject.projectDescription.trim() !== '';
   const VISIBLE_TAGS = 3;
 
 
@@ -47,9 +49,6 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
     setLocalProject(project);
   }, [project]);
 
-  //useEffect(() => {
-  //  console.log('Here is localProject: ', localProject)
-  //}, [])
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -73,7 +72,6 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
   }, [isEditing]);
 
   useEffect(() => {
-    // Highlight all code elements when the component mounts or updates
     document.querySelectorAll('pre code').forEach((block) => {
       hljs.highlightElement(block);
     });
@@ -190,7 +188,8 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
     let imgSrc = null;
     let codeContent = null;
     let codeLanguage = 'plaintext';
-
+    let videoSrc = null;
+  
     for (let layer of localProject.layers) {
       for (let cell of layer) {
         if (cell.type === 'image' && !imgSrc) {
@@ -201,18 +200,23 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
           codeContent = cell.value;
           codeLanguage = cell.language || 'plaintext';
         }
+        if (cell.type === 'video' && !videoSrc) {
+          videoSrc = cell.value;
+          break;
+        }
       }
-      if (imgSrc || codeContent) break;
+      if (imgSrc || codeContent || videoSrc) break;
     }
-
-    if (!imgSrc && !codeContent) {
+  
+    if (!imgSrc && !codeContent && !videoSrc) {
       return null;
     }
-
+  
     return (
       <div className={styles.preview}>
         {imgSrc && <img ref={imageRef} src={imgSrc} alt="Project Preview" className={styles.previewImage} />}
-        {!imgSrc && codeContent && (
+        {!imgSrc && videoSrc && <VideoPreview src={videoSrc} />}
+        {!imgSrc && !videoSrc && codeContent && (
           <div className={styles.codeContainer}>
             <pre className={styles.codePreview}>
               <code className={`language-${codeLanguage}`}>
@@ -266,16 +270,30 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
         </div>
       </div>
       <div className={styles.divider} />
-      <div className={`${styles.descAndPreviewContainer} ${!renderContentPreview() ? styles.fullWidthDesc : ''}`} onClick={togglePopup}>
-        <div className={styles.descContainer}>
-          {renderDescription()}
-        </div>
-        {renderContentPreview() && (
-          <div className={styles.previewContainer}>
-            {renderContentPreview()}
-          </div>
+      <div
+        className={`${styles.descAndPreviewContainer} ${!hasDescription ? styles.fullWidthPreview : ''}`}
+        onClick={togglePopup}
+      >
+        {hasDescription ? (
+          <>
+            <div className={styles.descContainer}>
+              {renderDescription()}
+            </div>
+            {renderContentPreview() && (
+              <div className={styles.previewContainer}>
+                {renderContentPreview()}
+              </div>
+            )}
+          </>
+        ) : (
+          renderContentPreview() && (
+            <div className={styles.descContainer}>
+              {renderContentPreview()}
+            </div>
+          )
         )}
       </div>
+
       {showPopup && (
         <div className={styles.popupOverlay}>
           <div className={styles.popupContent}>

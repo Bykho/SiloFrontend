@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import AddBlocPortfolio from '../AddBlocPortfolio';
 import AddProject from '../AddProjectComponent/AddProject';
 import styles from './layerDisplay.module.css';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/atom-one-dark.css';
+import ReactPlayer from 'react-player';
 
 const LayerDisplay = ({ layers, isEditing, toggleEdit, updateLayer, updateProjectDetails, initialProjectData }) => {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -34,8 +34,6 @@ const LayerDisplay = ({ layers, isEditing, toggleEdit, updateLayer, updateProjec
   };
 
   const handleSave = (updatedLayers, updatedProjectDetails) => {
-    console.log('Here is the updatedLayers in handleSave, ', updatedLayers);
-    console.log('Here is the updatedProjectDetails in handleSave, ', updatedProjectDetails);
     setShowEditor(false);
     toggleEdit();
     if (updatedLayers) {
@@ -53,7 +51,7 @@ const LayerDisplay = ({ layers, isEditing, toggleEdit, updateLayer, updateProjec
 
   const renderCode = (code, language, index) => {
     const lines = code.split('\n');
-    
+
     const handleScroll = (e) => {
       const lineNumbers = e.target.querySelector(`.${styles.lineNumbers}`);
       if (lineNumbers) {
@@ -81,43 +79,22 @@ const LayerDisplay = ({ layers, isEditing, toggleEdit, updateLayer, updateProjec
     );
   };
 
-  const getYouTubeEmbedUrl = (url) => {
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-    const match = url.match(regExp);
-    if (match && match[2].length === 11) {
-      return `https://www.youtube.com/embed/${match[2]}`;
-    }
-    return null;
-  };
-
   const renderVideo = (videoSrc) => {
-    const youtubeEmbedUrl = getYouTubeEmbedUrl(videoSrc);
-    
-    if (youtubeEmbedUrl) {
-      return (
-        <iframe
-          width="100%"
-          height="315"
-          src={youtubeEmbedUrl}
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-          className={styles.video}
-        ></iframe>
-      );
-    } else {
-      return (
-        <video controls className={styles.video}>
-          <source src={videoSrc} type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-      );
-    }
+    // Use ReactPlayer to handle videos from multiple platforms
+    return (
+      <ReactPlayer
+        url={videoSrc}
+        controls
+        width="100%"
+        height="315px"
+        className={styles.video}
+      />
+    );
   };
 
   useEffect(() => {
-    console.log("here is the layer object: ", layers)
-  }, [])
+    console.log("here is the layer object: ", layers);
+  }, []);
 
   return (
     <div className={styles.container}>
@@ -127,8 +104,8 @@ const LayerDisplay = ({ layers, isEditing, toggleEdit, updateLayer, updateProjec
             <div key={columnIndex} className={styles.column}>
               {column.type === 'text' && (
                 <div className={styles.textContainer}>
-                <div className={styles.textHeader}>{column.textHeader}</div>
-                <div className={styles.text}>{column.value}</div>
+                  <div className={styles.textHeader}>{column.textHeader}</div>
+                  <div className={styles.text}>{column.value}</div>
                 </div>
               )}
               {column.type === 'image' && (

@@ -31,11 +31,15 @@
     color: #1e1e1e;
     text-decoration: none;
   }
+  
   .buttonContainer{ 
-    margin-left: 5px; 
-    display: inline-flex; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
     gap: 10px;
-    width: 99%; 
+    width: calc(99% - 80px);
+    margin-right: auto;
+    margin-left: auto;
   }
 
   .copyConfirmation {
@@ -65,35 +69,31 @@
     font-size: 15px;
   }
   .bigButton {
-    display: inline-block;
-    font-family: 'inconsolata';
-    font-weight: bolder; 
-    margin-right: 20px; /* Adjust margin to make buttons less wide */
-    margin-bottom: 10px;
-    margin-top: 10px; 
-    background-color: rgb(29, 29, 29); 
-    color: #D9D9D9;
-    cursor: pointer;
-    height: 60px;
-    width: calc(100% / 2 - 30px); /* Adjusted calculation */
-    font-size: 18px;
-    margin-left: 20px; /* Adjust margin to make buttons less wide */
-    transition: background-color 0.3s ease, color 0.3s ease;
-    transition: box-shadow 0.3s ease, color 0.3s ease;
-    display: inline-flex;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
-    border: none; 
-    border-radius: 10px; 
-    gap: 20px; 
-    border-left: 2px solid rgb(125, 125, 125);
-    border-right: 2px solid rgb(125, 125, 125);
+    background: linear-gradient(to left, #e4e4e4, #d6d6d6);
+    padding: 10px 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    width: calc(100% - 80px); /* Reduced width by increasing subtraction */
+    max-width: 600px; /* Added max-width for larger screens */
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+    font-family: 'inconsolata';
+    font-weight: bolder;
+    font-size: 18px;
+    color: #1e1e1e;
+    border: none;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
   }
   
   .bigButton:hover {
-    background: linear-gradient(to bottom, #2c2c2c, #2e2e2e);
-    color: white;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.344);
+    background: linear-gradient(to left, #e8e8e8, #dedede);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   }
   
   .bigButton:focus {
@@ -101,48 +101,42 @@
   }
   
   .bigButton:active {
-    transform: translateY(2px);
+    transform: translateY(1px);
   }
 
   .bigButtonAdd {
-    display: inline-block;
-    font-family: 'inconsolata';
-    font-weight: bolder; 
-    margin-right: 20px; /* Adjust margin to make buttons less wide */
-    margin-bottom: 10px;
-    margin-top: 10px; 
-    background-color: rgb(29,29,29); 
-    color: #D9D9D9;
-    cursor: pointer;
-    height: 60px;
-    width: calc(100% / 2 - 30px); /* Adjusted calculation */
-    font-size: 18px;
-    margin-left: 20px; /* Adjust margin to make buttons less wide */
-    transition: background-color 0.3s ease, color 0.3s ease;
-    transition: box-shadow 0.3s ease, color 0.3s ease;
-    display: inline-flex;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
-    gap: 20px; 
-    border: none; 
-    border-radius: 10px; 
-    border-left: 2px solid rgb(125, 125, 125);
-    border-right: 2px solid rgb(125, 125, 125);
+    background: linear-gradient(to left, #e4e4e4, #d6d6d6);
+    padding: 10px 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    width: calc(100% - 40px);
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+    font-family: 'inconsolata';
+    font-weight: bolder;
+    font-size: 18px;
+    color: #1e1e1e;
+    border: none;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
   }
 
   .bigButtonAdd:hover {
-    background: linear-gradient(to bottom, #2c2c2c, #2e2e2e);
-    color: white;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.344);
-
+    background: linear-gradient(to left, #e8e8e8, #dedede);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   }
   
   .bigButtonAdd:focus {
     outline: none;
   }
   
-  .bigButton:active {
-    transform: translateY(2px);
+  .bigButtonAdd:active {
+    transform: translateY(1px);
   }
 
   .button:hover {
@@ -276,3 +270,34 @@
     margin: 20px 0;
   }
   
+  .sectionBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(to right, #f0f8ff, #e6f3ff);
+    padding: 15px 25px;
+    margin-top: 25px;
+    cursor: pointer;
+    border-radius: 10px;
+    width: calc(100% - 50px);
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+
+  .sectionBar h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  .sectionBar:hover {
+    background: linear-gradient(to right, #e6f3ff, #d9ecff);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+  }

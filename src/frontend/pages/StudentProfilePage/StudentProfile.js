@@ -16,6 +16,7 @@ import config from '../../config';
 import { FaWindowClose, FaPlusSquare, FaRegEdit, FaRegShareSquare, FaGithub } from 'react-icons/fa';
 import { IoSparkles } from "react-icons/io5";
 import { Plus, Edit2, Share, X, Eye, Briefcase } from 'lucide-react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import { LuGithub } from "react-icons/lu";
 import PublicProfileHeader from "../PublicPortfolioPage/PublicProfileHeader";
 
@@ -40,8 +41,8 @@ function StudentProfile() {
   const [showCopiedConfirmation, setShowCopiedConfirmation] = useState(false);
   const [portfolioKey, setPortfolioKey] = useState(0);
   const [showBuildPortfolioOptions, setShowBuildPortfolioOptions] = useState(false);
-  const [showWorkHistory, setShowWorkHistory] = useState(false);
-  const [showSeePortfolio, setShowSeePortfolio] = useState(false);
+  const [showPortfolio, setShowPortfolio] = useState(true);
+  const [showWorkHistory, setShowWorkHistory] = useState(true);
 
   useEffect(() => {
     console.log('here is repoURL: ', repoURL)
@@ -396,41 +397,53 @@ function StudentProfile() {
     setViewMode("Portfolio");
   };
 
+  const togglePortfolio = () => {
+    setShowPortfolio(!showPortfolio);
+  };
+
+  const toggleWorkHistory = () => {
+    setShowWorkHistory(!showWorkHistory);
+  };
+
   return (
-    <div className={styles.studentProfileContainer} style={{ maxWidth: '1200px', margin: '0 auto' }}>
+    <div className={styles.studentProfileContainer} style={{ maxWidth: '1200px', margin: '0 auto', marginBottom: '50px' }}>
       <ProfileHeader
         userData={userData}
         loading={loading}
         error={error}
-        onShareProfile={fetchUserData} 
+        onShareProfile={fetchUserData}
+        setUserData={setUserData}
       />
-      <div className={styles.buttonContainer}>
-        {!showBuildPortfolioOptions ? (
-          <>
-            <button className={styles.bigButton} onClick={handleBuildPortfolioClick}><Plus /> Build Portfolio</button>
-            <button className={styles.bigButton} onClick={handleSeePortfolioClick}><Eye /> See Portfolio</button>
-            <button className={styles.bigButton} onClick={handleWorkHistoryClick}><Briefcase /> Work History</button>
-            <button className={styles.bigButton} onClick={handleEditProfileClick}><Edit2 /> Edit Profile</button>
-          </>
-        ) : (
-          <>
-            <button className={styles.bigButton} onClick={() => setShowBuildPortfolioOptions(false)}><X /> Cancel</button>
-            <button className={styles.bigButtonAdd} onClick={handleBuildFromScratchClick}><Plus /> Add Project</button>
-            <button className={styles.bigButton} onClick={handleCheckGithubClick}><LuGithub /> Import GitHub</button>
-          </>
-        )}
-      </div>
       <div className={styles.contentContainer}>
         {loading ? (
-          <p> Loading ... </p>
+          <p>Loading...</p>
         ) : error ? (
-          <p> Error: {error}</p>
+          <p>Error: {error}</p>
         ) : userData && (
-          viewMode === "Portfolio" ? (
-            <PortfolioDisplay user={userData} key={`portfolio-${portfolioKey}-${userData.portfolio.length}`} />
-          ) : (
-            <WorkHistoryDisplay user={userData} />  // You'll need to create this component
-          )
+          <>
+            <div className={styles.sectionBar} onClick={togglePortfolio}>
+              <h2>Portfolio</h2>
+              {showPortfolio ? <ChevronDown size={24} /> : <ChevronUp size={24} />}
+            </div>
+            {showPortfolio && (
+              <>
+                <div className={styles.buttonContainer}>
+                  <>
+                    <button className={styles.bigButtonAdd} onClick={handleBuildFromScratchClick}><Plus size={20} /> Add Project</button>
+                    <button className={styles.bigButton} onClick={handleCheckGithubClick}><LuGithub size={20}/> Import GitHub</button>
+                  </>
+                </div>
+                <PortfolioDisplay user={userData} key={`portfolio-${portfolioKey}-${userData.portfolio.length}`} />
+              </>
+            )}
+            <div className={styles.sectionBar} onClick={toggleWorkHistory}>
+              <h2>Work History</h2>
+              {showWorkHistory ? <ChevronDown size={24} /> : <ChevronUp size={24} />}
+            </div>
+            {showWorkHistory && (
+              <WorkHistoryDisplay user={userData} />
+            )}
+          </>
         )}
       </div>
       {showEditor && (

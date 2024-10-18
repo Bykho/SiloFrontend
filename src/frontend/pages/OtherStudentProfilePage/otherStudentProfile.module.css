@@ -236,3 +236,28 @@
   justify-content: center;
   margin-bottom: 20px;
 }
+
+
+.sectionBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(to left, #e4e4e4, #d6d6d6);
+  padding: 10px 20px;
+  margin-top: 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  padding-left: 20px;
+  padding-right: 20px;
+  width: calc(100% - 40px); /* Make the element 40px thinner */
+  margin-left: auto; /* Center the element */
+  margin-right: auto; /* Center the element */
+  box-sizing: border-box;
+}
+.sectionBar h2 {
+  margin: 0;
+}
+
+.sectionBar:hover {
+  background: linear-gradient(to left, #e8e8e8, #dedede);
+}

@@ -1,6 +1,3 @@
-
-
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import PortfolioDisplay from '../../components/PortfolioDisplay';
@@ -9,7 +6,7 @@ import styles from './otherStudentProfile.module.css';
 import { useUser } from '../../contexts/UserContext';
 import ProfileHeader from '../../components/ProfileHeader';
 import config from '../../config';
-import { Briefcase, Eye } from 'react-feather';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 
 function OtherStudentProfile() {
   const { id } = useParams();
@@ -18,7 +15,8 @@ function OtherStudentProfile() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const { user } = useUser();
-  const [viewMode, setViewMode] = useState("Portfolio");
+  const [showPortfolio, setShowPortfolio] = useState(true);
+  const [showWorkHistory, setShowWorkHistory] = useState(true);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -30,7 +28,6 @@ function OtherStudentProfile() {
             'Authorization': `Bearer ${token}`,
           },
         });        
-        console.log('this is the useeffect userdata response: ', response)
         if (!response.ok) {
           throw new Error('Failed to fetch user data');
         }
@@ -38,7 +35,6 @@ function OtherStudentProfile() {
         const data = await response.json();
         setUserData(data);
         setLoading(false);
-        console.log('here is data:', data)
       } catch (error) {
         console.error('Error fetching user data:', error);
         setLoading(false);
@@ -46,14 +42,18 @@ function OtherStudentProfile() {
     };
 
     fetchUserData();
-  }, []);
+  }, [id]);
 
   if (!user || !userData) {
-    return <p> Loading ... </p>;
+    return <p>Loading...</p>;
   }
 
-  const toggleViewMode = () => {
-    setViewMode(prevMode => prevMode === "Portfolio" ? "Work" : "Portfolio");
+  const togglePortfolio = () => {
+    setShowPortfolio(!showPortfolio);
+  };
+
+  const toggleWorkHistory = () => {
+    setShowWorkHistory(!showWorkHistory);
   };
 
   return (
@@ -62,23 +62,27 @@ function OtherStudentProfile() {
         userData={userData}
         loading={loading}
         error={error}
+        isOwnProfile={false}
       />
-      <div className={styles.buttonContainer}>
-        <button className={styles.bigButton} onClick={toggleViewMode}>
-          {viewMode === "Portfolio" ? <><Briefcase /> Work History</> : <><Eye /> See Portfolio</>}
-        </button>
-      </div>
-      <div>
+      <div className={styles.contentContainer}>
         {loading ? (
-          <p> Loading ... </p>
+          <p>Loading...</p>
         ) : error ? (
-          <p> Error: {error}</p>
+          <p>Error: {error}</p>
         ) : userData && (
-          viewMode === "Portfolio" ? (
-            <PortfolioDisplay user={userData} />
-          ) : (
-            <WorkHistoryDisplay user={userData} />
-          )
+          <>
+            <div className={styles.sectionBar} onClick={togglePortfolio}>
+              <h2>Portfolio</h2>
+              {showPortfolio ? <ChevronDown size={24} /> : <ChevronUp size={24} />}
+            </div>
+            {showPortfolio && <PortfolioDisplay user={userData} />}
+            
+            <div className={styles.sectionBar} onClick={toggleWorkHistory}>
+              <h2>Work History</h2>
+              {showWorkHistory ? <ChevronDown size={24} /> : <ChevronUp size={24} />}
+            </div>
+            {showWorkHistory && <WorkHistoryDisplay user={userData} />}
+          </>
         )}
       </div>
     </div>
@@ -86,6 +90,4 @@ function OtherStudentProfile() {
 }
 
 export default OtherStudentProfile;
-
-
 
