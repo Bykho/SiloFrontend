@@ -294,7 +294,7 @@
 }
 
 .commentsSection {
-  background-color: #2a2a2a;
+  background-color: #242424;
   padding: 10px;
   border-radius: 10px;
   margin-top: 0px;
@@ -360,11 +360,12 @@
   display: inline-flex;
   flex-direction: row;
   gap: 10px;
-  margin-top: 20px;
+  margin-top: 10px;
   width: 100%;
   overflow: hidden;
   box-sizing: border-box;
   align-items: center;
+  justify-content: center;
 }
 
 .commentInput {
@@ -373,7 +374,7 @@
   color: white; 
   border: 1px solid #7c7c7ca1;
   border-radius: 8px;
-  width: 85%;
+  width: 90%;
   resize: vertical;
   box-sizing: border-box;
   max-width: 100%;
@@ -395,6 +396,7 @@
   border-radius: 5px;
   align-self: flex-end;
   transition: background-color 0.3s ease;
+  margin-bottom: 2px;
 }
 
 .addCommentButton:hover {
