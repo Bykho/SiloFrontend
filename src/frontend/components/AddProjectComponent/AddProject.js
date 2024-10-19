@@ -317,7 +317,7 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, repo_url = null
       )}
       <div className={styles.container}>
         <div className={styles.header}>
-          <h1 className={styles.title}> Project Builder  <PiPushPinBold /></h1>
+          <h1 className={styles.title}> Project Builder </h1>
           <AutofillProjectFromPDF
             setProjectName={setProjectName}
             setProjectDescription={setProjectDescription}
@@ -346,7 +346,7 @@ const AddProject = ({ initialRows = [], initialProjectData = {}, repo_url = null
           />
         </div>
         <div className={styles.toolbar}>
-          <p className={styles.toolbarHeader}> Add Content: </p>
+          <p className={styles.toolbarHeader}> Add Content </p>
           <button onClick={() => addCell('text')} className={styles.toolbarButton}>
             <FaFont /> Text
           </button>

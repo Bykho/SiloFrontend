@@ -1,4 +1,5 @@
 
+
 * {
     font-family: inconsolata; 
   }
@@ -108,7 +109,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: linear-gradient(to left, #232323, #303030);
+    background: linear-gradient(to left, #232323, #191919);
     padding: 10px 20px;
     margin-top: 10px;
     margin-bottom: 10px;
@@ -121,14 +122,22 @@
     font-family: 'inconsolata';
     font-weight: bolder;
     font-size: 18px;
-    color: #e0e0e0;
+    color: #ececec;
     border: none; 
     transition: background 0.3s ease, box-shadow 0.3s ease;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.315);
+    border-bottom: rgba(1, 98, 226, 0.388) .5px solid;
+  }
+
+  .bigButtonAdd > * {
+    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.5));
   }
 
   .bigButtonAdd:hover {
-    background: linear-gradient(to left, #3a3a3a, #4a4a4a);
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    background: linear-gradient(to left, #171717, #1f1f1f);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.204);
+    color: #ffffff;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.517);
   }
 
   .bigButtonAdd:focus {
@@ -199,7 +208,7 @@
   }
   
   .modalContent {
-    background-color: #1e1e1e;
+    background-color: #131313;
     padding: 20px;
     border-radius: 8px;
     position: relative;

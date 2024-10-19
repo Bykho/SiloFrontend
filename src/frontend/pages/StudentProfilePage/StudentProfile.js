@@ -380,28 +380,14 @@ function StudentProfile() {
           <p>Error: {error}</p>
         ) : userData && (
           <>
-            <div className={styles.sectionBar} onClick={togglePortfolio}>
-              <h2>Portfolio</h2>
-              {showPortfolio ? <ChevronDown size={24} /> : <ChevronUp size={24} />}
-            </div>
-            {showPortfolio && (
+            <div className={styles.buttonContainer}>
               <>
-                <div className={styles.buttonContainer}>
-                  <>
-                    <button className={styles.bigButtonAdd} onClick={handleBuildFromScratchClick}><Plus size={20} /> Add Project</button>
-                    <button className={styles.bigButtonAdd} onClick={handleCheckGithubClick}><LuGithub size={20}/> Add from GitHub</button>
-                  </>
-                </div>
-                <PortfolioDisplay user={userData} key={`portfolio-${portfolioKey}-${userData.portfolio.length}`} />
+                <button className={styles.bigButtonAdd} onClick={handleBuildFromScratchClick}><Plus size={20} /> Add Project</button>
+                <button className={styles.bigButtonAdd} onClick={handleCheckGithubClick}><LuGithub size={20}/> Add from GitHub</button>
               </>
-            )}
-            <div className={styles.sectionBar} onClick={toggleWorkHistory}>
-              <h2>Work History</h2>
-              {showWorkHistory ? <ChevronDown size={24} /> : <ChevronUp size={24} />}
             </div>
-            {showWorkHistory && (
+              <PortfolioDisplay user={userData} key={`portfolio-${portfolioKey}-${userData.portfolio.length}`} />
               <WorkHistoryDisplay user={userData} />
-            )}
           </>
         )}
       </div>

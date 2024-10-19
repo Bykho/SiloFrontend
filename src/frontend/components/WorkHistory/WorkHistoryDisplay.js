@@ -105,7 +105,7 @@ const WorkHistoryDisplay = ({ user: passedUser }) => {
   }
 
   if (!workHistory || Object.keys(workHistory).length === 0) {
-    return <div className={styles.noHistory}>User needs to add their resume to retrieve work history</div>;
+    return <div></div>;
   }
 
   return (
