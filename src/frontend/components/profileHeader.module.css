@@ -176,7 +176,7 @@
 
 .bioButton {
   position: relative; 
-  top: 1%;
+  top: -20px;
   left: 98%;
   background-color: #282b30;
   background-color: rgba(100, 181, 246, 0.1);
