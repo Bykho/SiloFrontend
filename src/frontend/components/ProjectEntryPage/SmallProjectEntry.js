@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect, useRef } from 'react';
 import { FaComment, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { IoIosExpand } from 'react-icons/io';
@@ -13,10 +11,14 @@ import HandleUpvote from '../wrappers/HandleUpvote';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/atom-one-dark.css';
-import { SiStyleshare } from 'react-icons/si';
 import VideoPreview from '../VideoPreview';
 
-const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes }) => {
+const SmallProjectEntry = ({
+  project,
+  UpvoteButton,
+  userUpvotes,
+  setUserUpvotes,
+}) => {
   const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
   const { user } = useUser();
@@ -29,11 +31,11 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
   const imageRef = useRef(null);
   const [showPopup, setShowPopup] = useState(false);
   const [localUpvotes, setLocalUpvotes] = useState(userUpvotes);
-  const hasDescription = localProject.projectDescription && localProject.projectDescription.trim() !== '';
+  const hasDescription =
+    localProject.projectDescription &&
+    localProject.projectDescription.trim() !== '';
   const VISIBLE_TAGS = 3;
 
-
-  
   const [comments, setComments] = useState(() => {
     try {
       return JSON.parse(JSON.stringify(project.comments));
@@ -49,7 +51,6 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
     setLocalProject(project);
   }, [project]);
 
-
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -58,7 +59,6 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
         }
       }
     };
-
 
     if (isEditing) {
       document.addEventListener('mousedown', handleClickOutside);
@@ -91,16 +91,23 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
   const handleAddComment = async (commentText) => {
     if (commentText.trim() !== '') {
       const token = localStorage.getItem('token');
-      const commentData = { author: user.username, text: commentText, projectId: localProject._id };
+      const commentData = {
+        author: user.username,
+        text: commentText,
+        projectId: localProject._id,
+      };
       try {
-        const response = await fetch(`${config.apiBaseUrl}/handleComment/${user.username}`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(commentData),
-        });
+        const response = await fetch(
+          `${config.apiBaseUrl}/handleComment/${user.username}`,
+          {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(commentData),
+          }
+        );
         const data = await response.json();
         if (response.ok) {
           const updatedComments = data.comments;
@@ -110,7 +117,7 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
             ...prevProject,
             comments: updatedComments,
           }));
-  
+
           // Create notification
           const notificationPayload = {
             user_id: localProject.user_id,
@@ -121,21 +128,28 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
             project_id: localProject._id,
             recipient_id: localProject.user_id,
           };
-          const notificationResponse = await fetch(`${config.apiBaseUrl}/create_notification`, {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(notificationPayload)
-          });
-          if (!notificationResponse.ok) throw new Error('Failed to create notification');
+          const notificationResponse = await fetch(
+            `${config.apiBaseUrl}/create_notification`,
+            {
+              method: 'POST',
+              headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(notificationPayload),
+            }
+          );
+          if (!notificationResponse.ok)
+            throw new Error('Failed to create notification');
           console.log('Notification created successfully');
         } else {
           console.error('Failed to add comment:', data.error);
         }
       } catch (error) {
-        console.error('Error during adding comment or creating notification:', error);
+        console.error(
+          'Error during adding comment or creating notification:',
+          error
+        );
       }
     }
   };
@@ -153,43 +167,59 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
   };
 
   const renderTagsPreview = (tags) => {
-    console.log('Tags:', tags, 'Type:', typeof tags, 'Is array:', Array.isArray(tags));
     if (!tags || tags.length === 0) {
       return null;
-    };
+    }
 
     if (typeof tags === 'string') {
-      tags = tags.split(',').map(tag => tag.trim());
+      tags = tags.split(',').map((tag) => tag.trim());
     }
     if (!Array.isArray(tags) || tags.length === 0) {
       return null;
     }
-    
+
     const previewTags = tags.slice(0, VISIBLE_TAGS);
     const remainingTags = tags.slice(VISIBLE_TAGS);
     return (
       <div className={styles.tagsContainer}>
         {previewTags.map((tag, index) => (
-          <span key={index} className={styles.tag} onClick={() => handleSkillClick(tag)}>
+          <span
+            key={index}
+            className={styles.tag}
+            onClick={() => handleSkillClick(tag)}
+          >
             {tag}
           </span>
         ))}
         {remainingTags.length > 0 && (
           <div className={styles.moreTagsContainer}>
-            <span className={styles.moreButton}>+{remainingTags.length} more</span>
+            <span className={styles.moreButton}>
+              +{remainingTags.length} more
+            </span>
           </div>
         )}
       </div>
     );
   };
 
+  // New function to check for media content
+  const hasMediaContent = () => {
+    for (let layer of localProject.layers) {
+      for (let cell of layer) {
+        if (['image', 'video', 'code'].includes(cell.type)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
 
   const renderContentPreview = () => {
     let imgSrc = null;
     let codeContent = null;
     let codeLanguage = 'plaintext';
     let videoSrc = null;
-  
+
     for (let layer of localProject.layers) {
       for (let cell of layer) {
         if (cell.type === 'image' && !imgSrc) {
@@ -207,21 +237,32 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
       }
       if (imgSrc || codeContent || videoSrc) break;
     }
-  
+
     if (!imgSrc && !codeContent && !videoSrc) {
       return null;
     }
-  
+
     return (
       <div className={styles.preview}>
-        {imgSrc && <img ref={imageRef} src={imgSrc} alt="Project Preview" className={styles.previewImage} />}
+        {imgSrc && (
+          <div className={styles.imageContainer}>
+            <div
+              className={styles.imageBackground}
+              style={{ backgroundImage: `url(${imgSrc})` }}
+            />
+            <img
+              ref={imageRef}
+              src={imgSrc}
+              alt="Project Preview"
+              className={styles.previewImage}
+            />
+          </div>
+        )}
         {!imgSrc && videoSrc && <VideoPreview src={videoSrc} />}
         {!imgSrc && !videoSrc && codeContent && (
           <div className={styles.codeContainer}>
             <pre className={styles.codePreview}>
-              <code className={`language-${codeLanguage}`}>
-                {codeContent}
-              </code>
+              <code className={`language-${codeLanguage}`}>{codeContent}</code>
             </pre>
           </div>
         )}
@@ -246,12 +287,11 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
   };
 
   const renderVisibilityText = () => {
-    // Check if the user ID matches and the localProject visibility is defined
     if (String(user._id) === localProject.user_id) {
-      if (localProject.visibility == false) {
+      if (localProject.visibility === false) {
         return <FaEyeSlash />;
       } else {
-        return "";
+        return '';
       }
     }
     return null;
@@ -262,36 +302,27 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
       <div className={styles.headerContainer}>
         <div className={styles.titleAndUsernameContainer}>
           <span className={styles.visIcon}> {renderVisibilityText()} </span>
-          <h3 className={styles.projectTitle} onClick={togglePopup}>{localProject.projectName}</h3>
-          <span className={styles.byUsername} onClick={navToProfile}>by <span className={styles.username}>{localProject.createdBy}</span></span>
+          <h3 className={styles.projectTitle} onClick={togglePopup}>
+            {localProject.projectName}
+          </h3>
+          <span className={styles.byUsername} onClick={navToProfile}>
+            by <span className={styles.username}>{localProject.createdBy}</span>
+          </span>
         </div>
         <div className={styles.tagsContainer}>
           {renderTagsPreview(localProject.tags)}
         </div>
       </div>
       <div className={styles.divider} />
-      <div
-        className={`${styles.descAndPreviewContainer} ${!hasDescription ? styles.fullWidthPreview : ''}`}
-        onClick={togglePopup}
-      >
-        {hasDescription ? (
-          <>
-            <div className={styles.descContainer}>
-              {renderDescription()}
-            </div>
-            {renderContentPreview() && (
-              <div className={styles.previewContainer}>
-                {renderContentPreview()}
-              </div>
-            )}
-          </>
-        ) : (
-          renderContentPreview() && (
-            <div className={styles.descContainer}>
-              {renderContentPreview()}
-            </div>
-          )
-        )}
+      {/* Updated Preview Section */}
+      <div className={styles.previewSection} onClick={togglePopup}>
+        {hasMediaContent() ? (
+          <div className={styles.previewContainer}>
+            {renderContentPreview()}
+          </div>
+        ) : hasDescription ? (
+          <div className={styles.previewContainer}>{renderDescription()}</div>
+        ) : null}
       </div>
 
       {showPopup && (
@@ -300,19 +331,24 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
             <button className={styles.closeButton} onClick={togglePopup}>
               &times;
             </button>
-            <ProjectEntry project={localProject} passedUser={user} userUpvotes={localUpvotes} setUserUpvotes={setLocalUpvotes} />
+            <ProjectEntry
+              project={localProject}
+              passedUser={user}
+              userUpvotes={localUpvotes}
+              setUserUpvotes={setLocalUpvotes}
+            />
           </div>
         </div>
       )}
       <div className={styles.upvoteAndCommentContainer}>
         <UpvoteButton
-            project={localProject}
-            setProject={setLocalProject}
-            passedUser={localUser}
-            setPassedUser={setLocalUser}
-            userUpvotes={localUpvotes}
-            setUserUpvotes={setLocalUpvotes}
-          />
+          project={localProject}
+          setProject={setLocalProject}
+          passedUser={localUser}
+          setPassedUser={setLocalUser}
+          userUpvotes={localUpvotes}
+          setUserUpvotes={setLocalUpvotes}
+        />
         <div className={styles.commentBox} onClick={toggleExpand}>
           <div className={styles.commentIconContainer}>
             <FaComment className={styles.commentIcon} />
@@ -322,13 +358,10 @@ const SmallProjectEntry = ({ project, UpvoteButton, userUpvotes, setUserUpvotes 
             {isExpanded ? <FaChevronUp /> : <FaChevronDown />}
           </button>
         </div>
-    </div>
-    {renderComments()}
+      </div>
+      {renderComments()}
     </div>
   );
 };
 
 export default HandleUpvote(SmallProjectEntry);
-
-
-
