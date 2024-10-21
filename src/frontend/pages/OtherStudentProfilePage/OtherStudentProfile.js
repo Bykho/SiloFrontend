@@ -71,8 +71,9 @@ function OtherStudentProfile() {
           <p>Error: {error}</p>
         ) : userData && (
           <>
-            <PortfolioDisplay user={userData} />
-            <WorkHistoryDisplay user={userData} />
+
+            {showPortfolio && <PortfolioDisplay user={userData} />}
+            {showWorkHistory && <WorkHistoryDisplay user={userData} />}
           </>
         )}
       </div>
