@@ -138,6 +138,7 @@
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.204);
     color: #ffffff;
     text-shadow: 0 0 8px rgba(255, 255, 255, 0.517);
+    cursor: pointer; 
   }
 
   .bigButtonAdd:focus {
