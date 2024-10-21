@@ -110,7 +110,8 @@ function SignUp() {
           skills: data.summary.skills || [],
           university: data.summary.latestUniversity || '',
           major: data.summary.major || '',
-          grad: data.summary.grad_yr || ''
+          grad: data.summary.grad_yr || '',
+          workhistory: data.summary.workhistory || []
         }));
       } else {
         console.error('Failed to send the resume file to backend');
@@ -214,7 +215,8 @@ function SignUp() {
       interests: trimTrailingCommaSpaces(formData.interests).split(', '),
       skills: trimTrailingCommaSpaces(formData.skills).split(', '),  
       biography: formData.biography,
-      groups: formData.groups
+      groups: formData.groups,
+      workhistory: formData.workhistory
     };
 
     console.log("Here is userData: ", userData);

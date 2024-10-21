@@ -71,17 +71,8 @@ function OtherStudentProfile() {
           <p>Error: {error}</p>
         ) : userData && (
           <>
-            <div className={styles.sectionBar} onClick={togglePortfolio}>
-              <h2>Portfolio</h2>
-              {showPortfolio ? <ChevronDown size={24} /> : <ChevronUp size={24} />}
-            </div>
-            {showPortfolio && <PortfolioDisplay user={userData} />}
-            
-            <div className={styles.sectionBar} onClick={toggleWorkHistory}>
-              <h2>Work History</h2>
-              {showWorkHistory ? <ChevronDown size={24} /> : <ChevronUp size={24} />}
-            </div>
-            {showWorkHistory && <WorkHistoryDisplay user={userData} />}
+            <PortfolioDisplay user={userData} />
+            <WorkHistoryDisplay user={userData} />
           </>
         )}
       </div>
