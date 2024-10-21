@@ -23,8 +23,7 @@
 .headerContainer {
     display: flex;
     flex-direction: column;
-    margin-bottom: 15px;
-    margin-top: 5px;
+    padding: 15px; 
   }
 
 .companyAndDateContainer {
@@ -76,7 +75,6 @@
 }
 
 .descContainer {
-    margin-bottom: 20px;
     min-height: 80px;
     max-height: 250px;
 }
