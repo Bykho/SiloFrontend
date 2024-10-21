@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import ForceGraphComponent from '../../pages/GraphPage/ForceGraphComponent';
 import { useUser } from '../../contexts/UserContext';
 import config from '../../config';
+import styles from './graphPage.module.css';
 
 const GraphPage = () => {
   const [userProjects, setUserProjects] = useState([]);
@@ -51,45 +52,23 @@ const GraphPage = () => {
   }
 
   return (
-    <div className="graph-page" style={{ position: 'relative', width: '100%', height: '100vh', margin: 0, padding: 0 }}>
+    <div className={styles.graphPage}>
       {userProjects && userProjects.length > 0 ? (
         <ForceGraphComponent />
       ) : (
-        <div style={{ 
-          position: 'relative',
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          overflow: 'hidden'
-        }}>
+        <div className={styles.noProjectsContainer}>
           <button 
-            style={{
-              padding: '15px 30px',
-              fontSize: '18px',
-              background: 'linear-gradient(to bottom, #1f1f1f, #131313)',
-              color: 'white',
-              border: 'none',
-              borderRadius: '5px',
-              cursor: 'pointer',
-              zIndex: 2,
-              position: 'relative',
-              transform: 'translateY(-100px)'
-            }}
+            className={styles.navigateButton}
             onClick={handleNavigateToProfile}
           >
             Make A Project To View Network Graph
           </button>
-          <div style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            zIndex: 1,
-          }}>
-            <spline-viewer url="https://prod.spline.design/2R4lYlPvgoU3Dyzv/scene.splinecode" background="rgba(0,0,0,0.3)" style={{ width: '100%', height: '100%' }}></spline-viewer>
+          <div className={styles.splineViewerWrapper}>
+            <spline-viewer 
+              url="https://prod.spline.design/2R4lYlPvgoU3Dyzv/scene.splinecode"
+              background="rgba(0,0,0,0.3)"
+              className={styles.splineViewer}
+            ></spline-viewer>
           </div>
         </div>
       )}
