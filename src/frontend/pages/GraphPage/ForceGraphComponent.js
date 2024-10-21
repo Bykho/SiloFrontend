@@ -1004,7 +1004,7 @@ const ForceGraphComponent = () => {
             )}
             {selectedNode.type === 'research' && (
               <>
-                <button className={styles.pdfButton} onClick={() => window.location.href = `/profile/${selectedNode.createdById}`}>View Research</button> 
+                <button className={styles.pdfButton} onClick={() => window.open(`https://arxiv.org/pdf/${selectedNode.arxiv_id}`, '_blank', 'noopener,noreferrer')}>View Research</button>
                 <div className={styles.infoLabel}>
                   <span className={styles.labelTitle}>Paper:</span>
                   <p>Arxiv Research Paper</p>
