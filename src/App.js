@@ -8,7 +8,8 @@ import Profile from './frontend/pages/StudentProfilePage/StudentProfile';
 import HomePage from './frontend/pages/HomePagePage/HomePage';
 import GenDirectory from './frontend/pages/GenDirectoryPage/GenDirectory';
 import StudentProfileEditor from './frontend/pages/OLDStudentProfileEditorPage/StudentProfileEditor';
-import SignUp from './frontend/pages/SignUpPage/SignUp';
+//import SignUp from './frontend/pages/SignUpPage/SignUp';
+import SignUp from './frontend/pages/MobileSignUpPage/MobileSignUp';
 import OtherStudentProfile from './frontend/pages/OtherStudentProfilePage/OtherStudentProfile';
 import SiloDescription from './frontend/pages/SiloDescriptionPage/siloDescription';
 import Feed from './frontend/pages/FeedPage/Feed';
@@ -23,6 +24,7 @@ import JobsPage from './frontend/pages/JobsPage/JobsPage';
 import  ResearchPage from './frontend/pages/Research/ResearchPage';
 import GraphPage from './frontend/pages/GraphPage/GraphPage';
 import AnalysisPage from './frontend/pages/AnalysisPage/AnalysisPage';
+import LinkedInCallback from './frontend/pages/SignUpPage/LinkedInCallback';
 import './App.css'; 
 
 import AddBlocPortfolio from './frontend/components/AddBlocPortfolio';
@@ -59,6 +61,7 @@ function App() {
             <Route path="/research" element={<ResearchPage />} />
             <Route path='/graph' element={<GraphPage />} />
             <Route path="/Analyze" element={<AnalysisPage />} />
+            <Route path="/linkedin-callback" element={<LinkedInCallback />} />
           </Routes>
         </div>
       </UserProvider>

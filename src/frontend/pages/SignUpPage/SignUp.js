@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../contexts/UserContext';
 import GameOfLife from '../GoLivePage/GameOfLife';
+import LinkedInAuthButton from './LinkedInAuth';
 import styles from './SignUp.module.css';
 import config from '../../config';
 
@@ -291,12 +292,20 @@ const filterPortfolio = (data) => {
     </div>
   );
 
+  const handleLinkedInSuccess = (user) => {
+    updateUser(user);
+    navigate('/siloDescription'); // Navigate to the desired page after successful login
+  };
+
+  
 
   const renderPage = () => {
     switch(page) {
       case 1:
         return (
           <>
+            <LinkedInAuthButton onLoginSuccess={handleLinkedInSuccess} />
+
             <div className={styles.formGroup}>
               <label htmlFor="firstName">First name *</label>
               <input

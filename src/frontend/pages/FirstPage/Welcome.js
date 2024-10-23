@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styles from './welcome.module.css';
 import { useNavigate } from 'react-router-dom';
-import GameOfLife from './GameOfLife';
 import AnimatedSection from './AnimatedSection';
 import PlayerRatingSpiderweb from '../../components/UserSpiderPlot';
 
@@ -33,7 +32,7 @@ function Welcome() {
               console.error("Error playing the video:", error);
           });
       }
-  };
+    };
 
     useEffect(() => {
       const observer = new IntersectionObserver((entries) => {
@@ -55,16 +54,13 @@ function Welcome() {
       return () => observer.disconnect();
     }, []);
 
-
     useEffect(() => {
-      // Load the Vimeo Player API script
       const script = document.createElement('script');
       script.src = "https://player.vimeo.com/api/player.js";
       script.async = true;
       document.body.appendChild(script);
 
       script.onload = () => {
-          // Initialize the Vimeo player when the script is loaded
           const iframe = document.querySelector('iframe');
           playerRef.current = new window.Vimeo.Player(iframe, {
               id: 996474292,
@@ -74,7 +70,6 @@ function Welcome() {
               muted: true
           });
 
-          // Ensure the video is paused and muted initially
           playerRef.current.ready().then(() => {
               playerRef.current.setVolume(0);
               playerRef.current.pause();
@@ -86,8 +81,7 @@ function Welcome() {
               script.parentNode.removeChild(script);
           }
       };
-  }, []);
-
+    }, []);
 
     // Mock data for the spider plot
     const mockPlayerData = {
@@ -96,7 +90,7 @@ function Welcome() {
       Innovation: 80,
       Leadership: 30,
       TechnicalDepth: 89,
-      };
+    };
 
     const mockUserData = JSON.stringify({
       skills: ['React', 'JavaScript', 'Node.js'],
@@ -107,7 +101,9 @@ function Welcome() {
 
     return (
       <div className={styles.container}>
-        <GameOfLife />
+        <div className={styles.splineWrapper}>
+          <spline-viewer url="https://prod.spline.design/2R4lYlPvgoU3Dyzv/scene.splinecode" background="rgba(0,0,0,0.3)"></spline-viewer>
+        </div>
         <div className={styles.blurOverlay}>
           <header className={styles.header}>
             <div className={styles.logo}>
@@ -133,44 +129,35 @@ function Welcome() {
                 <span className={styles.engineeringPlatform}>For Engineers</span>
               </h1>
               <p className={styles.description}>
-                Generate your portfolio, share your work, and explore the cutting edge. We're building the best STEM community. 
+                Generate your technical portfolio and get a job. 
               </p>
             </div>
             <AnimatedSection 
-                        ref={(el) => (sectionsRef.current.whatIsSilo = el)}
-                        title="What is Silo"
-                        content="Silo allows STEM individuals to easily build beautiful portfolios to display their work in social, interactive environment. We connect engineers and scientists from all disciplines, fostering collaboration and innovation. It's your go-to space for networking, knowledge sharing, and career growth in the engineering world."
-                    >
-                        <div className={styles.videoWrapper}>
-                            <div className={styles.videoContainer}>
-                                <iframe
-                                    src="https://player.vimeo.com/video/996474292?background=1&autopause=0&autoplay=0&muted=1" 
-                                    frameBorder="0"
-                                    allow="fullscreen; picture-in-picture"
-                                    allowFullScreen
-                                    title="What is Silo"
-                                ></iframe>
-                                {!isPlaying && (
-                                    <button className={styles.playButton} onClick={handlePlayClick}>
-                                        ▶
-                                    </button>
-                                )}
-                            </div>
-                        </div>
-             </AnimatedSection>
-             <AnimatedSection 
-              ref={(el) => (sectionsRef.current.howItWorks = el)}
-              title="In Depth Analysis"
-              content="Easily create your portfolio, and get detailed feedback on your status as an engineer."
+              ref={(el) => (sectionsRef.current.whatIsSilo = el)}
+              title="What is Silo"
+              content="Silo allows STEM individuals to easily build beautiful portfolios to display their work in social, interactive environment. We connect engineers and scientists from all disciplines, fostering collaboration and innovation. It's your go-to space for networking, knowledge sharing, and career growth in the engineering world."
             >
-              <div className={styles.spiderPlotWrapper}>
-                <PlayerRatingSpiderweb playerData={mockPlayerData} userData={mockUserData} />
+              <div className={styles.videoWrapper}>
+                <div className={styles.videoContainer}>
+                  <iframe
+                    src="https://player.vimeo.com/video/996474292?background=1&autopause=0&autoplay=0&muted=1" 
+                    frameBorder="0"
+                    allow="fullscreen; picture-in-picture"
+                    allowFullScreen
+                    title="What is Silo"
+                  ></iframe>
+                  {!isPlaying && (
+                    <button className={styles.playButton} onClick={handlePlayClick}>
+                      ▶
+                    </button>
+                  )}
+                </div>
               </div>
             </AnimatedSection>
             <AnimatedSection 
               ref={(el) => (sectionsRef.current.contactUs = el)}
               title="Contact Us"
-              content="We're here to help! Reach out with any questions, feedback, or assistance you need. Hit one of our cofounders up at dan@silorepo.com"
+              content="For feedback or assistance, please reach out to dan@silorepo.com. We strive to respond to all messages within 24 hours."
             />
           </div>
         </div>
