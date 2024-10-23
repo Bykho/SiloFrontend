@@ -6,6 +6,7 @@
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@mui/material": "^5.16.7",
+    "@splinetool/react-spline": "^4.0.0",
     "d3-force": "^3.0.0",
     "datetime": "^0.0.3",
     "dotenv": "^16.4.5",

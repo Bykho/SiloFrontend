@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&display=swap');
 
 .signupContainer {
   position: relative;
@@ -8,7 +8,7 @@
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  font-family: 'Inconsolata', sans-serif;
+  font-family: 'Inconsolata', monospace;
   font-weight: bold;
 }
 
@@ -29,18 +29,19 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(18, 44, 85, 0.5);
 }
 
 .signupForm {
   width: auto;
   min-width: 400px;
-  padding: 2rem;
-  background-color: rgba(32, 52, 74, 0.8); 
-  border-radius: 10px;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-  color: white;
+  min-height: 30vh;
+  padding: 32px;
+  background: radial-gradient(circle, rgba(40, 46, 57, 0.9) 0%, rgba(45, 45, 45, 0.8) 75%);
+  border-radius: 40px;
+  box-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
+  color: #E0E0E0;
   font-weight: bold;
+  backdrop-filter: blur(3px);
 }
 
 .signupForm h1 {
@@ -69,51 +70,52 @@
 .formGroup .fileInputLabel {
   display: inline-block;
   padding: 0.75rem 1.5rem;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: #1e1e1e;
   color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 6px;
+  border: 1px solid rgba(173, 216, 230, 0.3);
+  border-radius: 12px;
   cursor: pointer;
   font-size: 0.9rem;
   font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   transition: all 0.2s ease;
-  backdrop-filter: blur(5px);
   margin-top: 0.5rem;
 }
 
 .formGroup .fileInputLabel:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.3);
+  background-color: #333333;
+  transform: translateY(-3px);
 }
 
 .formGroup .fileInputLabel:focus {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 15px rgba(128, 180, 231, 0.342), 0 0 30px rgba(126, 161, 199, 0.22);
 }
 
 .formGroup .fileInputLabel:active {
-  background-color: rgba(255, 255, 255, 0.15);
-  transform: translateY(1px);
+  transform: translateY(2px);
+  box-shadow: 0 0 10px rgba(173, 216, 230, 0.5), 0 0 20px rgba(173, 216, 230, 0.3);
 }
 
 .fileUploadIndicator {
   display: inline-block;
   margin-left: 1rem;
   font-size: 0.9rem;
-  color: #4CAF50;
+  color: #E0E0E0;
 }
 .formGroup input,
 .formGroup select,
 .formGroup textarea {
   width: 95%;
-  padding: 0.5rem;
-  background-color: transparent;
+  padding: 12px;
+  background-color: #161616;
   border: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
-  color: white;
-  font-size: 1rem;
+  border-radius: 8px;
+  color: #E0E0E0;
+  font-size: 16px;
+  font-family: 'Inconsolata', monospace;
+  transition: background-color 0.3s;
 }
 
 .formGroup textarea {
@@ -124,68 +126,39 @@
 .formGroup input:focus,
 .formGroup select:focus,
 .formGroup textarea:focus {
+  background-color: #4a4a4a;
   outline: none;
-  border-bottom-color: white;
 }
 
 .btnNext,
-.btnBack,
 .btnSubmit {
-  padding: 0.75rem 1.5rem;
-  background-color: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 6px;
+  padding: 12px 0;
+  background-color: #1e1e1e;
+  color: white;
+  border: 1px solid rgba(173, 216, 230, 0.3);
+  border-radius: 12px;
   cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 400;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  transition: all 0.2s ease;
-  backdrop-filter: blur(5px);
+  font-size: 18px;
+  font-family: 'Inconsolata', monospace;
+  width: 200px;
+  transition: background-color 0.3s, transform 0.3s;
 }
 
 .btnNext:hover,
-.btnBack:hover,
 .btnSubmit:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.3);
-}
-
-.btnNext:focus,
-.btnBack:focus,
-.btnSubmit:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
-}
-
-.btnNext:active,
-.btnBack:active,
-.btnSubmit:active {
-  background-color: rgba(255, 255, 255, 0.15);
-  transform: translateY(1px);
+  background-color: #333333;
+  transform: translateY(-3px);
 }
 
 .btnNext,
 .btnSubmit {
   float: right;
-  background-color: rgba(185, 217, 235, 0.2);
-}
-
-.btnNext:hover,
-.btnSubmit:hover {
-  background-color: rgba(185, 217, 235, 0.3);
+  background-color: #181818;
 }
 
 .btnBack {
   float: left;
-  background-color: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.1);
-}
-
-.btnBack:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
+  background-color: #1e1e1e;
 }
 
 .buttonGroup {
@@ -210,30 +183,29 @@
 }
 
 .fileInputLabel {
-  padding: 0.75rem 1.5rem;
-  background-color: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 6px;
+  padding: 12px 0;
+  background-color: #1e1e1e;
+  color: white;
+  border: 1px solid rgba(173, 216, 230, 0.3);
+  border-radius: 12px;
   cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 400;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  transition: all 0.2s ease;
-  backdrop-filter: blur(5px);
+  font-size: 18px;
+  font-family: 'Inconsolata', monospace;
+  width: 200px;
+  transition: background-color 0.3s, transform 0.3s;
   display: inline-block;
   margin-top: 0.5rem;
+  text-align: center;
 }
 
 .fileInputLabel:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.3);
+  background-color: #333333;
+  transform: translateY(-3px);
 }
 
 .fileInputLabel:focus-within {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 15px rgba(128, 180, 231, 0.342), 0 0 30px rgba(126, 161, 199, 0.22);
 }
 
 .fileName {
@@ -242,48 +214,24 @@
   color: rgba(255, 255, 255, 0.7);
 }
 
-
-.btnNext:hover:not(:disabled),
-.btnBack:hover:not(:disabled),
-.btnSubmit:hover:not(:disabled) {
-  background-color: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.3);
-}
-
-.btnNext:focus:not(:disabled),
-.btnBack:focus:not(:disabled),
-.btnSubmit:focus:not(:disabled) {
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
-}
-
-.btnNext:active:not(:disabled),
-.btnBack:active:not(:disabled),
-.btnSubmit:active:not(:disabled) {
-  background-color: rgba(255, 255, 255, 0.15);
-  transform: translateY(1px);
-}
-
 .btnNext:disabled,
 .btnSubmit:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-
 .loadingIndicator {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: rgba(0, 0, 0, 0.7);
+  background: linear-gradient(to bottom, #1f1f1f, #131313);
   color: #fff;
   padding: 20px;
   border-radius: 5px;
-  z-index: 1000; /* Ensure the loading indicator appears on top */
+  z-index: 1000;
   font-size: 1.2em;
 }
-
 
 .modalOverlay {
   position: fixed;
@@ -291,15 +239,15 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999; /* High z-index value */
+  z-index: 9999;
 }
 
 .modal {
-  background: white;
+  background: #1E1E1E;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -314,20 +262,22 @@
   border: none;
   font-size: 20px;
   cursor: pointer;
+  color: #E0E0E0;
 }
 
 .autopopulateButton {
   margin: 10px 0;
   padding: 10px 20px;
-  background-color: #007bff;
+  background-color: #1e1e1e;
   color: white;
-  border: none;
-  border-radius: 5px;
+  border: 1px solid rgba(173, 216, 230, 0.3);
+  border-radius: 12px;
   cursor: pointer;
+  font-family: 'Inconsolata', monospace;
 }
 
 .autopopulateButton:hover {
-  background-color: #0056b3;
+  background-color: #333333;
 }
 
 .checkboxLabel {
@@ -347,24 +297,11 @@
   padding: 20px;
   font-size: 0.9em;
   line-height: 1.5;
-}
-
-.modal {
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0,0,0,0.4);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  color: #E0E0E0;
 }
 
 .modalContent {
-  background-color: #fefefe;
+  background-color: #1E1E1E;
   padding: 20px;
   border: 1px solid #888;
   width: 80%;
@@ -372,9 +309,10 @@
   max-height: 80vh;
   overflow-y: auto;
   border-radius: 5px;
+  color: #E0E0E0;
 }
 
-.closeButton{
+.closeButton {
   position: absolute;
   top: 50px;
   right: 400px;
@@ -389,7 +327,67 @@
   justify-content: center;
   align-items: center;
 }
-.tos{
+
+.tos {
   margin-left: 10px;
   color: rgb(76, 124, 248); 
+}
+
+
+
+/* Upload Resume to Autofill button */
+.uploadButton {
+  padding: 10px 15px;
+  background-color: #1e1e1e;
+  color: white;
+  border: 1px solid rgba(173, 216, 230, 0.3);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px; /* Ensure this is applied */
+  font-family: 'Inconsolata', monospace;
+  transition: background-color 0.3s, transform 0.3s;
+  text-align: center; /* Center text in label */
+  display: inline-block;
+}
+
+.uploadButton:hover {
+  background-color: #333333;
+  transform: translateY(-3px);
+}
+
+.uploadButton:focus {
+  outline: none;
+  box-shadow: 0 0 15px rgba(128, 180, 231, 0.342), 0 0 30px rgba(126, 161, 199, 0.22);
+}
+
+.uploadButton:active {
+  transform: translateY(2px);
+  box-shadow: 0 0 10px rgba(173, 216, 230, 0.5), 0 0 20px rgba(173, 216, 230, 0.3);
+}
+/* Fill Out Manually button */
+.manualEntryButton {
+  padding: 10px 15px;
+  background-color: #252525;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;  /* Decreased font size */
+  font-family: 'Inconsolata', monospace;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.manualEntryButton:hover {
+  background-color: #333333;
+  transform: translateY(-3px);
+}
+
+.manualEntryButton:focus {
+  outline: none;
+  box-shadow: 0 0 15px rgba(128, 180, 231, 0.342), 0 0 30px rgba(126, 161, 199, 0.22);
+}
+
+.manualEntryButton:active {
+  transform: translateY(2px);
+  box-shadow: 0 0 10px rgba(173, 216, 230, 0.5), 0 0 20px rgba(173, 216, 230, 0.3);
 }
