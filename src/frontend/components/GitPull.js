@@ -193,7 +193,6 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
       /package\.json$/,          // Exclude package.json file
       /yarn\.lock$/,             // Exclude yarn.lock file
       /\.gitignore$/,            // Exclude .gitignore file
-      /README\.md$/,             // Exclude README.md file
       /LICENSE$/,                // Exclude LICENSE file
       /CHANGELOG\.md$/,          // Exclude CHANGELOG.md file
       /CONTRIBUTING\.md$/,       // Exclude CONTRIBUTING.md file
@@ -207,7 +206,7 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
   
     // Define the file extensions to prioritize (source code files)
     const prioritizedExtensions = [
-      '.js', '.ts', '.jsx', '.tsx', '.py', '.java', '.c', '.cpp', '.cs', '.rb', '.php', '.go', '.rs'
+      '.js', '.ts', '.jsx', '.tsx', '.py', '.java', '.c', '.cpp', '.cs', '.rb', '.php', '.go', '.rs', '.md'
     ];
   
     // File size threshold (1 MB in bytes)
@@ -215,23 +214,27 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
   
     // Filter the file list
     const filteredList = fileList.filter(file => {
+      // Allow README.md files explicitly
+      if (file.toLowerCase().endsWith('readme.md')) {
+        return true;
+      }
+    
       // Check if the file is in the list of excluded patterns
       if (excludedPatterns.some(pattern => pattern.test(file))) {
         return false;
       }
-  
+    
       // Check if the file size exceeds the threshold
       if (file.size > sizeThreshold) {
         return false;
       }
-  
+    
       // Check if the file extension is prioritized
       const fileExtension = file.split('.').pop().toLowerCase();
       if (prioritizedExtensions.includes(`.${fileExtension}`)) {
         return true;
       }
-  
-      // If the file is not excluded and has a prioritized extension, include it
+    
       return false;
     });
   
@@ -378,12 +381,13 @@ const GitPull = ({ userData, onPortfolioUpdate }) => {
     if (!items || items.length === 0) return null;
   
     const prioritizedExtensions = [
-      '.js', '.ts', '.jsx', '.tsx', '.py', '.java', '.c', '.cpp', '.cs', '.rb', '.php', '.go', '.rs'
+      '.js', '.ts', '.jsx', '.tsx', '.py', '.java', '.c', '.cpp', '.cs', '.rb', '.php', '.go', '.rs', '.md'
     ];
   
     const isValidFile = (fileName) => {
       const extension = '.' + fileName.split('.').pop().toLowerCase();
-      return prioritizedExtensions.includes(extension);
+      const isReadme = fileName.toLowerCase() === 'readme.md';
+      return prioritizedExtensions.includes(extension) || isReadme;
     };
   
     return (
