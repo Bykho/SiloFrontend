@@ -8,6 +8,15 @@ import config from '../../config';
 import { MdFileUpload } from "react-icons/md";
 import { FaPencilAlt } from "react-icons/fa";
 
+const renderMobileMessage = (message) => (
+  <div className="mobile-message">
+    <div className="mobile-message-content">
+      <h3>Mobile Device Detected</h3>
+      <p>{message}</p>
+    </div>
+  </div>
+);
+
 
 // Custom hook to detect mobile devices
 const useIsMobile = () => {
@@ -53,6 +62,7 @@ function SignUp() {
   const [isResumeProcessed, setIsResumeProcessed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
+  const [showMobileMessage, setShowMobileMessage] = useState(false);
 
   const { updateUser } = useUser();
   const navigate = useNavigate();
@@ -220,6 +230,10 @@ function SignUp() {
         const data = await response.json();
         localStorage.setItem('token', data.access_token);
         updateUser(data.new_user);
+        if (isMobile) {
+          setShowMobileMessage(true);
+          return;
+        }    
         navigate('/siloDescription');
       } else {
         const errorData = await response.json();
@@ -543,6 +557,7 @@ function SignUp() {
         <div className={styles.signupForm}>
           {error && <p className={styles.error}>{error}</p>}
           {isLoading ? renderLoadingIndicator() : <form onSubmit={handleSubmit}>{renderPage()}</form>}
+          {showMobileMessage && renderMobileMessage('Please login on a desktop device to continue.')}
         </div>
       </div>
       {showTermsModal && (

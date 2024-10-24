@@ -41,6 +41,7 @@
   font-weight: bold;
   backdrop-filter: blur(3px);
   background-color: #7777771d;
+
 }
 
 .signUpFormOld{
@@ -411,11 +412,19 @@
 
 /* Mobile Responsive Styles */
 @media screen and (max-width: 768px) {
+
+  .signupForm{
+    margin: 50px; 
+    min-width: 40vw; 
+    min-height: 35vh;
+  }
+
   .formButtons{
     display: inline-flex; 
     flex-direction: column;
     padding: 20px; 
   }
+  
   .formButtons svg{
     font-size: 24px; 
   }

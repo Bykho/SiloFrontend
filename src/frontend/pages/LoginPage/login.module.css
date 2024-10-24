@@ -219,7 +219,10 @@ body, html {
 
 @media (max-width: 600px) {
   .container {
-    margin: 50px auto !important;
+    position: absolute !important;
+    top: 30% !important;
+    left: 50% !important;
+    transform: translate(-50%, -30%) !important;
     padding: 24px !important;
     max-width: 90% !important;
   }
