@@ -5,6 +5,9 @@ import Spline from '@splinetool/react-spline'; // Import the Spline component
 import styles from './SignUp.module.css';
 import TermsOfService from './ToS';
 import config from '../../config';
+import { MdFileUpload } from "react-icons/md";
+import { FaPencilAlt } from "react-icons/fa";
+
 
 // Custom hook to detect mobile devices
 const useIsMobile = () => {
@@ -241,16 +244,15 @@ function SignUp() {
   // Render initial options
   const renderInitialOptions = () => (
     <div className={styles.initialOptions}>
-      <h2>Create Your Account</h2>
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
+      <h2 className={styles.createHeader}>Create Your Account</h2>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-          <div className={styles.formGroup}>
+          <div className={styles.formButtons}>
           <button
             type="button"
             className={styles.uploadButton}
             onClick={() => document.getElementById('resume').click()}
           >
-            Upload Resume to Autofill
+           <MdFileUpload/> Upload Resume to Autofill
           </button>
           <input
             type="file"
@@ -263,17 +265,16 @@ function SignUp() {
           {formData.resume && (
             <span className={styles.fileUploadIndicator}>Resume Uploaded</span>
           )}
-          </div>
           <p>
-            Or{' '}
+            or
+          </p>
             <button
               type="button"
-              className={styles.manualEntryButton}
+              className={styles.uploadButton}
               onClick={() => setPage(1)} // Start manual entry at page 1
             >
-              Fill Out Manually
+             <FaPencilAlt/> Sign Up Manually
             </button>
-          </p>
         </div>
       </div>
     </div>

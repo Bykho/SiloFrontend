@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
 
 .signupContainer {
   position: relative;
@@ -34,14 +35,17 @@
 .signupForm {
   width: auto;
   min-width: 400px;
-  min-height: 30vh;
-  padding: 32px;
-  background: radial-gradient(circle, rgba(40, 46, 57, 0.9) 0%, rgba(45, 45, 45, 0.8) 75%);
+  padding: 25px 40px;
   border-radius: 40px;
-  box-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
   color: #E0E0E0;
   font-weight: bold;
   backdrop-filter: blur(3px);
+  background-color: #7777771d;
+}
+
+.signUpFormOld{
+  background: radial-gradient(circle, rgba(40, 46, 57, 0.9) 0%, rgba(45, 45, 45, 0.8) 75%);
+  box-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
 }
 
 .signupForm h1 {
@@ -53,8 +57,19 @@
   margin-bottom: 40px;
 }
 
+.createHeader{
+  font-family: "Outfit", sans-serif;
+  margin-top: 0;
+}
+
 .formGroup {
-  margin-bottom: 1.5rem;
+  margin-bottom: .5rem;
+}
+
+.formButtons{
+  display: inline-flex; 
+  gap: 10px;
+  flex-direction: row;
 }
 
 .formGroup label {
@@ -337,22 +352,24 @@
 
 /* Upload Resume to Autofill button */
 .uploadButton {
-  padding: 10px 15px;
+  font-family: "Outfit";
+  display: inline-flex;
+  align-items: center;
+  gap: 10px; 
+  padding: 15px 20px 15px 15px;
   background-color: #1e1e1e;
   color: white;
   border: 1px solid rgba(173, 216, 230, 0.3);
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
   font-size: 18px; /* Ensure this is applied */
-  font-family: 'Inconsolata', monospace;
   transition: background-color 0.3s, transform 0.3s;
   text-align: center; /* Center text in label */
-  display: inline-block;
 }
 
 .uploadButton:hover {
   background-color: #333333;
-  transform: translateY(-3px);
+  transform: translateY(-2px);
 }
 
 .uploadButton:focus {
@@ -366,14 +383,14 @@
 }
 /* Fill Out Manually button */
 .manualEntryButton {
+  font-family: "Outfit";
   padding: 10px 15px;
   background-color: #252525;
   color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 14px;  /* Decreased font size */
-  font-family: 'Inconsolata', monospace;
+  font-size: 18px;  /* Decreased font size */
   transition: background-color 0.3s, transform 0.3s;
 }
 
@@ -390,4 +407,20 @@
 .manualEntryButton:active {
   transform: translateY(2px);
   box-shadow: 0 0 10px rgba(173, 216, 230, 0.5), 0 0 20px rgba(173, 216, 230, 0.3);
+}
+
+/* Mobile Responsive Styles */
+@media screen and (max-width: 768px) {
+  .formButtons{
+    display: inline-flex; 
+    flex-direction: column;
+    padding: 20px; 
+  }
+  .formButtons svg{
+    font-size: 24px; 
+  }
+
+  .createHeader{
+    padding: 20px 0 0 20px; 
+  }
 }
