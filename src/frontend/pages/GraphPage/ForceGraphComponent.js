@@ -38,9 +38,9 @@ const ForceGraphComponent = () => {
   const applyForces = useCallback(() => {
     const fg = fgRef.current;
     if (fg) {
-      fg.d3Force('charge').strength(-500);
-      fg.d3Force('link').distance(170);
-      fg.d3Force('collide', d3.forceCollide(100).strength(0.9));
+      fg.d3Force('charge').strength(-300);
+      fg.d3Force('link').distance(200);
+      fg.d3Force('collide', d3.forceCollide(120).strength(0.9));
     }
   }, []);
 
@@ -394,7 +394,6 @@ const ForceGraphComponent = () => {
           }
         });
 
-        // Add similar research papers
         similarResearchPapers.forEach(paper => {
           if (!nodeMap.has(paper._id)) {
             const paperNode = {
@@ -411,7 +410,30 @@ const ForceGraphComponent = () => {
             nodes.push(paperNode);
             nodeMap.set(paper._id, paperNode);
           }
+
+          // Add researcher nodes and links
+          paper.authors.slice(0,1).forEach(author => {
+            if (!nodeMap.has(author)) {
+              const researcherNode = {
+                id: author, // Assuming author names are unique
+                name: author,
+                type: 'researcher',
+                depth: 3,
+                childrenFetched: false,
+              };
+              nodes.push(researcherNode);
+              nodeMap.set(author, researcherNode);
+            }
+            // Add link from paper to author
+            links.push({
+              source: paper._id,
+              target: author,
+              type: 'paper-author',
+            });
+          });
         });
+   
+
 
         // Add authors
         authors.forEach(author => {
@@ -586,8 +608,14 @@ const ForceGraphComponent = () => {
       }
 
       // Check if node is an edge node (has only one link)
-      if (node.links.length > 1) {
+      if (node.links.length > 4) {
         return;
+      }
+
+      if (node.type === 'researcher'){
+        print('null')
+        // Fetch papers for the researcher
+        //return research paper ids from author
       }
 
       if (node.type === 'project' || node.type === 'research') {
@@ -722,11 +750,30 @@ const ForceGraphComponent = () => {
               newNodes.push(paperNode);
               nodeMap.set(paper._id, paperNode);
             }
-            // Add link from the clicked node to similar research paper
             newLinks.push({
               source: node.id,
               target: paper._id,
               type: 'project-research',
+            });
+
+            // Add researcher nodes and links
+            paper.authors.slice(0,1).forEach(author => {
+              if (!nodeMap.has(author)) {
+                const researcherNode = {
+                  id: author,
+                  name: author,
+                  type: 'researcher',
+                  depth: node.depth + 2,
+                  childrenFetched: false,
+                };
+                newNodes.push(researcherNode);
+                nodeMap.set(author, researcherNode);
+              }
+              newLinks.push({
+                source: paper._id,
+                target: author,
+                type: 'paper-author',
+              });
             });
           });
 
@@ -863,6 +910,9 @@ const ForceGraphComponent = () => {
         }
       } else if (node.type === 'research') {
         borderColor = '#8A2BE2'; // Masculine purple
+      }
+      else if (node.type === 'researcher') {
+        borderColor = '#ff5e00'; // Color for researcher nodes
       }
 
       // Draw outer circle (border)
@@ -1018,6 +1068,15 @@ const ForceGraphComponent = () => {
                   <p>{selectedNode.abstract}</p>
                 </div>
               </>
+            )}
+            {selectedNode.type === 'researcher' && (
+                  <>
+                    <button className={styles.pdfButton} onClick={() => window.open(`https://arxiv.org/search/?query=${encodeURIComponent(selectedNode.name)}`, '_blank', 'noopener,noreferrer')}>Search Author</button>
+                    <div className={styles.infoLabel}>
+                      <span className={styles.labelTitle}>Author:</span>
+                      <p>{selectedNode.name}</p>
+                    </div>
+                  </>
             )}
             {selectedNode.neighbors && selectedNode.neighbors.length > 0 && (
               <div className={styles.connectedNodes}>
