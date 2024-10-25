@@ -613,7 +613,7 @@ const ForceGraphComponent = () => {
       }
 
       if (node.type === 'researcher'){
-        print('null')
+        console.log('null')
         // Fetch papers for the researcher
         //return research paper ids from author
       }
