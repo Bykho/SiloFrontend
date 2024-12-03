@@ -1,0 +1,197 @@
+.container {
+    min-height: 100vh;
+    background: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+  
+  .wrapper {
+    position: relative;
+    width: 100%;
+  }
+  
+  .gradientBg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(71, 169, 255, 0.125), transparent);
+    filter: blur(24px);
+  }
+  
+  .content {
+    position: relative;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(16px);
+    padding: 3rem;
+    border-radius: 1rem;
+    border: 1px solid rgba(71, 169, 255, 0.2);
+    max-width: 42rem;
+    width: 100%;
+    margin: 0 auto;
+  }
+  
+  .header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+  
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    background: rgba(71, 169, 255, 0.125);
+    color: #47a9ff;
+    font-weight: 500;
+    font-size: 0.875rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .badgeIcon {
+    width: 1rem;
+    height: 1rem;
+  }
+  
+  .title {
+    font-size: 3rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 1rem;
+  }
+  
+  .highlight {
+    display: block;
+    color: #47a9ff;
+    margin-bottom: 1.5rem;
+  }
+  
+  .subtitle {
+    color: #9ca3af;
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+  }
+  
+  .features {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+  
+  .feature {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #d1d5db;
+  }
+  
+  .featureIcon {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: #47a9ff;
+  }
+  
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  .inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .label {
+    color: #d1d5db;
+    font-size: 1.125rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  
+  .required {
+    color: #47a9ff;
+  }
+  
+  .optional {
+    color: #6b7280;
+    font-size: 0.875rem;
+    font-weight: normal;
+  }
+  
+  .input, .textarea {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    border-radius: 0.75rem;
+    background: rgba(71, 169, 255, 0.04);
+    border: 1px solid rgba(71, 169, 255, 0.2);
+    color: white;
+    font-size: 1.125rem;
+    transition: all 0.2s;
+  }
+  
+  .input:focus, .textarea:focus {
+    outline: none;
+    border-color: #47a9ff;
+    box-shadow: 0 0 0 4px rgba(71, 169, 255, 0.125);
+  }
+  
+  .textarea {
+    min-height: 8rem;
+    resize: vertical;
+  }
+  
+  .button {
+    width: 100%;
+    padding: 1rem 2rem;
+    border-radius: 9999px;
+    background: #47a9ff;
+    color: black;
+    font-weight: 600;
+    font-size: 1.125rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+  }
+  
+  .button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(71, 169, 255, 0.25);
+  }
+  
+  .successContainer {
+    text-align: center;
+  }
+  
+  .successTitle {
+    font-size: 3rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 1.5rem;
+  }
+  
+  .successMessage {
+    color: #9ca3af;
+    font-size: 1.25rem;
+  }
+  
+  .inputError {
+    border-color: #ff4747;
+  }
+  
+  .inputError:focus {
+    border-color: #ff4747;
+    box-shadow: 0 0 0 4px rgba(255, 71, 71, 0.125);
+  }
+  
+  .errorText {
+    color: #ff4747;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+  }
