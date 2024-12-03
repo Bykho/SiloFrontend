@@ -23,6 +23,8 @@ import JobsPage from './frontend/pages/JobsPage/JobsPage';
 import  ResearchPage from './frontend/pages/Research/ResearchPage';
 import GraphPage from './frontend/pages/GraphPage/GraphPage';
 import AnalysisPage from './frontend/pages/AnalysisPage/AnalysisPage';
+import CandidateSearch from './frontend/pages/CandidateSearchPage/CandidateSearch';
+import RecruiterSignup from './frontend/pages/RecruiterWaitlistPage/RecruiterWaitlist';
 import './App.css'; 
 
 import AddBlocPortfolio from './frontend/components/AddBlocPortfolio';
@@ -59,6 +61,8 @@ function App() {
             <Route path="/research" element={<ResearchPage />} />
             <Route path='/graph' element={<GraphPage />} />
             <Route path="/Analyze" element={<AnalysisPage />} />
+            <Route path='/candidateSearch' element={<CandidateSearch />} />
+            <Route path="/recruiter-signup" element={<RecruiterSignup />} />
           </Routes>
         </div>
       </UserProvider>
@@ -68,7 +72,7 @@ function App() {
 
 function NavigationWithConditionalRender() {
   const location = useLocation();
-  const noNavBarPaths = ['/', '/login', '/SignUp', '/public']; // Add /public to the noNavBarPaths
+  const noNavBarPaths = ['/', '/login', '/SignUp', '/public', '/recruiter-signup']; // Add /recruiter-signup to the noNavBarPaths
 
   // Check if the current pathname includes '/public/'
   const isPublicProfile = location.pathname.includes('/public/');
@@ -78,6 +82,4 @@ function NavigationWithConditionalRender() {
 }
 
 export default App;
-
-
 
