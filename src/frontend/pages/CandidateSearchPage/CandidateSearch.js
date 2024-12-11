@@ -31,20 +31,6 @@ const CandidateSearch = () => {
     setFile(event.target.files[0]);
   };
 
-  const getStrengthLabel = (matchScore) => {
-    if (matchScore >= 80) return 'excellentmatch';
-    if (matchScore >= 60) return 'strongmatch';
-    if (matchScore >= 40) return 'moderatematch';
-    return 'limitedmatch';
-  };
-
-  const getStrengthText = (matchScore) => {
-    if (matchScore >= 80) return 'Excellent Match';
-    if (matchScore >= 60) return 'Strong Match';
-    if (matchScore >= 40) return 'Moderate Match';
-    return 'Limited Match';
-  };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!file) {
@@ -255,20 +241,6 @@ const CandidateSearch = () => {
                         )}
                       </div>
                     </div>
-
-                    <div className={styles.matchScore}>
-                      <div
-                        className={`${styles.strengthIndicator} ${
-                          styles[getStrengthLabel(candidate.match_score)]
-                        }`}
-                      >
-                        {getStrengthText(candidate.match_score)}
-                        <span className={styles.matchStats}>
-                          ({candidate.match_score.toFixed(1)}%)
-                        </span>
-                      </div>
-                      <Progress value={candidate.match_score} />
-                    </div>
                   </div>
 
                   <div className={styles.topSkills}>
@@ -318,9 +290,12 @@ const CandidateSearch = () => {
                             .map((match, matchIndex) => (
                               <div key={matchIndex} className={styles.match}>
                                 <div className={styles.matchHeader}>
-                                  <span className={styles.filePath}>
-                                    {match.file_path.split('_').slice(2).join('/')}
-                                  </span>
+                                <span className={styles.filePath}>
+                                  {match.file_path.includes('_') 
+                                    ? match.file_path.substring(match.file_path.indexOf('_') + 1)
+                                    : match.file_path
+                                  }
+                                </span>
                                 </div>
                                 <p>{match.explanation}</p>
                               </div>
